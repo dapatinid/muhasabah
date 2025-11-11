@@ -25,13 +25,13 @@
                     <x-select.styled label="{{ __('Gender') }} *" wire:model="user.gender" required :options="[
                         ['label' => 'Laki - Laki', 'value' => 'L'],
                         ['label' => 'Perempuan', 'value' => 'P'],
-                    ]" />
+                    ]" placeholder="wajib isi"/>
                 </div>
                 <div>
-                    <x-input label="{{ __('Tempat Lahir') }} *" wire:model="user.tempat_lahir" required />
+                    <x-input label="{{ __('Tempat Lahir') }} *" wire:model="user.tempat_lahir" required placeholder="wajib isi"/>
                 </div>
                 <div>
-                    <x-date label="{{ __('Tanggal Lahir') }} *" wire:model="user.tanggal_lahir" required />
+                    <x-date label="{{ __('Tanggal Lahir') }} *" wire:model="user.tanggal_lahir" required placeholder="wajib isi"/>
                 </div>
 
                 <div>
@@ -46,10 +46,10 @@
                     @endif
                 </div>
                 <div>
-                    <x-upload label="Foto KTP" wire:model="image_id" hint="tidak wajib isi"/>
+                    <x-upload label="Foto KTP" wire:model="image_id" placeholder="tidak wajib isi"/>
                 </div>
                 <div>
-                    <x-input label="{{ __('No. ID / KTP / Passport') }} *" wire:model="user.no_id" hint="tidak wajib isi"/>
+                    <x-input label="{{ __('No. ID / KTP / Passport') }}" wire:model="user.no_id" placeholder="tidak wajib isi"/>
                 </div>
 
                 <div>
@@ -66,7 +66,7 @@
                     ]" />
                 </div>
                 <div>
-                    <x-input label="{{ __('Grup') }}" wire:model="user.grup"/>
+                    <x-input label="{{ __('Grup') }}" wire:model="user.grup" placeholder="tidak wajib isi"/>
                 </div>
 
             </div>
