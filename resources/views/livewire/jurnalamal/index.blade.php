@@ -28,7 +28,7 @@
         </div>
     </div>
     
-    <div class="mb-4 flex justify-between items-center">
+    <div class="mb-4 flex justify-between items-center gap-3">
         <span class="pt-2">
             <x-dropdown icon="squares-2x2" position="bottom-start">
                 <x-dropdown.items separator @click="$store.globalSelect.toggleSemua()"><span x-text="$store.globalSelect.allChecked ? 'Batal pilih semua' : 'Pilih semua'"></span></x-dropdown.items>
@@ -55,10 +55,10 @@
                         </div>
                         <img class="bg-cover bg-center size-10" src="{{ isset($ja->challenge->image) ? Str::replace('%2F', '/',url('storage', $ja->challenge->image)) : asset('storage/files/circle.png') }}" alt="{{ $ja->challenge->title }}">
                     </div>
-                    <div class="block items-center">
+                    <div class="block items-center space-y-1">
                         <input type="checkbox" value="{{ $ja->id }}" wire:model="selected" x-model="checked" class="hidden">
                         <div class="font-bold select-none leading-4">{{ $ja->challenge->title }}</div>
-                        <div class="text-xs select-none">
+                        <div class="text-xs select-none leading-3">
                             {{ $ja->challengeVariant->is_manual_input == true ? Illuminate\Support\Number::format($ja->submitted_value, locale: 'de'). " " . $ja->challengeVariant->name : $ja->challengeVariant->name }}
                         </div>
                     </div>
@@ -151,23 +151,39 @@ document.addEventListener('alpine:init', () => {
     });
 });
 
-// document.addEventListener('livewire:navigated', () => {
-//     const path = window.location.pathname;
+document.addEventListener('livewire:navigated', () => {
+    const path = window.location.pathname;
+    const nav = performance.getEntriesByType('navigation')[0];
+    const isReload = nav?.type === 'reload';
+    const flag = sessionStorage.getItem('app:reloaded');
 
-//     // khusus path /jurnal-amal
-//     if (path === '/jurnal-amal') {
-//         const hasReloaded = sessionStorage.getItem('jurnalamal:reloaded');
+    // 🔹 Jika halaman selain /jurnal-amal direload penuh
+    if (isReload && path !== '/jurnal-amal') {
+        sessionStorage.setItem('app:reloaded', 'general');
+    }
 
-//         // kalau belum reload sebelumnya, reload penuh sekarang
-//         if (!hasReloaded) {
-//             sessionStorage.setItem('jurnalamal:reloaded', 'true');
-//             window.location.reload(); // reload full
-//         }
-//     } else {
-//         // kalau pindah ke halaman lain, hapus flag reload
-//         sessionStorage.removeItem('jurnalamal:reloaded');
-//     }
-// });
+    // 🔹 Jika /jurnal-amal direload penuh
+    if (isReload && path === '/jurnal-amal') {
+        sessionStorage.setItem('app:reloaded', 'jurnal');
+    }
+
+    // 🔹 Jika sudah pernah reload di /jurnal-amal, jangan reload lagi di mana pun
+    if (flag === 'jurnal') return;
+
+    // 🔹 Jika di halaman lain dan belum pernah reload sama sekali
+    if (path !== '/jurnal-amal' && !flag) {
+        sessionStorage.setItem('app:reloaded', 'general');
+        window.location.reload();
+        return;
+    }
+
+    // 🔹 Jika di /jurnal-amal dan pernah reload di halaman lain (general)
+    if (path === '/jurnal-amal' && flag === 'general') {
+        sessionStorage.setItem('app:reloaded', 'jurnal');
+        window.location.reload();
+        return;
+    }
+});
 
 </script>
 

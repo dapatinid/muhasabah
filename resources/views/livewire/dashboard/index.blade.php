@@ -5,7 +5,7 @@
         <div
             wire:key="card-{{ $ja->id }}"
             @if ($ja->progresses->where('user_id',Auth::id())->sum('earned_score') != 0)                
-            href="{{ route('jurnalamal.detail',  $ja->id )}}"  wire:navigate.hover class="cursor-pointer p-3 rounded-md select-none dark:text-white ring-0 shadow bg-white dark:bg-gray-900"
+            href="{{ route('jurnalamal.detail',  $ja->id )}}"  wire:navigate.hover class="cursor-pointer p-3 rounded-md select-none dark:text-white ring-0 shadow bg-white dark:bg-gray-900 hover:bg-blue-300 dark:hover:bg-blue-700 active:bg-blue-500"
             @endif
             class="p-3 rounded-md select-none dark:text-white ring-0 shadow bg-white dark:bg-gray-900"
         >
