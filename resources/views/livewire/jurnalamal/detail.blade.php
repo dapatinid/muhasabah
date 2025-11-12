@@ -18,7 +18,7 @@
         <div class="divide-y divide-gray-300 dark:divide-gray-800">
         @foreach ($progressDetail as $progDet)
             <div class="flex justify-between items-center pt-2.5 pb-3">
-                <div class="block">
+                <div class="block me-3">
                     <div>{{ Carbon\Carbon::parse($progDet->date)->translatedFormat('Y M d - l') }}</div>
                     <div>Note : {{ $progDet->note }}</div>
                 </div>
