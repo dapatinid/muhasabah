@@ -46,7 +46,7 @@ class Create extends Component
         $rawFormat = $carbonDate->format('Y-m-d');
 
         $this->date = $rawFormat ?? now();
-        $this->modal = true;
+        // $this->modal = true;
     }
 
     public function render(): View
@@ -139,7 +139,7 @@ class Create extends Component
             $this->resetExcept('date');
             $this->jurnalamal = new ChallengeProgress();
 
-            $this->toast()->success('Berhasil', 'Semangat Amal Ibadah !!!')->send();
+            // $this->toast()->success('Berhasil', 'Semangat Amal Ibadah !!!')->send();
         }
         
 

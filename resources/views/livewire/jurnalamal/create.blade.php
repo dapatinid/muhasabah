@@ -1,7 +1,6 @@
 <div>
     <x-icon name="plus" 
-    {{-- wire:click="$toggle('modal')" --}}
-    wire:click="$dispatch('open::createjurnalamal', { date: datesort.value })"
+    wire:click="$toggle('modal'); $dispatch('open::createjurnalamal', { date: datesort.value })"
      class="text-white size-7 bg-primary-500 p-1 rounded-md cursor-pointer"/>
 
     <x-modal :title="__('Catatan Baru')" wire >

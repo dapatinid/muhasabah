@@ -25,7 +25,7 @@
 
                 <div class="flex justify-end items-center">
                     {{-- <span class="me-2">{{ '✦' }}</span> --}}
-                    <x-badge text="{{ $ja->progresses->where('user_id',Auth::id())->sum('earned_score') }}" color="{{ $ja->progresses->where('user_id',Auth::id())->sum('earned_score') == 0 ? 'red' : 'cyan' }}" light md/>
+                    <x-badge text="{{ Illuminate\Support\Number::abbreviate($ja->progresses->where('user_id',Auth::id())->sum('earned_score')) }}" color="{{ $ja->progresses->where('user_id',Auth::id())->sum('earned_score') == 0 ? 'red' : 'cyan' }}" light md/>
                 </div>
             </div>
         </div>
