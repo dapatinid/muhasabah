@@ -1,4 +1,4 @@
-<div class="space-y-3 p-3">
+<div class="space-y-3 p-3 pb-72">
     <div 
         x-data="{ show: true }" 
         x-init="
