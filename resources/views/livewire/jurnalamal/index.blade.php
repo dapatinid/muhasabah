@@ -76,13 +76,13 @@
                                 wire:navigate.hover
                             />
                             <x-dropdown.items 
-                                icon="Pencil"
+                                icon="pencil"
                                 text="Edit Catatan"
                                 separator
                                 wire:click="$dispatch('load::jurnalamal', { 'jurnalamal' : '{{ $ja->id }}'})"
                             />
                             <x-dropdown.items 
-                                icon="Trash"
+                                icon="trash"
                                 text="Hapus Catatan"
                                 separator
                                 wire:click.stop="confirmHapus({{ $ja->id }})"
