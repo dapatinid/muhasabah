@@ -9,11 +9,15 @@
         </x-slot:header>
          <form id="user-update-{{ $user->id }}" wire:submit="save" class="space-y-4">
             <div>
-                @if ($user->image != null)
-                    <img src="{{ url('storage/'.$user->image) }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full">
+                @if ($image) 
+                    <img src="{{ $image->temporaryUrl() }}" class="object-cover text-center mx-auto size-[120px] rounded-full">
                 @else
-                    <img src="{{ url('storage/avatar/user.png') }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full">
-                @endif
+                    @if ($user->image != null)
+                        <img src="{{ url('storage/'.$user->image) }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full">
+                    @else
+                        <img src="{{ url('storage/avatar/user.png') }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full">
+                    @endif
+                @endif                
             </div>
             <div>
                 <x-upload label="Avatar" wire:model="image" required />

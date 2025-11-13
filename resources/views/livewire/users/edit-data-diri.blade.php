@@ -4,14 +4,14 @@
             <div class="space-y-6">
                 <div>
                     @if ($image) 
-                        <img src="/storage/livewire-tmp/{{ $image->getFilename() }}" class="object-cover text-center mx-auto size-[120px] rounded-full">
+                        <img src="{{ $image->temporaryUrl() }}" class="object-cover text-center mx-auto size-[120px] rounded-full">
                     @else
                         @if ($user->image != null)
                             <img src="{{ url('storage/'.$user->image) }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full">
                         @else
                             <img src="{{ url('storage/avatar/user.png') }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full">
                         @endif
-                    @endif
+                    @endif 
                 </div>
                 <div>
                     <x-upload label="Avatar" wire:model="image" required />
@@ -31,7 +31,7 @@
 
                 <div>
                     @if ($image_id) 
-                        <img src="/storage/livewire-tmp/{{ $image_id->getFilename() }}" class="object-cover text-center mx-auto w-50 aspect-[16/11]">
+                        <img src="{{ $image_id->temporaryUrl() }}" class="object-cover text-center mx-auto w-50 aspect-[16/11]">
                     @else
                         @if ($user->image_id != null)
                             <img src="{{ url('storage/'.$user->image_id) }}" alt="foto_id" class="object-cover text-center mx-auto w-50 aspect-[16/11]">
@@ -49,7 +49,7 @@
 
                 <div>
                     <x-select.styled label="{{ __('Golongan Darah') }} *" wire:model="user.golongan_darah" required :options="[
-                        ['label' => 'Belum Tahu', 'value' => '-'],
+                        ['label' => 'Belum diketahui', 'value' => '-'],
                         ['label' => 'O+', 'value' => 'O+'],
                         ['label' => 'O-', 'value' => 'O-'],
                         ['label' => 'B+', 'value' => 'B+'],

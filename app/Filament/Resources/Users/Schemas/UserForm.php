@@ -141,6 +141,7 @@ class UserForm
                         ->required(),
                 Select::make('golongan_darah')
                     ->options([
+                                '-' => 'Belum diketahui',
                                 'O+' => 'O+',
                                 'O-' => 'O-',
                                 'B+' => 'B+',

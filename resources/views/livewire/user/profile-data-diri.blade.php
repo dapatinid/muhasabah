@@ -54,7 +54,7 @@
 
                 <div>
                     <x-select.styled label="{{ __('Golongan Darah') }} *" wire:model="user.golongan_darah" required :options="[
-                        ['label' => 'Belum Tahu', 'value' => '-'],
+                        ['label' => 'Belum diketahui', 'value' => '-'],
                         ['label' => 'O+', 'value' => 'O+'],
                         ['label' => 'O-', 'value' => 'O-'],
                         ['label' => 'B+', 'value' => 'B+'],
