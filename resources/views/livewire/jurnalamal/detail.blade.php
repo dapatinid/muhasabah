@@ -3,7 +3,7 @@
     <x-card>
         <div class="flex gap-3 justify-between items-center">
             <div class="block">
-                <div class="text-xl font-bold">Amalan {{ $progressDetail[0]->challenge->title }}</div>
+                <div class="text-xl font-bold">{{ $progressDetail[0]->challenge->title }}</div>
                 <div>Total Score <span class="font-bold text-primary-500">{{ Illuminate\Support\Number::abbreviate($progressDetail->sum('earned_score')) }}</span></div>
             </div>
             <span>
@@ -20,7 +20,7 @@
             <div class="flex justify-between items-center pt-2.5 pb-3">
                 <div class="block me-3">
                     <div>{{ Carbon\Carbon::parse($progDet->date)->translatedFormat('Y M d - l') }}</div>
-                    <div>Note : {{ $progDet->note }}</div>
+                    <div>{{ $progDet->challengeVariant->is_manual_input == true ? Illuminate\Support\Number::format($progDet->submitted_value, locale: 'de'). " " . $progDet->challengeVariant->name : $progDet->challengeVariant->name }}. {{ $progDet->note ? 'Note : '.$progDet->note : '' }}</div>
                 </div>
                 <div>
                     <x-badge :class="'text-center'">

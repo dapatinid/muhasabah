@@ -67,28 +67,52 @@
                 <div class="flex justify-end items-center">
                     <span class="me-2">{{ (!empty($ja->note)) ? '✦' : null }}</span>
                     <x-badge text="{{ Illuminate\Support\Number::format($ja->earned_score, locale: 'de') }}" color="cyan" light md/>
-                    <span class="pt-2">
-                        <x-dropdown icon="ellipsis-vertical" static>
-                            <x-dropdown.items 
-                                icon="magnifying-glass"
-                                text="Lihat Progress"
-                                href="{{ route('jurnalamal.detail',  $ja->challenge->id )}}"
-                                wire:navigate.hover
-                            />
-                            <x-dropdown.items 
-                                icon="pencil"
-                                text="Edit Catatan"
-                                separator
-                                wire:click="$dispatch('load::jurnalamal', { 'jurnalamal' : '{{ $ja->id }}'})"
-                            />
-                            <x-dropdown.items 
-                                icon="trash"
-                                text="Hapus Catatan"
-                                separator
-                                wire:click.stop="confirmHapus({{ $ja->id }})"
-                            />
-                        </x-dropdown>
-                    </span>
+<span class="relative inline-block" x-data="{ open: false }" @click.away="open = false">
+    <!-- Tombol trigger -->
+    <button 
+        @click="open = !open" 
+        class="p-2 rounded-full hover:bg-gray-200 transition"
+    >
+        <x-icon name="ellipsis-vertical" class="w-5 h-5" />
+    </button>
+
+    <!-- Isi dropdown di kiri -->
+    <div 
+        x-show="open" 
+        x-transition
+        class="absolute right-full mr-0 top-1/2 -translate-y-1/2 w-40 bg-white dark:bg-gray-700 rounded-lg shadow-lg border border-gray-100 dark:border-gray-500 z-50"
+    >
+        <div class="grid grid-cols-3 text-gray-700">
+            <!-- Detail -->
+            <span 
+                class="flex justify-center py-3 hover:bg-primary-500 hover:text-white dark:text-gray-200 cursor-pointer rounded-l-lg"
+                href="{{ route('jurnalamal.detail', $ja->challenge->id )}}"
+                wire:navigate.hover
+                @click="open = false"
+            >
+                <x-icon name="magnifying-glass" class="h-5 w-5" />
+            </span>
+
+            <!-- Edit -->
+            <span 
+                class="flex justify-center py-3 hover:bg-primary-500 hover:text-white dark:text-gray-200 cursor-pointer"
+                wire:click="$dispatch('load::jurnalamal', { jurnalamal : '{{ $ja->id }}'})"
+                @click="open = false"
+            >
+                <x-icon name="pencil" class="h-5 w-5" />
+            </span>
+
+            <!-- Hapus -->
+            <span 
+                class="flex justify-center py-3 hover:bg-red-500 hover:text-white dark:text-gray-200 cursor-pointer rounded-r-lg"
+                wire:click.stop="confirmHapus({{ $ja->id }})"
+                @click="open = false"
+            >
+                <x-icon name="trash" class="h-5 w-5" />
+            </span>
+        </div>
+    </div>
+</span>
                 </div>
             </div>
         </div>

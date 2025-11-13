@@ -1,5 +1,5 @@
 <div>
-    <x-modal :title="__('Edit Catatan #:id', ['id' => $jurnalamal?->id])" wire>
+    <x-modal :title="__('Edit Catatan : :challenge_id', ['challenge_id' => $jurnalamal?->challenge->title])" wire>
         <form id="jurnalamal-update-{{ $jurnalamal?->id }}" wire:submit="save" class="space-y-4">
             <div class="flex justify-center">
                 {{ Carbon\Carbon::parse($jurnalamal?->date)->translatedFormat('l, d M Y') }}
@@ -8,10 +8,10 @@
                 <x-date wire:model="jurnalamal.date" format="dddd, DD MMM YYYY" required />
             </div>
             <div>
-                <x-select.styled label="{{ __('Amalan') }}"  wire:model.live="jurnalamal.challenge_id" :options="$tantangan" searchable required wire:change="clearVariant"/>
+                <x-select.styled label="{{ __('Amalan') }} *"  wire:model.live="jurnalamal.challenge_id" :options="$tantangan" searchable required wire:change="clearVariant"/>
             </div>
             <div>
-                <x-select.styled label="{{ __('Capaian') }}"  wire:model.live="jurnalamal.challenge_variant_id" :options="$variant" searchable required wire:change="cekInputManual"/>
+                <x-select.styled label="{{ __('Capaian') }} *"  wire:model.live="jurnalamal.challenge_variant_id" :options="$variant" searchable required wire:change="cekInputManual"/>
             </div>
             <div class="{{ $hiddenValuenya }}">
                 <x-number label="{{ __('Nilai') }} *" wire:model.blur="jurnalamal.submitted_value" required centralized />

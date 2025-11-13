@@ -24,10 +24,10 @@ class ChallengeProgressResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::PresentationChartLine;
 
-    protected static ?string $recordTitleAttribute = 'JejakAmal';
-    protected static ?string $navigationLabel = 'Jejak Amal';
-    protected ?string $heading = 'Jejak Amal';
-    protected static ?string $slug = 'jejak-amal';
+    protected static ?string $recordTitleAttribute = 'JurnalAmal';
+    protected static ?string $navigationLabel = 'Jurnal Amal';
+    protected ?string $heading = 'Jurnal Amal';
+    protected static ?string $slug = 'jurnal-amal';
 
     public static function form(Schema $schema): Schema
     {

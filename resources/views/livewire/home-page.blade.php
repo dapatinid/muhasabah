@@ -9,8 +9,8 @@
 
         <!-- Desktop Nav -->
         <nav class="hidden md:flex space-x-4 items-center">
+            <a href="https://wa.me/62085950540055" target="_blank" class="text-gray-700 hover:text-indigo-700">Tanya</a>
             <a href="#tentang" class="text-gray-700 hover:text-indigo-700">Tentang</a>
-            <a href="#fitur" class="text-gray-700 hover:text-indigo-700">Fitur</a>
             <a href="#bergabung" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
                 Bergabung
             </a>
@@ -34,8 +34,8 @@
         <div x-show="open" x-transition
             class="absolute top-20 left-0 w-full bg-white border-t border-gray-100 shadow-md md:hidden">
             <nav class="flex flex-col text-center py-4 space-y-2">
+                <a href="https://wa.me/62085950540055" target="_blank" @click="open = false" class="text-gray-700 hover:text-indigo-700">Tanya</a>
                 <a href="#tentang" @click="open = false" class="text-gray-700 hover:text-indigo-700">Tentang</a>
-                <a href="#fitur" @click="open = false" class="text-gray-700 hover:text-indigo-700">Fitur</a>
                 <a href="#bergabung" @click="open = false"
                   class="bg-indigo-600 text-white px-4 py-2 mx-auto rounded-lg hover:bg-indigo-700 transition w-32">
                   Bergabung
@@ -45,7 +45,7 @@
     </header>
 
     <!-- Hero Section -->
-    <section id="fitur" class="flex flex-col items-center text-center mt-20 px-6">
+    <main class="flex flex-col items-center text-center mt-20 px-6">
         <h2 class="text-4xl font-bold text-gray-800 mb-4">
             Catat & Renungkan Ibadah Harianmu
         </h2>
@@ -58,7 +58,7 @@
            class="bg-indigo-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-indigo-700 transition shadow">
            Mulai Sekarang
         </a>
-    </section>
+    </main>
 
     <!-- Tentang -->
     <section id="tentang" class="mt-32 px-8 text-center">
