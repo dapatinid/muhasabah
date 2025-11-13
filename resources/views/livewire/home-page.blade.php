@@ -1,7 +1,7 @@
 <div class="bg-gradient-to-br from-indigo-50 via-white to-purple-50 min-h-screen flex flex-col">
  
     <!-- Header -->
-    <header x-data="{ open: false }" class="flex justify-between items-center px-8 py-6">
+    <header x-data="{ open: false }" class="flex justify-between items-center px-4 py-3">
         <h1 class="text-2xl font-bold text-indigo-700 flex items-center gap-2">
             <span class="text-3xl">📖</span>
             <span>Muhasabah.id</span>
@@ -47,10 +47,10 @@
     <!-- Hero Section -->
     <main class="flex flex-col items-center text-center mt-20 px-6">
         <h2 class="text-4xl font-bold text-gray-800 mb-4">
-            Catat & Renungkan Ibadah Harianmu
+            Catat Amal Ibadah Harianmu
         </h2>
         <p class="text-gray-600 max-w-2xl mb-8">
-            <strong>Muhasabah</strong> membantu kamu menjaga konsistensi ibadah harian
+            <strong>Muhasabah.id</strong> membantu kamu menjaga konsistensi ibadah harian
             melalui jurnal amal pribadi yang mudah digunakan.  
             Refleksi diri setiap hari untuk menjadi lebih baik dari hari kemarin.
         </p>
@@ -61,18 +61,18 @@
     </main>
 
     <!-- Tentang -->
-    <section id="tentang" class="mt-32 px-8 text-center">
-        <h3 class="text-2xl font-semibold text-indigo-700 mb-4">Tentang Muhasabah</h3>
+    <section id="tentang" class="mt-32 px-4 text-center">
+        <h3 class="text-2xl font-semibold text-indigo-700 mb-4">Tentang Muhasabah.id</h3>
         <p class="text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Aplikasi <strong>Muhasabah</strong> dirancang untuk membantu setiap muslim 
             dalam merefleksikan amal dan ibadah hariannya.  
-            Dengan tampilan yang ringan dan ramah pengguna, kamu bisa mencatat salat, tilawah, sedekah, dan amalan lain kapan pun.
+            Dengan tampilan yang ringan dan ramah pengguna, kamu bisa mencatat salat, tadarus, sedekah, dan amalan lain kapan pun.
         </p>
     </section>
 
     <!-- Ajakan -->
-    <section id="bergabung" class="mt-20 text-center bg-indigo-50 py-16 px-8">
-        <h3 class="text-3xl font-bold text-indigo-800 mb-6">Ayo Mulai Muhasabah Diri Hari Ini</h3>
+    <section id="bergabung" class="mt-20 text-center bg-indigo-50 py-16 px-4">
+        <h3 class="text-3xl font-bold text-indigo-800 mb-6">Ayo Mulai Muhasabah Hari Ini</h3>
         <p class="text-gray-700 mb-8 max-w-xl mx-auto">
             Daftar sekarang dan jadikan setiap hari lebih bermakna dengan mencatat kebaikanmu.
         </p>
@@ -84,7 +84,7 @@
 
     <!-- Footer -->
     <footer class="mt-auto text-center text-gray-500 py-6 border-t border-t-blue-200">
-        <p>© 2025 Muhasabah.id • Semua hak dilindungi.</p>
+        <p> • 2025 Muhasabah.id • </p>
     </footer>
   
 </div>
