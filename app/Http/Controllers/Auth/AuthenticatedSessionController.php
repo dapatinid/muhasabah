@@ -22,9 +22,9 @@ class AuthenticatedSessionController
         $request->session()->regenerate();
 
         if (Auth::user()->street == null || Auth::user()->village == null || Auth::user()->district == null || Auth::user()->city == null || Auth::user()->state == null) {
-            return redirect()->intended(route('user.profilealamat', absolute: false));
+            return redirect()->route('user.profilealamat');
         } elseif (Auth::user()->image == null || Auth::user()->gender == null || Auth::user()->tempat_lahir == null || Auth::user()->tanggal_lahir == null || Auth::user()->golongan_darah == null) {
-            return redirect()->intended(route('user.profiledatadiri', absolute: false));
+            return redirect()->route('user.profiledatadiri');
         } else {
             return redirect()->intended(route('home', absolute: false));
         }

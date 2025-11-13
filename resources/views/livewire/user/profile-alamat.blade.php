@@ -1,7 +1,7 @@
 <div class="mx-auto max-w-lg space-y-3 p-3">
     <div class="{{ Auth::user()->street == null || Auth::user()->village == null || Auth::user()->district == null || Auth::user()->city == null || Auth::user()->state == null ? '' : 'hidden' }}">
         <x-alert color="amber" icon="light-bulb" close >
-            @lang('Lengkapi data di bawah ini. Data tidak lengkap tidak diizinkan mengikuti Event.')
+            @lang('Lengkapi data di bawah ini.')
         </x-alert>
     </div>
     <div class="grid grid-cols-1 gap-3 ">

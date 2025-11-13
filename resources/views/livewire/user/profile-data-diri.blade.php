@@ -1,7 +1,7 @@
 <div @updated="$dispatch('name-updated', { name: $event.detail.name })" class="space-y-3 p-3 mx-auto max-w-lg">
     <div class="{{ Auth::user()->image == null || Auth::user()->gender == null || Auth::user()->tempat_lahir == null || Auth::user()->tanggal_lahir == null || Auth::user()->golongan_darah == null  ? '' : 'hidden' }}">
         <x-alert color="amber" icon="light-bulb" close >
-            @lang('Lengkapi data di bawah ini. Data tidak lengkap tidak diizinkan mengikuti Event.')
+            @lang('Lengkapi data di bawah ini.')
         </x-alert>
     </div>
     <x-card :header="__('Edit Data Diri')" color="primary">
