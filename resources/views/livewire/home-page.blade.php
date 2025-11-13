@@ -71,7 +71,7 @@
     </section>
 
     <!-- Ajakan -->
-    <section id="bergabung" class="mt-20 text-center bg-indigo-50 py-16">
+    <section id="bergabung" class="mt-20 text-center bg-indigo-50 py-16 px-8">
         <h3 class="text-3xl font-bold text-indigo-800 mb-6">Ayo Mulai Muhasabah Diri Hari Ini</h3>
         <p class="text-gray-700 mb-8 max-w-xl mx-auto">
             Daftar sekarang dan jadikan setiap hari lebih bermakna dengan mencatat kebaikanmu.
