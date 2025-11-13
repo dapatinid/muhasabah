@@ -1,10 +1,14 @@
 <div @updated="$dispatch('name-updated', { name: $event.detail.name })" class="space-y-3 p-3">
     
     <div class="relative mb-18">
-        @if ($user->image != null)
-            <img src="{{ url('storage/'.$user->image) }}" alt="avatar" class="absolute left-1/2 transform -translate-x-1/2 object-cover text-center mx-auto size-[120px] rounded-full">
+        @if ($image) 
+            <img src="{{ $image->temporaryUrl() }}" class="absolute left-1/2 transform -translate-x-1/2 object-cover text-center mx-auto size-[120px] rounded-full">
         @else
-            <img src="{{ url('storage/avatar/user.png') }}" alt="avatar" class="absolute left-1/2 transform -translate-x-1/2 object-cover text-center mx-auto size-[120px] rounded-full">
+            @if ($user->image != null)
+                <img src="{{ url('storage/'.$user->image) }}" alt="avatar" class="absolute left-1/2 transform -translate-x-1/2 object-cover text-center mx-auto size-[120px] rounded-full">
+            @else
+                <img src="{{ url('storage/avatar/user.png') }}" alt="avatar" class="absolute left-1/2 transform -translate-x-1/2 object-cover text-center mx-auto size-[120px] rounded-full">
+            @endif
         @endif
     </div>
 
