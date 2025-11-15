@@ -19,7 +19,7 @@
                     @endif
                 </div>
                 <div>
-                    <x-upload label="Avatar" wire:model="image" required />
+                    <x-upload label="Avatar" wire:model="image" required close-after-upload/>
                 </div>
                 <div>
                     <x-select.styled label="{{ __('Gender') }} *" wire:model="user.gender" required :options="[
@@ -32,24 +32,6 @@
                 </div>
                 <div>
                     <x-date label="{{ __('Tanggal Lahir') }} *" wire:model="user.tanggal_lahir" required placeholder="wajib isi"/>
-                </div>
-
-                <div>
-                    @if ($image_id) 
-                        <img src="{{ $image_id->temporaryUrl() }}" class="object-cover text-center mx-auto w-50 aspect-[16/11]">
-                    @else
-                        @if ($user->image_id != null)
-                            <img src="{{ url('storage/'.$user->image_id) }}" alt="foto_id" class="object-cover text-center mx-auto w-50 aspect-[16/11]">
-                        @else
-                            <img src="{{ url('storage/image_id/image_id.png') }}" alt="foto_id" class="object-cover text-center mx-auto w-50 aspect-[16/11]">
-                        @endif
-                    @endif
-                </div>
-                <div>
-                    <x-upload label="Foto KTP" wire:model="image_id" placeholder="tidak wajib isi"/>
-                </div>
-                <div>
-                    <x-input label="{{ __('No. ID / KTP / Passport') }}" wire:model="user.no_id" placeholder="tidak wajib isi"/>
                 </div>
 
                 <div>
@@ -67,6 +49,24 @@
                 </div>
                 <div>
                     <x-input label="{{ __('Grup') }}" wire:model="user.grup" placeholder="tidak wajib isi"/>
+                </div>
+
+                <div>
+                    @if ($image_id) 
+                        <img src="{{ $image_id->temporaryUrl() }}" class="object-cover text-center mx-auto w-50 aspect-[16/11]">
+                    @else
+                        @if ($user->image_id != null)
+                            <img src="{{ url('storage/'.$user->image_id) }}" alt="foto_id" class="object-cover text-center mx-auto w-50 aspect-[16/11]">
+                        @else
+                            <img src="{{ url('storage/image_id/image_id.png') }}" alt="foto_id" class="object-cover text-center mx-auto w-50 aspect-[16/11]">
+                        @endif
+                    @endif
+                </div>
+                <div>
+                    <x-upload label="Foto KTP" wire:model="image_id" placeholder="tidak wajib isi" close-after-upload/>
+                </div>
+                <div>
+                    <x-input label="{{ __('No. ID / KTP / Passport') }}" wire:model="user.no_id" placeholder="tidak wajib isi"/>
                 </div>
 
             </div>

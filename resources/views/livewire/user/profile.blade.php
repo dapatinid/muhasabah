@@ -18,7 +18,7 @@
             <div class="space-y-6 pt-10">
 
                 <div>
-                    <x-upload label="Avatar" wire:model="image" required />
+                    <x-upload label="Avatar" wire:model="image" required close-after-upload/>
                 </div>
                 <div>
                     <x-input label="{{ __('Name') }} *" wire:model="user.name" required />

@@ -89,7 +89,7 @@ class Update extends Component
     public function updatedjurnalamalSubmittedValue()
     {
         $isOpenValue = ChallengeVariant::find($this->jurnalamal->challenge_variant_id)->is_manual_input;
-        $this->jurnalamal->earned_score = ($isOpenValue == true) ? $this->jurnalamal->submitted_value : ChallengeVariant::find($this->jurnalamal->challenge_variant)->score;
+        $this->jurnalamal->earned_score = ($isOpenValue == true) ? $this->jurnalamal->submitted_value : ChallengeVariant::find($this->jurnalamal->challenge_variant_id)->score;
     }
 
 
