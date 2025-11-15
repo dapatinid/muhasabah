@@ -120,60 +120,7 @@
     </div>
 
 
-<script>
-
-
-document.addEventListener('alpine:init', () => {
-    // Komponen card individual
-    Alpine.data('selectCard', (id) => ({
-        id,
-        checked: false,
-        toggle() {
-            this.checked = !this.checked;
-            const checkbox = this.$root.querySelector('input[type="checkbox"]');
-            checkbox.checked = this.checked;
-            checkbox.dispatchEvent(new Event('input', { bubbles: true }));
-            checkbox.dispatchEvent(new Event('change', { bubbles: true }));
-
-            // setiap kali toggle, perbarui status global
-            Alpine.store('globalSelect').updateStatus();
-        },
-    }));
-
-    // Store global untuk toggle semua
-    Alpine.store('globalSelect', {
-        allChecked: false, // status global
-        toggleSemua() {
-            const cards = document.querySelectorAll('[x-data^="selectCard"]');
-            const targetState = !this.allChecked; // toggle state baru
-
-            cards.forEach((el) => {
-                const checkbox = el.querySelector('input[type="checkbox"]');
-                if (checkbox) {
-                    checkbox.checked = targetState;
-                    checkbox.dispatchEvent(new Event('input', { bubbles: true }));
-                    checkbox.dispatchEvent(new Event('change', { bubbles: true }));
-                    if (el.__x) {
-                        el.__x.$data.checked = targetState;
-                    }
-                }
-            });
-
-            this.allChecked = targetState;
-        },
-        updateStatus() {
-            const cards = document.querySelectorAll('[x-data^="selectCard"]');
-            if (cards.length === 0) {
-                this.allChecked = false;
-                return;
-            }
-            this.allChecked = Array.from(cards).every(el => {
-                const input = el.querySelector('input[type="checkbox"]');
-                return input && input.checked;
-            });
-        },
-    });
-});
+{{-- <script>
 
 document.addEventListener('livewire:navigated', () => {
     const path = window.location.pathname;
@@ -209,7 +156,7 @@ document.addEventListener('livewire:navigated', () => {
     }
 });
 
-</script>
+</script> --}}
 
 
     <livewire:jurnalamal.update @updated="$refresh" />

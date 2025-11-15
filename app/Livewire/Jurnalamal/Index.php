@@ -21,7 +21,7 @@ class Index extends Component
     #[Url()]
     public $selected = [];
 
-    // #[Url()]
+    #[Url()]
     public $datesort;
 
     public array $sort = [
@@ -31,7 +31,9 @@ class Index extends Component
 
     #[Title('Jurnal Amal')]
     public function mount() {
-        $this->datesort = Carbon::now()->format('Y-m-d');
+        if ($this->datesort == null || $this->datesort == '') {
+            $this->datesort = Carbon::now()->format('Y-m-d');
+        }        
     }
 
     public function updatedDatesort() {

@@ -97,8 +97,9 @@
                                 <img src="{{ url('storage/avatar/user.png') }}" alt="avatar" class="object-cover text-center mx-auto size-[80px] rounded-full">
                             @endif
                         </div>
-                        <div class="text-secondary-600 dark:text-dark-300 flex justify-around pb-3">
-                            {{ Auth::check() ? Auth::user()->name : 'Silakan Login' }}
+                        <div class="text-secondary-600 dark:text-dark-300 block text-center pb-3">
+                            <div class="font-bold">{{ Auth::check() ? Auth::user()->name : 'Silakan Login' }}</div>
+                            <div class="text-xs">{{ Auth::check() ? Auth::user()->phone : '' }}</div>
                         </div>
                         <div class="flex justify-around pt-3 pb-3 border-b border-slate-100 dark:border-slate-600">
                             <x-theme-switch />
@@ -201,7 +202,63 @@
                 {{-- <x-side-bar.item text="Tentang" icon="information-circle" :route="route('about')" /> --}}
             </x-side-bar>
         </x-slot:menu>
+
         {{ $slot }}
+
+        <script>
+            document.addEventListener('alpine:init', () => {
+                // Komponen card individual
+                Alpine.data('selectCard', (id) => ({
+                    id,
+                    checked: false,
+                    toggle() {
+                        this.checked = !this.checked;
+                        const checkbox = this.$root.querySelector('input[type="checkbox"]');
+                        checkbox.checked = this.checked;
+                        checkbox.dispatchEvent(new Event('input', { bubbles: true }));
+                        checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+
+                        // setiap kali toggle, perbarui status global
+                        Alpine.store('globalSelect').updateStatus();
+                    },
+                }));
+
+                // Store global untuk toggle semua
+                Alpine.store('globalSelect', {
+                    allChecked: false, // status global
+                    toggleSemua() {
+                        const cards = document.querySelectorAll('[x-data^="selectCard"]');
+                        const targetState = !this.allChecked; // toggle state baru
+
+                        cards.forEach((el) => {
+                            const checkbox = el.querySelector('input[type="checkbox"]');
+                            if (checkbox) {
+                                checkbox.checked = targetState;
+                                checkbox.dispatchEvent(new Event('input', { bubbles: true }));
+                                checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+                                if (el.__x) {
+                                    el.__x.$data.checked = targetState;
+                                }
+                            }
+                        });
+
+                        this.allChecked = targetState;
+                    },
+                    updateStatus() {
+                        const cards = document.querySelectorAll('[x-data^="selectCard"]');
+                        if (cards.length === 0) {
+                            this.allChecked = false;
+                            return;
+                        }
+                        this.allChecked = Array.from(cards).every(el => {
+                            const input = el.querySelector('input[type="checkbox"]');
+                            return input && input.checked;
+                        });
+                    },
+                });
+            });
+        </script>
+
     </x-layout>
 
 </html>

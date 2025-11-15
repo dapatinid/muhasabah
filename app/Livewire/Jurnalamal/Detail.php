@@ -25,7 +25,7 @@ class Detail extends Component
     }
 
     public function render(): View {
-        $progressDetail = ChallengeProgress::query()->whereChallengeId($this->cha_id)->whereUserId(Auth::id())->get();
+        $progressDetail = ChallengeProgress::query()->orderBy('date', 'desc')->whereChallengeId($this->cha_id)->whereUserId(Auth::id())->get();
         return view('livewire.jurnalamal.detail',compact('progressDetail'));
     }
 
