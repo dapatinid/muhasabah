@@ -71,7 +71,7 @@
     <!-- Tombol trigger -->
     <button 
         @click="open = !open" 
-        class="p-2 rounded-full hover:bg-gray-200 transition"
+        class="-me-2 ms-1 py-2 rounded-full hover:bg-gray-200 transition"
     >
         <x-icon name="ellipsis-vertical" class="w-5 h-5" />
     </button>
