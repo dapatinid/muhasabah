@@ -14,7 +14,48 @@
                 <x-select.styled label="{{ __('Capaian') }} *"  wire:model.live="jurnalamal.challenge_variant_id" :options="$variant" searchable required wire:change="cekInputManual"/>
             </div>
             <div class="{{ $hiddenValuenya }}">
-                <x-number label="{{ __('Nilai') }} *" wire:model.blur="jurnalamal.submitted_value" required centralized />
+                {{-- <x-number label="{{ __('Nilai') }} *" wire:model.blur="jurnalamal.submitted_value" required centralized /> --}}
+
+                <div 
+                    x-data="{
+                        raw: @entangle('jurnalamal.submitted_value'),
+                        formatNumber(v) {
+                            if (!v) return '';
+                            v = v.toString().replace(/\D/g, '');
+                            return v.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                        }
+                    }"
+                    x-init="
+                        $nextTick(() => {
+                            $el.querySelector('input').value = formatNumber(raw);
+                        });
+                    "                    
+                >
+                    <input
+                        type="text"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        class="flex w-full items-center dark:bg-dark-800 bg-white border dark:border-dark-600 border-gray-300 rounded-lg px-2 py-2"
+                        
+                        @input="
+                            let cleaned = $event.target.value.replace(/\D/g, '');
+                            raw = cleaned;
+                            $event.target.value = formatNumber(cleaned);
+                        "
+
+                        @blur="
+                            $event.target.value = formatNumber(raw);
+                        "
+
+                        @paste.prevent="
+                            let pasted = (event.clipboardData || window.clipboardData).getData('text');
+                            pasted = pasted.replace(/\D/g,'');
+                            raw = pasted;
+                            $event.target.value = formatNumber(pasted);
+                        "
+                    >
+                </div>
+
             </div>
             <div class="hidden">
                 <x-number label="{{ __('Score') }} *" wire:model="jurnalamal.earned_score" required centralized />

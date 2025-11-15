@@ -31,7 +31,7 @@
                 </div>
                 <div>
                     <x-password :label="__('Password')"
-                                :hint="__('The password will only be updated if you set the value of this field')"
+                                :hint="__('Kosongkan jika tidak ingin ubah password')"
                                 wire:model="password"
                                 rules
                                 generator
