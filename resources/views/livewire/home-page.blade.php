@@ -54,7 +54,10 @@
             melalui jurnal amal pribadi yang mudah digunakan.  
             Refleksi diri setiap hari untuk menjadi lebih baik dari hari kemarin.
         </p>
-        <a wire:navigate.hover href="/jurnal-amal" 
+        <a href="/jurnal-amal" 
+            @auth
+                wire:navigate.hover 
+            @endauth
            class="bg-indigo-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-indigo-700 transition shadow">
            Mulai Sekarang
         </a>
