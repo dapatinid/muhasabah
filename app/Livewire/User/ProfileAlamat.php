@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 
 class ProfileAlamat extends Component
@@ -33,6 +34,7 @@ class ProfileAlamat extends Component
     public $street;
     public $zip_code;
 
+    #[Title('Edit Alamat')]
     public function mount()
     {
         $this->user = User::find(Auth::user()->id);

@@ -30,6 +30,23 @@
                 </div>
 
                 <div>
+                    <x-select.styled label="{{ __('Golongan Darah') }} *" wire:model="user.golongan_darah" required :options="[
+                        ['label' => 'Belum diketahui', 'value' => '-'],
+                        ['label' => 'O+', 'value' => 'O+'],
+                        ['label' => 'O-', 'value' => 'O-'],
+                        ['label' => 'B+', 'value' => 'B+'],
+                        ['label' => 'B-', 'value' => 'B-'],
+                        ['label' => 'AB+', 'value' => 'AB+'],
+                        ['label' => 'AB-', 'value' => 'AB-'],
+                        ['label' => 'A+', 'value' => 'A+'],
+                        ['label' => 'A-', 'value' => 'A-'],
+                    ]" />
+                </div>
+                <div>
+                    <x-input label="{{ __('Grup') }}" wire:model="user.grup" />
+                </div>
+
+                <div>
                     @if ($image_id) 
                         <img src="{{ $image_id->temporaryUrl() }}" class="object-cover text-center mx-auto w-50 aspect-[16/11]">
                     @else
@@ -47,29 +64,7 @@
                     <x-input label="{{ __('No. ID / KTP / Passport') }} *" wire:model="user.no_id" required />
                 </div>
 
-                <div>
-                    <x-select.styled label="{{ __('Golongan Darah') }} *" wire:model="user.golongan_darah" required :options="[
-                        ['label' => 'Belum diketahui', 'value' => '-'],
-                        ['label' => 'O+', 'value' => 'O+'],
-                        ['label' => 'O-', 'value' => 'O-'],
-                        ['label' => 'B+', 'value' => 'B+'],
-                        ['label' => 'B-', 'value' => 'B-'],
-                        ['label' => 'AB+', 'value' => 'AB+'],
-                        ['label' => 'AB-', 'value' => 'AB-'],
-                        ['label' => 'A+', 'value' => 'A+'],
-                        ['label' => 'A-', 'value' => 'A-'],
-                    ]" />
-                </div>
-                <div>
-                    <x-input label="{{ __('Grup') }}" wire:model="user.grup" />
-                </div>
-
             </div>
-            <x-slot:footer>
-                <x-button type="submit">
-                    @lang('Save')
-                </x-button>
-            </x-slot:footer>
         </form>
         <x-slot:footer>
             <x-button type="submit" form="update-profile-data-diri" class="w-full">

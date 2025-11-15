@@ -13,6 +13,7 @@ use App\Livewire\Jurnalamal\Detail as JurnalamalDetail;
 
 use App\Livewire\HomePage;
 use App\Livewire\TicketPage;
+use App\Livewire\User\ProfileAkun;
 use App\Livewire\User\ProfileAlamat;
 use App\Livewire\User\ProfileDataDiri;
 use App\Livewire\Users\Edit;
@@ -33,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
     // Route::get('/jurnalamal/{jurnalamalid}/update', Edit::class)->name('jurnalamal.update');
 
     Route::get('/user/profile', Profile::class)->name('user.profile');
+    Route::get('/user/profile-akun', ProfileAkun::class)->name('user.profileakun');
     Route::get('/user/profile-data-diri', ProfileDataDiri::class)->name('user.profiledatadiri');
     Route::get('/user/profile-alamat', ProfileAlamat::class)->name('user.profilealamat');
 

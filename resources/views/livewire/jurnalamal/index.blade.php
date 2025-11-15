@@ -85,7 +85,7 @@
         <div class="grid grid-cols-3 text-gray-700">
             <!-- Detail -->
             <span 
-                class="flex justify-center py-3 hover:bg-primary-500 hover:text-white dark:text-gray-200 cursor-pointer rounded-l-lg"
+                class="flex justify-center py-3 active:bg-primary-500 active:text-white hover:bg-primary-500 hover:text-white dark:text-gray-200 cursor-pointer rounded-l-lg"
                 href="{{ route('jurnalamal.detail', $ja->challenge->id )}}"
                 wire:navigate.hover
                 @click="open = false"
@@ -95,7 +95,7 @@
 
             <!-- Edit -->
             <span 
-                class="flex justify-center py-3 hover:bg-primary-500 hover:text-white dark:text-gray-200 cursor-pointer"
+                class="flex justify-center py-3 active:bg-primary-500 active:text-white hover:bg-primary-500 hover:text-white dark:text-gray-200 cursor-pointer"
                 wire:click="$dispatch('load::jurnalamal', { jurnalamal : '{{ $ja->id }}'})"
                 @click="open = false"
             >
@@ -104,7 +104,7 @@
 
             <!-- Hapus -->
             <span 
-                class="flex justify-center py-3 hover:bg-red-500 hover:text-white dark:text-gray-200 cursor-pointer rounded-r-lg"
+                class="flex justify-center py-3 active:bg-red-500 active:text-white hover:bg-red-500 hover:text-white dark:text-gray-200 cursor-pointer rounded-r-lg"
                 wire:click.stop="confirmHapus({{ $ja->id }})"
                 @click="open = false"
             >
