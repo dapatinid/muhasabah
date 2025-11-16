@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Jurnalamal;
+namespace App\Livewire\Raport;
 
 use App\Livewire\Traits\Alert;
 use App\Models\ChallengeProgress;
@@ -18,15 +18,20 @@ class Detail extends Component
 {
 
     public $cha_id;
+    public $user_id;
 
     #[Title('Progress Detail')]
-    public function mount($id){
-        $this->cha_id = $id;
+    public function mount($cha_id, $user_id) {
+        $this->cha_id = $cha_id;
+        $this->user_id = $user_id;
     }
 
     public function render(): View {
-        $progressDetail = ChallengeProgress::query()->orderBy('date', 'desc')->whereChallengeId($this->cha_id)->whereUserId(Auth::id())->get();
-        return view('livewire.jurnalamal.detail',compact('progressDetail'));
+        $progressDetail = ChallengeProgress::query()->orderBy('date', 'desc')
+        ->whereChallengeId($this->cha_id)
+        ->whereUserId($this->user_id)
+        ->get();
+        return view('livewire.raport.detail',compact('progressDetail'));
     }
 
 }

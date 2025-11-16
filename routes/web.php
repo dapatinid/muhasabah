@@ -7,9 +7,11 @@ use App\Livewire\User\Profile;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Users\Index;
 
-use App\Livewire\Dashboard\Index as DashboardIndex;
 use App\Livewire\Jurnalamal\Index as JurnalamalIndex;
-use App\Livewire\Jurnalamal\Detail as JurnalamalDetail;
+use App\Livewire\Dashboard\Index as DashboardIndex;
+use App\Livewire\Dashboard\Detail as DashboardDetail;
+use App\Livewire\Raport\Index as RaportIndex;
+use App\Livewire\Raport\Detail as RaportDetail;
 
 use App\Livewire\HomePage;
 use App\Livewire\TicketPage;
@@ -30,8 +32,10 @@ Route::middleware(['auth'])->group(function () {
 //     Route::view('/dashboard', 'dashboard')->name('dashboard');
     Route::get('/dashboard', DashboardIndex::class)->name('dashboard.index');
     Route::get('/jurnal-amal', JurnalamalIndex::class)->name('jurnalamal.index');
-    Route::get('/progress-detail/{id}', JurnalamalDetail::class)->name('jurnalamal.detail');
+    Route::get('/progress-detail/{id}', DashboardDetail::class)->name('dashboard.detail');
     // Route::get('/jurnalamal/{jurnalamalid}/update', Edit::class)->name('jurnalamal.update');
+    Route::get('/raport', RaportIndex::class)->name('raport.index');
+    Route::get('/raport/{cha_id}/{user_id}', RaportDetail::class)->name('raport.detail');
 
     Route::get('/user/profile', Profile::class)->name('user.profile');
     Route::get('/user/profile-akun', ProfileAkun::class)->name('user.profileakun');

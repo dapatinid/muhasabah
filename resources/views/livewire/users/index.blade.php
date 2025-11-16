@@ -29,7 +29,9 @@
                 <x-button.circle icon="pencil" href="{{ route('users.edit', ['userid' => $row->id]) }}" color="yellow" wire:navigate.hover/> 
                 <x-button.circle icon="map-pin" href="{{ route('users.editalamat', ['userid' => $row->id]) }}" color="green" wire:navigate.hover/> 
                 <x-button.circle icon="identification" href="{{ route('users.editdatadiri', ['userid' => $row->id]) }}" color="teal" wire:navigate.hover/> 
+                @if (Auth::id() == 1)                    
                 <livewire:users.delete :user="$row" :key="uniqid('', true)" @deleted="$refresh" />
+                @endif
             </div>
             @endinteract
         </x-table>

@@ -1,5 +1,7 @@
 <div class="p-3 space-y-3">
 
+    <h3 class="text-2xl font-bold">{{ App\Models\User::find($this->user_id)->name }}</h3>
+
     <x-card>
         <div class="flex gap-3 justify-between items-center">
             <div class="block">
@@ -15,13 +17,13 @@
     <x-tab selected="Jurnal Amal">
         <x-tab.items tab="Jurnal Amal">
             <x-slot:left>
-                <x-icon name="document-text" class="w-5 h-5" />
+                <x-icon name="book-open" class="w-5 h-5" />
             </x-slot:left>
                 <div class="divide-y divide-gray-300 dark:divide-gray-800">
                 @foreach ($progressDetail as $progDet)
                     <div class="flex justify-between items-center pt-2.5 pb-3">
                         <div class="block me-3">
-                            <div class="flex gap-2 items-center"><span>{{ Carbon\Carbon::parse($progDet->date)->translatedFormat('Y M d • l') }}</span> <a wire:navigate.hover href="/jurnal-amal?datesort={{ Carbon\Carbon::parse($progDet->date)->translatedFormat('Y-m-d') }}"><x-icon name="arrow-top-right-on-square" class="size-5"/></a></div>
+                            <div class="flex gap-2 items-center"><span>{{ Carbon\Carbon::parse($progDet->date)->translatedFormat('Y M d • l') }}</span></div>
                             <div class="text-sm">{{ $progDet->challengeVariant->is_manual_input == true ? Illuminate\Support\Number::format($progDet->submitted_value, locale: 'de'). " " . $progDet->challengeVariant->name : $progDet->challengeVariant->name }}. {{ $progDet->note ? 'Note : '.$progDet->note : '' }}</div>
                         </div>
                         <div>

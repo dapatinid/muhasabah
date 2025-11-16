@@ -51,8 +51,8 @@ class Index extends Component
     public function rows(): LengthAwarePaginator
     {
         return User::query()
-            ->whereNotIn('id', [Auth::id()])
-            ->when($this->search !== null, fn(Builder $query) => $query->whereAny(['name', 'email'], 'like', '%' . trim($this->search) . '%'))
+            ->whereNotIn('id', [Auth::id(),2])
+            ->when($this->search !== null, fn(Builder $query) => $query->whereAny(['name', 'email', 'phone'], 'like', '%' . trim($this->search) . '%'))
             ->orderBy(...array_values($this->sort))
             ->paginate($this->quantity)
             ->withQueryString();
