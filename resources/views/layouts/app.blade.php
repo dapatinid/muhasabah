@@ -102,7 +102,7 @@
                             <div class="text-xs">{{ Auth::check() ? Auth::user()->phone : '' }}</div>
                         </div>
                         <div class="flex justify-around pt-3 pb-3 border-b border-slate-100 dark:border-slate-600">
-                            <x-theme-switch />
+                            <x-theme-switch only-icons/>
                             {{-- TOMBOL FULLSCREEN START --}}
                             <svg onclick="toggle_full_screen()" id="layarpenuh" class="cursor-pointer hover:text-yellow-500 text-zinc-500 dark:text-zinc-200" width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
