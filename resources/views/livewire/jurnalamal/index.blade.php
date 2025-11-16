@@ -86,7 +86,7 @@
             <!-- Detail -->
             <span 
                 class="flex justify-center py-3 active:bg-primary-500 active:text-white hover:bg-primary-500 hover:text-white dark:text-gray-200 cursor-pointer rounded-l-lg"
-                href="{{ route('jurnalamal.detail', $ja->challenge->id )}}"
+                href="{{ route('dashboard.detail', $ja->challenge->id )}}"
                 wire:navigate.hover
                 @click="open = false"
             >

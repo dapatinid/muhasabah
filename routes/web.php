@@ -31,8 +31,8 @@ Route::get('/', HomePage::class)->name('home');
 Route::middleware(['auth'])->group(function () {
 //     Route::view('/dashboard', 'dashboard')->name('dashboard');
     Route::get('/dashboard', DashboardIndex::class)->name('dashboard.index');
-    Route::get('/jurnal-amal', JurnalamalIndex::class)->name('jurnalamal.index');
     Route::get('/progress-detail/{id}', DashboardDetail::class)->name('dashboard.detail');
+    Route::get('/jurnal-amal', JurnalamalIndex::class)->name('jurnalamal.index');
     // Route::get('/jurnalamal/{jurnalamalid}/update', Edit::class)->name('jurnalamal.update');
     Route::get('/raport', RaportIndex::class)->name('raport.index');
     Route::get('/raport/{cha_id}/{user_id}', RaportDetail::class)->name('raport.detail');
