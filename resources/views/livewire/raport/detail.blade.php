@@ -1,6 +1,6 @@
 <div class="p-3 space-y-3">
 
-    <h3 class="text-2xl font-bold">{{ App\Models\User::find($this->user_id)->name }}</h3>
+    <h3 class="text-2xl font-bold dark:text-white">{{ App\Models\User::find($this->user_id)->name }}</h3>
 
     <x-card>
         <div class="flex gap-3 justify-between items-center">
