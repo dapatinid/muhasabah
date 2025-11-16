@@ -12,7 +12,7 @@
         </div>
     </x-card>    
 
-    <x-tab selected="Jurnal Amal">
+    <x-tab selected="Jurnal Amal" scroll-on-mobile>
         <x-tab.items tab="Jurnal Amal">
             <x-slot:left>
                 <x-icon name="book-open" class="w-5 h-5" />
