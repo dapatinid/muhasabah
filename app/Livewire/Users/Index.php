@@ -37,6 +37,10 @@ class Index extends Component
         ['index' => 'name', 'label' => 'Name'],
         ['index' => 'phone', 'label' => 'Phone'],
         ['index' => 'email', 'label' => 'E-mail'],
+        ['index' => 'gender', 'label' => 'L/P'],
+        ['index' => 'tanggal_lahir', 'label' => 'Usia'],
+        ['index' => 'golongan_darah', 'label' => 'Golda'],
+        ['index' => 'grup', 'label' => 'Grup'],
         ['index' => 'created_at', 'label' => 'Created'],
         ['index' => 'action', 'sortable' => false],
     ];
@@ -52,7 +56,7 @@ class Index extends Component
     {
         return User::query()
             ->whereNotIn('id', [Auth::id(),2])
-            ->when($this->search !== null, fn(Builder $query) => $query->whereAny(['name', 'email', 'phone'], 'like', '%' . trim($this->search) . '%'))
+            ->when($this->search !== null, fn(Builder $query) => $query->whereAny(['name', 'email', 'phone', 'gender', 'golongan_darah', 'grup'], 'like', '%' . trim($this->search) . '%'))
             ->orderBy(...array_values($this->sort))
             ->paginate($this->quantity)
             ->withQueryString();

@@ -35,7 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/jurnal-amal', JurnalamalIndex::class)->name('jurnalamal.index');
     // Route::get('/jurnalamal/{jurnalamalid}/update', Edit::class)->name('jurnalamal.update');
     Route::get('/raport', RaportIndex::class)->name('raport.index');
-    Route::get('/raport/{cha_id}/{user_id}', RaportDetail::class)->name('raport.detail');
+    Route::get('/raport/{user_id}-{cha_id}', RaportDetail::class)->name('raport.detail');
 
     Route::get('/user/profile', Profile::class)->name('user.profile');
     Route::get('/user/profile-akun', ProfileAkun::class)->name('user.profileakun');

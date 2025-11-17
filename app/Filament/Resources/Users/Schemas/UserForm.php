@@ -126,19 +126,15 @@ class UserForm
                     ->maxSize(4000)
                     ->disk('public')
                     ->directory('image_id'),
-                TextInput::make('no_id')
-                    ->required(),
+                TextInput::make('no_id')                    ,
 
-                TextInput::make('tempat_lahir')
-                    ->required(),
-                DatePicker::make('tanggal_lahir')
-                    ->required(),
+                TextInput::make('tempat_lahir')                    ,
+                DatePicker::make('tanggal_lahir')                    ,
                 Select::make('gender')
                         ->options([
                                     'L' => 'Laki - Laki',
                                     'P' => 'Perempuan',
-                                ])
-                        ->required(),
+                                ])                        ,
                 Select::make('golongan_darah')
                     ->options([
                                 '-' => 'Belum diketahui',
@@ -154,8 +150,7 @@ class UserForm
                 TextInput::make('grup'),
 
 
-                TextInput::make('poin')
-                    ->required()
+                TextInput::make('poin')                    
                     ->numeric()
                     ->default(0),
             ]);

@@ -8,11 +8,11 @@
         @foreach ($challenge as $ja)
         <div
             wire:key="card-{{ $ja->id }}"
-            @if ($ja->progresses->where('user_id',$this->pengguna_id)->sum('earned_score') != 0)      
+            @if ($ja->progresses->where('user_id',$this->pengguna_id)->count() > 0)      
             href="{{ route('raport.detail', ['cha_id' => $ja->id, 'user_id' => $this->pengguna_id ]) }}"
             {{-- href="/raport/{{ $ja->id }}/{{ $this->pengguna_id  }}" --}}
             wire:navigate.hover 
-            class="cursor-pointer p-3 rounded-md select-none dark:text-white ring-0 shadow bg-white dark:bg-gray-900 hover:bg-blue-300 dark:hover:bg-blue-700 active:bg-blue-500"          
+            class="cursor-pointer p-3 rounded-md select-none dark:text-white ring-0 shadow bg-white dark:bg-gray-900 hover:bg-blue-300 active:bg-blue-300 dark:hover:bg-blue-700 dark:active:bg-blue-700"    
             @else
             class="p-3 rounded-md select-none dark:text-white ring-0 shadow bg-white dark:bg-gray-900"
             @endif

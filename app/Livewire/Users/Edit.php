@@ -33,6 +33,9 @@ class Edit extends Component
 
     public function mount($userid)
     {
+        if (User::find($userid)->is_admin == true) {
+            $this->redirect('/users', navigate: true);
+        }
         $this->user = User::find($userid);
     }
 

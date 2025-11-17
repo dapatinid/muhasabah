@@ -4,7 +4,7 @@
     </x-alert> --}}
     {{-- <x-card> --}}
         <div class="mb-2 flex justify-between items-center">
-            <x-dropdown icon="bolt" position="bottom-start">
+            <x-dropdown icon="squares-2x2" position="bottom-start">
                 {{-- <x-dropdown.items text="Ganti Level" /> --}}
                 <x-dropdown.items text="Hapus" separator wire:click="hapussekaligus"/>
             </x-dropdown>
@@ -13,10 +13,41 @@
         </div>
 
         <x-table :$headers :$sort :rows="$this->rows" paginate persistent filter loading selectable wire:model="selected" :quantity="[5, 15, 25, 50, 100, 500, 1000]">
-            @interact('column_image', $row)
-            @if ($row->image)
+            @interact('column_id', $row)
+            <div class="flex justify-start items-center">
+                <div class="mt-1">
+                <x-dropdown icon="ellipsis-vertical" static>
+                    <x-dropdown.items icon="pencil" text="Edit Akun" href="{{ route('users.edit', ['userid' => $row->id]) }}" wire:navigate.hover/>
+                    <x-dropdown.items icon="identification" text="Edit Data Diri" href="{{ route('users.editdatadiri', ['userid' => $row->id]) }}" separator wire:navigate.hover/>
+                    <x-dropdown.items icon="map-pin" text="Edit Alamat" href="{{ route('users.editalamat', ['userid' => $row->id]) }}" separator wire:navigate.hover/>
+                </x-dropdown>
+                </div>
+                <div>
+                    {{ $row->id }}
+                </div>
+            </div>
+            @endinteract
+            @interact('column_image', $row)            
+                @if ($row->image)
                 <img src="{{ url('storage/'.$row->image) }}" alt="image" class="object-cover size-[50px] rounded-full">
+                @endif
+            @endinteract
+
+            @interact('column_name', $row)
+            <div class="font-bold">
+                {{ $row->name }}
+            </div>
+            @if ($row->is_admin == true)                
+            <div >
+                <x-badge text="admin" color="red" />
+            </div>
             @endif
+            @endinteract
+
+            @interact('column_tanggal_lahir', $row)
+            <div class="flex justify-end">
+                <x-badge text="{{ floor(Carbon\Carbon::parse($row->tanggal_lahir)->diffInYears(Carbon\Carbon::now())) }}" color="fuchsia" light />
+            </div>
             @endinteract
 
             @interact('column_created_at', $row)
@@ -27,8 +58,8 @@
             <div class="flex gap-1">
                 <x-button.circle icon="eye" wire:click="$dispatch('load::user', { 'user' : '{{ $row->id }}'})" color="sky" />
                 <x-button.circle icon="pencil" href="{{ route('users.edit', ['userid' => $row->id]) }}" color="yellow" wire:navigate.hover/> 
-                <x-button.circle icon="map-pin" href="{{ route('users.editalamat', ['userid' => $row->id]) }}" color="green" wire:navigate.hover/> 
                 <x-button.circle icon="identification" href="{{ route('users.editdatadiri', ['userid' => $row->id]) }}" color="teal" wire:navigate.hover/> 
+                <x-button.circle icon="map-pin" href="{{ route('users.editalamat', ['userid' => $row->id]) }}" color="green" wire:navigate.hover/> 
                 @if (Auth::id() == 1)                    
                 <livewire:users.delete :user="$row" :key="uniqid('', true)" @deleted="$refresh" />
                 @endif
