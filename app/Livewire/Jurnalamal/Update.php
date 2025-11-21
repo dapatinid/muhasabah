@@ -23,7 +23,6 @@ class Update extends Component
     public $variant = [];
     public $hiddenValuenya;
     public $deskripsinya;
-    public $placeholder = '';
 
     public function render(): View
     {
@@ -64,8 +63,6 @@ class Update extends Component
                 'label' => $variant->name,
             ])
             ->toArray();
-        
-        $this->placeholder = ChallengeVariant::find($this->jurnalamal->challenge_variant_id)?->name ?? '';
     }
 
     public function updatedjurnalamalChallengeId()
@@ -88,7 +85,6 @@ class Update extends Component
         $this->hiddenValuenya = ($isOpenValue == true) ? '' : 'hidden' ;
         $this->jurnalamal->submitted_value = ($isOpenValue == true) ? '0' : ChallengeVariant::find($this->jurnalamal->challenge_variant_id)->score;
         $this->jurnalamal->earned_score = ($isOpenValue == true) ? $this->jurnalamal->submitted_value : ChallengeVariant::find($this->jurnalamal->challenge_variant_id)->score;
-        $this->placeholder = ChallengeVariant::find($this->jurnalamal->challenge_variant_id)?->name ?? '';
     }
     public function updatedjurnalamalSubmittedValue()
     {

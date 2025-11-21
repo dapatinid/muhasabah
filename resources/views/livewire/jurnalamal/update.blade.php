@@ -16,7 +16,7 @@
             </div>
             <div class="{{ $hiddenValuenya }}">
                 {{-- <x-number label="{{ __('Nilai') }} *" wire:model.blur="jurnalamal.submitted_value" required centralized /> --}}
-                <label>berapa {{ $this->placeholder }}? Tuliskan!</label>
+
                 <div 
                     x-data="{
                         raw: @entangle('jurnalamal.submitted_value'),
