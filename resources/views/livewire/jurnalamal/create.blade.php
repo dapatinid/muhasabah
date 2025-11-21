@@ -18,7 +18,7 @@
             </div>
             <div class="{{ $hiddenValue }}">
                 {{-- <x-number label="{{ __('Nilai') }} *" wire:model.blur="submitted_value" required centralized/> --}}
-
+                <label>berapa {{ App\Models\ChallengeVariant::find($this->challenge_variant)?->name ?? '' }}? Tuliskan!</label>
                 <div 
                     x-data="{
                         raw: @entangle('submitted_value'),
