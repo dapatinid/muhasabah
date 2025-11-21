@@ -1,5 +1,6 @@
 <div>
     <x-modal :title="__('Edit Catatan : :challenge_id', ['challenge_id' => $jurnalamal?->challenge->title])" wire>
+        <x-loading /> 
         <form id="jurnalamal-update-{{ $jurnalamal?->id }}" wire:submit="save" class="space-y-4">
             <div class="flex justify-center">
                 {{ Carbon\Carbon::parse($jurnalamal?->date)->translatedFormat('l, d M Y') }}
