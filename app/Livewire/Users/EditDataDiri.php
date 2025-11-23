@@ -51,26 +51,26 @@ class EditDataDiri extends Component
     {
         return [
             'user.gender' => [
-                'required',
+                'nullable',
             ],
             'user.tempat_lahir' => [
-                'required',
+                'nullable',
                 'string',
                 'max:255'
             ],
             'user.tanggal_lahir' => [
-                'required',
+                'nullable',
             ],
             'user.no_id' => [
-                'required',
+                'nullable',
                 'string',
                 'max:255'
             ],
             'user.golongan_darah' => [
-                'required',
+                'nullable',
             ],
             'user.grup' => [
-                'required',
+                'nullable',
                 'string',
                 'max:255'
             ],

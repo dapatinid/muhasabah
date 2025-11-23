@@ -53,10 +53,6 @@ class ProfileAlamat extends Component
         $this->user->district = null;
         $this->user->village = null;
         $this->user->update();
-        $this->toast()
-            ->position('top-right')
-            ->success('Berhasil', 'Ubah Provinsi')
-            ->send();
         $this->redirect('/user/profile-alamat', navigate: true);
     }
     public function savekota()
@@ -65,10 +61,6 @@ class ProfileAlamat extends Component
         $this->user->district = null;
         $this->user->village = null;
         $this->user->update();
-        $this->toast()
-            ->position('top-right')
-            ->success('Berhasil', 'Ubah Kabupaten / Kota')
-            ->send();
         $this->redirect('/user/profile-alamat', navigate: true);
     }
     public function savekecamatan()
@@ -77,10 +69,6 @@ class ProfileAlamat extends Component
         $this->user->district = $this->district;
         $this->user->village = null;
         $this->user->update();
-        $this->toast()
-            ->position('top-right')
-            ->success('Berhasil', 'Ubah Kecamatan')
-            ->send();
         $this->redirect('/user/profile-alamat', navigate: true);
     }
     public function savedesa()
@@ -88,20 +76,12 @@ class ProfileAlamat extends Component
 
         $this->user->village = $this->village;
         $this->user->update();
-        $this->toast()
-            ->position('top-right')
-            ->success('Berhasil', 'Ubah Desa')
-            ->send();
         $this->redirect('/user/profile-alamat', navigate: true);
     }
     public function savejalan()
     {
         $this->user->street = $this->street;
         $this->user->update();
-        $this->toast()
-            ->position('top-right')
-            ->success('Berhasil', 'Ubah Jalan / Detail Alamat')
-            ->send();
         $this->redirect('/user/profile-alamat', navigate: true);
     }
     public function render()

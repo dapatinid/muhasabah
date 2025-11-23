@@ -11,6 +11,7 @@
                 Edit Alamat
             </div>
         </x-slot:header>
+            <x-loading /> 
          <form id="user-update-alamat-{{ $user->id }}" wire:submit="save_alamat" class="space-y-4">
           
             <div>

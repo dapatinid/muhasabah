@@ -14,23 +14,23 @@
                     @endif 
                 </div>
                 <div>
-                    <x-upload label="Avatar" wire:model="image" required />
+                    <x-upload label="Avatar" wire:model="image"  />
                 </div>
                 <div>
-                    <x-select.styled label="{{ __('Gender') }} *" wire:model="user.gender" required :options="[
+                    <x-select.styled label="{{ __('Gender') }} *" wire:model="user.gender"  :options="[
                         ['label' => 'Laki - Laki', 'value' => 'L'],
                         ['label' => 'Perempuan', 'value' => 'P'],
                     ]" />
                 </div>
                 <div>
-                    <x-input label="{{ __('Tempat Lahir') }} *" wire:model="user.tempat_lahir" required />
+                    <x-input label="{{ __('Tempat Lahir') }} *" wire:model="user.tempat_lahir"  />
                 </div>
                 <div>
-                    <x-date label="{{ __('Tanggal Lahir') }} *" wire:model="user.tanggal_lahir" required />
+                    <x-date label="{{ __('Tanggal Lahir') }} *" wire:model="user.tanggal_lahir"  />
                 </div>
 
                 <div>
-                    <x-select.styled label="{{ __('Golongan Darah') }} *" wire:model="user.golongan_darah" required :options="[
+                    <x-select.styled label="{{ __('Golongan Darah') }} *" wire:model="user.golongan_darah"  :options="[
                         ['label' => 'Belum diketahui', 'value' => '-'],
                         ['label' => 'O+', 'value' => 'O+'],
                         ['label' => 'O-', 'value' => 'O-'],
@@ -44,7 +44,7 @@
                 </div>
                 <div>
                     {{-- <x-input label="{{ __('Grup') }}" wire:model="user.grup" /> --}}
-                    <x-select.styled label="{{ __('Grup') }} *" wire:model="user.grup" required :options="[
+                    <x-select.styled label="{{ __('Grup') }} *" wire:model="user.grup"  :options="[
                         ['label' => 'Kendal', 'value' => 'Kendal'],
                         ['label' => 'Batang', 'value' => 'Batang'],
                         ['label' => 'Semarang', 'value' => 'Semarang'],
@@ -67,10 +67,10 @@
                     @endif
                 </div>
                 <div>
-                    <x-upload label="Foto KTP" wire:model="image_id" required />
+                    <x-upload label="Foto KTP" wire:model="image_id"  />
                 </div>
                 <div>
-                    <x-input label="{{ __('No. ID / KTP / Passport') }} *" wire:model="user.no_id" required />
+                    <x-input label="{{ __('No. ID / KTP / Passport') }} *" wire:model="user.no_id"  />
                 </div>
 
             </div>

@@ -135,9 +135,7 @@ class Update extends Component
             $this->jurnalamal->save();
 
             $this->dispatch('updated');
-
             $this->resetExcept('date');
-
             $this->success('Data berhasil diubah', 'Sukses Edit');
         }
     }
