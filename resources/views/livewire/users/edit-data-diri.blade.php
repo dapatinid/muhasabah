@@ -43,7 +43,16 @@
                     ]" />
                 </div>
                 <div>
-                    <x-input label="{{ __('Grup') }}" wire:model="user.grup" />
+                    {{-- <x-input label="{{ __('Grup') }}" wire:model="user.grup" /> --}}
+                    <x-select.styled label="{{ __('Grup') }} *" wire:model="user.grup" required :options="[
+                        ['label' => 'Kendal', 'value' => 'Kendal'],
+                        ['label' => 'Batang', 'value' => 'Batang'],
+                        ['label' => 'Semarang', 'value' => 'Semarang'],
+                        ['label' => 'Temanggung', 'value' => 'Temanggung'],
+                        ['label' => 'Pekalongan', 'value' => 'Pekalongan'],
+                        ['label' => 'Tegal', 'value' => 'Tegal'],
+                        ['label' => 'Gunungkidul', 'value' => 'Gunungkidul'],
+                    ]" />                     
                 </div>
 
                 <div>

@@ -33,6 +33,7 @@ class Index extends Component
     {
         $userList = User::query()
             ->whereNotIn('id', [1,2])
+            ->where('grup','like', '%'.Auth::user()->grup.'%')
             ->get()
             ->map(fn(User $userList): array => [
                 'value' => $userList->id,

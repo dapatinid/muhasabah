@@ -70,7 +70,7 @@ class EditDataDiri extends Component
                 'required',
             ],
             'user.grup' => [
-                'nullable',
+                'required',
                 'string',
                 'max:255'
             ],

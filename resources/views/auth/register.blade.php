@@ -20,11 +20,11 @@
         </div>
 
         <div class="mt-4">
-            <x-password label="Password *" name="password" required autocomplete="new-password" />
+            <x-password label="Password *" name="password" required autocomplete="new-password" placeholder="minimal panjang 8 karakter" />
         </div>
 
         <div class="mt-4">
-            <x-password label="Confirm Password *" name="password_confirmation" required autocomplete="new-password" />
+            <x-password label="Confirm Password *" name="password_confirmation" required autocomplete="new-password" placeholder="ulangi password" />
         </div>
 
         <div class="flex items-center justify-end mt-4">

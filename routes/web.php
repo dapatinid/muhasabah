@@ -34,8 +34,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/progress-detail/{id}', DashboardDetail::class)->name('dashboard.detail');
     Route::get('/jurnal-amal', JurnalamalIndex::class)->name('jurnalamal.index');
     // Route::get('/jurnalamal/{jurnalamalid}/update', Edit::class)->name('jurnalamal.update');
-    Route::get('/raport', RaportIndex::class)->name('raport.index');
-    Route::get('/raport/{user_id}-{cha_id}', RaportDetail::class)->name('raport.detail');
 
     Route::get('/user/profile', Profile::class)->name('user.profile');
     Route::get('/user/profile-akun', ProfileAkun::class)->name('user.profileakun');
@@ -46,10 +44,15 @@ Route::middleware(['auth'])->group(function () {
     // Route::get('/printtiket', [PrintController::class, 'printtiket'])->name('printtiket');
 
     Route::middleware(IsAdmin::class)->group(function () {
+
+        Route::get('/raport', RaportIndex::class)->name('raport.index');
+        Route::get('/raport/{user_id}-{cha_id}', RaportDetail::class)->name('raport.detail');
+
         Route::get('/users', Index::class)->name('users.index');
         Route::get('/users/{userid}/edit', Edit::class)->name('users.edit');
         Route::get('/users/{userid}/edit-alamat', EditAlamat::class)->name('users.editalamat');
         Route::get('/users/{userid}/edit-data-diri', EditDataDiri::class)->name('users.editdatadiri');
+        
     });
 });
 

@@ -4,6 +4,7 @@ namespace App\Livewire\Raport;
 
 use App\Livewire\Traits\Alert;
 use App\Models\ChallengeProgress;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,9 @@ class Detail extends Component
 
     #[Title('Progress Detail')]
     public function mount($cha_id, $user_id) {
+        if (strtolower(Auth::user()->grup) != strtolower(User::find($user_id)->grup)) {
+            $this->redirect('/raport', navigate: true);
+        }
         $this->cha_id = $cha_id;
         $this->user_id = $user_id;
     }

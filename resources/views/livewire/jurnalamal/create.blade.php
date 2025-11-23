@@ -15,7 +15,7 @@
                 <x-select.styled label="{{ __('Amalan') }} *"  wire:model.live="challenge" :options="$tantangan" searchable required wire:change="clearVariant"/>
             </div>
             <div>
-                <x-select.styled label="{{ __('Capaian') }} *"  wire:model.live="challenge_variant" :options="$variant" searchable required wire:change="cekInputManual"/>
+                <x-select.styled label="{{ __('Capaian') }} *"  wire:model.live="challenge_variant" :options="$variant" required wire:change="cekInputManual"/>
             </div>
             <div class="{{ $hiddenValue }}">
                 {{-- <x-number label="{{ __('Nilai') }} *" wire:model.blur="submitted_value" required centralized/> --}}
