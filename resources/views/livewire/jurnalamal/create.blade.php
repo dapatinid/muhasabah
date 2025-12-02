@@ -3,7 +3,7 @@
     wire:click="$toggle('modal'); $dispatch('open::createjurnalamal', { date: datesort.value })"
      class="text-white size-7 bg-primary-500 p-1 rounded-md cursor-pointer"/>
 
-    <x-modal :title="__('Catatan Baru')" wire >
+    <x-modal :title="__('Catatan Baru')" wire center>
         <x-loading /> 
         <form id="jurnalamal-create" wire:submit="save" class="space-y-4">
             <div class="flex justify-center">

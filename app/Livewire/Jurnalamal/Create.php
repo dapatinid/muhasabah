@@ -40,9 +40,32 @@ class Create extends Component
     #[On('open::createjurnalamal')]
     public function setDate($date)
     {
-        $inputFormat = 'd M Y';
         $inputDate = substr($date, -11);
-        $carbonDate = Carbon::createFromFormat($inputFormat, $inputDate);
+
+        $bulanIndo = [
+            'Jan' => 'Jan',
+            'Feb' => 'Feb',
+            'Mar' => 'Mar',
+            'Apr' => 'Apr',
+            'Mei' => 'May',
+            'Jun' => 'Jun',
+            'Jul' => 'Jul',
+            'Agu' => 'Aug',
+            'Sep' => 'Sep',
+            'Okt' => 'Oct',
+            'Nov' => 'Nov',
+            'Des' => 'Dec',
+        ];
+
+        foreach ($bulanIndo as $indo => $eng) {
+            $inputDate = str_replace($indo, $eng, $inputDate);
+        }
+
+        $carbonDate = Carbon::createFromFormat('d M Y', $inputDate);
+
+        $carbonDate->toDateString();
+
+
         $rawFormat = $carbonDate->format('Y-m-d');
 
         $this->date = $rawFormat ?? now();

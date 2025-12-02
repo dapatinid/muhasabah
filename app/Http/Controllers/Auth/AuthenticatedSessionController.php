@@ -10,8 +10,12 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController
 {
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
+        if (auth()->check()) {
+            return redirect()->route('home');
+        }
+
         return view('auth.login');
     }
 

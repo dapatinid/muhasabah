@@ -9,7 +9,20 @@
         </x-slot:header>  
         <form id="update-profile" wire:submit="save">
             <div class="space-y-6">
-
+                <div>
+                    @if ($image) 
+                        <img src="{{ $image->temporaryUrl() }}" class="object-cover text-center mx-auto size-[120px] rounded-full">
+                    @else
+                        @if ($user->image != null)
+                            <img src="{{ url('storage/'.$user->image) }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full">
+                        @else
+                            <img src="{{ url('storage/avatar/user.png') }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full">
+                        @endif
+                    @endif
+                </div>
+                <div>
+                    <x-upload label="Avatar" wire:model="image" required close-after-upload/>
+                </div>
                 <div>
                     <x-input label="{{ __('Name') }} *" wire:model="user.name" required />
                 </div>
