@@ -43,6 +43,10 @@
             </div>
             @endif
             @endinteract
+            
+            @interact('column_phone', $row)
+                <a href="http://wa.me/62{{ $row->phone }}" target="_blank">{{ $row->phone }}</a>
+            @endinteract
 
             @interact('column_tanggal_lahir', $row)
             <div class="flex justify-end">
