@@ -22,6 +22,10 @@ use App\Livewire\Users\Edit;
 use App\Livewire\Users\EditAlamat;
 use App\Livewire\Users\EditDataDiri;
 
+Route::get('/login/check', function () {
+    return ['authenticated' => auth()->check()];
+});
+
 Route::get('/', HomePage::class)->name('home');
 // Route::view('/events', 'events')->name('events');
 // Route::get('/event/{slug}', EventDetailPage::class)->name('event');

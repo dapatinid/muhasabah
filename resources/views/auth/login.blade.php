@@ -36,4 +36,15 @@
                 </div>
         </div>
     </form>
+    <script>
+    document.addEventListener('livewire:navigated', () => {
+        fetch('/login/check', { cache: "no-store" })
+            .then(res => res.json())
+            .then(data => {
+                if (data.authenticated) {
+                    window.location.reload();
+                }
+            });
+    });
+    </script>    
 </x-guest-layout>
