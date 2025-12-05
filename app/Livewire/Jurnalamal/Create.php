@@ -68,14 +68,17 @@ class Create extends Component
 
         $rawFormat = $carbonDate->format('Y-m-d');
 
-        $this->date = $rawFormat ?? now();
+        $this->date = $rawFormat ?? today();
         // $this->modal = true;
     }
 
     public function resetForm()
     {
-        $this->resetExcept('date'); 
-        $this->resetValidation();
+        $this->challenge = '';
+        $this->challenge_variant = '';
+        $this->submitted_value = '';
+        $this->earned_score = '';
+        $this->note = '';
     }
 
 

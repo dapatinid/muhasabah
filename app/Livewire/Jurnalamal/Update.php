@@ -50,12 +50,6 @@ class Update extends Component
         $this->pencapaian = ChallengeVariant::find($this->jurnalamal->challenge_variant_id)?->name ?? '';
     }
 
-    public function resetForm()
-    {
-        $this->resetExcept('date'); 
-        $this->resetValidation();
-    }
-
     public function loadVariant(): void
     {
         if (!$this->jurnalamal?->challenge_id) {

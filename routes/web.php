@@ -14,6 +14,7 @@ use App\Livewire\Raport\Index as RaportIndex;
 use App\Livewire\Raport\Detail as RaportDetail;
 
 use App\Livewire\HomePage;
+use App\Livewire\EventRegister;
 use App\Livewire\TicketPage;
 use App\Livewire\User\ProfileAkun;
 use App\Livewire\User\ProfileAlamat;
@@ -27,6 +28,7 @@ Route::get('/login/check', function () {
 });
 
 Route::get('/', HomePage::class)->name('home');
+Route::get('/daftar-acara', EventRegister::class)->name('eventregister');
 // Route::view('/events', 'events')->name('events');
 // Route::get('/event/{slug}', EventDetailPage::class)->name('event');
 

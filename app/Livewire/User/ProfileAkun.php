@@ -26,10 +26,20 @@ class ProfileAkun extends Component
     public ?string $password = null;
     public ?string $password_confirmation = null;
 
+    protected $messages = [
+        'user.phone.unique' => 'Nomor sudah ada penggunanya',
+        'user.email.unique' => 'Email sudah ada penggunanya',
+    ];
+
     #[Title('Edit Akun')]
     public function mount(): void
     {
         $this->user = Auth::user();
+    }
+
+    public function render(): View
+    {
+        return view('livewire.user.profile-akun');
     }
 
     public function rules(): array
@@ -46,6 +56,14 @@ class ProfileAkun extends Component
                 'max:255',
                 Rule::unique('users', 'phone')->ignore($this->user->id),
             ],
+            'user.email' => [
+                'nullable',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($this->user->id)->whereNotNull('email'),
+            ],
             'password' => [
                 'nullable',
                 'string',
@@ -55,22 +73,14 @@ class ProfileAkun extends Component
         ];
     }
 
-    public function render(): View
-    {
-        return view('livewire.user.profile-akun');
-    }
-
     public function save(): void
     {
         $this->validate();
 
-        if ($this->image != null) {
-            Storage::disk('public')->putFile('avatar', $this->image);
+        if ($this->image) {
             $image = Storage::disk('public')->putFile('avatar', $this->image);
             $this->user->image = $image;
-        } else {
-            $this->user->image = $this->user->image;
-        }
+        } 
 
         $this->user->password = when($this->password !== null, Hash::make($this->password), $this->user->password);
         $this->user->save();

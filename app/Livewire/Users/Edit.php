@@ -31,6 +31,11 @@ class Edit extends Component
     public ?string $password = null;
     public ?string $password_confirmation = null;
 
+    protected $messages = [
+        'user.phone.unique' => 'Nomor sudah ada penggunanya',
+        'user.email.unique' => 'Email sudah ada penggunanya',
+    ];
+
     public function mount($userid)
     {
         if (User::find($userid)->is_admin == true) {
@@ -59,11 +64,12 @@ class Edit extends Component
                 Rule::unique('users', 'phone')->ignore($this->user->id),
             ],
             'user.email' => [
-                'required',
+                'nullable',
                 'string',
+                'lowercase',
                 'email',
                 'max:255',
-                Rule::unique('users', 'email')->ignore($this->user->id),
+                Rule::unique('users', 'email')->ignore($this->user->id)->whereNotNull('email'),
             ],
             'password' => [
                 'nullable',
@@ -78,13 +84,10 @@ class Edit extends Component
     {
         $this->validate();
 
-        if ($this->image != null) {
-            Storage::disk('public')->putFile('avatar', $this->image);
+        if ($this->image) {
             $image = Storage::disk('public')->putFile('avatar', $this->image);
             $this->user->image = $image;
-        } else {
-            $this->user->image = $this->user->image;
-        }
+        } 
 
         $this->user->password = when($this->password !== null, bcrypt($this->password), $this->user->password);
         $this->user->update();

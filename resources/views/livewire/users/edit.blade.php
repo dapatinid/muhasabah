@@ -29,7 +29,7 @@
                 <x-input label="{{ __('No. Whatsapp') }} *" wire:model="user.phone" required />
             </div>
             <div>
-                <x-input label="{{ __('Email') }} *" wire:model="user.email" required />
+                <x-input label="{{ __('Email') }}" wire:model="user.email" />
             </div>
             <div>
                 <x-password :label="__('Password')"
