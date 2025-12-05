@@ -23,6 +23,7 @@ class Update extends Component
     public $variant = [];
     public $hiddenValuenya;
     public $deskripsinya;
+    public $pencapaian;
 
     public function render(): View
     {
@@ -46,6 +47,13 @@ class Update extends Component
         $this->loadVariant();
         $this->deskripsinya = Challenge::find($this->jurnalamal->challenge_id)->description;
         $this->hiddenValuenya = (ChallengeVariant::find($this->jurnalamal->challenge_variant_id)->is_manual_input == true) ? '' : 'hidden' ;
+        $this->pencapaian = ChallengeVariant::find($this->jurnalamal->challenge_variant_id)?->name ?? '';
+    }
+
+    public function resetForm()
+    {
+        $this->resetExcept('date'); 
+        $this->resetValidation();
     }
 
     public function loadVariant(): void

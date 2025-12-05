@@ -40,6 +40,12 @@ class ProfileDataDiri extends Component
     public $golongan_darah;
     public $grup;
 
+    protected $messages = [
+        'user.gender.required' => 'pilih Laki laki / Perempuan',
+        'user.golongan_darah.required' => 'wajib isi',
+        'user.grup.required' => 'wajib isi',
+    ];
+
     #[Title('Edit Data Diri')]
     public function mount()
     {

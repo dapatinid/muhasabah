@@ -1,5 +1,5 @@
 <div>
-    <x-modal :title="__('Edit Catatan : :challenge_id', ['challenge_id' => $jurnalamal?->challenge->title])" wire center>
+    <x-modal :title="__('Edit Catatan : :challenge_id', ['challenge_id' => $jurnalamal?->challenge->title])" wire center x-on:close="$wire.resetForm()">
         <x-loading /> 
         <form id="jurnalamal-update-{{ $jurnalamal?->id }}" wire:submit="save" class="space-y-4">
             <div class="flex justify-center">
@@ -16,7 +16,7 @@
             </div>
             <div class="{{ $hiddenValuenya }}">
                 {{-- <x-number label="{{ __('Nilai') }} *" wire:model.blur="jurnalamal.submitted_value" required centralized /> --}}
-
+                <label>berapa {{ $pencapaian }}? Tuliskan!</label>
                 <div 
                     x-data="{
                         raw: @entangle('jurnalamal.submitted_value'),

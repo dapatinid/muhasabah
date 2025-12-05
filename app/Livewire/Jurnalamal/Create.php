@@ -72,6 +72,13 @@ class Create extends Component
         // $this->modal = true;
     }
 
+    public function resetForm()
+    {
+        $this->resetExcept('date'); 
+        $this->resetValidation();
+    }
+
+
     public function render(): View
     {
         $tantangan = Challenge::query()

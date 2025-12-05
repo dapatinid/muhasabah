@@ -30,7 +30,8 @@ class AuthenticatedSessionController
         } elseif (Auth::user()->image == null || Auth::user()->gender == null || Auth::user()->tempat_lahir == null || Auth::user()->tanggal_lahir == null || Auth::user()->golongan_darah == null) {
             return redirect()->route('user.profiledatadiri');
         } else {
-            return redirect()->intended(route('home', absolute: false));
+            // return redirect()->intended(route('home', absolute: false));
+            return redirect('/');
         }
     }
 

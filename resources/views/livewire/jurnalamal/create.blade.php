@@ -3,7 +3,7 @@
     wire:click="$toggle('modal'); $dispatch('open::createjurnalamal', { date: datesort.value })"
      class="text-white size-7 bg-primary-500 p-1 rounded-md cursor-pointer"/>
 
-    <x-modal :title="__('Catatan Baru')" wire center>
+    <x-modal :title="__('Catatan Baru')" wire center x-on:close="$wire.resetForm()">
         <x-loading /> 
         <form id="jurnalamal-create" wire:submit="save" class="space-y-4">
             <div class="flex justify-center">
@@ -39,6 +39,7 @@
                         type="text"
                         inputmode="numeric"
                         autocomplete="off"
+                        placeholder="wajib isi"
                         class="flex w-full items-center dark:bg-dark-800 bg-white border dark:border-dark-600 border-gray-300 rounded-lg px-2 py-2"
                         
                         @input="

@@ -19,7 +19,7 @@
                     @endif
                 </div>
                 <div>
-                    <x-upload label="Avatar" wire:model="image" required close-after-upload/>
+                    <x-upload label="Avatar" wire:model="image" required close-after-upload hint="foto profil tidak lebih dari 4 MB"/>
                 </div>
                 <div>
                     <x-select.styled label="{{ __('Gender') }} *" wire:model="user.gender" required :options="[
@@ -49,10 +49,12 @@
                 </div>
                 <div>
                     {{-- <x-input label="{{ __('Grup') }}" wire:model="user.grup" placeholder="tidak wajib isi"/> --}}
-                    <x-select.styled label="{{ __('Grup') }} *" wire:model="user.grup" required :options="[
+                    <x-select.styled label="{{ __('Grup') }} *" wire:model="user.grup" required searchable :options="[
+                        ['label' => 'Non Grup', 'value' => 'Non Grup'],
                         ['label' => 'Kendal', 'value' => 'Kendal'],
                         ['label' => 'Batang', 'value' => 'Batang'],
                         ['label' => 'Semarang', 'value' => 'Semarang'],
+                        ['label' => 'Gunung Prau', 'value' => 'Gunung Prau'],
                         ['label' => 'Temanggung', 'value' => 'Temanggung'],
                         ['label' => 'Pekalongan', 'value' => 'Pekalongan'],
                         ['label' => 'Tegal', 'value' => 'Tegal'],
@@ -60,7 +62,7 @@
                     ]" />                    
                 </div>
 
-                <div>
+                <div class="border-t-2 pt-4">
                     @if ($image_id) 
                         <img src="{{ $image_id->temporaryUrl() }}" class="object-cover text-center mx-auto w-50 aspect-[16/11]">
                     @else

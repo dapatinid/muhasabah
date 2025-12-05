@@ -8,15 +8,15 @@
         @csrf
 
         <div>
-            <x-input label="Name *" name="name" :value="old('name')" required autofocus autocomplete="name" />
+            <x-input label="Name *" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="Nama Lengkap" />
         </div>
 
         <div class="mt-4">
-            <x-input label="No. Whatsapp *" type="number" name="phone" :value="old('phone')" required autocomplete="phone" />
+            <x-input label="No. Whatsapp *" type="number" name="phone" :value="old('phone')" required autocomplete="phone" placeholder="Contoh : 085950540055" />
         </div>
 
         <div class="mt-4">
-            <x-input label="Email *" type="email" name="email" :value="old('email')" required autocomplete="username" />
+            <x-input label="Email" type="email" name="email" :value="old('email')" placeholder="Tidak wajib isi, bisa kosongkan dulu" autocomplete="username" />
         </div>
 
         <div class="mt-4">

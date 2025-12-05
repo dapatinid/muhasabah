@@ -77,7 +77,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     // fungsi agar tidak dapat masuk ke /admin panel
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->is_admin == 1;
+        return $this->is_admin == 1 && $this->level != null;
     }
     public function getFilamentAvatarUrl(): ?string
     {

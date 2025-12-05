@@ -44,10 +44,12 @@
                 </div>
                 <div>
                     {{-- <x-input label="{{ __('Grup') }}" wire:model="user.grup" /> --}}
-                    <x-select.styled label="{{ __('Grup') }} *" wire:model="user.grup"  :options="[
+                    <x-select.styled label="{{ __('Grup') }} *" wire:model="user.grup" searchable :options="[
+                        ['label' => 'Non Grup', 'value' => 'Non Grup'],
                         ['label' => 'Kendal', 'value' => 'Kendal'],
                         ['label' => 'Batang', 'value' => 'Batang'],
                         ['label' => 'Semarang', 'value' => 'Semarang'],
+                        ['label' => 'Gunung Prau', 'value' => 'Gunung Prau'],
                         ['label' => 'Temanggung', 'value' => 'Temanggung'],
                         ['label' => 'Pekalongan', 'value' => 'Pekalongan'],
                         ['label' => 'Tegal', 'value' => 'Tegal'],
