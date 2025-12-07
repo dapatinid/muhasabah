@@ -20,12 +20,17 @@ class RegisteredUserController
 
     public function store(Request $request): RedirectResponse
     {
+        $messages = [
+            'phone.unique' => 'Nomor sudah ada penggunanya',
+            'email.unique' => 'Email sudah ada penggunanya',
+        ];
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:255', 'unique:' . User::class],
             'email' => ['nullable', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        ], $messages);
 
         $user = User::create([
             'name' => $request->name,

@@ -20,21 +20,23 @@
         </div>
 
         <div class="mt-4">
-            <x-password label="Password *" name="password" required autocomplete="new-password" placeholder="minimal panjang 8 karakter" />
+            <x-password label="Password *" name="password" required autocomplete="new-password" placeholder="tulis password baru" hint="minimal panjang 8 huruf / angka"/>
         </div>
 
         <div class="mt-4">
-            <x-password label="Confirm Password *" name="password_confirmation" required autocomplete="new-password" placeholder="ulangi password" />
+            <x-password label="Confirm Password *" name="password_confirmation" required autocomplete="new-password" placeholder="tulis ulang password diatas" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md" href="{{ route('login') }}">
-                {{ __('Masuk') }}
-            </a>
-
-            <x-button type="submit" class="ms-4">
+        <div class="flex items-center justify-end my-6">
+            <x-button type="submit" class="w-full">
                 {{ __('Daftar') }}
             </x-button>
         </div>
     </form>
+
+    <div class="text-center">
+            Sudah punya akun? <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md" href="{{ route('login') }}">
+                {{ __('Masuk disini') }}
+            </a>
+    </div>
 </x-guest-layout>

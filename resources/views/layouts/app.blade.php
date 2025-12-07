@@ -45,7 +45,7 @@
             <x-layout.header without-mobile-button class="{{ request()->is('/') ? 'hidden' : 'fixed' }}">
                 <x-slot:left>
                     <!-- Opening -->
-                    @if (request()->is('/') || request()->is('dashboard') || request()->is('jurnal-amal') || request()->is('raport') || request()->is('users') || request()->is('user/profile') || request()->is('daftar-acara') || request()->is('events') || request()->is('ticket'))
+                    @if (request()->is('/') || request()->is('dashboard') || request()->is('jurnal-amal') || request()->is('raport') || request()->is('users') || request()->is('user/profile') || request()->is('acara-wolu') || request()->is('events') || request()->is('ticket'))
                         <button x-on:click="$dispatch('tallstackui-menu-mobile', { status : true })" class="md:hidden flex cursor-pointer">
                             <x-icon name="bars-3" class="size-6 text-primary-600"/>
                         </button>
