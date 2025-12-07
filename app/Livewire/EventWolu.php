@@ -69,6 +69,7 @@ public function mount()
     $this->form['event_name'] = $this->selectedEvent['name'];
     $this->desc = $this->selectedEvent['desc'];
     $this->ticket = $this->selectedEvent['ticket'];
+    $this->notenya = $this->selectedEvent['note'];
     $this->showModal = true;
     }
 
