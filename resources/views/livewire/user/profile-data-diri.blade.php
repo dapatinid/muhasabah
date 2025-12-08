@@ -19,19 +19,19 @@
                     @endif
                 </div>
                 <div>
-                    <x-upload label="Avatar" wire:model="image" required close-after-upload hint="foto profil tidak lebih dari 4 MB"/>
+                    <x-upload label="{{ __('Avatar') }} *" wire:model="image" required close-after-upload placeholder="Wajib isi, pilih foto profil" hint="foto profil tidak lebih dari 4 MB"/>
                 </div>
                 <div>
                     <x-select.styled label="{{ __('Gender') }} *" wire:model="user.gender" required :options="[
                         ['label' => 'Laki - Laki', 'value' => 'L'],
                         ['label' => 'Perempuan', 'value' => 'P'],
-                    ]" placeholder="wajib isi"/>
+                    ]" placeholder="Wajib isi"/>
                 </div>
                 <div>
-                    <x-input label="{{ __('Tempat Lahir') }} *" wire:model="user.tempat_lahir" required placeholder="wajib isi"/>
+                    <x-input label="{{ __('Tempat Lahir') }} *" wire:model="user.tempat_lahir" required placeholder="Wajib isi"/>
                 </div>
                 <div>
-                    <x-date label="{{ __('Tanggal Lahir') }} *" wire:model="user.tanggal_lahir" required placeholder="wajib isi"/>
+                    <x-date label="{{ __('Tanggal Lahir') }} *" wire:model="user.tanggal_lahir" required placeholder="Wajib isi"/>
                 </div>
 
                 <div>
@@ -45,7 +45,7 @@
                         ['label' => 'AB-', 'value' => 'AB-'],
                         ['label' => 'A+', 'value' => 'A+'],
                         ['label' => 'A-', 'value' => 'A-'],
-                    ]" />
+                    ]" placeholder="Wajib isi"/>
                 </div>
                 <div>
                     {{-- <x-input label="{{ __('Grup') }}" wire:model="user.grup" placeholder="tidak wajib isi"/> --}}
@@ -59,7 +59,7 @@
                         ['label' => 'Pekalongan', 'value' => 'Pekalongan'],
                         ['label' => 'Tegal', 'value' => 'Tegal'],
                         ['label' => 'Gunungkidul', 'value' => 'Gunungkidul'],
-                    ]" />                    
+                    ]" placeholder="Wajib isi"/>                    
                 </div>
 
                 <div class="border-t-2 pt-4">
