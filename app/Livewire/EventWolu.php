@@ -34,17 +34,27 @@ public function mount()
     $this->events = collect([
     [
     'id' => 1,
-    'name' => 'Workshop Lunas Utang #37',
-    'ticket' => 'Rp300.000 / Peserta • Rp500.000 / Pasangan',
-    'desc' => '10 - 11 Jan 2025 • Semarang',
+    'name' => 'Workshop Lunas Utang #36',
+    'ticket' => 'Rp100.000 / Peserta • Rp150.000 / Pasangan',
+    'desc' => 'Sabtu - Ahad, 6 - 7 Des 2025 • Gunung Prau',
     'note' => 'Motivasi atau Alasan mengikuti acara ini?',
+    'label' => 'SELESAI',
     ],
     [
     'id' => 2,
+    'name' => 'Workshop Lunas Utang #37',
+    'ticket' => 'Rp300.000 / Peserta • Rp500.000 / Pasangan',
+    'desc' => 'Sabtu - Ahad, 10 - 11 Jan 2026 • Semarang',
+    'note' => 'Motivasi atau Alasan mengikuti acara ini?',
+    'label' => 'DAFTAR',
+    ],
+    [
+    'id' => 3,
     'name' => 'Workshop Lunas Utang #38',
     'ticket' => 'Rp100.000 / Peserta • Rp150.000 / Pasangan',
-    'desc' => '13 - 14 Jan 2025 • Gunung Kidul',
-    'note' => 'Motivasi atau Alasan mengikuti acara ini',
+    'desc' => 'Selasa - Rabu, 13 - 14 Jan 2026 • Gunung Kidul',
+    'note' => 'Motivasi atau Alasan mengikuti acara ini?',
+    'label' => 'DAFTAR',
     ],
     ])->sortByDesc('id')->values()->toArray();
 }

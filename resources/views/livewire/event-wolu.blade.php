@@ -5,10 +5,18 @@
 <h2 class="text-primary-700 dark:text-primary-500 text-xl">Acara Terdekat</h2>
 
 @foreach ($events as $event)
-<div class="border rounded-xl p-4 shadow cursor-pointer hover:shadow-lg transition dark:text-white bg-white dark:bg-black select-none" wire:click="openModal({{ $event['id'] }})">
-<h2 class="font-bold text-lg">{{ $event['name'] }}</h2>
-<p class="text-sm text-gray-600 dark:text-gray-200">{{ $event['ticket'] }}</p>
-<p class="text-sm text-gray-600 dark:text-gray-200">{{ $event['desc'] }}</p>
+<div class="border rounded-xl shadow cursor-pointer hover:shadow-lg transition dark:text-white bg-white dark:bg-black select-none" wire:click="openModal({{ $event['id'] }})">
+<div class="flex items-center">
+    <div class="p-4">
+        <h2 class="font-bold text-lg">{{ $event['name'] }}</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-200">{{ $event['desc'] }}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-200">{{ $event['ticket'] }}</p>
+    </div>
+    <div class="ms-auto -mr-5">
+        <div class="-rotate-90 {{ $event['label'] === 'SELESAI' ? 'bg-blue-500' : 'bg-green-500' }} px-3 rounded-lg"><span >{{ $event['label'] }}</span></div>
+    </div>
+</div>
+
 </div>
 @endforeach
 
