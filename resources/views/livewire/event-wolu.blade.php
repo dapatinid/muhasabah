@@ -87,7 +87,7 @@ class="bg-white w-full max-w-lg rounded-xl shadow-lg relative"
 
 <div>
 <label class="font-semibold">{{ $notenya }}</label>
-<textarea wire:model="form.note" class="w-full border rounded p-2" rows="3"></textarea>
+<textarea wire:model="form.note" class="w-full border rounded p-2" rows="3" required></textarea>
 </div>
 
 <div>
