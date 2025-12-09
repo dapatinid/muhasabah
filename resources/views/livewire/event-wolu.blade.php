@@ -13,7 +13,7 @@
         <p class="text-sm text-gray-600 dark:text-gray-200">{{ $event['ticket'] }}</p>
     </div>
     <div class="ms-auto -mr-5">
-        <div class="-rotate-90 {{ $event['label'] === 'SELESAI' ? 'bg-blue-500' : 'bg-green-500' }} px-3 rounded-lg"><span >{{ $event['label'] }}</span></div>
+        <div class="text-white -rotate-90 {{ $event['label'] === 'SELESAI' ? 'bg-blue-500' : 'bg-green-500' }} px-3 rounded-lg"><span >{{ $event['label'] }}</span></div>
     </div>
 </div>
 
