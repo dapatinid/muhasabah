@@ -95,14 +95,17 @@ class Create extends Component
                 'value' => $tantangan->id,
                 'label' => $tantangan->title    
             ]);
-        $variant = ChallengeVariant::query()
-            ->when($this->challenge, fn(Builder $query) => $query->where('challenge_id', $this->challenge))
-            // ->unless($search, fn(Builder $query) => $query->limit(100))
-            ->get()
-            ->map(fn(ChallengeVariant $variant): array => [
-                'value' => $variant->id,
-                'label' => $variant->name
-            ]);
+
+        $variant = [];
+
+        if (!empty($this->challenge)) {
+            $variant = ChallengeVariant::where('challenge_id', $this->challenge)
+                ->get()
+                ->map(fn($v): array => [
+                    'value' => $v->id,
+                    'label' => $v->name,
+                ]);
+        }
         return view('livewire.jurnalamal.create', compact('tantangan','variant'));
     }
 
@@ -111,23 +114,39 @@ class Create extends Component
     //     $this->challenge = '';
     //     $this->challenge_variant = '';
     // }
-    public function clearVariant()
+
+    public function updatedChallenge()
     {
+        $this->deskripsi = Challenge::find($this->challenge)?->description;
         $this->challenge_variant = '';
-        $this->deskripsi = Challenge::find($this->challenge)->description;
+        $this->hiddenValue     = 'hidden';
     }
+
     public function cekInputManual()
     {
-        $isOpenValue = ChallengeVariant::find($this->challenge_variant)->is_manual_input;
-        $this->hiddenValue = ($isOpenValue == true) ? '' : 'hidden' ;
-        $this->submitted_value = ($isOpenValue == true) ? '0' : ChallengeVariant::find($this->challenge_variant)->score;
-        $this->earned_score = ($isOpenValue == true) ? $this->submitted_value : ChallengeVariant::find($this->challenge_variant)->score;
+        $variant = ChallengeVariant::find($this->challenge_variant);
+
+        if (!$variant) {
+            return; // cegah error null object
+        }
+
+        $isOpenValue = $variant->is_manual_input;
+
+        $this->hiddenValue     = $isOpenValue ? '' : 'hidden';
+        $this->submitted_value = $isOpenValue ? '0' : $variant->score;
+        $this->earned_score    = $isOpenValue ? $this->submitted_value : $variant->score;
         
     }
+    
     public function updatedSubmittedValue()
     {
-        $isOpenValue = ChallengeVariant::find($this->challenge_variant)->is_manual_input;
-        $this->earned_score = ($isOpenValue == true) ? $this->submitted_value : ChallengeVariant::find($this->challenge_variant)->score;
+        $variant = ChallengeVariant::find($this->challenge_variant);
+
+        if (!$variant) return;
+
+        $this->earned_score = $variant->is_manual_input
+            ? $this->submitted_value
+            : $variant->score;
     }
 
     public function rules(): array

@@ -9,10 +9,10 @@
                 <x-date wire:model="jurnalamal.date" format="dddd, DD MMM YYYY" required />
             </div>
             <div>
-                <x-select.styled label="{{ __('Amalan') }} *"  wire:model.live="jurnalamal.challenge_id" :options="$tantangan" searchable required wire:change="clearVariant"/>
+                <x-select.styled label="{{ __('Amalan') }} *"  wire:model="jurnalamal.challenge_id" :options="$tantangan" searchable required wire:change="clearVariant"/>
             </div>
             <div>
-                <x-select.styled label="{{ __('Capaian') }} *"  wire:model.live="jurnalamal.challenge_variant_id" :options="$variant" required wire:change="cekInputManual"/>
+                <x-select.styled label="{{ __('Capaian') }} *"  wire:model="jurnalamal.challenge_variant_id" :options="$variant" required wire:change="cekInputManual"/>
             </div>
             <div class="{{ $hiddenValuenya }}">
                 {{-- <x-number label="{{ __('Nilai') }} *" wire:model.blur="jurnalamal.submitted_value" required centralized /> --}}

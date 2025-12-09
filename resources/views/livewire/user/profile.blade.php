@@ -2,11 +2,11 @@
     
     <div class="relative mb-14">
         @if ($user->image != null)
-            <a wire:navigate.hover href="/user/profile-data-diri" >
+            <a wire:navigate.hover href="/user/profile-akun" >
             <img src="{{ url('storage/'.$user->image) }}" alt="avatar" class="absolute z-20 left-1/2 transform -translate-x-1/2 object-cover text-center mx-auto size-[120px] rounded-full">
             </a>
         @else
-            <a wire:navigate.hover href="/user/profile-data-diri" >
+            <a wire:navigate.hover href="/user/profile-akun" >
             <img src="{{ url('storage/avatar/user.png') }}" alt="avatar" class="absolute z-20 left-1/2 transform -translate-x-1/2 object-cover text-center mx-auto size-[120px] rounded-full">
             </a>
         @endif

@@ -31,7 +31,7 @@
         </div>
     </form>
     @if (Route::has('register'))
-    <div  class="text-center border-t-2 pt-4">
+    <div  class="text-center border-t-2 border-gray-200 pt-4">
         Belum punya akun?<a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md" href="{{ route('register') }}">
             {{ __('Daftar disini') }}
         </a>

@@ -21,7 +21,7 @@
                     @endif
                 </div>
                 <div>
-                    <x-upload label="Avatar" wire:model="image" required close-after-upload/>
+                    <x-upload label="Avatar" wire:model="image" required close-after-upload placeholder="upload untuk ganti foto profil"/>
                 </div>
                 <div>
                     <x-input label="{{ __('Name') }} *" wire:model="user.name" required />
