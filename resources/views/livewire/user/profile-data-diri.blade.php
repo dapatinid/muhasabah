@@ -3,23 +3,23 @@
         <x-alert color="amber" icon="light-bulb" close >
             @lang('Lengkapi data di bawah ini.')
         </x-alert>
-    </div>
+    </div> 
     <x-card :header="__('Edit Data Diri')" color="primary">
         <form id="update-profile-data-diri" wire:submit="save_data_diri">
             <div class="space-y-6">
                 <div>
                     @if ($image) 
-                        <img src="{{ $image->temporaryUrl() }}" class="object-cover text-center mx-auto size-[120px] rounded-full">
+                        <img src="{{ $image->temporaryUrl() }}" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.querySelector('[x-data^=tallstackui_formUpload] input[type=file]').click();">
                     @else
                         @if ($user->image != null)
-                            <img src="{{ url('storage/'.$user->image) }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full">
+                            <img src="{{ url('storage/'.$user->image) }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.querySelector('[x-data^=tallstackui_formUpload] input[type=file]').click();">
                         @else
-                            <img src="{{ url('storage/avatar/user.png') }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full">
+                            <img src="{{ url('storage/avatar/user.png') }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.querySelector('[x-data^=tallstackui_formUpload] input[type=file]').click();">
                         @endif
                     @endif
                 </div>
                 <div>
-                    <x-upload label="{{ __('Avatar') }} *" wire:model="image" required close-after-upload placeholder="Wajib isi, pilih foto profil" hint="foto profil tidak lebih dari 4 MB"/>
+                    <x-upload label="{{ __('Avatar') }} *" wire:model="image" required close-after-upload placeholder="Wajib isi, pilih foto profil" hint="foto profil tidak lebih dari 4 MB" x-ref="files"/>
                 </div>
                 <div>
                     <x-select.styled label="{{ __('Gender') }} *" wire:model="user.gender" required :options="[

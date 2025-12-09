@@ -46,7 +46,7 @@ class ProfileAlamat extends Component
         $this->street = $userEdit->street;
         $this->zip_code = $userEdit->zip_code;
     }
-    public function saveprovinsi()
+    public function updatedState()
     {
         $this->user->state = $this->state;
         $this->user->city = null;
@@ -55,7 +55,7 @@ class ProfileAlamat extends Component
         $this->user->update();
         $this->redirect('/user/profile-alamat', navigate: true);
     }
-    public function savekota()
+    public function updatedCity()
     {
         $this->user->city = $this->city;
         $this->user->district = null;
@@ -63,7 +63,7 @@ class ProfileAlamat extends Component
         $this->user->update();
         $this->redirect('/user/profile-alamat', navigate: true);
     }
-    public function savekecamatan()
+    public function updatedDistrict()
     {
 
         $this->user->district = $this->district;
@@ -71,57 +71,69 @@ class ProfileAlamat extends Component
         $this->user->update();
         $this->redirect('/user/profile-alamat', navigate: true);
     }
-    public function savedesa()
+    public function updatedVillage()
     {
 
         $this->user->village = $this->village;
         $this->user->update();
         $this->redirect('/user/profile-alamat', navigate: true);
     }
-    public function savejalan()
-    {
-        $this->user->street = $this->street;
-        $this->user->update();
-        $this->redirect('/user/profile-alamat', navigate: true);
-    }
+    // public function updatedStreet()
+    // {
+    //     $this->user->street = $this->street;
+    //     $this->user->update();
+    //     $this->redirect('/user/profile-alamat', navigate: true);
+    // }
     public function render()
     {
-        // $search = 'jawa';
+        // PROVINSI selalu load
         $provinsi = Province::query()
-            // ->when($search, fn(Builder $query) => $query->where('name', 'like', "%{$search}%"))
-            // ->unless($search, fn(Builder $query) => $query->limit(100))
+            ->orderBy('name')
             ->get()
-            ->map(fn(Province $provinsi): array => [
+            ->map(fn(Province $provinsi) => [
                 'label' => $provinsi->name,
                 'value' => $provinsi->code,
             ]);
-        $kota = City::query()
-            ->when($this->state, fn(Builder $query) => $query->where('province_code', 'like', "%{$this->state}%"))
-            ->unless($this->state, fn(Builder $query) => $query->limit(200))
-            ->orderByDesc('name')
-            ->get()
-            ->map(fn(City $kota): array => [
-                'label' => $kota->name,
-                'value' => $kota->code,
-            ]);
-        $kecamatan = District::query()
-            ->when($this->city, fn(Builder $query) => $query->where('city_code', 'like', "%{$this->city}%"))
-            ->unless($this->city, fn(Builder $query) => $query->limit(200))
-            ->orderBy('name')
-            ->get()
-            ->map(fn(District $kecamatan): array => [
-                'label' => $kecamatan->name,
-                'value' => $kecamatan->code,
-            ]);
-        $desa = Village::query()
-            ->when($this->district, fn(Builder $query) => $query->where('district_code', 'like', "%{$this->district}%"))
-            ->unless($this->district, fn(Builder $query) => $query->limit(200))
-            ->orderBy('name')
-            ->get()
-            ->map(fn(Village $desa): array => [
-                'label' => $desa->name,
-                'value' => $desa->code,
-            ]);
+
+        // KOTA hanya load kalau provinsi dipilih
+        $kota = collect();
+        if ($this->state) {
+            $kota = City::query()
+                ->where('province_code', $this->state)
+                ->orderBy('name')
+                ->get()
+                ->map(fn(City $kota) => [
+                    'label' => $kota->name,
+                    'value' => $kota->code,
+                ]);
+        }
+
+        // KECAMATAN hanya load kalau kota dipilih
+        $kecamatan = collect();
+        if ($this->city) {
+            $kecamatan = District::query()
+                ->where('city_code', $this->city)
+                ->orderBy('name')
+                ->get()
+                ->map(fn(District $kecamatan) => [
+                    'label' => $kecamatan->name,
+                    'value' => $kecamatan->code,
+                ]);
+        }
+
+        // DESA hanya load kalau kecamatan dipilih
+        $desa = collect();
+        if ($this->district) {
+            $desa = Village::query()
+                ->where('district_code', $this->district)
+                ->orderBy('name')
+                ->get()
+                ->map(fn(Village $desa) => [
+                    'label' => $desa->name,
+                    'value' => $desa->code,
+                ]);
+        }
+
         return view('livewire.user.profile-alamat', [
             'provinsi' => $provinsi,
             'kota' => $kota,
@@ -129,6 +141,7 @@ class ProfileAlamat extends Component
             'desa' => $desa,
         ]);
     }
+
 
     public function save_alamat(): void
     {
@@ -138,7 +151,7 @@ class ProfileAlamat extends Component
         // $this->user->city = $this->city;
         // $this->user->district = $this->district;
         // $this->user->village = $this->village;
-        // $this->user->street = $this->street;
+        $this->user->street = $this->street;
         $this->user->zip_code = $this->zip_code;
 
         $this->user->update();
@@ -150,6 +163,10 @@ class ProfileAlamat extends Component
             // ->flash()
             ->send();
 
-        $this->redirect('/user/profile-data-diri', navigate: true);
+        if (Auth::user()->image == null || Auth::user()->gender == null || Auth::user()->tempat_lahir == null || Auth::user()->tanggal_lahir == null || Auth::user()->golongan_darah == null || Auth::user()->grup == null) {
+            $this->redirect('/user/profile-data-diri', navigate: true);
+        } else {
+            $this->redirect('/user/profile', navigate: true);
+        }
     }
 }

@@ -15,19 +15,19 @@
          <form id="user-update-alamat-{{ $user->id }}" wire:submit="save_alamat" class="space-y-4">
           
             <div>
-                <x-select.styled label="Provinsi"  wire:model.live="state" :options="$provinsi" searchable wire:change="saveprovinsi"/>
+                <x-select.native label="Provinsi"  wire:model.live="state" :options="$provinsi" searchable />
             </div>
             <div>
-                <x-select.styled label="Kabupaten / Kota" wire:model.live="city" :options="$kota" searchable wire:change="savekota" />
+                <x-select.styled label="Kabupaten / Kota" wire:model.live="city" :options="$kota" searchable />
             </div>
             <div>
-                <x-select.styled label="Kecamatan" wire:model.live="district" :options="$kecamatan" searchable wire:change="savekecamatan" />
+                <x-select.styled label="Kecamatan" wire:model.live="district" :options="$kecamatan" searchable />
             </div>
             <div>
-                <x-select.styled label="Desa" wire:model.live="village" :options="$desa" searchable wire:change="savedesa" />
+                <x-select.styled label="Desa" wire:model.live="village" :options="$desa" searchable />
             </div>
             <div>
-                <x-input label="Jalan dan Detail Alamat" wire:model="street" hint="Gang / Jalan / Dukuh / RT / RW" wire:change="savejalan" />
+                <x-input label="Jalan dan Detail Alamat" wire:model="street" hint="Gang / Jalan / Dukuh / RT / RW" />
             </div>
             <div>
                 <x-input label="Kode Pos" wire:model="zip_code" hint="tidak wajib isi" />
