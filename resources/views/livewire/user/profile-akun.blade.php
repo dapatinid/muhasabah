@@ -11,17 +11,17 @@
             <div class="space-y-6">
                 <div>
                     @if ($image) 
-                        <img src="{{ $image->temporaryUrl() }}" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.querySelector('[x-data^=tallstackui_formUpload] input[type=file]').click();">
+                        <img src="{{ $image->temporaryUrl() }}" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.getElementById('image')?.click();">
                     @else
                         @if ($user->image != null)
-                            <img src="{{ url('storage/'.$user->image) }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.querySelector('[x-data^=tallstackui_formUpload] input[type=file]').click();">
+                            <img src="{{ url('storage/'.$user->image) }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.getElementById('image')?.click();">
                         @else
-                            <img src="{{ url('storage/avatar/user.png') }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.querySelector('[x-data^=tallstackui_formUpload] input[type=file]').click();">
+                            <img src="{{ url('storage/avatar/user.png') }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.getElementById('image')?.click();">
                         @endif
                     @endif
                 </div>
                 <div>
-                    <x-upload label="Avatar" wire:model="image" required close-after-upload placeholder="upload untuk ganti foto profil" x-ref="files"/>
+                    <x-upload label="Avatar" wire:model="image" required close-after-upload placeholder="upload untuk ganti foto profil" />
                 </div>
                 <div>
                     <x-input label="{{ __('Name') }} *" wire:model="user.name" required />

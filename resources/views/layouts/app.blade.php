@@ -194,7 +194,7 @@
                     <x-side-bar.item text="Raport" icon="document-text" :route="route('raport.index')" />
                     {{-- <x-side-bar.item text="Events" icon="calendar-days" :route="route('events')" /> --}}
                     {{-- <x-side-bar.item icon="ticket" text="Ticket"  badge="{{ App\Models\Event::whereHas('participants', function ($query) {$query->where('user_id', Auth::user()->id);})->count() }}"  :route="route('ticket')" /> --}}
-                    <x-side-bar.item icon="users" text="Users" badge="{{ App\Models\User::query()->whereNotIn('id', [Auth::id()])->count() }}"  :route="route('users.index')" />
+                    <x-side-bar.item icon="users" text="Users" badge="{{ App\Models\User::query()->whereNotIn('id', [Auth::id()])->whereGrup(Auth::user()->grup)->count() }}"  :route="route('users.index')" />
                         
                     @endif
                 @endauth

@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -33,7 +34,7 @@ class RegisteredUserController
         ], $messages);
 
         $user = User::create([
-            'name' => $request->name,
+            'name' => Str::title($request->name),
             'phone' => $request->phone,
             'email' => $request->email ?? null,
             'password' => Hash::make($request->password),

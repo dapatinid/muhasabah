@@ -15,7 +15,7 @@
          <form id="user-update-alamat-{{ $user->id }}" wire:submit="save_alamat" class="space-y-4">
           
             <div>
-                <x-select.native label="Provinsi"  wire:model.live="state" :options="$provinsi" searchable />
+                <x-select.styled label="Provinsi"  wire:model.live="state" :options="$provinsi" searchable />
             </div>
             <div>
                 <x-select.styled label="Kabupaten / Kota" wire:model.live="city" :options="$kota" searchable />

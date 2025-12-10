@@ -8,6 +8,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Validate;
@@ -21,7 +22,7 @@ class ProfileAkun extends Component
 
     public User $user;
 
-    #[Validate('image|max:4000|mimes:png,jpg,jpeg|nullable')]
+    #[Validate('image|max:4000|mimes:png,jpg,jpeg,webp|nullable')]
     public $image;
     public ?string $password = null;
     public ?string $password_confirmation = null;
@@ -82,6 +83,7 @@ class ProfileAkun extends Component
             $this->user->image = $image;
         } 
 
+        $this->user->name = Str::title($this->user->name);
         $this->user->password = when($this->password !== null, Hash::make($this->password), $this->user->password);
         $this->user->save();
 

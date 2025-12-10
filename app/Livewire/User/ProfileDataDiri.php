@@ -27,13 +27,13 @@ class ProfileDataDiri extends Component
     use Alert, WithFileUploads;
 
     public User $user;
-    #[Validate('image|max:4000|mimes:png,jpg,jpeg|nullable')]
+    #[Validate('image|max:4000|mimes:png,jpg,jpeg,webp|nullable')]
     public $image;
     public $gender;
     public $tempat_lahir;
     public $tanggal_lahir;
 
-    #[Validate('image|max:4000|mimes:png,jpg,jpeg|nullable')]
+    #[Validate('image|max:4000|mimes:png,jpg,jpeg,webp|nullable')]
     public $image_id;
     public $no_id;
 
@@ -84,8 +84,7 @@ class ProfileDataDiri extends Component
     }
 
     public function render()
-    {
-
+    {        
         return view('livewire.user.profile-data-diri');
     }
 

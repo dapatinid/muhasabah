@@ -26,7 +26,7 @@ class Edit extends Component
 
     public User $user;
 
-    #[Validate('image|max:4000|mimes:png,jpg,jpeg|nullable')]
+    #[Validate('image|max:4000|mimes:png,jpg,jpeg,webp|nullable')]
     public $image;
     public ?string $password = null;
     public ?string $password_confirmation = null;

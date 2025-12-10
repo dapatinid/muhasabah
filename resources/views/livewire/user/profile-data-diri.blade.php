@@ -9,17 +9,17 @@
             <div class="space-y-6">
                 <div>
                     @if ($image) 
-                        <img src="{{ $image->temporaryUrl() }}" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.querySelector('[x-data^=tallstackui_formUpload] input[type=file]').click();">
+                        <img src="{{ $image->temporaryUrl() }}" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.getElementById('image')?.click();">
                     @else
                         @if ($user->image != null)
-                            <img src="{{ url('storage/'.$user->image) }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.querySelector('[x-data^=tallstackui_formUpload] input[type=file]').click();">
+                            <img src="{{ url('storage/'.$user->image) }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.getElementById('image')?.click();">
                         @else
-                            <img src="{{ url('storage/avatar/user.png') }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.querySelector('[x-data^=tallstackui_formUpload] input[type=file]').click();">
+                            <img src="{{ url('storage/avatar/user.png') }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.getElementById('image')?.click();">
                         @endif
                     @endif
                 </div>
                 <div>
-                    <x-upload label="{{ __('Avatar') }} *" wire:model="image" required close-after-upload placeholder="Wajib isi, pilih foto profil" hint="foto profil tidak lebih dari 4 MB" x-ref="files"/>
+                    <x-upload label="{{ __('Avatar') }} *" wire:model="image" required close-after-upload placeholder="Wajib isi, pilih foto profil" hint="foto profil tidak lebih dari 4 MB"/>
                 </div>
                 <div>
                     <x-select.styled label="{{ __('Gender') }} *" wire:model="user.gender" required :options="[
@@ -62,14 +62,14 @@
                     ]" placeholder="Wajib isi"/>                    
                 </div>
 
-                <div class="border-t-2 pt-4">
+                <div class="border-t-2 border-gray-200 dark:border-gray-800 pt-6">
                     @if ($image_id) 
-                        <img src="{{ $image_id->temporaryUrl() }}" class="object-cover text-center mx-auto w-50 aspect-[16/11]">
+                        <img src="{{ $image_id->temporaryUrl() }}" class="object-cover text-center mx-auto w-50 aspect-[16/11]" x-on:click="document.getElementById('image_id')?.click();">
                     @else
                         @if ($user->image_id != null)
-                            <img src="{{ url('storage/'.$user->image_id) }}" alt="foto_id" class="object-cover text-center mx-auto w-50 aspect-[16/11]">
+                            <img src="{{ url('storage/'.$user->image_id) }}" alt="foto_id" class="object-cover text-center mx-auto w-50 aspect-[16/11]" x-on:click="document.getElementById('image_id')?.click();">
                         @else
-                            <img src="{{ url('storage/image_id/image_id.png') }}" alt="foto_id" class="object-cover text-center mx-auto w-50 aspect-[16/11]">
+                            <img src="{{ url('storage/image_id/image_id.png') }}" alt="foto_id" class="object-cover text-center mx-auto w-50 aspect-[16/11]" x-on:click="document.getElementById('image_id')?.click();">
                         @endif
                     @endif
                 </div>

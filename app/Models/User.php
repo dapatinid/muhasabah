@@ -25,21 +25,32 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     use HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
-        'image',
         'name',
+        'phone',
         'email',
         'email_verified_at',
         'password',
+
         'is_admin',
         'level',
-        'phone',
+        
+        'gender',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'no_id',
+        'golongan_darah',
+        'grup',
+
         'street',
         'village',
         'district',
         'city',
         'state',
         'zip_code',
+        
+        'image',
         'image_id',
+        'score',
 
     ];
 
