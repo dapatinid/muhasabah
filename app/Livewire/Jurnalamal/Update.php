@@ -17,13 +17,23 @@ class Update extends Component
 {
     use Alert;
 
-    public ?ChallengeProgress $jurnalamal;
+    // public ?ChallengeProgress $jurnalamal;
 
+    public $jurnalamal;
     public bool $modal = false;
     public $variant = [];
     public $hiddenValuenya;
     public $deskripsinya;
     public $pencapaian;
+
+    public function mount(): void
+    {
+        $this->jurnalamal = new ChallengeProgress([
+            'date' => now()->toDateString(),
+            'submitted_value' => 0,
+            'earned_score' => 0,
+        ]);
+    }
 
     public function render(): View
     {

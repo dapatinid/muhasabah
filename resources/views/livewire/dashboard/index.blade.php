@@ -18,7 +18,6 @@
                         <img class="bg-cover bg-center size-10" src="{{ isset($ja->image) ? Str::replace('%2F', '/',url('storage', $ja->image)) : asset('storage/files/circle.png') }}" alt="{{ $ja->title }}">
                     </div>
                     <div class="block items-center">
-                        <input type="checkbox" value="{{ $ja->id }}" wire:model="selected" x-model="checked" class="hidden">
                         <div class="font-bold select-none leading-4">{{ $ja->title }}</div>                          
                         <div class="text-xs select-none">
                             {{ $ja->difficulty  }}

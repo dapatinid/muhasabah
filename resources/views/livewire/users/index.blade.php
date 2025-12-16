@@ -50,7 +50,7 @@
 
             @interact('column_tanggal_lahir', $row)
             <div class="flex justify-end">
-                <x-badge text="{{ floor(Carbon\Carbon::parse($row->tanggal_lahir)->diffInYears(Carbon\Carbon::now())) }}" color="fuchsia" light />
+                <x-badge text="{{ floor(Carbon\Carbon::parse($row->tanggal_lahir)->diffInYears(Carbon\Carbon::now())) }}" color="sky" light />
             </div>
             @endinteract
 
@@ -60,9 +60,9 @@
 
             @interact('column_action', $row)
             <div class="flex gap-1">
-                <x-button.circle icon="eye" wire:click="$dispatch('load::user', { 'user' : '{{ $row->id }}'})" color="sky" />
+                {{-- <x-button.circle icon="eye" wire:click="$dispatch('load::user', { 'user' : '{{ $row->id }}'})" color="sky" /> --}}
                 <x-button.circle icon="pencil" href="{{ route('users.edit', ['userid' => $row->id]) }}" color="yellow" wire:navigate.hover/> 
-                <x-button.circle icon="identification" href="{{ route('users.editdatadiri', ['userid' => $row->id]) }}" color="teal" wire:navigate.hover/> 
+                <x-button.circle icon="identification" href="{{ route('users.editdatadiri', ['userid' => $row->id]) }}" color="blue" wire:navigate.hover/> 
                 <x-button.circle icon="map-pin" href="{{ route('users.editalamat', ['userid' => $row->id]) }}" color="green" wire:navigate.hover/> 
                 @if (Auth::id() == 1)                    
                 <livewire:users.delete :user="$row" :key="uniqid('', true)" @deleted="$refresh" />
@@ -72,5 +72,5 @@
         </x-table>
     {{-- </x-card> --}}
 
-    <livewire:users.update @updated="$refresh" />
+    {{-- <livewire:users.update @updated="$refresh" /> --}}
 </div>

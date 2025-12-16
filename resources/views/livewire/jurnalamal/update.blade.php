@@ -1,4 +1,5 @@
 <div>
+    @if ($modal && $jurnalamal)
     <x-modal :title="__('Edit Catatan : :challenge_id', ['challenge_id' => $jurnalamal?->challenge->title])" wire center>
         <x-loading /> 
         <form id="jurnalamal-update-{{ $jurnalamal?->id }}" wire:submit="save" class="space-y-4">
@@ -74,4 +75,5 @@
             </x-button>
         </x-slot:footer>
     </x-modal>
+    @endif
 </div>
