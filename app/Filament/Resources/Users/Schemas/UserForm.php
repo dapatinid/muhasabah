@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Users\Schemas;
 use App\Models\City;
 use App\Models\District;
 use App\Models\Province;
+use App\Models\Setting;
 use App\Models\Village;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
@@ -147,7 +148,17 @@ class UserForm
                                 'A+' => 'A+',
                                 'A-' => 'A-',
                             ]),
-                TextInput::make('grup'),
+                Select::make('grup')
+                    ->label('Grup')
+                    ->options(
+                        collect(explode(',', Setting::value('grup_tercatat')))
+                            ->mapWithKeys(fn ($v) => [
+                                trim($v) => trim($v),
+                            ])
+                            ->toArray()
+                    )
+                    ->searchable()
+                    ->required(),
 
 
                 TextInput::make('poin')                    

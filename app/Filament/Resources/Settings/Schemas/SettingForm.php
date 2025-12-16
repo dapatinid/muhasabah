@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Settings\Schemas;
 
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
@@ -23,6 +24,9 @@ class SettingForm
                 RichEditor::make('panduan_event')
                     ->required()
                     ->columnSpanFull(),
+                TagsInput::make('grup_tercatat')
+                    ->separator(',')
+                    ->reorderable()    
             ]);
     }
 }

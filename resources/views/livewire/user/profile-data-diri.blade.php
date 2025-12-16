@@ -47,19 +47,9 @@
                         ['label' => 'A-', 'value' => 'A-'],
                     ]" placeholder="Wajib isi"/>
                 </div>
-                <div>
+                <div class="{{ Auth::user()->is_admin == true && Auth::user()->level == null ? 'hidden' : '' }}">
                     {{-- <x-input label="{{ __('Grup') }}" wire:model="user.grup" placeholder="tidak wajib isi"/> --}}
-                    <x-select.styled label="{{ __('Grup') }} *" wire:model="user.grup" required searchable :options="[
-                        ['label' => 'Non Grup', 'value' => 'Non Grup'],
-                        ['label' => 'Kendal', 'value' => 'Kendal'],
-                        ['label' => 'Batang', 'value' => 'Batang'],
-                        ['label' => 'Semarang', 'value' => 'Semarang'],
-                        ['label' => 'Gunung Prau', 'value' => 'Gunung Prau'],
-                        ['label' => 'Temanggung', 'value' => 'Temanggung'],
-                        ['label' => 'Pekalongan', 'value' => 'Pekalongan'],
-                        ['label' => 'Tegal', 'value' => 'Tegal'],
-                        ['label' => 'Gunungkidul', 'value' => 'Gunungkidul'],
-                    ]" placeholder="Wajib isi"/>                    
+                    <x-select.styled label="{{ __('Grup') }} *" wire:model="user.grup" required searchable :options="$grup_tercatat" placeholder="Wajib isi"/>                    
                 </div>
 
                 <div class="border-t-2 border-gray-200 dark:border-gray-800 pt-6">

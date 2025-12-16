@@ -119,7 +119,7 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown.items :text="__('Profile')" :href="route('user.profile')" wire:navigate.hover class="border-b border-slate-100 dark:border-slate-600"/>
-                            @if (Auth::check() && Auth::user()->is_admin == true)
+                            @if (Auth::check() && Auth::user()->is_admin == true && Auth::user()->level === 'Super User')
                             <x-dropdown.items :text="__('Control Panel')" href="/mypanel" />
                             @endif
                             <x-dropdown.items :text="__('Logout')" onclick="event.preventDefault(); this.closest('form').submit();" separator />

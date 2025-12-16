@@ -6,6 +6,7 @@ use App\Livewire\Traits\Alert;
 use App\Models\City;
 use App\Models\District;
 use App\Models\Province;
+use App\Models\Setting;
 use App\Models\User;
 use App\Models\Village;
 use Illuminate\Contracts\View\View;
@@ -80,8 +81,13 @@ class EditDataDiri extends Component
 
     public function render()
     {
-
-        return view('livewire.users.edit-data-diri');
+        $grup_tercatat = collect(
+            explode(',', Setting::value('grup_tercatat'))
+        )->map(fn ($v) => [
+            'label' => trim($v),
+            'value' => trim($v),
+        ]);
+        return view('livewire.users.edit-data-diri',compact('grup_tercatat'));
     }
 
     public function save_data_diri(): void
