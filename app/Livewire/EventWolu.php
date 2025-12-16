@@ -43,7 +43,7 @@ public function mount()
     [
     'id' => 2,
     'name' => 'Workshop Lunas Utang #37',
-    'ticket' => 'Rp150.000 / Peserta • Rp250.000 / Pasangan',
+    'ticket' => 'Rp100.000 / Peserta • Rp150.000 / Pasangan',
     'desc' => 'Selasa - Rabu, 13 - 14 Jan 2026 • Gunung Kidul',
     'note' => 'Motivasi atau Alasan mengikuti acara ini?',
     'label' => 'DAFTAR',
@@ -51,7 +51,7 @@ public function mount()
     [
     'id' => 3,
     'name' => 'Workshop Lunas Utang #38',
-    'ticket' => 'Rp300.000 / Peserta',
+    'ticket' => 'Rp300.000 / PAX',
     'desc' => 'Sabtu - Ahad, 24 - 25 Jan 2026 • Semarang',
     'note' => 'Motivasi atau Alasan mengikuti acara ini?',
     'label' => 'DAFTAR',

@@ -101,69 +101,20 @@
                             <div class="font-bold">{{ Auth::check() ? Auth::user()->name : 'Silakan Login' }}</div>
                             <div class="text-xs">{{ Auth::check() ? Auth::user()->phone : '' }}</div>
                         </div>
-                        <div class="flex justify-around pt-3 pb-3 border-b border-slate-100 dark:border-slate-600">
-                            <x-theme-switch only-icons/>
-                            {{-- TOMBOL FULLSCREEN START --}}
-                            <svg onclick="toggle_full_screen()" id="layarpenuh" class="cursor-pointer hover:text-yellow-500 text-zinc-500 dark:text-zinc-200" width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
-                            </svg> 
-                            <svg onclick="toggle_full_screen()" id="layarpenuhtutup" class="hidden cursor-pointer hover:text-yellow-500 text-zinc-500 dark:text-zinc-200" width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5 5.25 5.25" />
-                            </svg> 
-
-                            <script language="JavaScript">
-                                function toggle_full_screen()
-                                {
-                                    if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen))
-                                    {
-                                        if (document.documentElement.requestFullScreen){
-                                            document.documentElement.requestFullScreen();
-                                            document.getElementById("layarpenuh").classList.add("hidden");
-                                            document.getElementById("layarpenuhtutup").classList.remove("hidden");
-                                        }
-                                        else if (document.documentElement.mozRequestFullScreen){ /* Firefox */
-                                            document.documentElement.mozRequestFullScreen();
-                                            document.getElementById("layarpenuh").classList.add("hidden");
-                                            document.getElementById("layarpenuhtutup").classList.remove("hidden");
-                                        }
-                                        else if (document.documentElement.webkitRequestFullScreen){   /* Chrome, Safari & Opera */
-                                            document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-                                            document.getElementById("layarpenuh").classList.add("hidden");
-                                            document.getElementById("layarpenuhtutup").classList.remove("hidden");
-                                        }
-                                        else if (document.msRequestFullscreen){ /* IE/Edge */
-                                            document.documentElement.msRequestFullscreen();
-                                            document.getElementById("layarpenuh").classList.add("hidden");
-                                            document.getElementById("layarpenuhtutup").classList.remove("hidden");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (document.cancelFullScreen){
-                                            document.cancelFullScreen();
-                                            document.getElementById("layarpenuh").classList.remove("hidden");
-                                            document.getElementById("layarpenuhtutup").classList.add("hidden");
-                                        }
-                                        else if (document.mozCancelFullScreen){ /* Firefox */
-                                            document.mozCancelFullScreen();
-                                            document.getElementById("layarpenuh").classList.remove("hidden");
-                                            document.getElementById("layarpenuhtutup").classList.add("hidden");
-                                        }
-                                        else if (document.webkitCancelFullScreen){   /* Chrome, Safari and Opera */
-                                            document.webkitCancelFullScreen();
-                                            document.getElementById("layarpenuh").classList.remove("hidden");
-                                            document.getElementById("layarpenuhtutup").classList.add("hidden");
-                                        }
-                                        else if (document.msExitFullscreen){ /* IE/Edge */
-                                            document.msExitFullscreen();
-                                            document.getElementById("layarpenuh").classList.remove("hidden");
-                                            document.getElementById("layarpenuhtutup").classList.add("hidden");
-                                        }
-                                    }
-                                }
-                            </script>
-
-                            {{-- TOMBOL FULLSCREEN END --}}
+                        <div class="flex justify-around pt-1.5 pb-3 px-8 border-b border-slate-100 dark:border-slate-600">
+                            <div class="bg-gray-50 dark:bg-gray-600 p-2 rounded-full">
+                                <x-theme-switch only-icons/>
+                            </div>
+                            <div class="bg-gray-50 dark:bg-gray-600 p-2 rounded-full">
+                                {{-- TOMBOL FULLSCREEN START --}}
+                                <svg onclick="toggle_full_screen()" id="layarpenuh" class="cursor-pointer hover:text-yellow-500 text-zinc-500 dark:text-zinc-200" width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                                </svg> 
+                                <svg onclick="toggle_full_screen()" id="layarpenuhtutup" class="hidden cursor-pointer hover:text-yellow-500 text-zinc-500 dark:text-zinc-200" width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5 5.25 5.25" />
+                                </svg> 
+                                {{-- TOMBOL FULLSCREEN END --}}
+                            </div>
                         </div>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -181,7 +132,7 @@
             <x-side-bar smart collapsible navigate-hover thin-scroll>
                 <x-slot:brand>
                     <div class="mt-8 flex items-center justify-center">
-                        <img src="{{ asset('storage/files/alquran.png') }}" width="80" height="80" />
+                        <img src="{{ asset('storage/files/alquran.png') }}" width="60" height="60" />
                     </div>
                 </x-slot:brand>
                 {{-- <x-side-bar.item text="Home" icon="home" :route="route('home')" /> --}}
@@ -205,6 +156,58 @@
         </x-slot:menu>
 
         {{ $slot }}
+
+        <script language="JavaScript">
+            function toggle_full_screen()
+            {
+                if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen))
+                {
+                    if (document.documentElement.requestFullScreen){
+                        document.documentElement.requestFullScreen();
+                        document.getElementById("layarpenuh").classList.add("hidden");
+                        document.getElementById("layarpenuhtutup").classList.remove("hidden");
+                    }
+                    else if (document.documentElement.mozRequestFullScreen){ /* Firefox */
+                        document.documentElement.mozRequestFullScreen();
+                        document.getElementById("layarpenuh").classList.add("hidden");
+                        document.getElementById("layarpenuhtutup").classList.remove("hidden");
+                    }
+                    else if (document.documentElement.webkitRequestFullScreen){   /* Chrome, Safari & Opera */
+                        document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+                        document.getElementById("layarpenuh").classList.add("hidden");
+                        document.getElementById("layarpenuhtutup").classList.remove("hidden");
+                    }
+                    else if (document.msRequestFullscreen){ /* IE/Edge */
+                        document.documentElement.msRequestFullscreen();
+                        document.getElementById("layarpenuh").classList.add("hidden");
+                        document.getElementById("layarpenuhtutup").classList.remove("hidden");
+                    }
+                }
+                else
+                {
+                    if (document.cancelFullScreen){
+                        document.cancelFullScreen();
+                        document.getElementById("layarpenuh").classList.remove("hidden");
+                        document.getElementById("layarpenuhtutup").classList.add("hidden");
+                    }
+                    else if (document.mozCancelFullScreen){ /* Firefox */
+                        document.mozCancelFullScreen();
+                        document.getElementById("layarpenuh").classList.remove("hidden");
+                        document.getElementById("layarpenuhtutup").classList.add("hidden");
+                    }
+                    else if (document.webkitCancelFullScreen){   /* Chrome, Safari and Opera */
+                        document.webkitCancelFullScreen();
+                        document.getElementById("layarpenuh").classList.remove("hidden");
+                        document.getElementById("layarpenuhtutup").classList.add("hidden");
+                    }
+                    else if (document.msExitFullscreen){ /* IE/Edge */
+                        document.msExitFullscreen();
+                        document.getElementById("layarpenuh").classList.remove("hidden");
+                        document.getElementById("layarpenuhtutup").classList.add("hidden");
+                    }
+                }
+            }
+        </script>
 
         <script>
             document.addEventListener('alpine:init', () => {

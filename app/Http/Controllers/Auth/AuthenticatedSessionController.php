@@ -31,7 +31,7 @@ class AuthenticatedSessionController
             return redirect()->route('user.profiledatadiri');
         } else {
             // return redirect()->intended(route('home', absolute: false));
-            return redirect('/');
+            return redirect('/jurnal-amal');
         }
     }
 

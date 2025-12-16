@@ -261,6 +261,7 @@ class Index extends Component
     public function confirmHapus($id): void
     {   
         $this->question('Data akan dihapus.', 'Yakin hapus?')
+            ->error('Yakin hapus?')
             ->confirm(
                 method: 'deletesatuan',
                 params: ['id' => $id] 

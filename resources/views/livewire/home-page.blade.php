@@ -86,7 +86,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="mt-auto text-center text-gray-500 py-6 border-t border-t-blue-200">
+    <footer class="mt-auto text-center text-gray-500 py-6">
         <p> • 2025 Muhasabah.id • </p>
     </footer>
   
