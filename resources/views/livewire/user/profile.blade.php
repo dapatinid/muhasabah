@@ -50,9 +50,7 @@
         <x-slot:header>
             <div class="flex justify-between px-3 py-2">
                 <span class="pt-1">@lang('Data Diri')</span>
-                <x-button href="/user/profile-data-diri" icon="pencil" wire:navigate.hover sm>
-                    @lang('Edit')
-                </x-button>
+                <x-button flat href="/user/profile-data-diri" icon="pencil" color="white" wire:navigate.hover sm />
             </div>
         </x-slot:header>
         <div class="divide-y divide-dark-400">
@@ -97,9 +95,7 @@
         <x-slot:header>
             <div class="flex justify-between px-3 py-2">
                 <span class="pt-1">@lang('Alamat')</span>
-                <x-button href="/user/profile-alamat" icon="pencil" wire:navigate.hover sm>
-                    @lang('Edit')
-                </x-button>
+                <x-button flat href="/user/profile-alamat" icon="pencil" color="white" wire:navigate.hover sm />
             </div>
         </x-slot:header>        
         <div class="divide-y divide-dark-400">

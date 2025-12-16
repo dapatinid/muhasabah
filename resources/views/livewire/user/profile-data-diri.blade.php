@@ -7,19 +7,20 @@
     <x-card :header="__('Edit Data Diri')" color="primary">
         <form id="update-profile-data-diri" wire:submit="save_data_diri">
             <div class="space-y-6">
-                <div>
+                <div class="relative">
                     @if ($image) 
-                        <img src="{{ $image->temporaryUrl() }}" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.getElementById('image')?.click();">
+                        <img src="{{ $image->temporaryUrl() }}" class="object-cover text-center mx-auto size-[200px] rounded-full" x-on:click="document.getElementById('image')?.click();">
                     @else
                         @if ($user->image != null)
-                            <img src="{{ url('storage/'.$user->image) }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.getElementById('image')?.click();">
+                            <img src="{{ url('storage/'.$user->image) }}" alt="avatar" class="object-cover text-center mx-auto size-[200px] rounded-full" x-on:click="document.getElementById('image')?.click();">
                         @else
-                            <img src="{{ url('storage/avatar/user.png') }}" alt="avatar" class="object-cover text-center mx-auto size-[120px] rounded-full" x-on:click="document.getElementById('image')?.click();">
+                            <img src="{{ url('storage/avatar/user.png') }}" alt="avatar" class="object-cover text-center mx-auto size-[200px] rounded-full" x-on:click="document.getElementById('image')?.click();">
                         @endif
                     @endif
+                    <div class="absolute left-1/2 -translate-x-1/2 -bottom-4"><x-button.circle light icon="pencil" x-on:click="document.getElementById('image')?.click();"/></div>
                 </div>
-                <div>
-                    <x-upload label="{{ __('Avatar') }} *" wire:model="image" required close-after-upload placeholder="Wajib isi, pilih foto profil" hint="foto profil tidak lebih dari 4 MB"/>
+                <div class="{{ $image && $image->temporaryUrl() ? '' : 'hidden' }}">
+                    <x-upload label="{{ __('Foto Profil') }} *" wire:model="image" required close-after-upload placeholder="Wajib isi, pilih foto profil" hint="foto profil tidak lebih dari 4 MB"/>
                 </div>
                 <div>
                     <x-select.styled label="{{ __('Gender') }} *" wire:model="user.gender" required :options="[
