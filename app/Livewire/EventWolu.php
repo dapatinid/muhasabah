@@ -51,8 +51,8 @@ public function mount()
     [
     'id' => 3,
     'name' => 'Workshop Lunas Utang #38',
-    'ticket' => 'Rp300.000 / PAX',
-    'desc' => 'Sabtu - Ahad, 24 - 25 Jan 2026 • Semarang',
+    'ticket' => 'Rp150.000 / Peserta • Rp200.000 / Pasangan',
+    'desc' => 'Sabtu - Ahad, 24 - 25 Jan 2026 • Limpung Raya',
     'note' => 'Motivasi atau Alasan mengikuti acara ini?',
     'label' => 'DAFTAR',
     ],

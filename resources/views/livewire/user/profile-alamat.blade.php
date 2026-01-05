@@ -4,6 +4,11 @@
             @lang('Lengkapi data di bawah ini.')
         </x-alert>
     </div>
+    <div class="{{ Auth::user()->street == null || Auth::user()->village == null || Auth::user()->district == null || Auth::user()->city == null || Auth::user()->state == null ? '' : 'hidden' }}">
+        <x-alert color="red" icon="light-bulb" close >
+            @lang('Mulai isi dari Provinsi, Kabupaten / Kota, Kecamatan, Desa, dan Detail Alamat. Kode pos tidak wajib isi.')
+        </x-alert>
+    </div>
     <div class="grid grid-cols-1 gap-3 ">
     <x-card color="primary">
         <x-slot:header>
