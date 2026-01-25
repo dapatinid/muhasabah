@@ -4,7 +4,7 @@
      class="text-white size-7 bg-primary-500 p-1 rounded-md cursor-pointer"/>
 
     <x-modal :title="__('Catatan Baru')" wire center x-on:close="$wire.resetForm()">
-        <x-loading /> 
+        {{-- <x-loading />  --}}
         <form id="jurnalamal-create" wire:submit="save" class="space-y-4">
             <div class="flex justify-center">
                 <x-date wire:model="date" format="dddd, DD MMM YYYY" required 
