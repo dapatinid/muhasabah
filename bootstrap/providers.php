@@ -1,6 +1,9 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\FortifyServiceProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\Filament\MypanelPanelProvider::class,
+    AppServiceProvider::class,
+    FortifyServiceProvider::class,
 ];
