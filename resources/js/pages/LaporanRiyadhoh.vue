@@ -30,8 +30,8 @@ const ibadahList = [
     // Tambahkan property type: 'number' untuk yang bersifat kuantitas
     { key: 'tahajud', label: 'Sholat Tahajud', icon: '🌙', kategori: 'Sholat Sunnah Malam', type: 'number', placeholder: 'Jumlah rakaat' },
     { key: 'witir', label: 'Sholat Witir', icon: '⭐', kategori: 'Sholat Sunnah Malam', type: 'number', placeholder: 'Jumlah rakaat' },
-    { key: 'qobliyah_subuh', label: 'Qobliyah Subuh', icon: '🌅', kategori: 'Sholat Pagi' },
-    { key: 'subuh_jamaah', label: 'Subuh Berjamaah', icon: '🕌', kategori: 'Sholat Pagi' },
+    { key: 'qobliyah_subuh', label: 'Qobliyah Subuh', icon: '🌠', kategori: 'Sholat Pagi' },
+    { key: 'subuh_jamaah', label: 'Subuh Berjamaah', icon: '🌅', kategori: 'Sholat Pagi' },
     { key: 'dhuha', label: 'Sholat Dhuha', icon: '☀️', kategori: 'Sholat Pagi', type: 'number', placeholder: 'Jumlah rakaat' },
     { key: 'dhuhur_jamaah', label: 'Dhuhur Berjamaah', icon: '🕛', kategori: 'Sholat Jamaah' },
     { key: 'ashar_jamaah', label: 'Ashar Berjamaah', icon: '🕓', kategori: 'Sholat Jamaah' },
@@ -39,13 +39,13 @@ const ibadahList = [
     { key: 'isya_jamaah', label: "Isya' Berjamaah", icon: '🌃', kategori: 'Sholat Jamaah' },
     { key: 'sedekah_subuh', label: 'Sedekah Subuh', icon: '💝', kategori: 'Amal Kebaikan', type: 'number', placeholder: 'Rp' },
     { key: 'birrul_walidain', label: 'Birrul Walidain', icon: '👨‍👩‍👧', kategori: 'Amal Kebaikan' },
-    { key: 'bakti_masjid', label: 'Bakti Masjid', icon: '🏛️', kategori: 'Amal Kebaikan' },
+    { key: 'bakti_masjid', label: 'Bakti Masjid', icon: '🕌', kategori: 'Amal Kebaikan' },
     { key: 'dzikir_pagi', label: 'Dzikir Pagi', icon: '📿', kategori: 'Dzikir & Wirid' },
     { key: 'dzikir_sore', label: 'Dzikir Sore', icon: '📿', kategori: 'Dzikir & Wirid' },
     { key: 'istighfar', label: 'Istighfar', icon: '🤲', kategori: 'Dzikir & Wirid', type: 'number', placeholder: 'Berapa kali' },
     { key: 'sholawat', label: 'Sholawat', icon: '💚', kategori: 'Dzikir & Wirid', type: 'number', placeholder: 'Berapa kali' },
     { key: 'alquran', label: 'Al-Qur\'an 1 Juz', icon: '📖', kategori: 'Tilawah' },
-    { key: 'puasa_sunnah', label: 'Puasa Sunnah', icon: '🌙', kategori: 'Puasa' },
+    { key: 'puasa_sunnah', label: 'Puasa Sunnah', icon: '🍽️', kategori: 'Puasa' },
 ];
 
 const opsiJawaban = [

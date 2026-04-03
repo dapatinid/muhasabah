@@ -12,7 +12,7 @@ const banners = [
 
 const categories = [
     { name: 'Buat Artikel', icon: '📋', link: '#', color: 'bg-amber-500/20 text-amber-400' },
-    { name: 'Buat Acara', icon: '📅', link: '#', color: 'bg-rose-500/20 text-rose-400' },
+    { name: 'Buat Acara', icon: '📅', link: '#', color: 'bg-rose-500/30 text-rose-400' },
     { name: 'Galang Dana', icon: '💰', link: '#', color: 'bg-emerald-500/20 text-emerald-400' },
     { name: '+Daftar Masjid', icon: '🕌', link: '#', color: 'bg-blue-500/20 text-blue-400' },
 ];
@@ -57,7 +57,7 @@ const searchQuery = ref('');
 
         <main class="px-5 space-y-8 pb-32">
             
-            <section class="relative">
+            <section class="relative mt-5">
                 <div class="relative group">
                     <span class="absolute left-4 top-1/2 -translate-y-1/2 text-stone-500 group-focus-within:text-amber-400 transition-colors">🔍</span>
                     <input 
