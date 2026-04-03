@@ -17,7 +17,7 @@ class LaporanRiyadhohController extends Controller
         $numberKeys = ['tahajud', 'witir', 'dhuha', 'sedekah_subuh', 'istighfar', 'sholawat'];
         
         // Ambil semua key ibadah (asumsi Anda punya array $ibadahKeys di Model)
-        $allIbadahKeys = \App\Models\LaporanRiyadhoh::$ibadahKeys;
+        $allIbadahKeys = LaporanRiyadhoh::$ibadahKeys;
 
         $rules = [
             'nama'     => 'required|string|max:100',
