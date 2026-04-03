@@ -59,4 +59,6 @@ class LaporanRiyadhoh extends Model
             ->filter(fn($key) => $this->$key === 'sempurna')
             ->count();
     }
+
+    #coba rename file ini jadi LaporanRiyadhoh.php
 }
