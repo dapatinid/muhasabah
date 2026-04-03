@@ -1,61 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
-* @see \App\Http\Controllers\LaporanRiyadhohController::store
-* @see app/Http/Controllers/LaporanRiyadhohController.php:14
-* @route '/laporan'
-*/
-export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: store.url(options),
-    method: 'post',
-})
-
-store.definition = {
-    methods: ["post"],
-    url: '/laporan',
-} satisfies RouteDefinition<["post"]>
-
-/**
-* @see \App\Http\Controllers\LaporanRiyadhohController::store
-* @see app/Http/Controllers/LaporanRiyadhohController.php:14
-* @route '/laporan'
-*/
-store.url = (options?: RouteQueryOptions) => {
-    return store.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\LaporanRiyadhohController::store
-* @see app/Http/Controllers/LaporanRiyadhohController.php:14
-* @route '/laporan'
-*/
-store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: store.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\LaporanRiyadhohController::store
-* @see app/Http/Controllers/LaporanRiyadhohController.php:14
-* @route '/laporan'
-*/
-const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\LaporanRiyadhohController::store
-* @see app/Http/Controllers/LaporanRiyadhohController.php:14
-* @route '/laporan'
-*/
-storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-store.form = storeForm
-
-/**
 * @see \App\Http\Controllers\LaporanRiyadhohController::index
 * @see app/Http/Controllers/LaporanRiyadhohController.php:0
 * @route '/laporan'
@@ -137,7 +81,6 @@ indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 index.form = indexForm
 
 const laporan = {
-    store: Object.assign(store, store),
     index: Object.assign(index, index),
 }
 

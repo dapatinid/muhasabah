@@ -301,6 +301,87 @@ home.form = homeForm
 /**
 * @see \Inertia\Controller::__invoke
 * @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/laporan-riyadhoh'
+*/
+export const laporanRiyadhoh = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: laporanRiyadhoh.url(options),
+    method: 'get',
+})
+
+laporanRiyadhoh.definition = {
+    methods: ["get","head"],
+    url: '/laporan-riyadhoh',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/laporan-riyadhoh'
+*/
+laporanRiyadhoh.url = (options?: RouteQueryOptions) => {
+    return laporanRiyadhoh.definition.url + queryParams(options)
+}
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/laporan-riyadhoh'
+*/
+laporanRiyadhoh.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: laporanRiyadhoh.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/laporan-riyadhoh'
+*/
+laporanRiyadhoh.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: laporanRiyadhoh.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/laporan-riyadhoh'
+*/
+const laporanRiyadhohForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: laporanRiyadhoh.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/laporan-riyadhoh'
+*/
+laporanRiyadhohForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: laporanRiyadhoh.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/laporan-riyadhoh'
+*/
+laporanRiyadhohForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: laporanRiyadhoh.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+laporanRiyadhoh.form = laporanRiyadhohForm
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
 * @route '/dashboard'
 */
 export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({

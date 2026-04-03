@@ -11,6 +11,14 @@ class LaporanRiyadhohController extends Controller
 {
     use SoftDeletes;
 
+    // public function index()
+    // {
+    //     $laporan = LaporanRiyadhoh::orderBy('tanggal', 'desc')->get();
+    //     return Inertia::render('LaporanRiyadhoh/Index', [
+    //         'laporan' => $laporan,
+    //     ]);
+    // }
+
     public function store(Request $request)
     {
         // List key yang bertipe angka (Quantity)
