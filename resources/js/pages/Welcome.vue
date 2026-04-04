@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
-import { BookOpen, BookOpenText, CalendarDays, HeartHandshake, House, MapPin, Newspaper } from 'lucide-vue-next';
+import { BookOpen, BookOpenText, CalendarDays, HeartHandshake, House, MapPin, Newspaper, Search, UserRound } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 // Mock Data untuk Banner & Artikel
@@ -11,7 +11,7 @@ const banners = [
 ];
 
 const categories = [
-    { name: 'Buat Artikel', icon: '📋', link: '#', color: 'bg-amber-500/20 text-amber-400' },
+    { name: 'Tulis Artikel', icon: '📋', link: '#', color: 'bg-amber-500/20 text-amber-400' },
     { name: 'Buat Acara', icon: '📅', link: '#', color: 'bg-rose-500/30 text-rose-400' },
     { name: 'Galang Dana', icon: '💰', link: '#', color: 'bg-emerald-500/20 text-emerald-400' },
     { name: '+Daftar Masjid', icon: '🕌', link: '#', color: 'bg-blue-500/20 text-blue-400' },
@@ -23,6 +23,19 @@ const articles = [
 ];
 
 const searchQuery = ref('');
+
+
+const isDonationOpen = ref(false); // State untuk dropdown
+const toggleDonation = () => isDonationOpen.value = !isDonationOpen.value;
+
+// Mock data untuk menu donasi
+const donationMenus = [
+    { name: 'Semua', link: '#' },
+    { name: 'Infaq', link: '#' },
+    { name: 'Program', link: '#' },
+    { name: 'Waqaf', link: '#' },
+    { name: 'Qurban', link: '#' },
+];
 </script>
 
 <template>
@@ -51,7 +64,7 @@ const searchQuery = ref('');
                 <h1 class="text-lg font-bold text-stone-100" style="font-family: 'Amiri', serif;">Hamba Allah</h1>
             </div>
             <div class="w-10 h-10 rounded-full bg-stone-800 border border-amber-500/30 flex items-center justify-center text-xl">
-                👤
+                <UserRound />
             </div>
         </nav>    
 
@@ -59,7 +72,7 @@ const searchQuery = ref('');
             
             <section class="relative mt-5">
                 <div class="relative group">
-                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-stone-500 group-focus-within:text-amber-400 transition-colors">🔍</span>
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-stone-500 group-focus-within:text-amber-400 transition-colors"><Search /></span>
                     <input 
                         v-model="searchQuery"
                         type="text" 
@@ -133,10 +146,28 @@ const searchQuery = ref('');
                     <span class="text-xl"><CalendarDays /></span>
                     <span class="text-[10px] font-medium">Acara</span>
                 </button>
-
+        
                 <div class="relative w-full flex justify-center">
+                    <transition name="fade-up">
+                        <div v-if="isDonationOpen" 
+                            class="absolute bottom-20 w-32 bg-stone-900 border border-stone-800 rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.5)] z-[60]">
+                            <div class="flex flex-col">
+                                <Link v-for="menu in donationMenus" 
+                                    :key="menu.name" 
+                                    :href="menu.link"
+                                    class="px-4 py-3 text-[11px] font-semibold text-stone-300 hover:bg-amber-500/10 hover:text-amber-400 border-b border-stone-800/50 last:border-0 text-center transition-colors">
+                                    {{ menu.name }}
+                                </Link>
+                            </div>
+                            <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-stone-900 border-r border-b border-stone-800 rotate-45"></div>
+                        </div>
+                    </transition>
+
                     <div class="absolute -top-12 flex flex-col items-center">
-                        <button class="bg-linear-to-b from-amber-400 to-amber-600 w-14 h-14 rounded-full shadow-[0_8px_20px_rgba(217,119,6,0.4)] flex items-center justify-center text-2xl border-4 border-stone-950 active:scale-90 transition-transform">
+                        <button 
+                            @click="toggleDonation"
+                            :class="[isDonationOpen ? 'scale-110 rotate-360' : '']"
+                            class="bg-linear-to-b from-amber-400 to-amber-600 w-14 h-14 rounded-full shadow-[0_8px_20px_rgba(217,119,6,0.4)] flex items-center justify-center text-2xl border-4 border-stone-950 active:scale-90 transition-all duration-300">
                             <HeartHandshake />
                         </button>
                         <span class="text-[10px] font-medium text-stone-500 mt-0">Donasi</span>
@@ -166,5 +197,16 @@ const searchQuery = ref('');
 .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+}
+
+.fade-up-enter-active,
+.fade-up-leave-active {
+  transition: all 0.3s ease;
+}
+
+.fade-up-enter-from,
+.fade-up-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
 }
 </style>

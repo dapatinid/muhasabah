@@ -12,8 +12,18 @@ withDefaults(
     },
 );
 
-const today = new Date();
-const formattedDate = today.toISOString().split('T')[0];
+const getJakartaDate = () => {
+    const now = new Date();
+    // Format ke YYYY-MM-DD menggunakan timezone Jakarta
+    return new Intl.DateTimeFormat('sv-SE', {
+        timeZone: 'Asia/Jakarta',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    }).format(now);
+};
+
+const formattedDate = getJakartaDate();
 
 const STORAGE_KEY = 'riyadhoh_form_data';
 
@@ -34,7 +44,7 @@ const ibadahList = [
     { key: 'subuh_jamaah', label: 'Subuh Berjamaah', icon: '🌅', kategori: 'Sholat Pagi' },
     { key: 'dhuha', label: 'Sholat Dhuha', icon: '☀️', kategori: 'Sholat Pagi', type: 'number', placeholder: 'Jumlah rakaat' },
     { key: 'dhuhur_jamaah', label: 'Dhuhur Berjamaah', icon: '🕛', kategori: 'Sholat Jamaah' },
-    { key: 'ashar_jamaah', label: 'Ashar Berjamaah', icon: '🕓', kategori: 'Sholat Jamaah' },
+    { key: 'ashar_jamaah', label: 'Ashar Berjamaah', icon: '🕒', kategori: 'Sholat Jamaah' },
     { key: 'maghrib_jamaah', label: 'Maghrib Berjamaah', icon: '🌆', kategori: 'Sholat Jamaah' },
     { key: 'isya_jamaah', label: "Isya' Berjamaah", icon: '🌃', kategori: 'Sholat Jamaah' },
     { key: 'sedekah_subuh', label: 'Sedekah Subuh', icon: '💝', kategori: 'Amal Kebaikan', type: 'number', placeholder: 'Rp' },
@@ -230,7 +240,7 @@ const handleNumberInput = (e: Event, key: string) => {
 </script>
 
 <template>
-    <Head title="Laporan Riyadhoh Harian" />
+    <Head title="Laporan Riyadhoh" />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -249,9 +259,10 @@ const handleNumberInput = (e: Event, key: string) => {
             <div class="relative z-10 max-w-2xl mx-auto">
                 <p class="text-amber-400 text-sm tracking-[0.3em] uppercase mb-2 font-medium">بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ</p>
                 <h1 class="text-3xl md:text-4xl font-bold text-amber-100 mb-1" style="font-family: 'Amiri', serif; letter-spacing: 0.02em;">
-                    📋 Laporan Riyadhoh Harian
+                    📋 Laporan Riyadhoh
                 </h1>
-                <p class="text-stone-400 text-sm mt-2">Isi dengan jujur — Allah Maha Mengetahui apa yang tersembunyi</p>
+                <p class="text-stone-400 text-sm mt-2">"Tantangan 40 hari menuju ketaatan dan keimanan, semata-mata mengharap pertolongan Allah."</p>
+                <em class="text-stone-400 text-sm mt-2">Isi dengan jujur — Allah Maha Mengetahui apa yang tersembunyi</em>
 
                 
             </div>
