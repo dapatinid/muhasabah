@@ -55,7 +55,7 @@ const donationMenus = [
             }">
     </div>
 
-    <div class="relative z-10 min-h-screen bg-stone-950 font-sans text-stone-100 max-w-xl mx-auto border-x border-stone-800 shadow-[0_0_50px_rgba(0,0,0,0.5)]"
+    <div class="relative z-10 min-h-screen bg-stone-950 font-sans text-stone-100 max-w-xl mx-auto sm:border-x sm:border-stone-800 sm:shadow-[0_0_50px_rgba(0,0,0,0.5)]"
              style="font-family: 'Plus Jakarta Sans', sans-serif; background-image: radial-gradient(ellipse at 20% 0%, rgba(120,90,40,0.15) 0%, transparent 50%);">
 
         <nav class="px-6 py-5 flex justify-between items-center sticky top-0 z-50 bg-stone-950/80 backdrop-blur-md border-b border-stone-800/50">
@@ -68,9 +68,9 @@ const donationMenus = [
             </div>
         </nav>    
 
-        <main class="px-5 space-y-8 pb-32">
+        <main class="space-y-8 pb-32">
             
-            <section class="relative mt-5">
+            <section class="relative mt-5 px-5">
                 <div class="relative group">
                     <span class="absolute left-4 top-1/2 -translate-y-1/2 text-stone-500 group-focus-within:text-amber-400 transition-colors"><Search /></span>
                     <input 
@@ -83,9 +83,10 @@ const donationMenus = [
             </section>
 
             <section class="overflow-hidden">
-                <div class="flex gap-4 overflow-x-auto snap-x no-scrollbar">
-                    <div v-for="banner in banners" :key="banner.id" 
-                         class="min-w-[85%] relative h-44 rounded-3xl overflow-hidden snap-center border border-stone-800">
+                <div class="flex gap-4 overflow-x-auto snap-x no-scrollbar px-5 pb-4">
+                    
+                    <div v-for="(banner, index) in banners" :key="banner.id" 
+                        class="min-w-[85%] relative h-44 rounded-3xl overflow-hidden snap-center border border-stone-800 shrink-0">
                         <img :src="banner.image" :alt="banner.title" class="absolute inset-0 w-full h-full object-cover opacity-60">
                         <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent"></div>
                         <div class="absolute bottom-5 left-5">
@@ -93,10 +94,12 @@ const donationMenus = [
                             <p class="text-xs text-stone-300">{{ banner.subtitle }}</p>
                         </div>
                     </div>
+
+                    <div class="min-w-[1px] -ml-4"></div>
                 </div>
             </section>
 
-            <section>
+            <section class="px-5">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-sm font-bold uppercase tracking-wider text-amber-200/70">Layanan Utama</h2>
                 </div>
@@ -112,7 +115,7 @@ const donationMenus = [
                 </div>
             </section>
 
-            <section>
+            <section class="px-5">
                 <div class="flex justify-between items-end mb-4">
                     <h2 class="text-sm font-bold uppercase tracking-wider text-amber-200/70">Artikel Pilihan</h2>
                     <button class="text-xs text-amber-500 font-medium">Lihat Semua</button>
@@ -150,7 +153,7 @@ const donationMenus = [
                 <div class="relative w-full flex justify-center">
                     <transition name="fade-up">
                         <div v-if="isDonationOpen" 
-                            class="absolute bottom-20 w-32 bg-stone-900 border border-stone-800 rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.5)] z-[60]">
+                            class="absolute bottom-14 w-32 bg-stone-900 border border-stone-800 rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.5)] z-60">
                             <div class="flex flex-col">
                                 <Link v-for="menu in donationMenus" 
                                     :key="menu.name" 
@@ -166,9 +169,9 @@ const donationMenus = [
                     <div class="absolute -top-12 flex flex-col items-center">
                         <button 
                             @click="toggleDonation"
-                            :class="[isDonationOpen ? 'scale-110 rotate-360' : '']"
-                            class="bg-linear-to-b from-amber-400 to-amber-600 w-14 h-14 rounded-full shadow-[0_8px_20px_rgba(217,119,6,0.4)] flex items-center justify-center text-2xl border-4 border-stone-950 active:scale-90 transition-all duration-300">
-                            <HeartHandshake />
+                            :class="[isDonationOpen ? 'scale-110' : '']"
+                            class="bg-linear-to-b from-amber-400 to-amber-600 w-14 h-14 rounded-full shadow-[0_8px_20px_rgba(217,119,6,0.4)] flex items-center justify-center text-2xl border-4 border-stone-950 transition-all duration-300">
+                            <HeartHandshake :class="[isDonationOpen ? 'scale-110 rotate-360' : '']" class=" transition-all duration-300" />
                         </button>
                         <span class="text-[10px] font-medium text-stone-500 mt-0">Donasi</span>
                     </div>
