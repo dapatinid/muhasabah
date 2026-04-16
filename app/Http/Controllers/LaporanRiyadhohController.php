@@ -56,6 +56,7 @@ class LaporanRiyadhohController extends Controller
     public function log()
     {
         $logs = LaporanRiyadhoh::query()
+            ->whereNull('deleted_at')
             ->orderBy('tanggal', 'desc')
             ->orderBy('created_at', 'asc')
             ->get()
