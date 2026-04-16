@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LaporanRiyadhoh;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -50,5 +51,36 @@ class LaporanRiyadhohController extends Controller
         \App\Models\LaporanRiyadhoh::create($validated);
 
         return redirect()->back();
+    }
+
+    public function log()
+    {
+        $logs = LaporanRiyadhoh::query()
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('created_at', 'asc')
+            ->get()
+            ->groupBy(function($item) {
+                // Mengelompokkan berdasarkan tanggal format Y-m-d
+                return $item->tanggal->format('Y-m-d');
+            })
+            ->map(function ($items, $date) {
+                        // 1. Format tanggal ke bahasa Indonesia
+                        $formattedDate = \Carbon\Carbon::parse($date)->isoFormat('YYYY MM DD ~ dddd');
+                        
+                        // 2. Timpa kata 'Minggu' menjadi 'Ahad'
+                        $formattedDate = str_replace('Minggu', 'Ahad', $formattedDate);
+
+                        return [
+                            'formatted_date' => $formattedDate,
+                            'entries' => $items->map(function ($entry) {
+                                return "{$entry->nama} ({$entry->grup}) ... Hari ke {$entry->hari_ke}";
+                            })
+                        ];
+                    })
+            ->values();
+
+        return Inertia::render('LaporanLog', [
+            'logs' => $logs
+        ]);
     }
 }

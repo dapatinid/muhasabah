@@ -12,6 +12,7 @@ Route::inertia('/', 'Welcome', [
 // Laporan Riyadhoh — publik (tidak perlu login)
 Route::inertia('/laporan-riyadhoh', 'LaporanRiyadhoh')->name('laporan-riyadhoh');
 Route::post('/laporan-riyadhoh-submit', [LaporanRiyadhohController::class, 'store'])->name('laporan-riyadhoh.store');
+Route::get('/laporan-riyadhoh/log', [LaporanRiyadhohController::class, 'log'])->name('laporan-riyadhoh.log');
 
 // Tampilan data laporan — bisa dikunci dengan auth jika perlu
 Route::middleware(['auth', 'verified'])->group(function () {

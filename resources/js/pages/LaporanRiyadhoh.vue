@@ -329,7 +329,7 @@ const handleNumberInput = (e: Event, key: string) => {
                 <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
 
                     <div>
-                        <label class="text-xs text-stone-400 font-medium uppercase tracking-wider block mb-1.5">Nama Lengkap *</label>
+                        <label class="text-xs text-stone-400 font-medium uppercase tracking-wider block mb-1.5">Nama Panggilan *</label>
                         <input
                             v-model="form.nama"
                             type="text"
