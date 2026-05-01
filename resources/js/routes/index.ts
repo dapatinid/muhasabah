@@ -382,6 +382,87 @@ laporanRiyadhoh.form = laporanRiyadhohForm
 /**
 * @see \Inertia\Controller::__invoke
 * @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/amal-ibadah'
+*/
+export const amalIbadah = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: amalIbadah.url(options),
+    method: 'get',
+})
+
+amalIbadah.definition = {
+    methods: ["get","head"],
+    url: '/amal-ibadah',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/amal-ibadah'
+*/
+amalIbadah.url = (options?: RouteQueryOptions) => {
+    return amalIbadah.definition.url + queryParams(options)
+}
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/amal-ibadah'
+*/
+amalIbadah.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: amalIbadah.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/amal-ibadah'
+*/
+amalIbadah.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: amalIbadah.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/amal-ibadah'
+*/
+const amalIbadahForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: amalIbadah.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/amal-ibadah'
+*/
+amalIbadahForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: amalIbadah.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/amal-ibadah'
+*/
+amalIbadahForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: amalIbadah.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+amalIbadah.form = amalIbadahForm
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
 * @route '/dashboard'
 */
 export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({

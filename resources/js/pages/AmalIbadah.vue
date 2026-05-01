@@ -1,0 +1,85 @@
+<script setup lang="ts">
+import { Head, Link } from '@inertiajs/vue3';
+
+// Data edukasi tetap sama
+const sections = [
+    { id: 'tahajud', label: 'Sholat Tahajud', icon: '🌙', kategori: 'Sholat Sunnah Malam', content: 'Sholat sunnah yang dikerjakan di sepertiga malam terakhir setelah bangun tidur. Keutamaannya adalah diangkat ke kedudukan yang terpuji (Maqaman Mahmuda).' },
+    { id: 'witir', label: 'Sholat Witir', icon: '⭐', kategori: 'Sholat Sunnah Malam', content: 'Sholat penutup malam. Rasulullah SAW tidak pernah meninggalkan witir baik saat mukim maupun safar. Minimal 1 rakaat, maksimal 11 rakaat.' },
+    { id: 'qobliyah_subuh', label: 'Qobliyah Subuh', icon: '🌠', kategori: 'Sholat Pagi', content: 'Dua rakaat sebelum fardhu Subuh. Pahalanya lebih baik dari dunia dan seisinya. Disunnahkan membaca surah Al-Kafirun dan Al-Ikhlas.' },
+    { id: 'subuh_jamaah', label: 'Subuh Berjamaah', icon: '🌅', kategori: 'Sholat Pagi', content: 'Mendapatkan jaminan perlindungan Allah sepanjang hari. Bagi laki-laki, langkah kaki menuju masjid dihitung sebagai penghapus dosa dan pengangkat derajat.' },
+    { id: 'dhuha', label: 'Sholat Dhuha', icon: '☀️', kategori: 'Sholat Pagi', content: 'Waktu dimulainya dari matahari setinggi tombak hingga menjelang Dzuhur. Sholat ini adalah sedekah bagi 360 persendian tubuh manusia.' },
+    { id: 'dhuhur_jamaah', label: 'Dhuhur Berjamaah', icon: '🕛', kategori: 'Sholat Jamaah', content: 'Awal ketaatan di siang hari. Berjamaah di awal waktu melatih kedisiplinan dan memberikan ketenangan di tengah kesibukan dunia.' },
+    { id: 'ashar_jamaah', label: 'Ashar Berjamaah', icon: '🕒', kategori: 'Sholat Jamaah', content: 'Sholat Wustha yang sangat dijaga. Meninggalkannya dengan sengaja dapat menghapuskan pahala amal ibadah di hari tersebut.' },
+    { id: 'maghrib_jamaah', label: 'Maghrib Berjamaah', icon: '🌆', kategori: 'Sholat Jamaah', content: 'Transisi dari terang ke gelap. Menjaga jamaah Maghrib mempererat ukhuwah dan menjaga cahaya iman di malam hari.' },
+    { id: 'isya_jamaah', label: "Isya' Berjamaah", icon: '🌃', kategori: 'Sholat Jamaah', content: 'Pahalanya seperti sholat setengah malam. Menjaga Isya berjamaah adalah pembeda dari sifat munafik.' },
+    { id: 'sedekah_subuh', label: 'Sedekah Subuh', icon: '💝', kategori: 'Amal Kebaikan', content: 'Waktu terbaik untuk berinfak karena didoakan langsung oleh Malaikat agar harta tersebut diganti dengan yang lebih baik.' },
+    { id: 'birrul_walidain', label: 'Birrul Walidain', icon: '👨‍👩‍👧', kategori: 'Amal Kebaikan', content: 'Berbakti kepada orang tua adalah amal paling utama setelah sholat tepat waktu. Ridho Allah terletak pada ridho kedua orang tua.' },
+    { id: 'bakti_masjid', label: 'Bakti Masjid', icon: '🕌', kategori: 'Amal Kebaikan', content: 'Berkhidmat membersihkan atau merapikan masjid. Bahkan membuang duri dari jalan masjid adalah sedekah yang mulia.' },
+    { id: 'dzikir_pagi', label: 'Dzikir Pagi', icon: '📿', kategori: 'Dzikir & Wirid', content: 'Pelindung dari gangguan syaitan, sihir, dan marabahaya hingga sore hari. Waktu terbaik adalah setelah sholat Subuh.' },
+    { id: 'dzikir_sore', label: 'Dzikir Sore', icon: '📿', kategori: 'Dzikir & Wirid', content: 'Pembersih jiwa setelah beraktivitas seharian. Membawa ketenangan hati menyambut istirahat malam.' },
+    { id: 'istighfar', label: 'Istighfar', icon: '🤲', kategori: 'Dzikir & Wirid', content: 'Kunci pembuka pintu rezeki dan jalan keluar dari setiap kesulitan. Rasulullah SAW beristighfar lebih dari 70-100 kali sehari.' },
+    { id: 'sholawat', label: 'Sholawat', icon: '💚', kategori: 'Dzikir & Wirid', content: 'Cara terbaik mendapatkan syafaat Nabi Muhammad SAW. Satu sholawat dibalas sepuluh rahmat dari Allah Azza wa Jalla.' },
+    { id: 'alquran', label: 'Al-Qur\'an 1 Juz', icon: '📖', kategori: 'Tilawah', content: 'Setiap hurufnya adalah 10 kebaikan. Al-Quran akan datang pada hari kiamat sebagai pemberi syafaat bagi pembacanya.' },
+    { id: 'puasa_sunnah', label: 'Puasa Sunnah', icon: '🍽️', kategori: 'Puasa', content: 'Puasa Senin-Kamis atau Ayyamul Bidh (13,14,15 Hijriah). Melatih jiwa untuk menundukkan syahwat dan menjernihkan pikiran.' },
+];
+</script>
+
+<template>
+    <Head title="Edukasi Riyadhoh" />
+
+    <!-- Import Google Fonts -->
+    <component is="style">
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    </component>
+
+    <!-- Container Utama tanpa Layout Sidebar yang error -->
+    <div class="min-h-screen bg-stone-950 font-sans text-stone-100 pb-30"
+         style="font-family: 'Plus Jakarta Sans', sans-serif; background-image: radial-gradient(ellipse at 20% 20%, rgba(120,90,40,0.15) 0%, transparent 60%), radial-gradient(ellipse at 80% 80%, rgba(20,100,60,0.12) 0%, transparent 60%);">
+
+        <div class="fixed z-1000 h-1 w-full bg-gradient-to-r from-amber-700 via-amber-400 to-amber-700"></div>
+
+        <!-- Header Sederhana -->
+        <header class="relative py-12 px-4 text-center border-b border-stone-800/50">
+            <div class="max-w-2xl mx-auto">
+                <p class="text-amber-400 text-xs tracking-[0.3em] uppercase mb-2 font-semibold">Panduan Ibadah</p>
+                <h1 class="text-3xl md:text-4xl font-bold text-amber-100" style="font-family: 'Amiri', serif;">
+                    📚 Detail Amal Riyadhoh
+                </h1>
+                <p class="text-stone-400 text-sm mt-4 italic">"Maka berlomba-lombalah kamu dalam kebaikan."</p>
+            </div>
+        </header>
+
+        <!-- List Section -->
+        <main class="max-w-2xl mx-auto px-4 pt-10 space-y-8">
+            <div v-for="item in sections" :key="item.id" :id="item.id"
+                 class="scroll-mt-6 bg-stone-900/60 backdrop-blur-sm border border-stone-800 rounded-2xl overflow-hidden">
+                
+                <div class="bg-stone-800/40 px-5 py-2.5 border-b border-stone-800 flex justify-between items-center">
+                    <span class="text-[10px] text-amber-500 font-bold uppercase tracking-widest">{{ item.kategori }}</span>
+                    <span class="text-xl">{{ item.icon }}</span>
+                </div>
+
+                <div class="p-6">
+                    <h2 class="text-xl font-bold text-amber-100 mb-3">{{ item.label }}</h2>
+                    <p class="text-stone-300 text-sm leading-relaxed">
+                        {{ item.content }}
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Floating Back Button -->
+        <div class="fixed bottom-8 left-0 right-0 flex justify-center">
+            <Link href="/laporan-riyadhoh" 
+                  class="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold px-6 py-3 rounded-full shadow-2xl transition-all active:scale-95 flex items-center gap-2 no-underline">
+               <span>📝</span> Kembali ke Laporan
+            </Link>
+        </div>
+    </div>
+</template>
+
+<style scoped>
+html {
+    scroll-behavior: smooth;
+}
+</style>

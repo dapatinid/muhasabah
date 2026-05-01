@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { ref, computed, onMounted, watch } from 'vue';
-import { router } from '@inertiajs/vue3';
 
 withDefaults(
     defineProps<{
@@ -142,7 +141,27 @@ const kategoriList = computed(() => {
     return cats;
 });
 
+// Tambahkan fungsi ini di dalam <script setup>
+const saveScrollPosition = () => {
+    // Simpan posisi scroll saat ini ke memory browser
+    sessionStorage.setItem('riyadhoh_scroll_pos', window.scrollY.toString());
+};
+
+// Gunakan onMounted untuk mengembalikan posisi scroll jika ada data tersimpan
 onMounted(() => {
+    const savedScroll = sessionStorage.getItem('riyadhoh_scroll_pos');
+    if (savedScroll) {
+        // Gunakan setTimeout agar browser selesai me-render list sebelum scroll
+        setTimeout(() => {
+            window.scrollTo({
+                top: parseInt(savedScroll),
+                behavior: 'instant' // Gunakan 'instant' agar user tidak pusing melihat layar bergerak cepat
+            });
+            // Hapus setelah digunakan agar tidak mengganggu navigasi normal lainnya
+            sessionStorage.removeItem('riyadhoh_scroll_pos');
+        }, 100);
+    }
+    
     const savedData = localStorage.getItem(STORAGE_KEY);
     if (savedData) {
         try {
@@ -155,6 +174,7 @@ onMounted(() => {
         }
     }
 });
+
 
 watch(form, (newVal) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newVal));
@@ -320,7 +340,7 @@ const handleNumberInput = (e: Event, key: string) => {
          style="font-family: 'Plus Jakarta Sans', sans-serif; background-image: radial-gradient(ellipse at 20% 20%, rgba(120,90,40,0.15) 0%, transparent 60%), radial-gradient(ellipse at 80% 80%, rgba(20,100,60,0.12) 0%, transparent 60%);">
 
         <!-- Decorative top border -->
-        <div class="h-1 w-full bg-linear-to-r from-amber-700 via-amber-400 to-amber-700"></div>
+        <div class="fixed top-0 left-0 z-[100] h-1 w-full bg-gradient-to-r from-amber-700 via-amber-400 to-amber-700 shadow-[0_1px_10px_rgba(251,191,36,0.3)]"></div>
 
         <!-- Header -->
         <header class="relative overflow-hidden py-10 px-4 text-center">
@@ -330,7 +350,7 @@ const handleNumberInput = (e: Event, key: string) => {
                 <h1 class="text-3xl md:text-4xl font-bold text-amber-100 mb-1" style="font-family: 'Amiri', serif; letter-spacing: 0.02em;">
                     📋 Laporan Riyadhoh
                 </h1>
-                <p class="text-stone-400 text-sm mt-2">"Tantangan 40 hari menuju ketaatan dan keimanan, semata-mata mengharap pertolongan Allah."</p>
+                <p class="text-stone-400 text-sm mt-2">"Tantangan 40 hari menuju ketaatan dan keimanan, semata-mata mengharap ridho & pertolongan Allah Azza wa Jalla."</p>
                 <em class="text-stone-400 text-sm mt-2">Isi dengan jujur — Allah Maha Mengetahui apa yang tersembunyi</em>
 
                 
@@ -475,9 +495,21 @@ const handleNumberInput = (e: Event, key: string) => {
                         <div class="flex flex-col sm:flex-row sm:items-center gap-3">
                             <div class="flex items-center gap-2.5 flex-1 min-w-0">
                                 <span class="text-xl shrink-0">{{ ibadah.icon }}</span>
-                                <span class="text-stone-200 text-sm font-medium leading-snug">
-                                    {{ ibadah.label }}
-                                </span>
+                                    <div class="flex flex-col">
+                                        <!-- Tambahkan Link di sini -->
+                                        <Link 
+                                            :href="`/amal-ibadah#${ibadah.key}`" 
+                                            @click="saveScrollPosition"
+                                            target="_blank"
+                                            class="text-stone-200 text-sm font-medium leading-snug hover:text-amber-400 transition-colors flex items-center gap-1 group"
+                                        >
+                                            {{ ibadah.label }}
+                                            <!-- Icon info kecil yang muncul saat di hover -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </Link>
+                                    </div>
                             </div>
 
                             <div v-if="ibadah.type === 'number'" class="w-full sm:w-40">

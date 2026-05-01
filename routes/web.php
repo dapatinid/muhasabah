@@ -11,6 +11,7 @@ Route::inertia('/', 'Welcome', [
 
 // Laporan Riyadhoh — publik (tidak perlu login)
 Route::inertia('/laporan-riyadhoh', 'LaporanRiyadhoh')->name('laporan-riyadhoh');
+Route::inertia('/amal-ibadah', 'AmalIbadah')->name('amal-ibadah');
 Route::post('/laporan-riyadhoh-submit', [LaporanRiyadhohController::class, 'store'])->name('laporan-riyadhoh.store');
 Route::get('/laporan-riyadhoh/log', [LaporanRiyadhohController::class, 'log'])->name('laporan-riyadhoh.log');
 
