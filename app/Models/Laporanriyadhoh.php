@@ -56,7 +56,7 @@ class LaporanRiyadhoh extends Model
     public function getSkorAttribute(): int
     {
         return collect(self::$ibadahKeys)
-            ->filter(fn($key) => $this->$key === 'sempurna')
+            ->filter(fn($key) => in_array($this->$key, ['sempurna', 'ya', 'jamaah']))
             ->count();
     }
 

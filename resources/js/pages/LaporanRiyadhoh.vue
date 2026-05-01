@@ -37,28 +37,97 @@ const form = ref({
 });
 
 const ibadahList = [
-    // Tambahkan property type: 'number' untuk yang bersifat kuantitas
     { key: 'tahajud', label: 'Sholat Tahajud', icon: '🌙', kategori: 'Sholat Sunnah Malam', type: 'number', placeholder: 'Jumlah rakaat' },
     { key: 'witir', label: 'Sholat Witir', icon: '⭐', kategori: 'Sholat Sunnah Malam', type: 'number', placeholder: 'Jumlah rakaat' },
-    { key: 'qobliyah_subuh', label: 'Qobliyah Subuh', icon: '🌠', kategori: 'Sholat Pagi' },
-    { key: 'subuh_jamaah', label: 'Subuh Berjamaah', icon: '🌅', kategori: 'Sholat Pagi' },
+    
+    // Contoh custom opsi: Ya / Tidak
+    { 
+        key: 'qobliyah_subuh', 
+        label: 'Qobliyah Subuh', 
+        icon: '🌠', 
+        kategori: 'Sholat Pagi',
+        options: [
+            { value: 'ya', label: 'Ya', color: 'emerald' },
+            { value: 'tidak', label: 'Tidak', color: 'rose' }
+        ]
+    },
+    
+    // Contoh custom opsi: Jamaah / Sendiri / Tidak
+    { 
+        key: 'subuh_jamaah', 
+        label: 'Subuh Berjamaah', 
+        icon: '🌅', 
+        kategori: 'Sholat Pagi',
+        options: [
+            { value: 'jamaah', label: 'Jamaah', color: 'emerald' },
+            { value: 'sendiri', label: 'Sendiri', color: 'amber' },
+            { value: 'tidak', label: 'Tidak', color: 'rose' }
+        ]
+    },
+
     { key: 'dhuha', label: 'Sholat Dhuha', icon: '☀️', kategori: 'Sholat Pagi', type: 'number', placeholder: 'Jumlah rakaat' },
-    { key: 'dhuhur_jamaah', label: 'Dhuhur Berjamaah', icon: '🕛', kategori: 'Sholat Jamaah' },
-    { key: 'ashar_jamaah', label: 'Ashar Berjamaah', icon: '🕒', kategori: 'Sholat Jamaah' },
-    { key: 'maghrib_jamaah', label: 'Maghrib Berjamaah', icon: '🌆', kategori: 'Sholat Jamaah' },
-    { key: 'isya_jamaah', label: "Isya' Berjamaah", icon: '🌃', kategori: 'Sholat Jamaah' },
+    
+    // Sholat Jamaah lainnya disamakan opsinya
+    { 
+        key: 'dhuhur_jamaah', label: 'Dhuhur Berjamaah', icon: '🕛', kategori: 'Sholat Jamaah',
+        options: [
+            { value: 'jamaah', label: 'Jamaah', color: 'emerald' },
+            { value: 'sendiri', label: 'Sendiri', color: 'amber' },
+            { value: 'tidak', label: 'Tidak', color: 'rose' }
+        ]
+    },
+    { 
+        key: 'ashar_jamaah', label: 'Ashar Berjamaah', icon: '🕒', kategori: 'Sholat Jamaah',
+        options: [
+            { value: 'jamaah', label: 'Jamaah', color: 'emerald' },
+            { value: 'sendiri', label: 'Sendiri', color: 'amber' },
+            { value: 'tidak', label: 'Tidak', color: 'rose' }
+        ]
+    },
+    { 
+        key: 'maghrib_jamaah', label: 'Maghrib Berjamaah', icon: '🌆', kategori: 'Sholat Jamaah',
+        options: [
+            { value: 'jamaah', label: 'Jamaah', color: 'emerald' },
+            { value: 'sendiri', label: 'Sendiri', color: 'amber' },
+            { value: 'tidak', label: 'Tidak', color: 'rose' }
+        ]
+    },
+    { 
+        key: 'isya_jamaah', label: "Isya' Berjamaah", icon: '🌃', kategori: 'Sholat Jamaah',
+        options: [
+            { value: 'jamaah', label: 'Jamaah', color: 'emerald' },
+            { value: 'sendiri', label: 'Sendiri', color: 'amber' },
+            { value: 'tidak', label: 'Tidak', color: 'rose' }
+        ]
+    },
+
     { key: 'sedekah_subuh', label: 'Sedekah Subuh', icon: '💝', kategori: 'Amal Kebaikan', type: 'number', placeholder: 'Rp' },
+    
+    // Gunakan default opsi (Sempurna/Sebagian/Tidak) untuk yang tidak punya properti .options
     { key: 'birrul_walidain', label: 'Birrul Walidain', icon: '👨‍👩‍👧', kategori: 'Amal Kebaikan' },
     { key: 'bakti_masjid', label: 'Bakti Masjid', icon: '🕌', kategori: 'Amal Kebaikan' },
-    { key: 'dzikir_pagi', label: 'Dzikir Pagi', icon: '📿', kategori: 'Dzikir & Wirid' },
-    { key: 'dzikir_sore', label: 'Dzikir Sore', icon: '📿', kategori: 'Dzikir & Wirid' },
+    
+    { key: 'dzikir_pagi', label: 'Dzikir Pagi', icon: '📿', kategori: 'Dzikir & Wirid', 
+        options: [
+            { value: 'ya', label: 'Ya', color: 'emerald' },
+            { value: 'tidak', label: 'Tidak', color: 'rose' }
+        ]
+    },
+    { key: 'dzikir_sore', label: 'Dzikir Sore', icon: '📿', kategori: 'Dzikir & Wirid', 
+        options: [
+            { value: 'ya', label: 'Ya', color: 'emerald' },
+            { value: 'tidak', label: 'Tidak', color: 'rose' }
+        ]
+    },
     { key: 'istighfar', label: 'Istighfar', icon: '🤲', kategori: 'Dzikir & Wirid', type: 'number', placeholder: 'Berapa kali' },
     { key: 'sholawat', label: 'Sholawat', icon: '💚', kategori: 'Dzikir & Wirid', type: 'number', placeholder: 'Berapa kali' },
+    
     { key: 'alquran', label: 'Al-Qur\'an 1 Juz', icon: '📖', kategori: 'Tilawah' },
     { key: 'puasa_sunnah', label: 'Puasa Sunnah', icon: '🍽️', kategori: 'Puasa' },
 ];
 
-const opsiJawaban = [
+// Opsi default jika di ibadahList tidak mendefinisikan options
+const opsiJawabanDefault = [
     { value: 'sempurna', label: 'Sempurna', color: 'emerald' },
     { value: 'sebagian', label: 'Sebagian', color: 'amber' },
     { value: 'tidak', label: 'Tidak', color: 'rose' },
@@ -424,9 +493,10 @@ const handleNumberInput = (e: Event, key: string) => {
                                 </div>
                             </div>
 
-                            <div v-else class="flex gap-2 shrink-0">
+                            <div v-else class="flex flex-wrap gap-2 shrink-0">
+                                <!-- Cek: Pakai opsi kustom jika ada, jika tidak pakai default -->
                                 <label
-                                    v-for="opsi in opsiJawaban"
+                                    v-for="opsi in (ibadah.options || opsiJawabanDefault)"
                                     :key="opsi.value"
                                     class="cursor-pointer"
                                 >
@@ -438,17 +508,19 @@ const handleNumberInput = (e: Event, key: string) => {
                                         class="sr-only"
                                     />
                                     <span
-                                        class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 select-none"
+                                        class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 select-none capitalize"
                                         :class="{
-                                            'bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-900/50': form.ibadah[ibadah.key] === opsi.value && opsi.value === 'sempurna',
-                                            'bg-amber-600 border-amber-500 text-white shadow-lg shadow-amber-900/50': form.ibadah[ibadah.key] === opsi.value && opsi.value === 'sebagian',
-                                            'bg-rose-700 border-rose-600 text-white shadow-lg shadow-rose-900/50': form.ibadah[ibadah.key] === opsi.value && opsi.value === 'tidak',
+                                            'bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-900/50': form.ibadah[ibadah.key] === opsi.value && (opsi.color === 'emerald' || opsi.value === 'sempurna' || opsi.value === 'ya' || opsi.value === 'jamaah'),
+                                            'bg-amber-600 border-amber-500 text-white shadow-lg shadow-amber-900/50': form.ibadah[ibadah.key] === opsi.value && (opsi.color === 'amber' || opsi.value === 'sebagian' || opsi.value === 'sendiri'),
+                                            'bg-rose-700 border-rose-600 text-white shadow-lg shadow-rose-900/50': form.ibadah[ibadah.key] === opsi.value && (opsi.color === 'rose' || opsi.value === 'tidak'),
                                             'bg-stone-800 border-stone-700 text-stone-400 hover:border-stone-500 hover:text-stone-300': form.ibadah[ibadah.key] !== opsi.value,
                                         }"
                                     >
-                                        <span v-if="opsi.value === 'sempurna'">✓</span>
-                                        <span v-else-if="opsi.value === 'sebagian'">~</span>
+                                        <!-- Icon dinamis berdasarkan value -->
+                                        <span v-if="['sempurna', 'ya', 'jamaah'].includes(opsi.value)">✓</span>
+                                        <span v-else-if="['sebagian', 'sendiri'].includes(opsi.value)">○</span>
                                         <span v-else>✗</span>
+                                        
                                         <span class="ml-1">{{ opsi.label }}</span>
                                     </span>
                                 </label>

@@ -41,7 +41,7 @@ class LaporanRiyadhohController extends Controller
             if (in_array($key, $numberKeys)) {
                 $rules[$key] = 'required|numeric|min:0'; // Untuk yang quantity
             } else {
-                $rules[$key] = 'required|in:sempurna,sebagian,tidak'; // Untuk yang radio
+                $rules[$key] = 'required|in:sempurna,sebagian,tidak,ya,jamaah,sendiri'; // Untuk yang radio
             }
         }
 
