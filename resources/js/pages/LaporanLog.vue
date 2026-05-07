@@ -21,7 +21,7 @@ defineProps<{
     <div class="min-h-screen bg-stone-950 font-sans text-stone-100 pb-24"
          style="font-family: 'Plus Jakarta Sans', sans-serif; background-image: radial-gradient(ellipse at 20% 20%, rgba(120,90,40,0.15) 0%, transparent 60%), radial-gradient(ellipse at 80% 80%, rgba(20,100,60,0.12) 0%, transparent 60%);">
 
-        <div class="h-1 w-full bg-linear-to-r from-amber-700 via-amber-400 to-amber-700"></div>
+        <div class="fixed z-1000 h-1 w-full bg-linear-to-r from-amber-700 via-amber-400 to-amber-700"></div>
 
         <header class="relative overflow-hidden py-10 px-4 text-center">
             <div class="absolute inset-0 opacity-5" :style="{ backgroundImage: `url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22><path d=%22M30 5 L55 20 L55 40 L30 55 L5 40 L5 20 Z%22 fill=%22none%22 stroke=%22%23d4a017%22 stroke-width=%221%22/></svg>')` }" style="background-size: 60px 60px;"></div>

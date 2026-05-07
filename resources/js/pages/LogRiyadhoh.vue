@@ -165,7 +165,7 @@ function skorClass(skor: number): string {
     // Contoh: Hijau jika skor murni di atas 8000
     if (skor >= 8000) return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300';
     if (skor >= 4000) return 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300';
-    return 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300';
+    return 'bg-red-100 text-red-500 dark:bg-red-900/40 dark:text-red-300';
 }
 
 const hasFilters = computed(() => search.value || dateFrom.value || dateTo.value);

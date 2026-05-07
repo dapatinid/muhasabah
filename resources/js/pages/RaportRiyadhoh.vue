@@ -2,6 +2,9 @@
 import { Head, router } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 import { dashboard } from '@/routes';
+import { toPng } from 'html-to-image';
+import { nextTick } from 'vue';
+import { Award } from 'lucide-vue-next';
 
 defineOptions({
     layout: {
@@ -52,6 +55,8 @@ interface Props {
         tanggal_selesai: string;
         total_hari: number;
         skor_rata: number;
+        skor_total: number;
+        skor_total_gabung: number;
     } | null;
 }
 
@@ -141,8 +146,35 @@ function formatTgl(tgl: string) {
         .replace('Minggu', 'Ahad');
 }
 
-function printRaport() {
-    window.print();
+///// PRINT & DOWNLOAD FUNCTIONS
+
+const page1Ref = ref<HTMLElement | null>(null);
+const page2Ref = ref<HTMLElement | null>(null);
+
+async function downloadRaportPng() {
+    if (!page1Ref.value || !page2Ref.value) return;
+
+    await nextTick();
+
+    const options = {
+        cacheBust: true,
+        pixelRatio: 3, // kualitas tinggi
+        backgroundColor: '#ffffff',
+    };
+
+    // PAGE 1
+    const dataUrl1 = await toPng(page1Ref.value, options);
+    const link1 = document.createElement('a');
+    link1.download = `piagam-${props.peserta?.no_wa ?? 'raport'}.png`;
+    link1.href = dataUrl1;
+    link1.click();
+
+    // PAGE 2
+    const dataUrl2 = await toPng(page2Ref.value, options);
+    const link2 = document.createElement('a');
+    link2.download = `log-ibadah-${props.peserta?.no_wa ?? 'raport'}.png`;
+    link2.href = dataUrl2;
+    link2.click();
 }
 </script>
 
@@ -197,16 +229,14 @@ function printRaport() {
             <div>
                 <p class="font-bold text-emerald-800 dark:text-emerald-200 text-lg">{{ peserta.nama }}</p>
                 <p class="text-sm text-emerald-700 dark:text-emerald-300">{{ peserta.no_wa }} · Grup {{ peserta.grup }}</p>
-                <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1">{{ peserta.total_hari }} hari tercatat · Skor rata-rata {{ peserta.skor_rata }}/18 · {{ persen }}%</p>
+                <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1">{{ peserta.total_hari }} hari tercatat · Skor rata-rata {{ peserta.skor_rata }}</p>
             </div>
             <button
-                @click="printRaport"
-                class="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition"
+                v-if="peserta"
+                @click="downloadRaportPng"
+                class="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                </svg>
-                Cetak / Simpan PDF
+                Download PNG
             </button>
         </div>
     </div>
@@ -219,7 +249,7 @@ function printRaport() {
         <!-- ======================================================== -->
         <!-- HALAMAN 1 : PIAGAM                                       -->
         <!-- ======================================================== -->
-        <div class="raport-page certificate-page">
+        <div ref="page1Ref" class="raport-page certificate-page">
 
             <!-- Corner ornaments -->
             <div class="corner tl"></div>
@@ -233,29 +263,21 @@ function printRaport() {
 
             <!-- Watermark rosette -->
             <div class="watermark">
-                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <g fill="none" stroke="#16a34a" stroke-width="0.8" opacity="0.18">
-                        <circle cx="100" cy="100" r="90"/>
-                        <circle cx="100" cy="100" r="75"/>
-                        <circle cx="100" cy="100" r="58"/>
-                        <polygon points="100,10 118,60 172,60 128,90 145,145 100,115 55,145 72,90 28,60 82,60" />
-                        <polygon points="100,30 113,70 155,70 122,93 134,135 100,112 66,135 78,93 45,70 87,70" opacity="0.5"/>
-                    </g>
-                </svg>
+                <Award class="watermark-award" />
             </div>
 
             <!-- Header bismillah area -->
             <div class="cert-header">
                 <div class="arabic-bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
                 <div class="cert-subtitle-top">PROGRAM RIYADHOH 40 HARI</div>
-            </div>
+            </div>  
 
             <!-- Divider khat -->
             <div class="khat-divider">
                 <span class="khat-line"></span>
-                <span class="khat-diamond">✦</span>
-                <span class="khat-diamond small">✦</span>
-                <span class="khat-diamond">✦</span>
+                    <Award class="award-icon small" />
+                    <Award class="award-icon big" />
+                    <Award class="award-icon small" />
                 <span class="khat-line"></span>
             </div>
 
@@ -333,7 +355,7 @@ function printRaport() {
         <!-- ======================================================== -->
         <!-- HALAMAN 2 : TABEL LOG IBADAH                             -->
         <!-- ======================================================== -->
-        <div class="raport-page log-page">
+        <div ref="page2Ref" class="raport-page log-page">
 
             <div class="log-header">
                 <div class="log-title-left">
@@ -440,12 +462,30 @@ function printRaport() {
     margin: 0 auto 32px;
     box-shadow: 0 4px 32px rgba(0,0,0,0.12);
     page-break-after: always;
-    overflow: hidden;
+    overflow: visible;
 }
 
 /* ================================================================
    HALAMAN 1 — PIAGAM
    ================================================================ */
+
+.award-icon {
+    color: #15803d;
+    opacity: 0.75;
+}
+
+.award-icon.small {
+    width: 12mm;
+    height: 12mm;
+    stroke-width: 1.6;
+}
+
+.award-icon.big {
+    width: 18mm;
+    height: 18mm;
+    stroke-width: 1.6;
+}
+
 .certificate-page {
     padding: 18mm 22mm;
     background: #fff;
@@ -502,6 +542,13 @@ function printRaport() {
     z-index: 0;
 }
 .watermark svg { width: 160mm; height: 160mm; }
+
+.watermark-award {
+    width: 150mm;
+    height: 150mm;
+    opacity: 0.08;
+    color: #16a34a;
+}
 
 /* all cert children above watermark */
 .certificate-page > *:not(.watermark):not(.corner):not(.outer-border):not(.inner-border) {
@@ -587,6 +634,7 @@ function printRaport() {
     padding: 0 8mm 1mm;
     line-height: 1.2;
     letter-spacing: 0.02em;
+    text-transform: capitalize;
 }
 .cert-meta {
     font-size: 8.5pt;
@@ -646,6 +694,7 @@ function printRaport() {
     gap: 4mm;
     font-family: 'Segoe UI', system-ui, sans-serif;
     background: #fff;
+    overflow: visible;
 }
 
 .log-header {
@@ -680,7 +729,7 @@ function printRaport() {
 }
 
 /* table */
-.log-table-wrap { flex: 1; overflow: hidden; }
+.log-table-wrap { overflow: visible; }
 .log-table {
     width: 100%;
     border-collapse: collapse;
