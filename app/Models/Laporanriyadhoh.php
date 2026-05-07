@@ -9,6 +9,7 @@ class LaporanRiyadhoh extends Model
 {
     use SoftDeletes;
     protected $table = 'laporanriyadhohs';
+    protected $appends = ['skor', 'skor_gabung'];
 
     public static array $ibadahKeys = [
         'tahajud', 'witir', 'qobliyah_subuh', 'subuh_jamaah',
@@ -38,7 +39,7 @@ class LaporanRiyadhoh extends Model
         'sedekah_subuh'=> 'integer',
     ];
 
-    protected $appends = ['skor', 'skor_gabung'];
+    
     public static array $rakaatKeys = ['tahajud', 'witir', 'dhuha'];
     public static array $hitunganKeys = ['istighfar', 'sholawat'];
     public static array $pilihanKeys = [
@@ -53,27 +54,20 @@ class LaporanRiyadhoh extends Model
     public function getSkorAttribute(): int
     {
         $skor = 0;
-
-        // A. Rakaat x 100
         foreach (self::$rakaatKeys as $key) {
             $skor += ((int) $this->$key) * 100;
         }
-
-        // B. Istighfar & Sholawat x 1
         foreach (self::$hitunganKeys as $key) {
             $skor += (int) $this->$key;
         }
-
-        // Skor 1000, 500, 0
         foreach (self::$pilihanKeys as $key) {
-            $val = strtolower($this->$key);
+            $val = strtolower($this->$key ?? '');
             $skor += match ($val) {
                 'sempurna', 'ya', 'jamaah' => 1000,
                 'sebagian'                => 500,
                 default                   => 0,
             };
         }
-
         return $skor;
     }
 
@@ -84,7 +78,6 @@ class LaporanRiyadhoh extends Model
     {
         $skorMurni = number_format($this->skor, 0, ',', '.');
         $sedekah = $this->sedekah_subuh ?? 0;
-        
         return "{$skorMurni} + Rp" . number_format($sedekah, 0, ',', '.');
     }
 }
