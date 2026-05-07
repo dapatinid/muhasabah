@@ -10,7 +10,7 @@ defineOptions({
     layout: {
         breadcrumbs: [
             { title: 'Dashboard', href: dashboard() },
-            { title: 'Raport Riyadhoh', href: '/raport-riyadhoh' },
+            { title: 'rapor Riyadhoh', href: '/rapor-riyadhoh' },
         ],
     },
 });
@@ -65,11 +65,11 @@ const props = defineProps<Props>();
 const noWa = ref(props.no_wa ?? '');
 const loading = ref(false);
 
-function cariRaport() {
+function carirapor() {
     if (!noWa.value.trim()) return;
     loading.value = true;
     router.get(
-        '/raport-riyadhoh',
+        '/rapor-riyadhoh',
         { no_wa: noWa.value.trim() },
         {
             preserveState: true,
@@ -151,7 +151,7 @@ function formatTgl(tgl: string) {
 const page1Ref = ref<HTMLElement | null>(null);
 const page2Ref = ref<HTMLElement | null>(null);
 
-async function downloadRaportPng() {
+async function downloadraporPng() {
     if (!page1Ref.value || !page2Ref.value) return;
 
     await nextTick();
@@ -165,14 +165,14 @@ async function downloadRaportPng() {
     // PAGE 1
     const dataUrl1 = await toPng(page1Ref.value, options);
     const link1 = document.createElement('a');
-    link1.download = `piagam-${props.peserta?.no_wa ?? 'raport'}.png`;
+    link1.download = `piagam-${props.peserta?.no_wa ?? 'rapor'}.png`;
     link1.href = dataUrl1;
     link1.click();
 
     // PAGE 2
     const dataUrl2 = await toPng(page2Ref.value, options);
     const link2 = document.createElement('a');
-    link2.download = `log-ibadah-${props.peserta?.no_wa ?? 'raport'}.png`;
+    link2.download = `log-ibadah-${props.peserta?.no_wa ?? 'rapor'}.png`;
     link2.href = dataUrl2;
     link2.click();
 }
@@ -228,13 +228,13 @@ const statsFrontend = computed(() => {
 </script>
 
 <template>
-    <Head title="Raport Riyadhoh" />
+    <Head title="rapor Riyadhoh" />
 
     <!-- Screen UI -->
     <div class="print:hidden flex flex-col gap-6 p-4 max-w-3xl mx-auto">
         <div class="flex flex-col gap-1">
-            <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Raport Riyadhoh</h1>
-            <p class="text-sm text-slate-500 dark:text-slate-400">Masukkan nomor WhatsApp peserta untuk melihat raport</p>
+            <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">rapor Riyadhoh</h1>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Masukkan nomor WhatsApp peserta untuk melihat rapor</p>
         </div>
 
         <!-- Search -->
@@ -251,11 +251,11 @@ const statsFrontend = computed(() => {
                         type="text"
                         placeholder="Contoh: 08123456789"
                         class="w-full pl-9 pr-3 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition"
-                        @keydown.enter="cariRaport"
+                        @keydown.enter="carirapor"
                     />
                 </div>
                 <button
-                    @click="cariRaport"
+                    @click="carirapor"
                     :disabled="loading || !noWa.trim()"
                     class="px-5 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2"
                 >
@@ -263,7 +263,7 @@ const statsFrontend = computed(() => {
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
                     </svg>
-                    {{ loading ? 'Mencari...' : 'Tampilkan Raport' }}
+                    {{ loading ? 'Mencari...' : 'Tampilkan rapor' }}
                 </button>
             </div>
         </div>
@@ -282,7 +282,7 @@ const statsFrontend = computed(() => {
             </div>
             <button
                 v-if="peserta"
-                @click="downloadRaportPng"
+                @click="downloadraporPng"
                 class="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition"
             >
                 Download PNG
@@ -293,12 +293,12 @@ const statsFrontend = computed(() => {
     <!-- ============================================================ -->
     <!-- PRINT AREA — Landscape A4                                    -->
     <!-- ============================================================ -->
-    <div v-if="peserta && entries" class="raport-print-root">
+    <div v-if="peserta && entries" class="rapor-print-root">
 
         <!-- ======================================================== -->
         <!-- HALAMAN 1 : PIAGAM                                       -->
         <!-- ======================================================== -->
-        <div ref="page1Ref" class="raport-page certificate-page">
+        <div ref="page1Ref" class="rapor-page certificate-page">
 
             <!-- Corner ornaments -->
             <div class="corner tl"></div>
@@ -404,7 +404,7 @@ const statsFrontend = computed(() => {
         <!-- ======================================================== -->
         <!-- HALAMAN 2 : TABEL LOG IBADAH                             -->
         <!-- ======================================================== -->
-        <div ref="page2Ref" class="raport-page log-page">
+        <div ref="page2Ref" class="rapor-page log-page">
 
             <div class="log-header">
                 <div class="log-title-left">
@@ -486,18 +486,18 @@ const statsFrontend = computed(() => {
 /* ================================================================
    SCREEN: container biasa
    ================================================================ */
-.raport-print-root {
+.rapor-print-root {
     display: none; /* hidden on screen, shown on print */
 }
 
 @media print {
-    .raport-print-root {
+    .rapor-print-root {
         display: block;
     }
 }
 
 /* Preview on screen when peserta ada */
-.raport-print-root {
+.rapor-print-root {
     display: block;
     margin-top: 2rem;
     padding: 0 1rem 4rem;
@@ -506,7 +506,7 @@ const statsFrontend = computed(() => {
 /* ================================================================
    SHARED PAGE
    ================================================================ */
-.raport-page {
+.rapor-page {
     width: 297mm;
     min-height: 210mm;
     background: #fff;
@@ -859,6 +859,7 @@ const statsFrontend = computed(() => {
     align-items: center;
     border-top: 1px solid #d1fae5;
     padding-top: 2mm;
+    margin-top: 1rem;
     font-size: 6pt;
     color: #9ca3af;
 }
@@ -875,10 +876,10 @@ const statsFrontend = computed(() => {
 @media print {
     @page { size: A4 landscape; margin: 0; }
     body * { visibility: hidden; }
-    .raport-print-root,
-    .raport-print-root * { visibility: visible; }
-    .raport-print-root { position: fixed; top: 0; left: 0; }
-    .raport-page { box-shadow: none; margin: 0; page-break-after: always; }
+    .rapor-print-root,
+    .rapor-print-root * { visibility: visible; }
+    .rapor-print-root { position: fixed; top: 0; left: 0; }
+    .rapor-page { box-shadow: none; margin: 0; page-break-after: always; }
     .print\:hidden { display: none !important; }
 
     /* ensure colors print */

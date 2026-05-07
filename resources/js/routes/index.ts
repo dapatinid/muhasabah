@@ -623,76 +623,76 @@ logRiyadhohForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'>
 logRiyadhoh.form = logRiyadhohForm
 
 /**
-* @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
+* @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
 * @see app/Http/Controllers/LaporanRiyadhohController.php:99
-* @route '/raport-riyadhoh'
+* @route '/rapor-riyadhoh'
 */
-export const raportRiyadhoh = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: raportRiyadhoh.url(options),
+export const raporRiyadhoh = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: raporRiyadhoh.url(options),
     method: 'get',
 })
 
-raportRiyadhoh.definition = {
+raporRiyadhoh.definition = {
     methods: ["get","head"],
-    url: '/raport-riyadhoh',
+    url: '/rapor-riyadhoh',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
+* @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
 * @see app/Http/Controllers/LaporanRiyadhohController.php:99
-* @route '/raport-riyadhoh'
+* @route '/rapor-riyadhoh'
 */
-raportRiyadhoh.url = (options?: RouteQueryOptions) => {
-    return raportRiyadhoh.definition.url + queryParams(options)
+raporRiyadhoh.url = (options?: RouteQueryOptions) => {
+    return raporRiyadhoh.definition.url + queryParams(options)
 }
 
 /**
-* @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
+* @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
 * @see app/Http/Controllers/LaporanRiyadhohController.php:99
-* @route '/raport-riyadhoh'
+* @route '/rapor-riyadhoh'
 */
-raportRiyadhoh.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: raportRiyadhoh.url(options),
+raporRiyadhoh.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: raporRiyadhoh.url(options),
     method: 'get',
 })
 
 /**
-* @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
+* @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
 * @see app/Http/Controllers/LaporanRiyadhohController.php:99
-* @route '/raport-riyadhoh'
+* @route '/rapor-riyadhoh'
 */
-raportRiyadhoh.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: raportRiyadhoh.url(options),
+raporRiyadhoh.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: raporRiyadhoh.url(options),
     method: 'head',
 })
 
 /**
-* @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
+* @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
 * @see app/Http/Controllers/LaporanRiyadhohController.php:99
-* @route '/raport-riyadhoh'
+* @route '/rapor-riyadhoh'
 */
-const raportRiyadhohForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: raportRiyadhoh.url(options),
+const raporRiyadhohForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: raporRiyadhoh.url(options),
     method: 'get',
 })
 
 /**
-* @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
+* @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
 * @see app/Http/Controllers/LaporanRiyadhohController.php:99
-* @route '/raport-riyadhoh'
+* @route '/rapor-riyadhoh'
 */
-raportRiyadhohForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: raportRiyadhoh.url(options),
+raporRiyadhohForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: raporRiyadhoh.url(options),
     method: 'get',
 })
 
 /**
-* @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
+* @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
 * @see app/Http/Controllers/LaporanRiyadhohController.php:99
-* @route '/raport-riyadhoh'
+* @route '/rapor-riyadhoh'
 */
-raportRiyadhohForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: raportRiyadhoh.url({
+raporRiyadhohForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: raporRiyadhoh.url({
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -701,4 +701,4 @@ raportRiyadhohForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'ge
     method: 'get',
 })
 
-raportRiyadhoh.form = raportRiyadhohForm
+raporRiyadhoh.form = raporRiyadhohForm

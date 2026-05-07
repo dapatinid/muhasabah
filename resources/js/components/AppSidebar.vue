@@ -29,8 +29,8 @@ const mainNavItems: NavItem[] = [
         icon: Logs,
     },
     {
-        title: 'Raport Riyadhoh',
-        href: '/raport-riyadhoh',
+        title: 'Rapor Riyadhoh',
+        href: '/rapor-riyadhoh',
         icon: Award,
     },
 ];

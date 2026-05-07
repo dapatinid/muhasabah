@@ -96,7 +96,7 @@ public function logRiyadhoh(Request $request)
     ]);
 }
 
-public function raportRiyadhoh(Request $request)
+public function raporRiyadhoh(Request $request)
 {
     $noWa = $request->input('no_wa');
     if (!$noWa) {
@@ -120,7 +120,7 @@ public function raportRiyadhoh(Request $request)
     $totalSedekah = $deduplicated->sum('sedekah_subuh');
     $totalHari    = $deduplicated->count();
 
-    return Inertia::render('RaportRiyadhoh', [
+    return Inertia::render('RaporRiyadhoh', [
         'no_wa'   => $noWa,
         'entries' => $deduplicated,
         'peserta' => [
