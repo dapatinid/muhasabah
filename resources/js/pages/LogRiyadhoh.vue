@@ -64,6 +64,12 @@ interface Props {
 
 const props = defineProps<Props>();
 
+    console.log('Data dari Laravel:', props.entries);
+if (props.entries.length > 0) {
+    console.log('Contoh data pertama:', props.entries[0]);
+    console.log('Skor ada?', 'skor' in props.entries[0]);
+}
+
 const search = ref(props.filters?.search ?? '');
 const dateFrom = ref(props.filters?.date_from ?? '');
 const dateTo = ref(props.filters?.date_to ?? '');
