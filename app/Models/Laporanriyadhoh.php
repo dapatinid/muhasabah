@@ -3,10 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LaporanRiyadhoh extends Model
 {
+    use SoftDeletes;
     protected $table = 'laporanriyadhohs';
+
+    public static array $ibadahKeys = [
+        'tahajud', 'witir', 'qobliyah_subuh', 'subuh_jamaah',
+        'dhuha', 'dhuhur_jamaah', 'ashar_jamaah', 'maghrib_jamaah',
+        'isya_jamaah', 'sedekah_subuh', 'birrul_walidain', 'bakti_masjid',
+        'dzikir_pagi', 'dzikir_sore', 'istighfar', 'sholawat',
+        'alquran', 'puasa_sunnah',
+    ];
 
     protected $fillable = [
         'nama', 'no_wa', 'tanggal', 'hari_ke', 'grup',
