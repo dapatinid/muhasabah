@@ -51,12 +51,12 @@ interface Props {
         nama: string;
         no_wa: string;
         grup: string;
-        tanggal_mulai: string;
-        tanggal_selesai: string;
         total_hari: number;
         skor_rata: number;
         skor_total: number;
         skor_total_gabung: number;
+        tanggal_mulai: string;
+        tanggal_selesai: string;
     } | null;
 }
 
@@ -142,7 +142,11 @@ function skorColor(skor: number): string {
 }
 
 function formatTgl(tgl: string) {
-    return new Date(tgl).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+    if (!tgl) return '—'; // Jika null/undefined tampilkan strip
+    const date = new Date(tgl);
+    if (isNaN(date.getTime())) return '—'; // Jika format string bukan tanggal valid
+    
+    return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
         .replace('Minggu', 'Ahad');
 }
 

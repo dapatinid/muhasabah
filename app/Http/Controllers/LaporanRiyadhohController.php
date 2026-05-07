@@ -120,6 +120,9 @@ public function raporRiyadhoh(Request $request)
     $totalSedekah = $deduplicated->sum('sedekah_subuh');
     $totalHari    = $deduplicated->count();
 
+    $tanggalMulai = $deduplicated->first()->tanggal;
+    $tanggalSelesai = $deduplicated->last()->tanggal;    
+
     return Inertia::render('RaporRiyadhoh', [
         'no_wa'   => $noWa,
         'entries' => $deduplicated,
@@ -131,6 +134,8 @@ public function raporRiyadhoh(Request $request)
             'skor_total'        => $totalSkor,
             'skor_total_gabung' => number_format($totalSkor, 0, ',', '.') . ($totalSedekah > 0 ? ' + Rp' . number_format($totalSedekah, 0, ',', '.') : ''),
             'skor_rata'         => $totalHari > 0 ? round($totalSkor / $totalHari) : 0,
+            'tanggal_mulai'     => $tanggalMulai,
+            'tanggal_selesai'   => $tanggalSelesai,            
         ],
     ]);
 }   
