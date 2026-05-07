@@ -86,7 +86,7 @@ const donationMenus = [
                 <div class="flex gap-4 overflow-x-auto snap-x no-scrollbar px-5 pb-4">
                     
                     <div v-for="(banner, index) in banners" :key="banner.id" 
-                        class="min-w-[85%] relative h-44 rounded-3xl overflow-hidden snap-center border border-stone-800 shrink-0">
+                        class="min-w-[85%] relative h-44 rounded-3xl overflow-hidden snap-center border border-stone-800 shrink-0 select-none">
                         <img :src="banner.image" :alt="banner.title" class="absolute inset-0 w-full h-full object-cover opacity-60">
                         <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent"></div>
                         <div class="absolute bottom-5 left-5">
