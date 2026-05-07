@@ -80,7 +80,13 @@ class LaporanRiyadhohController extends Controller
         $entries = $query
             ->orderBy('tanggal', 'desc')
             ->orderBy('created_at', 'desc')
-            ->paginate(50);
+            ->paginate(50)
+            ->through(function ($item) {
+                // Paksa append secara manual untuk setiap item
+                return $item->append(['skor', 'skor_gabung']);
+            });
+
+            dd($entries->items()[0]->toArray());
 
         return Inertia::render('LogRiyadhoh', [
             'entries' => $entries->items(),
