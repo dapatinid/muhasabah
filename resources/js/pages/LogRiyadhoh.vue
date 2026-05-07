@@ -329,13 +329,13 @@ function goToPage(page: number) {
                                     {{ formatNilai(key, (entry as any)[key]) }}
                                 </td>
                                 <td class="px-4 py-3 text-center">
-                                        <span
-                                            class="inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap"
-                                            :class="skorClass(entry.skor)"
-                                        >
-                                            {{ entry.skor_gabung }}
-                                        </span>
-                                    </td>
+                                    <span
+                                        class="inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap"
+                                        :class="skorClass(entry.skor ?? 0)"
+                                    >
+                                        {{ entry.skor_gabung ?? '0' }}
+                                    </span>
+                                </td>
                             </tr>
                         </template>
                         <template v-else>

@@ -58,113 +58,80 @@ class LaporanRiyadhohController extends Controller
         return Inertia::render('LaporanLog', ['logs' => $logs]);
     }
 
-    public function logRiyadhoh(Request $request)
-    {
-        $query = LaporanRiyadhoh::query();
+public function logRiyadhoh(Request $request)
+{
+    $query = LaporanRiyadhoh::query();
 
-        if ($search = $request->input('search')) {
-            $query->where(function ($q) use ($search) {
-                $q->where('nama', 'like', "%{$search}%")
-                  ->orWhere('no_wa', 'like', "%{$search}%");
-            });
-        }
-
-        if ($dateFrom = $request->input('date_from')) {
-            $query->whereDate('tanggal', '>=', $dateFrom);
-        }
-
-        if ($dateTo = $request->input('date_to')) {
-            $query->whereDate('tanggal', '<=', $dateTo);
-        }
-
-        $entries = $query
-            ->orderBy('tanggal', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->paginate(50)
-            ->through(function ($item) {
-                // Paksa append secara manual untuk setiap item
-                return $item->append(['skor', 'skor_gabung']);
-            });
-
-        return Inertia::render('LogRiyadhoh', [
-            'entries' => $entries->items(),
-            'filters' => $request->only(['search', 'date_from', 'date_to']),
-            'meta'    => [
-                'total'        => $entries->total(),
-                'current_page' => $entries->currentPage(),
-                'last_page'    => $entries->lastPage(),
-                'per_page'     => $entries->perPage(),
-            ],
-        ]);
+    if ($search = $request->input('search')) {
+        $query->where(function ($q) use ($search) {
+            $q->where('nama', 'like', "%{$search}%")
+              ->orWhere('no_wa', 'like', "%{$search}%");
+        });
     }
 
-    public function raportRiyadhoh(Request $request)
-    {
-        $noWa = $request->input('no_wa');
-
-        if (!$noWa) {
-            return Inertia::render('RaportRiyadhoh', [
-                'no_wa'   => null,
-                'entries' => null,
-                'peserta' => null,
-            ]);
-        }
-
-        $allEntries = LaporanRiyadhoh::query()
-            ->where('no_wa', $noWa)
-            ->orderBy('hari_ke', 'asc')
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        if ($allEntries->isEmpty()) {
-            return Inertia::render('RaportRiyadhoh', [
-                'no_wa'   => $noWa,
-                'entries' => [],
-                'peserta' => null,
-            ]);
-        }
-
-        // Deduplikasi: per hari_ke, ambil yang created_at paling baru
-        $deduplicated = $allEntries
-            ->groupBy('hari_ke')
-            ->map(fn($group) => $group->sortByDesc('created_at')->first())
-            ->sortKeys()
-            ->values()
-            ->map(function ($entry) {
-                // Append computed attributes untuk dikirim ke Vue
-                $entry->skor            = $entry->skor;
-                $entry->skor_gabung     = $entry->skor_gabung;
-                $entry->sedekah_subuh = $entry->sedekah_subuh;
-                return $entry;
-            });
-
-        $first        = $allEntries->first();
-        $totalSkor    = $deduplicated->sum('skor');
-        $totalSedekah = $deduplicated->sum('sedekah_subuh');
-        $totalHari    = $deduplicated->count();
-        $skorRata     = $totalHari > 0 ? round($totalSkor / $totalHari, 0) : 0;
-
-        // Format total skor gabungan
-        $totalSkorGabung = number_format($totalSkor, 0, ',', '.');
-        if ($totalSedekah > 0) {
-            $totalSkorGabung .= ' + Rp' . number_format($totalSedekah, 0, ',', '.');
-        }
-
-        return Inertia::render('RaportRiyadhoh', [
-            'no_wa'   => $noWa,
-            'entries' => $deduplicated->values(),
-            'peserta' => [
-                'nama'              => $first->nama,
-                'no_wa'             => $first->no_wa,
-                'grup'              => $first->grup,
-                'tanggal_mulai'     => $deduplicated->min('tanggal'),
-                'tanggal_selesai'   => $deduplicated->max('tanggal'),
-                'total_hari'        => $totalHari,
-                'skor_total'        => $totalSkor,
-                'skor_total_gabung' => $totalSkorGabung,
-                'total_sedekah'     => $totalSedekah,
-                'skor_rata'         => $skorRata,
-            ],
-        ]);
+    if ($dateFrom = $request->input('date_from')) {
+        $query->whereDate('tanggal', '>=', $dateFrom);
     }
+
+    if ($dateTo = $request->input('date_to')) {
+        $query->whereDate('tanggal', '<=', $dateTo);
+    }
+
+    // Gunakan paginate secara standar. 
+    // Karena sudah ada $appends di model, skor otomatis ikut.
+    $entries = $query->orderBy('tanggal', 'desc')
+                     ->orderBy('created_at', 'desc')
+                     ->paginate(50)
+                     ->withQueryString();
+
+    return Inertia::render('LogRiyadhoh', [
+        'entries' => $entries->items(),
+        'filters' => $request->only(['search', 'date_from', 'date_to']),
+        'meta'    => [
+            'total'        => $entries->total(),
+            'current_page' => $entries->currentPage(),
+            'last_page'    => $entries->lastPage(),
+            'per_page'     => $entries->perPage(),
+        ],
+    ]);
+}
+
+public function raportRiyadhoh(Request $request)
+{
+    $noWa = $request->input('no_wa');
+    if (!$noWa) {
+        return Inertia::render('RaportRiyadhoh', ['no_wa' => null, 'entries' => null, 'peserta' => null]);
+    }
+
+    $allEntries = LaporanRiyadhoh::where('no_wa', $noWa)
+        ->orderBy('hari_ke', 'asc')
+        ->get();
+
+    if ($allEntries->isEmpty()) {
+        return Inertia::render('RaportRiyadhoh', ['no_wa' => $noWa, 'entries' => [], 'peserta' => null]);
+    }
+
+    // Deduplikasi logic
+    $deduplicated = $allEntries->groupBy('hari_ke')
+        ->map(fn($group) => $group->sortByDesc('created_at')->first())
+        ->values();
+
+    $totalSkor    = $deduplicated->sum('skor');
+    $totalSedekah = $deduplicated->sum('sedekah_subuh');
+    $totalHari    = $deduplicated->count();
+
+    return Inertia::render('RaportRiyadhoh', [
+        'no_wa'   => $noWa,
+        'entries' => $deduplicated,
+        'peserta' => [
+            'nama'              => $allEntries->first()->nama,
+            'no_wa'             => $noWa,
+            'grup'              => $allEntries->first()->grup,
+            'total_hari'        => $totalHari,
+            'skor_total'        => $totalSkor,
+            'skor_total_gabung' => number_format($totalSkor, 0, ',', '.') . ($totalSedekah > 0 ? ' + Rp' . number_format($totalSedekah, 0, ',', '.') : ''),
+            'skor_rata'         => $totalHari > 0 ? round($totalSkor / $totalHari) : 0,
+        ],
+    ]);
+}   
 }
