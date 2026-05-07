@@ -100,7 +100,7 @@ public function raporRiyadhoh(Request $request)
 {
     $noWa = $request->input('no_wa');
     if (!$noWa) {
-        return Inertia::render('RaportRiyadhoh', ['no_wa' => null, 'entries' => null, 'peserta' => null]);
+        return Inertia::render('RaporRiyadhoh', ['no_wa' => null, 'entries' => null, 'peserta' => null]);
     }
 
     $allEntries = LaporanRiyadhoh::where('no_wa', $noWa)
@@ -108,7 +108,7 @@ public function raporRiyadhoh(Request $request)
         ->get();
 
     if ($allEntries->isEmpty()) {
-        return Inertia::render('RaportRiyadhoh', ['no_wa' => $noWa, 'entries' => [], 'peserta' => null]);
+        return Inertia::render('RaporRiyadhoh', ['no_wa' => $noWa, 'entries' => [], 'peserta' => null]);
     }
 
     // Deduplikasi logic

@@ -10,7 +10,7 @@ defineOptions({
     layout: {
         breadcrumbs: [
             { title: 'Dashboard', href: dashboard() },
-            { title: 'rapor Riyadhoh', href: '/rapor-riyadhoh' },
+            { title: 'Rapor Riyadhoh', href: '/rapor-riyadhoh' },
         ],
     },
 });
@@ -232,12 +232,12 @@ const statsFrontend = computed(() => {
 </script>
 
 <template>
-    <Head title="rapor Riyadhoh" />
+    <Head title="Rapor Riyadhoh" />
 
     <!-- Screen UI -->
     <div class="print:hidden flex flex-col gap-6 p-4 max-w-3xl mx-auto">
         <div class="flex flex-col gap-1">
-            <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">rapor Riyadhoh</h1>
+            <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Rapor Riyadhoh</h1>
             <p class="text-sm text-slate-500 dark:text-slate-400">Masukkan nomor WhatsApp peserta untuk melihat rapor</p>
         </div>
 
