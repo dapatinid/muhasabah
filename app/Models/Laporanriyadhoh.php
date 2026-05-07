@@ -38,6 +38,7 @@ class LaporanRiyadhoh extends Model
         'sedekah_subuh'=> 'integer',
     ];
 
+    protected $appends = ['skor', 'skor_gabung'];
     public static array $rakaatKeys = ['tahajud', 'witir', 'dhuha'];
     public static array $hitunganKeys = ['istighfar', 'sholawat'];
     public static array $pilihanKeys = [

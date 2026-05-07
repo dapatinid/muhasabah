@@ -80,14 +80,7 @@ class LaporanRiyadhohController extends Controller
         $entries = $query
             ->orderBy('tanggal', 'desc')
             ->orderBy('created_at', 'desc')
-            ->paginate(50)
-            ->through(function ($item) {
-                // Sertakan computed attributes
-                $item->skor         = $item->skor;
-                $item->skor_gabung  = $item->skor_gabung;
-                $item->sedekah_subuh = $item->sedekah_subuh;
-                return $item;
-            });
+            ->paginate(50);
 
         return Inertia::render('LogRiyadhoh', [
             'entries' => $entries->items(),
