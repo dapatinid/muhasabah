@@ -122,7 +122,7 @@ const donationMenus = [
                 </div>
                 <div class="space-y-4">
                     <div v-for="article in articles" :key="article.title" 
-                         class="bg-stone-900/50 border border-stone-800/60 rounded-2xl p-3 flex gap-4 hover:border-amber-500/30 transition-all">
+                         class="bg-stone-900/50 border border-stone-800/60 rounded-2xl p-3 flex gap-4 hover:border-amber-500/30 transition-all select-none">
                         <img :src="article.image" :alt="article.title" class="w-24 h-24 rounded-xl object-cover shrink-0">
                         <div class="flex flex-col justify-between py-1">
                             <div>
