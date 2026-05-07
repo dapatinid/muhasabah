@@ -540,3 +540,165 @@ dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 })
 
 dashboard.form = dashboardForm
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::logRiyadhoh
+* @see app/Http/Controllers/LaporanRiyadhohController.php:64
+* @route '/log-riyadhoh'
+*/
+export const logRiyadhoh = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: logRiyadhoh.url(options),
+    method: 'get',
+})
+
+logRiyadhoh.definition = {
+    methods: ["get","head"],
+    url: '/log-riyadhoh',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::logRiyadhoh
+* @see app/Http/Controllers/LaporanRiyadhohController.php:64
+* @route '/log-riyadhoh'
+*/
+logRiyadhoh.url = (options?: RouteQueryOptions) => {
+    return logRiyadhoh.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::logRiyadhoh
+* @see app/Http/Controllers/LaporanRiyadhohController.php:64
+* @route '/log-riyadhoh'
+*/
+logRiyadhoh.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: logRiyadhoh.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::logRiyadhoh
+* @see app/Http/Controllers/LaporanRiyadhohController.php:64
+* @route '/log-riyadhoh'
+*/
+logRiyadhoh.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: logRiyadhoh.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::logRiyadhoh
+* @see app/Http/Controllers/LaporanRiyadhohController.php:64
+* @route '/log-riyadhoh'
+*/
+const logRiyadhohForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: logRiyadhoh.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::logRiyadhoh
+* @see app/Http/Controllers/LaporanRiyadhohController.php:64
+* @route '/log-riyadhoh'
+*/
+logRiyadhohForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: logRiyadhoh.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::logRiyadhoh
+* @see app/Http/Controllers/LaporanRiyadhohController.php:64
+* @route '/log-riyadhoh'
+*/
+logRiyadhohForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: logRiyadhoh.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+logRiyadhoh.form = logRiyadhohForm
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
+* @see app/Http/Controllers/LaporanRiyadhohController.php:107
+* @route '/raport-riyadhoh'
+*/
+export const raportRiyadhoh = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: raportRiyadhoh.url(options),
+    method: 'get',
+})
+
+raportRiyadhoh.definition = {
+    methods: ["get","head"],
+    url: '/raport-riyadhoh',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
+* @see app/Http/Controllers/LaporanRiyadhohController.php:107
+* @route '/raport-riyadhoh'
+*/
+raportRiyadhoh.url = (options?: RouteQueryOptions) => {
+    return raportRiyadhoh.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
+* @see app/Http/Controllers/LaporanRiyadhohController.php:107
+* @route '/raport-riyadhoh'
+*/
+raportRiyadhoh.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: raportRiyadhoh.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
+* @see app/Http/Controllers/LaporanRiyadhohController.php:107
+* @route '/raport-riyadhoh'
+*/
+raportRiyadhoh.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: raportRiyadhoh.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
+* @see app/Http/Controllers/LaporanRiyadhohController.php:107
+* @route '/raport-riyadhoh'
+*/
+const raportRiyadhohForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: raportRiyadhoh.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
+* @see app/Http/Controllers/LaporanRiyadhohController.php:107
+* @route '/raport-riyadhoh'
+*/
+raportRiyadhohForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: raportRiyadhoh.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
+* @see app/Http/Controllers/LaporanRiyadhohController.php:107
+* @route '/raport-riyadhoh'
+*/
+raportRiyadhohForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: raportRiyadhoh.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+raportRiyadhoh.form = raportRiyadhohForm

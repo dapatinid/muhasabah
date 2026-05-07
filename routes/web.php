@@ -19,6 +19,8 @@ Route::get('/laporan-riyadhoh/log', [LaporanRiyadhohController::class, 'log'])->
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
     Route::get('/laporan', [LaporanRiyadhohController::class, 'index'])->name('laporan.index');
+    Route::get('/log-riyadhoh', [LaporanRiyadhohController::class, 'logRiyadhoh'])->name('log-riyadhoh');
+    Route::get('/raport-riyadhoh', [LaporanRiyadhohController::class, 'raportRiyadhoh'])->name('raport-riyadhoh');
 });
 
 require __DIR__.'/settings.php';
