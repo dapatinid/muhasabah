@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -48,36 +49,38 @@ class LaporanRiyadhoh extends Model
         'dzikir_pagi', 'dzikir_sore', 'alquran', 'puasa_sunnah',
     ];
 
-    /**
-     * Hitung skor murni (tanpa sedekah)
-     */
-    public function getSkorAttribute(): int
-    {
-        $skor = 0;
-        foreach (self::$rakaatKeys as $key) {
-            $skor += ((int) $this->$key) * 100;
-        }
-        foreach (self::$hitunganKeys as $key) {
-            $skor += (int) $this->$key;
-        }
-        foreach (self::$pilihanKeys as $key) {
-            $val = strtolower($this->$key ?? '');
-            $skor += match ($val) {
-                'sempurna', 'ya', 'jamaah' => 1000,
-                'sebagian'                => 500,
-                default                   => 0,
-            };
-        }
-        return $skor;
-    }
+protected function skor(): Attribute
+{
+    return Attribute::make(
+        get: function () {
+            $skor = 0;
+            foreach (self::$rakaatKeys as $key) {
+                $skor += ((int) $this->$key) * 100;
+            }
+            foreach (self::$hitunganKeys as $key) {
+                $skor += (int) $this->$key;
+            }
+            foreach (self::$pilihanKeys as $key) {
+                $val = strtolower($this->$key ?? '');
+                $skor += match ($val) {
+                    'sempurna', 'ya', 'jamaah' => 1000,
+                    'sebagian'                => 500,
+                    default                   => 0,
+                };
+            }
+            return $skor;
+        },
+    );
+}
 
-    /**
-     * Format tampilan: 11.200 + Rp30.000
-     */
-    public function getSkorGabungAttribute(): string
-    {
-        $skorMurni = number_format($this->skor, 0, ',', '.');
-        $sedekah = $this->sedekah_subuh ?? 0;
-        return "{$skorMurni} + Rp" . number_format($sedekah, 0, ',', '.');
-    }
+protected function skorGabung(): Attribute
+{
+    return Attribute::make(
+        get: function () {
+            $skorMurni = number_format($this->skor, 0, ',', '.');
+            $sedekah = $this->sedekah_subuh ?? 0;
+            return "{$skorMurni} + Rp" . number_format($sedekah, 0, ',', '.');
+        },
+    );
+}    
 }
