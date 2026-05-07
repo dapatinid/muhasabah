@@ -86,8 +86,6 @@ class LaporanRiyadhohController extends Controller
                 return $item->append(['skor', 'skor_gabung']);
             });
 
-            dd($entries->items()[0]->toArray());
-
         return Inertia::render('LogRiyadhoh', [
             'entries' => $entries->items(),
             'filters' => $request->only(['search', 'date_from', 'date_to']),
