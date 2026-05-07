@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::store
-* @see app/Http/Controllers/LaporanRiyadhohController.php:15
+* @see app/Http/Controllers/LaporanRiyadhohController.php:13
 * @route '/laporan-riyadhoh-submit'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::store
-* @see app/Http/Controllers/LaporanRiyadhohController.php:15
+* @see app/Http/Controllers/LaporanRiyadhohController.php:13
 * @route '/laporan-riyadhoh-submit'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::store
-* @see app/Http/Controllers/LaporanRiyadhohController.php:15
+* @see app/Http/Controllers/LaporanRiyadhohController.php:13
 * @route '/laporan-riyadhoh-submit'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -35,7 +35,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::store
-* @see app/Http/Controllers/LaporanRiyadhohController.php:15
+* @see app/Http/Controllers/LaporanRiyadhohController.php:13
 * @route '/laporan-riyadhoh-submit'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -45,7 +45,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::store
-* @see app/Http/Controllers/LaporanRiyadhohController.php:15
+* @see app/Http/Controllers/LaporanRiyadhohController.php:13
 * @route '/laporan-riyadhoh-submit'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -57,7 +57,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::log
-* @see app/Http/Controllers/LaporanRiyadhohController.php:43
+* @see app/Http/Controllers/LaporanRiyadhohController.php:41
 * @route '/laporan-riyadhoh/log'
 */
 export const log = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -72,7 +72,7 @@ log.definition = {
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::log
-* @see app/Http/Controllers/LaporanRiyadhohController.php:43
+* @see app/Http/Controllers/LaporanRiyadhohController.php:41
 * @route '/laporan-riyadhoh/log'
 */
 log.url = (options?: RouteQueryOptions) => {
@@ -81,7 +81,7 @@ log.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::log
-* @see app/Http/Controllers/LaporanRiyadhohController.php:43
+* @see app/Http/Controllers/LaporanRiyadhohController.php:41
 * @route '/laporan-riyadhoh/log'
 */
 log.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -91,7 +91,7 @@ log.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::log
-* @see app/Http/Controllers/LaporanRiyadhohController.php:43
+* @see app/Http/Controllers/LaporanRiyadhohController.php:41
 * @route '/laporan-riyadhoh/log'
 */
 log.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -101,7 +101,7 @@ log.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::log
-* @see app/Http/Controllers/LaporanRiyadhohController.php:43
+* @see app/Http/Controllers/LaporanRiyadhohController.php:41
 * @route '/laporan-riyadhoh/log'
 */
 const logForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -111,7 +111,7 @@ const logForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::log
-* @see app/Http/Controllers/LaporanRiyadhohController.php:43
+* @see app/Http/Controllers/LaporanRiyadhohController.php:41
 * @route '/laporan-riyadhoh/log'
 */
 logForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -121,7 +121,7 @@ logForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::log
-* @see app/Http/Controllers/LaporanRiyadhohController.php:43
+* @see app/Http/Controllers/LaporanRiyadhohController.php:41
 * @route '/laporan-riyadhoh/log'
 */
 logForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -219,7 +219,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::logRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:64
+* @see app/Http/Controllers/LaporanRiyadhohController.php:61
 * @route '/log-riyadhoh'
 */
 export const logRiyadhoh = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -234,7 +234,7 @@ logRiyadhoh.definition = {
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::logRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:64
+* @see app/Http/Controllers/LaporanRiyadhohController.php:61
 * @route '/log-riyadhoh'
 */
 logRiyadhoh.url = (options?: RouteQueryOptions) => {
@@ -243,7 +243,7 @@ logRiyadhoh.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::logRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:64
+* @see app/Http/Controllers/LaporanRiyadhohController.php:61
 * @route '/log-riyadhoh'
 */
 logRiyadhoh.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -253,7 +253,7 @@ logRiyadhoh.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::logRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:64
+* @see app/Http/Controllers/LaporanRiyadhohController.php:61
 * @route '/log-riyadhoh'
 */
 logRiyadhoh.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -263,7 +263,7 @@ logRiyadhoh.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::logRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:64
+* @see app/Http/Controllers/LaporanRiyadhohController.php:61
 * @route '/log-riyadhoh'
 */
 const logRiyadhohForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -273,7 +273,7 @@ const logRiyadhohForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::logRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:64
+* @see app/Http/Controllers/LaporanRiyadhohController.php:61
 * @route '/log-riyadhoh'
 */
 logRiyadhohForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -283,7 +283,7 @@ logRiyadhohForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::logRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:64
+* @see app/Http/Controllers/LaporanRiyadhohController.php:61
 * @route '/log-riyadhoh'
 */
 logRiyadhohForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -300,7 +300,7 @@ logRiyadhoh.form = logRiyadhohForm
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:107
+* @see app/Http/Controllers/LaporanRiyadhohController.php:104
 * @route '/raport-riyadhoh'
 */
 export const raportRiyadhoh = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -315,7 +315,7 @@ raportRiyadhoh.definition = {
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:107
+* @see app/Http/Controllers/LaporanRiyadhohController.php:104
 * @route '/raport-riyadhoh'
 */
 raportRiyadhoh.url = (options?: RouteQueryOptions) => {
@@ -324,7 +324,7 @@ raportRiyadhoh.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:107
+* @see app/Http/Controllers/LaporanRiyadhohController.php:104
 * @route '/raport-riyadhoh'
 */
 raportRiyadhoh.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -334,7 +334,7 @@ raportRiyadhoh.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:107
+* @see app/Http/Controllers/LaporanRiyadhohController.php:104
 * @route '/raport-riyadhoh'
 */
 raportRiyadhoh.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -344,7 +344,7 @@ raportRiyadhoh.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => 
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:107
+* @see app/Http/Controllers/LaporanRiyadhohController.php:104
 * @route '/raport-riyadhoh'
 */
 const raportRiyadhohForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -354,7 +354,7 @@ const raportRiyadhohForm = (options?: RouteQueryOptions): RouteFormDefinition<'g
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:107
+* @see app/Http/Controllers/LaporanRiyadhohController.php:104
 * @route '/raport-riyadhoh'
 */
 raportRiyadhohForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -364,7 +364,7 @@ raportRiyadhohForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raportRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:107
+* @see app/Http/Controllers/LaporanRiyadhohController.php:104
 * @route '/raport-riyadhoh'
 */
 raportRiyadhohForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

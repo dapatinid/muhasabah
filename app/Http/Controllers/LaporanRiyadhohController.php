@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\LaporanRiyadhoh;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class LaporanRiyadhohController extends Controller
 {
-    use SoftDeletes;
 
     public function store(Request $request)
     {
@@ -43,7 +41,6 @@ class LaporanRiyadhohController extends Controller
     public function log()
     {
         $logs = LaporanRiyadhoh::query()
-            ->whereNull('deleted_at')
             ->orderBy('tanggal', 'desc')
             ->orderBy('created_at', 'asc')
             ->get()
@@ -63,7 +60,7 @@ class LaporanRiyadhohController extends Controller
 
     public function logRiyadhoh(Request $request)
     {
-        $query = LaporanRiyadhoh::query()->whereNull('deleted_at');
+        $query = LaporanRiyadhoh::query();
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
@@ -118,7 +115,6 @@ class LaporanRiyadhohController extends Controller
 
         $allEntries = LaporanRiyadhoh::query()
             ->where('no_wa', $noWa)
-            ->whereNull('deleted_at')
             ->orderBy('hari_ke', 'asc')
             ->orderBy('created_at', 'desc')
             ->get();
