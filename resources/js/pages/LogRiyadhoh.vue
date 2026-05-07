@@ -188,6 +188,58 @@ function goToPage(page: number) {
         { preserveState: true, replace: true }
     );
 }
+
+// 1. Definisikan kategori kunci (sama dengan di Laravel)
+const rakaatKeys = ['tahajud', 'witir', 'dhuha'];
+const hitunganKeys = ['istighfar', 'sholawat'];
+const pilihanKeys = [
+    'qobliyah_subuh', 'subuh_jamaah', 'dhuhur_jamaah', 'ashar_jamaah',
+    'maghrib_jamaah', 'isya_jamaah', 'birrul_walidain', 'bakti_masjid',
+    'dzikir_pagi', 'dzikir_sore', 'alquran', 'puasa_sunnah',
+];
+
+// 2. Fungsi Hitung Skor Murni
+function hitungSkor(entry: LogEntry): number {
+    let skor = 0;
+
+    // Hitung Rakaat (x100)
+    rakaatKeys.forEach(key => {
+        const val = Number((entry as any)[key]) || 0;
+        skor += val * 100;
+    });
+
+    // Hitung Hitungan (x1)
+    hitunganKeys.forEach(key => {
+        const val = Number((entry as any)[key]) || 0;
+        skor += val;
+    });
+
+    // Hitung Pilihan String
+    pilihanKeys.forEach(key => {
+        const val = String((entry as any)[key] || '').toLowerCase();
+        if (['sempurna', 'ya', 'jamaah'].includes(val)) {
+            skor += 1000;
+        } else if (['sebagian', 'sendiri'].includes(val)) {
+            skor += 500;
+        }
+    });
+
+    return skor;
+}
+
+// 3. Fungsi Format Skor Gabungan (Skor + Sedekah)
+function formatSkorGabung(entry: LogEntry): string {
+    const skorMurni = hitungSkor(entry);
+    const sedekah = Number(entry.sedekah_subuh) || 0;
+    
+    const formattedSkor = skorMurni.toLocaleString('id-ID');
+    
+    if (sedekah > 0) {
+        return `${formattedSkor} + Rp ${sedekah.toLocaleString('id-ID')}`;
+    }
+    
+    return formattedSkor;
+}
 </script>
 
 <template>
@@ -329,11 +381,13 @@ function goToPage(page: number) {
                                     {{ formatNilai(key, (entry as any)[key]) }}
                                 </td>
                                 <td class="px-4 py-3 text-center">
+                                    <!-- Kirim hasil hitungSkor ke skorClass untuk warna -->
                                     <span
                                         class="inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap"
-                                        :class="skorClass(entry.skor ?? 0)"
+                                        :class="skorClass(hitungSkor(entry))"
                                     >
-                                        {{ entry.skor_gabung ?? '0' }}
+                                        <!-- Tampilkan skor gabungan hasil hitungan frontend -->
+                                        {{ formatSkorGabung(entry) }}
                                     </span>
                                 </td>
                             </tr>

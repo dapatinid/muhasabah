@@ -136,9 +136,9 @@ function nilaiClass(key: string, value: any): string {
 }
 
 function skorColor(skor: number): string {
-    if (skor >= 15) return '#16a34a';
-    if (skor >= 10) return '#d97706';
-    return '#dc2626';
+    if (skor >= 8000) return '#16a34a'; // Hijau jika bagus
+    if (skor >= 4000) return '#d97706'; // Kuning/Amber jika sedang
+    return '#dc2626'; // Merah jika kurang
 }
 
 function formatTgl(tgl: string) {
@@ -176,6 +176,55 @@ async function downloadRaportPng() {
     link2.href = dataUrl2;
     link2.click();
 }
+
+// --- LOGIC PERHITUNGAN FRONTEND ---
+
+const rakaatKeys = ['tahajud', 'witir', 'dhuha'];
+const hitunganKeys = ['istighfar', 'sholawat'];
+const pilihanKeys = [
+    'qobliyah_subuh', 'subuh_jamaah', 'dhuhur_jamaah', 'ashar_jamaah',
+    'maghrib_jamaah', 'isya_jamaah', 'birrul_walidain', 'bakti_masjid',
+    'dzikir_pagi', 'dzikir_sore', 'alquran', 'puasa_sunnah',
+];
+
+// Fungsi hitung skor per entri
+function hitungSkor(entry: LogEntry): number {
+    let skor = 0;
+    rakaatKeys.forEach(key => {
+        skor += (Number((entry as any)[key]) || 0) * 100;
+    });
+    hitunganKeys.forEach(key => {
+        skor += (Number((entry as any)[key]) || 0);
+    });
+    pilihanKeys.forEach(key => {
+        const val = String((entry as any)[key] || '').toLowerCase();
+        if (['sempurna', 'ya', 'jamaah'].includes(val)) skor += 1000;
+        else if (['sebagian', 'sendiri'].includes(val)) skor += 500;
+    });
+    return skor;
+}
+
+// Fungsi format skor gabungan (Skor + Sedekah)
+function formatSkorGabung(entry: LogEntry): string {
+    const skorMurni = hitungSkor(entry);
+    const sedekah = Number(entry.sedekah_subuh) || 0;
+    const formatted = skorMurni.toLocaleString('id-ID');
+    return sedekah > 0 ? `${formatted} + Rp${sedekah.toLocaleString('id-ID')}` : formatted;
+}
+
+// Computed property untuk menghitung total akumulasi dari semua entri yang ada
+const statsFrontend = computed(() => {
+    if (!props.entries || props.entries.length === 0) return { totalSkor: 0, totalSedekah: 0, rataRata: 0, gabung: '0' };
+    
+    const totalSkor = props.entries.reduce((acc, curr) => acc + hitungSkor(curr), 0);
+    const totalSedekah = props.entries.reduce((acc, curr) => acc + (Number(curr.sedekah_subuh) || 0), 0);
+    const rataRata = Math.round(totalSkor / props.entries.length);
+    
+    let gabung = totalSkor.toLocaleString('id-ID');
+    if (totalSedekah > 0) gabung += ` + Rp${totalSedekah.toLocaleString('id-ID')}`;
+    
+    return { totalSkor, totalSedekah, rataRata, gabung };
+});
 </script>
 
 <template>
@@ -298,11 +347,11 @@ async function downloadRaportPng() {
                     dimulai sejak <strong>{{ formatTgl(peserta.tanggal_mulai) }}</strong> hingga <strong>{{ formatTgl(peserta.tanggal_selesai) }}</strong>.
                     Semoga amal ibadah ini menjadi bekal di dunia dan akhirat.
                 </p>
-
-                <!-- Stats baris -->
+                
+                <!-- Stats baris pada Piagam -->
                 <div class="cert-stats">
                     <div class="cert-stat-item">
-                        <div class="stat-angka">{{ peserta.total_hari }}</div>
+                        <div class="stat-angka">{{ props.entries?.length || 0 }}</div>
                         <div class="stat-label">Hari Tercatat</div>
                     </div>
 
@@ -310,7 +359,7 @@ async function downloadRaportPng() {
 
                     <div class="cert-stat-item">
                         <div class="stat-angka">
-                            Rp{{ Number(peserta.total_sedekah).toLocaleString('id-ID') }}
+                            Rp{{ statsFrontend.totalSedekah.toLocaleString('id-ID') }}
                         </div>
                         <div class="stat-label">Sedekah</div>
                     </div>
@@ -319,7 +368,7 @@ async function downloadRaportPng() {
 
                     <div class="cert-stat-item">
                         <div class="stat-angka">
-                            {{ Number(peserta.skor_total).toLocaleString('id-ID') }}
+                            {{ statsFrontend.totalSkor.toLocaleString('id-ID') }}
                         </div>
                         <div class="stat-label">Skor</div>
                     </div>
@@ -328,7 +377,7 @@ async function downloadRaportPng() {
 
                     <div class="cert-stat-item">
                         <div class="stat-angka">
-                            {{ Number(peserta.skor_rata).toLocaleString('id-ID') }}
+                            {{ statsFrontend.rataRata.toLocaleString('id-ID') }}
                         </div>
                         <div class="stat-label">Rata-rata Skor</div>
                     </div>
@@ -400,8 +449,11 @@ async function downloadRaportPng() {
                                 <span v-else class="empty-dash">—</span>
                             </td>
                             <td class="col-skor">
-                                <span v-if="entry" class="skor-badge">
-                                    {{ entry.skor_gabung }}
+                                <span v-if="entry" 
+                                    class="skor-badge" 
+                                    :style="{ color: skorColor(hitungSkor(entry)), borderColor: skorColor(hitungSkor(entry)) }">
+                                    <!-- Ganti entry.skor_gabung menjadi formatSkorGabung(entry) -->
+                                    {{ formatSkorGabung(entry) }}
                                 </span>
                                 <span v-else class="empty-dash">—</span>
                             </td>
@@ -412,7 +464,8 @@ async function downloadRaportPng() {
                             <td colspan="2" class="tfoot-label">TOTAL / RATA-RATA</td>
                             <td v-for="col in ibadahCols" :key="col.key" class="col-ibadah tfoot-val">—</td>
                             <td class="col-skor tfoot-skor">
-                                {{ peserta.skor_total_gabung }}
+                                <!-- Pakai statsFrontend.gabung -->
+                                {{ statsFrontend.gabung }}
                             </td>
                         </tr>
                     </tfoot>
