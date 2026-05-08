@@ -171,3 +171,31 @@
     }
 }
 
+/* Targetkan class .dark atau selector yang menandakan mode dark */
+.dark::-webkit-scrollbar,
+.dark *::-webkit-scrollbar {
+  width: 12px; /* Lebar scrollbar */
+}
+
+.dark::-webkit-scrollbar-track,
+.dark *::-webkit-scrollbar-track {
+  background: #000000; /* Warna dasar/jalur scroll */
+}
+
+.dark::-webkit-scrollbar-thumb,
+.dark *::-webkit-scrollbar-thumb {
+  background-color: #333333; /* Warna handle/batang scroll */
+  border-radius: 6px;
+  border: 3px solid #000000; /* Menciptakan efek padding */
+}
+
+.dark::-webkit-scrollbar-thumb:hover,
+.dark *::-webkit-scrollbar-thumb:hover {
+  background-color: #444444; /* Warna saat mouse di atasnya */
+}
+
+.dark {
+  /* scrollbar-color: [Warna Handle] [Warna Track] */
+  scrollbar-color: #333333 #000000;
+  scrollbar-width: thin;
+}
