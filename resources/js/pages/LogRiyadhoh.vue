@@ -2,6 +2,7 @@
 import { Head, router } from '@inertiajs/vue3';
 import { ref, computed, watch } from 'vue';
 import { dashboard } from '@/routes';
+import { ChevronsLeft, ChevronsRight, Ellipsis } from 'lucide-vue-next';
 
 defineOptions({
     layout: {
@@ -240,6 +241,30 @@ function formatSkorGabung(entry: LogEntry): string {
     
     return formattedSkor;
 }
+
+// Pagination handler
+
+const displayedPages = computed(() => {
+    const current = props.meta.current_page;
+    const last = props.meta.last_page;
+    const delta = 2; // Jumlah halaman di kiri dan kanan halaman aktif
+    
+    let start = Math.max(1, current - delta);
+    let end = Math.min(last, current + delta);
+
+    // Penyesuaian jika di awal atau di akhir range
+    if (current <= delta) {
+        end = Math.min(last, start + (delta * 2));
+    } else if (current > last - delta) {
+        start = Math.max(1, last - (delta * 2));
+    }
+
+    const pages = [];
+    for (let i = start; i <= end; i++) {
+        pages.push(i);
+    }
+    return pages;
+});
 </script>
 
 <template>
@@ -412,21 +437,31 @@ function formatSkorGabung(entry: LogEntry): string {
             <!-- Pagination -->
             <div
                 v-if="meta && meta.last_page > 1"
-                class="flex items-center justify-between px-4 py-3 border-t border-slate-100 dark:border-slate-800"
+                class="flex items-center justify-between px-4 py-3 border-t border-slate-100 dark:border-slate-800 overflow-x-auto"
             >
-                <p class="text-xs text-slate-400 dark:text-slate-500">
-                    Halaman {{ meta.current_page }} dari {{ meta.last_page }}
+                <p class="text-xs text-slate-400 dark:text-slate-500 text-nowrap">
+                    Hal {{ meta.current_page }} dari {{ meta.last_page }}
                 </p>
-                <div class="flex gap-1">
+                <div class="flex gap-1 ms-3">              
+                    <!-- Tombol First Page << -->
                     <button
                         :disabled="meta.current_page <= 1"
-                        @click="goToPage(meta.current_page - 1)"
+                        @click="goToPage(1)"
                         class="px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition"
                     >
-                        ← Prev
+                        <ChevronsLeft class="h-4 w-4" />
                     </button>
+
+                    <button v-show="meta.current_page > 3"
+                        disabled 
+                        class="px-1 py-1.5 rounded-lg text-xs font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 transition"
+                    >
+                        <Ellipsis class="h-4 w-4" />
+                    </button>      
+
+                    <!-- Loop Halaman yang sudah difilter -->
                     <button
-                        v-for="page in meta.last_page"
+                        v-for="page in displayedPages"
                         :key="page"
                         @click="goToPage(page)"
                         class="px-3 py-1.5 rounded-lg text-xs font-medium border transition"
@@ -436,12 +471,21 @@ function formatSkorGabung(entry: LogEntry): string {
                     >
                         {{ page }}
                     </button>
+
+                    <button v-show="meta.current_page < meta.last_page - 2"
+                        disabled 
+                        class="px-1 py-1.5 rounded-lg text-xs font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 transition"
+                    >
+                        <Ellipsis class="h-4 w-4" />
+                    </button>   
+
+                    <!-- Tombol Last Page >> -->
                     <button
                         :disabled="meta.current_page >= meta.last_page"
-                        @click="goToPage(meta.current_page + 1)"
+                        @click="goToPage(meta.last_page)"
                         class="px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition"
                     >
-                        Next →
+                        <ChevronsRight class="h-4 w-4" />
                     </button>
                 </div>
             </div>
