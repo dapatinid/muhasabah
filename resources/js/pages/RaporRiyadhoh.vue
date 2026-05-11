@@ -5,6 +5,7 @@ import { dashboard } from '@/routes';
 import { toPng } from 'html-to-image';
 import { nextTick } from 'vue';
 import { Award } from 'lucide-vue-next';
+import SearchableSelect from '@/Components/SearchableSelect.vue';
 
 defineOptions({
     layout: {
@@ -47,6 +48,7 @@ interface LogEntry {
 interface Props {
     no_wa?: string;
     entries?: LogEntry[];
+    all_participants?: { nama: string, no_wa: string }[];
     peserta?: {
         nama: string;
         no_wa: string;
@@ -65,18 +67,31 @@ const props = defineProps<Props>();
 const noWa = ref(props.no_wa ?? '');
 const loading = ref(false);
 
-function carirapor() {
-    if (!noWa.value.trim()) return;
+// Fungsi cari rapor
+function carirapor(manualValue?: string) {
+    const valueToSearch = manualValue || noWa.value;
+    
+    if (!valueToSearch) return;
+    
     loading.value = true;
     router.get(
         '/rapor-riyadhoh',
-        { no_wa: noWa.value.trim() },
+        { no_wa: valueToSearch },
         {
             preserveState: true,
             replace: true,
             onFinish: () => { loading.value = false; },
         }
     );
+}
+
+// Handler untuk SearchableSelect
+function handleSelect(val: any) {
+    // val adalah no_wa karena kita pakai value-key="no_wa"
+    if (val) {
+        noWa.value = val;
+        carirapor(val);
+    }
 }
 
 const ibadahCols = [
@@ -229,6 +244,7 @@ const statsFrontend = computed(() => {
     
     return { totalSkor, totalSedekah, rataRata, gabung };
 });
+
 </script>
 
 <template>
@@ -243,34 +259,31 @@ const statsFrontend = computed(() => {
 
         <!-- Search -->
         <div class="rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-white dark:bg-sidebar p-4">
-            <div class="flex gap-3 flex-col sm:flex-row">
-                <div class="relative flex-1">
-                    <span class="absolute inset-y-0 left-3 flex items-center text-slate-400 pointer-events-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                    </span>
-                    <input
-                        v-model="noWa"
-                        type="text"
-                        placeholder="Contoh: 08123456789"
-                        class="w-full pl-9 pr-3 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition"
-                        @keydown.enter="carirapor"
-                    />
+                <div class="flex gap-3 flex-col sm:flex-row items-end">
+                    <div class="flex-1 w-full text-left">
+                        <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 text-left">Cari Peserta (Nama / No. WA)</label>
+                        <!-- KOMPONEN SEARCHABLE SELECT -->
+                        <SearchableSelect
+                            v-model="noWa"
+                            :items="all_participants ?? []" 
+                            label="Peserta"
+                            value-key="no_wa"
+                            label-key="nama"
+                            :label-formatter="(item) => `${item.nama} (${item.no_wa})`"
+                            @update:modelValue="handleSelect"
+                        />
+                    </div>
+                    
+                    <button
+                        @click="carirapor()"
+                        :disabled="loading || !noWa"
+                        class="px-5 py-2.5 h-[42px] rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold disabled:opacity-50 transition flex items-center gap-2"
+                    >
+                        <!-- SVG Loading tetap sama -->
+                        {{ loading ? 'Mencari...' : 'Tampilkan' }}
+                    </button>
                 </div>
-                <button
-                    @click="carirapor"
-                    :disabled="loading || !noWa.trim()"
-                    class="px-5 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2"
-                >
-                    <svg v-if="loading" class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-                    </svg>
-                    {{ loading ? 'Mencari...' : 'Tampilkan rapor' }}
-                </button>
-            </div>
-        </div>
+            </div>           
 
         <!-- Not found -->
         <div v-if="no_wa && !peserta && entries !== undefined" class="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-6 text-center">

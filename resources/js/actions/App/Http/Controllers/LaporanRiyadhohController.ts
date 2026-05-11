@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::store
 * @see app/Http/Controllers/LaporanRiyadhohController.php:13
@@ -299,8 +299,92 @@ logRiyadhohForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'>
 logRiyadhoh.form = logRiyadhohForm
 
 /**
+* @see \App\Http\Controllers\LaporanRiyadhohController::updateLog
+* @see app/Http/Controllers/LaporanRiyadhohController.php:100
+* @route '/log-riyadhoh/{id}'
+*/
+export const updateLog = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: updateLog.url(args, options),
+    method: 'patch',
+})
+
+updateLog.definition = {
+    methods: ["patch"],
+    url: '/log-riyadhoh/{id}',
+} satisfies RouteDefinition<["patch"]>
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::updateLog
+* @see app/Http/Controllers/LaporanRiyadhohController.php:100
+* @route '/log-riyadhoh/{id}'
+*/
+updateLog.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { id: args }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            id: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        id: args.id,
+    }
+
+    return updateLog.definition.url
+            .replace('{id}', parsedArgs.id.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::updateLog
+* @see app/Http/Controllers/LaporanRiyadhohController.php:100
+* @route '/log-riyadhoh/{id}'
+*/
+updateLog.patch = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: updateLog.url(args, options),
+    method: 'patch',
+})
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::updateLog
+* @see app/Http/Controllers/LaporanRiyadhohController.php:100
+* @route '/log-riyadhoh/{id}'
+*/
+const updateLogForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updateLog.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\LaporanRiyadhohController::updateLog
+* @see app/Http/Controllers/LaporanRiyadhohController.php:100
+* @route '/log-riyadhoh/{id}'
+*/
+updateLogForm.patch = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updateLog.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+updateLog.form = updateLogForm
+
+/**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:99
+* @see app/Http/Controllers/LaporanRiyadhohController.php:120
 * @route '/rapor-riyadhoh'
 */
 export const raporRiyadhoh = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -315,7 +399,7 @@ raporRiyadhoh.definition = {
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:99
+* @see app/Http/Controllers/LaporanRiyadhohController.php:120
 * @route '/rapor-riyadhoh'
 */
 raporRiyadhoh.url = (options?: RouteQueryOptions) => {
@@ -324,7 +408,7 @@ raporRiyadhoh.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:99
+* @see app/Http/Controllers/LaporanRiyadhohController.php:120
 * @route '/rapor-riyadhoh'
 */
 raporRiyadhoh.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -334,7 +418,7 @@ raporRiyadhoh.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:99
+* @see app/Http/Controllers/LaporanRiyadhohController.php:120
 * @route '/rapor-riyadhoh'
 */
 raporRiyadhoh.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -344,7 +428,7 @@ raporRiyadhoh.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:99
+* @see app/Http/Controllers/LaporanRiyadhohController.php:120
 * @route '/rapor-riyadhoh'
 */
 const raporRiyadhohForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -354,7 +438,7 @@ const raporRiyadhohForm = (options?: RouteQueryOptions): RouteFormDefinition<'ge
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:99
+* @see app/Http/Controllers/LaporanRiyadhohController.php:120
 * @route '/rapor-riyadhoh'
 */
 raporRiyadhohForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -364,7 +448,7 @@ raporRiyadhohForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:99
+* @see app/Http/Controllers/LaporanRiyadhohController.php:120
 * @route '/rapor-riyadhoh'
 */
 raporRiyadhohForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -379,6 +463,6 @@ raporRiyadhohForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get
 
 raporRiyadhoh.form = raporRiyadhohForm
 
-const LaporanRiyadhohController = { store, log, index, logRiyadhoh, raporRiyadhoh }
+const LaporanRiyadhohController = { store, log, index, logRiyadhoh, updateLog, raporRiyadhoh }
 
 export default LaporanRiyadhohController

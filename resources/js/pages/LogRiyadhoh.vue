@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import { Head, router } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
 import { ref, computed, watch } from 'vue';
 import { dashboard } from '@/routes';
 import { ChevronsLeft, ChevronsRight, Ellipsis } from 'lucide-vue-next';
+import { 
+    Dialog, DialogContent, DialogHeader, DialogTitle, 
+    DialogFooter, DialogDescription 
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 defineOptions({
     layout: {
@@ -265,6 +272,46 @@ const displayedPages = computed(() => {
     }
     return pages;
 });
+
+// State untuk Modal
+const isEditDialogOpen = ref(false);
+const editingCell = ref<{
+    id: number;
+    nama: string;
+    label: string;
+    column: string;
+    value: any;
+} | null>(null);
+
+const editForm = useForm({
+    column: '',
+    value: '' as any,
+});
+
+// Fungsi saat Cell di double click
+function handleDoubleClick(entry: LogEntry, columnKey: string, label: string) {
+    editingCell.value = {
+        id: entry.id,
+        nama: entry.nama,
+        label: label,
+        column: columnKey,
+        value: (entry as any)[columnKey]
+    };
+    
+    editForm.column = columnKey;
+    editForm.value = (entry as any)[columnKey];
+    isEditDialogOpen.value = true;
+}
+
+function submitUpdate() {
+    editForm.patch(`/log-riyadhoh/${editingCell.value?.id}`, {
+        preserveScroll: true,
+        onSuccess: () => {
+            isEditDialogOpen.value = false;
+            editingCell.value = null;
+        },
+    });
+}
 </script>
 
 <template>
@@ -380,19 +427,24 @@ const displayedPages = computed(() => {
                                 <td class="px-4 py-3 text-slate-400 dark:text-slate-600 text-xs">
                                     {{ ((meta?.current_page - 1) * meta?.per_page) + index + 1 }}
                                 </td>
-                                <td class="px-4 py-3 font-medium text-slate-800 dark:text-slate-100 whitespace-nowrap">
+                                <td class="px-4 py-3 font-medium text-slate-800 dark:text-slate-100 whitespace-nowrap"
+                                    @dblclick="handleDoubleClick(entry, 'nama', 'Nama')">
                                     {{ entry.nama }}
                                 </td>
-                                <td class="px-4 py-3 text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                                <td class="px-4 py-3 text-slate-500 dark:text-slate-400 whitespace-nowrap"
+                                    @dblclick="handleDoubleClick(entry, 'no_wa', 'No. WA')">
                                     {{ entry.no_wa }}
                                 </td>
-                                <td class="px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap text-xs">
+                                <td class="px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap text-xs"
+                                    @dblclick="handleDoubleClick(entry, 'tanggal', 'Tanggal')">
                                     {{ formatTanggal(entry.tanggal) }}
                                 </td>
-                                <td class="px-4 py-3 text-center text-slate-600 dark:text-slate-300">
+                                <td class="px-4 py-3 text-center text-slate-600 dark:text-slate-300"
+                                    @dblclick="handleDoubleClick(entry, 'hari_ke', 'Hari ke')">
                                     {{ entry.hari_ke }}
                                 </td>
-                                <td class="px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                                <td class="px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap"
+                                    @dblclick="handleDoubleClick(entry, 'grup', 'Grup')">
                                     <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium">
                                         {{ entry.grup }}
                                     </span>
@@ -400,6 +452,7 @@ const displayedPages = computed(() => {
                                 <td
                                     v-for="key in ibadahKeys"
                                     :key="key"
+                                    @dblclick="handleDoubleClick(entry, key, ibadahLabels[key])"
                                     class="px-3 py-3 text-center text-xs whitespace-nowrap"
                                     :class="nilaiClass(key, (entry as any)[key])"
                                 >
@@ -492,4 +545,60 @@ const displayedPages = computed(() => {
         </div>
 
     </div>
+
+
+<!-- Modal Edit Dialog -->
+    <Dialog :open="isEditDialogOpen" @update:open="isEditDialogOpen = $event">
+        <DialogContent class="sm:max-w-[425px]">
+            <DialogHeader>
+                <DialogTitle>Ubah {{ editingCell?.label }}</DialogTitle>
+                <DialogDescription>
+                    Mengubah data milik <strong>{{ editingCell?.nama }}</strong>
+                </DialogDescription>
+            </DialogHeader>
+            
+            <form @submit.prevent="submitUpdate" class="space-y-4 py-4">
+                <div class="grid gap-2">
+                    <Label :for="editingCell?.column">{{ editingCell?.label }}</Label>
+                    
+                    <!-- Input dinamis berdasarkan tipe data -->
+                    <Input 
+                        v-if="rakaatKeys.includes(editingCell?.column || '') || hitunganKeys.includes(editingCell?.column || '') || editingCell?.column === 'sedekah_subuh'"
+                        type="number"
+                        v-model="editForm.value"
+                        class="w-full"
+                        autofocus
+                    />
+                    
+                    <select 
+                        v-else-if="pilihanKeys.includes(editingCell?.column || '')"
+                        v-model="editForm.value"
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                        <option value="sempurna">Sempurna / Ya / Jamaah</option>
+                        <option value="sebagian">Sebagian / Sendiri</option>
+                        <option value="tidak">Tidak</option>
+                        <option value="">-</option>
+                    </select>
+
+                    <Input 
+                        v-else
+                        type="text"
+                        v-model="editForm.value"
+                        class="w-full"
+                        autofocus
+                    />
+                </div>
+
+                <DialogFooter class="gap-2">
+                    <Button type="button" variant="outline" @click="isEditDialogOpen = false">
+                        Batal
+                    </Button>
+                    <Button type="submit" :disabled="editForm.processing">
+                        {{ editForm.processing ? 'Menyimpan...' : 'Simpan Perubahan' }}
+                    </Button>
+                </DialogFooter>
+            </form>
+        </DialogContent>
+    </Dialog>    
 </template>

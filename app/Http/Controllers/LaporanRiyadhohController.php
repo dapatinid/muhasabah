@@ -96,22 +96,64 @@ public function logRiyadhoh(Request $request)
     ]);
 }
 
+// Tambahkan di Controller Anda
+public function updateLog(Request $request, $id)
+{
+    $entry = LaporanRiyadhoh::findOrFail($id);
+
+    // Validasi dinamis: ambil key yang dikirim (misal: 'tahajud' atau 'nama')
+    $data = $request->validate([
+        'column' => 'required|string',
+        'value'  => 'nullable', // Sesuaikan jika ingin validasi lebih ketat
+    ]);
+
+    $column = $data['column'];
+    $value = $data['value'];
+
+    // Update kolom spesifik
+    $entry->$column = $value;
+    $entry->save();
+
+    return back()->with('success', 'Data berhasil diperbarui');
+}
+
 public function raporRiyadhoh(Request $request)
 {
     $noWa = $request->input('no_wa');
+
+    // 1. Ambil data semua peserta (SELALU AMBIL INI)
+    // Gunakan distinct atau groupBy agar tidak duplikat di dropdown
+    $allParticipants = LaporanRiyadhoh::select('nama', 'no_wa')
+        ->groupBy('no_wa', 'nama')
+        ->orderBy('nama', 'asc')
+        ->get();
+
+    // 2. Jika tidak ada input no_wa, tampilkan halaman kosong tapi bawa data list peserta
     if (!$noWa) {
-        return Inertia::render('RaporRiyadhoh', ['no_wa' => null, 'entries' => null, 'peserta' => null]);
+        return Inertia::render('RaporRiyadhoh', [
+            'no_wa' => null,
+            'entries' => null,
+            'peserta' => null,
+            'all_participants' => $allParticipants
+        ]);
     }
 
+    // 3. Cari data entri berdasarkan no_wa
     $allEntries = LaporanRiyadhoh::where('no_wa', $noWa)
         ->orderBy('hari_ke', 'asc')
         ->get();
 
+    // Jika no_wa ada tapi data laporan tidak ada
     if ($allEntries->isEmpty()) {
-        return Inertia::render('RaporRiyadhoh', ['no_wa' => $noWa, 'entries' => [], 'peserta' => null]);
+        return Inertia::render('RaporRiyadhoh', [
+            'no_wa' => $noWa,
+            'entries' => [],
+            'peserta' => null,
+            'all_participants' => $allParticipants
+        ]);
     }
 
-    // Deduplikasi logic
+    // 4. Logic Deduplikasi
     $deduplicated = $allEntries->groupBy('hari_ke')
         ->map(fn($group) => $group->sortByDesc('created_at')->first())
         ->values();
@@ -121,11 +163,12 @@ public function raporRiyadhoh(Request $request)
     $totalHari    = $deduplicated->count();
 
     $tanggalMulai = $deduplicated->first()->tanggal;
-    $tanggalSelesai = $deduplicated->last()->tanggal;    
+    $tanggalSelesai = $deduplicated->last()->tanggal;
 
     return Inertia::render('RaporRiyadhoh', [
         'no_wa'   => $noWa,
         'entries' => $deduplicated,
+        'all_participants' => $allParticipants,
         'peserta' => [
             'nama'              => $allEntries->first()->nama,
             'no_wa'             => $noWa,
@@ -138,5 +181,5 @@ public function raporRiyadhoh(Request $request)
             'tanggal_selesai'   => $tanggalSelesai,            
         ],
     ]);
-}   
+}
 }
