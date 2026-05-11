@@ -6,6 +6,7 @@ import SheetDescription from '@/components/ui/sheet/SheetDescription.vue'
 import SheetHeader from '@/components/ui/sheet/SheetHeader.vue'
 import SheetTitle from '@/components/ui/sheet/SheetTitle.vue'
 import { SIDEBAR_WIDTH_MOBILE, useSidebar } from "./utils"
+import { ref, onMounted } from "vue"   // ← tambah ini
 
 defineOptions({
   inheritAttrs: false,
@@ -18,6 +19,10 @@ const props = withDefaults(defineProps<SidebarProps>(), {
 })
 
 const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+
+// ← tambah ini
+const isMounted = ref(false)
+onMounted(() => { isMounted.value = true })
 </script>
 
 <template>
@@ -30,6 +35,42 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
     <slot />
   </div>
 
+  <!-- Sebelum mounted: selalu render versi desktop (cocok dengan server) -->
+  <div
+    v-else-if="!isMounted"
+    class="group peer text-sidebar-foreground hidden md:block"
+    data-slot="sidebar"
+    :data-state="state"
+    :data-collapsible="state === 'collapsed' ? collapsible : ''"
+    :data-variant="variant"
+    :data-side="side"
+    v-bind="$attrs"
+  >
+    <div :class="cn(
+      'relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear',
+      'group-data-[collapsible=offcanvas]:w-0',
+      'group-data-[side=right]:rotate-180',
+      variant === 'floating' || variant === 'inset'
+        ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]'
+        : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
+    )" />
+    <div :class="cn(
+      'fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex',
+      side === 'left'
+        ? 'left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]'
+        : 'right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
+      variant === 'floating' || variant === 'inset'
+        ? 'p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]'
+        : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l',
+      props.class,
+    )">
+      <div data-sidebar="sidebar" class="bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm">
+        <slot />
+      </div>
+    </div>
+  </div>
+
+  <!-- Setelah mounted: render normal sesuai isMobile -->
   <Sheet v-else-if="isMobile" :open="openMobile" v-bind="$attrs" @update:open="setOpenMobile">
     <SheetContent
       data-sidebar="sidebar"
@@ -37,9 +78,7 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
       data-mobile="true"
       :side="side"
       class="bg-sidebar text-sidebar-foreground w-(--sidebar-width) p-0 [&>button]:hidden"
-      :style="{
-        '--sidebar-width': SIDEBAR_WIDTH_MOBILE,
-      }"
+      :style="{ '--sidebar-width': SIDEBAR_WIDTH_MOBILE }"
     >
       <SheetHeader class="sr-only">
         <SheetTitle>Sidebar</SheetTitle>
@@ -60,35 +99,25 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
     :data-variant="variant"
     :data-side="side"
   >
-    <!-- This is what handles the sidebar gap on desktop  -->
-    <div
-      :class="cn(
-        'relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear',
-        'group-data-[collapsible=offcanvas]:w-0',
-        'group-data-[side=right]:rotate-180',
-        variant === 'floating' || variant === 'inset'
-          ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]'
-          : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
-      )"
-    />
-    <div
-      :class="cn(
-        'fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex',
-        side === 'left'
-          ? 'left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]'
-          : 'right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
-        // Adjust the padding for floating and inset variants.
-        variant === 'floating' || variant === 'inset'
-          ? 'p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]'
-          : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l',
-        props.class,
-      )"
-      v-bind="$attrs"
-    >
-      <div
-        data-sidebar="sidebar"
-        class="bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm"
-      >
+    <div :class="cn(
+      'relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear',
+      'group-data-[collapsible=offcanvas]:w-0',
+      'group-data-[side=right]:rotate-180',
+      variant === 'floating' || variant === 'inset'
+        ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]'
+        : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
+    )" />
+    <div :class="cn(
+      'fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex',
+      side === 'left'
+        ? 'left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]'
+        : 'right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
+      variant === 'floating' || variant === 'inset'
+        ? 'p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]'
+        : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l',
+      props.class,
+    )" v-bind="$attrs">
+      <div data-sidebar="sidebar" class="bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm">
         <slot />
       </div>
     </div>

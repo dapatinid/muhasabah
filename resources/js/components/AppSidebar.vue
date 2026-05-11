@@ -24,6 +24,11 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
+        title: 'Kalam',
+        href: '/kalam',
+        icon: BookOpen,
+    },
+    {
         title: 'Log Riyadhoh',
         href: '/log-riyadhoh',
         icon: Logs,

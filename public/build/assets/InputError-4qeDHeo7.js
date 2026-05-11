@@ -1,1 +1,0 @@
-import{Ct as e,H as t,O as n,p as r,tt as i,w as a,x as o}from"./dist-CQpKNVHX.js";var s={class:`text-sm text-red-600 dark:text-red-500`},c=n({__name:`InputError`,props:{message:{}},setup(n){return(c,l)=>i((t(),a(`div`,null,[o(`p`,s,e(n.message),1)],512)),[[r,n.message]])}});export{c as t};
