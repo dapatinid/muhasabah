@@ -556,38 +556,38 @@ function submitUpdate() {
                     Mengubah data milik <strong>{{ editingCell?.nama }}</strong>
                 </DialogDescription>
             </DialogHeader>
-            
+
             <form @submit.prevent="submitUpdate" class="space-y-4 py-4">
                 <div class="grid gap-2">
                     <Label :for="editingCell?.column">{{ editingCell?.label }}</Label>
                     
-                    <!-- Input dinamis berdasarkan tipe data -->
+                    <!-- Input Angka: Untuk Rakaat, Hitungan, Hari ke, atau Sedekah -->
                     <Input 
-                        v-if="rakaatKeys.includes(editingCell?.column || '') || hitunganKeys.includes(editingCell?.column || '') || editingCell?.column === 'sedekah_subuh'"
+                        v-if="
+                            rakaatKeys.includes(editingCell?.column || '') || 
+                            hitunganKeys.includes(editingCell?.column || '') || 
+                            ['sedekah_subuh', 'hari_ke'].includes(editingCell?.column || '')
+                        "
                         type="number"
                         v-model="editForm.value"
                         class="w-full"
                         autofocus
+                        placeholder="Masukkan angka..."
                     />
                     
-                    <select 
-                        v-else-if="pilihanKeys.includes(editingCell?.column || '')"
-                        v-model="editForm.value"
-                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                        <option value="sempurna">Sempurna / Ya / Jamaah</option>
-                        <option value="sebagian">Sebagian / Sendiri</option>
-                        <option value="tidak">Tidak</option>
-                        <option value="">-</option>
-                    </select>
-
+                    <!-- Input Teks: Untuk Nama, Grup, dan semua Pilihan Ibadah (sempurna, sebagian, dll) -->
                     <Input 
                         v-else
                         type="text"
                         v-model="editForm.value"
                         class="w-full"
                         autofocus
+                        placeholder="Ketik nilai..."
                     />
+                    
+                    <p v-if="pilihanKeys.includes(editingCell?.column || '')" class="text-[10px] text-slate-400 italic">
+                        Tip: Ketik "sempurna", "sebagian", atau "tidak" untuk pewarnaan otomatis.
+                    </p>
                 </div>
 
                 <DialogFooter class="gap-2">
@@ -598,7 +598,8 @@ function submitUpdate() {
                         {{ editForm.processing ? 'Menyimpan...' : 'Simpan Perubahan' }}
                     </Button>
                 </DialogFooter>
-            </form>
+            </form>            
+          
         </DialogContent>
     </Dialog>    
 </template>
