@@ -415,6 +415,8 @@ function submitUpdate() {
                                 {{ ibadahLabels[key] }}
                             </th>
                             <th class="px-4 py-3 text-center font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">Skor</th>
+                            <th class="px-4 py-3 text-center font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">Dibuat</th>
+                            <th class="px-4 py-3 text-center font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">Diubah</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -466,6 +468,28 @@ function submitUpdate() {
                                     >
                                         <!-- Tampilkan skor gabungan hasil hitungan frontend -->
                                         {{ formatSkorGabung(entry) }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                                    <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium">
+                                        {{ entry.created_at ? new Date(entry.created_at).toLocaleString('id-ID', {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        }) : '-' }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                                    <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium">
+                                        {{ entry.updated_at ? new Date(entry.updated_at).toLocaleString('id-ID', {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        }) : '-' }}
                                     </span>
                                 </td>
                             </tr>
@@ -547,7 +571,7 @@ function submitUpdate() {
     </div>
 
 
-<!-- Modal Edit Dialog -->
+    <!-- Modal Edit Dialog -->
     <Dialog :open="isEditDialogOpen" @update:open="isEditDialogOpen = $event">
         <DialogContent class="sm:max-w-[425px]">
             <DialogHeader>
