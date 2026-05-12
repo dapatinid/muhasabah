@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/app/AppSidebarLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import { computed, watch, nextTick } from 'vue';
-import { usePage } from '@inertiajs/vue3'; 
-import { Toaster } from '@/components/ui/sonner';
-import { toast } from 'vue-sonner';
+import { onMounted, onUnmounted } from 'vue';
+import { router, usePage } from '@inertiajs/vue3'; 
+import { Toaster, toast } from 'vue-sonner';
+import 'vue-sonner/style.css';
 
 const { breadcrumbs = [] } = defineProps<{
     breadcrumbs?: BreadcrumbItem[];
@@ -12,17 +12,19 @@ const { breadcrumbs = [] } = defineProps<{
 
 const page = usePage()
 
-const flash = computed(() => page.props.flash as { success?: string; error?: string; info?: string })
-
-watch(flash, (val) => {
-  if (!val?.success && !val?.error && !val?.info) return
+// ← Pakai event Inertia, bukan watch
+// Event 'finish' fire setiap kali navigasi selesai, termasuk request yang sama
+const removeListener = router.on('finish', () => {
+  const flash = page.props.flash as any
   
-  nextTick(() => {
-    if (val?.success) toast.success(val.success)
-    if (val?.error)   toast.error(val.error)
-    if (val?.info)    toast.info(val.info)
-  })
-}, { immediate: true })
+  if (flash?.success) toast.success(flash.success)
+  if (flash?.error)   toast.error(flash.error)
+  if (flash?.info)    toast.info(flash.info)
+})
+
+onUnmounted(() => {
+  removeListener()
+})
 </script>
 
 <template>

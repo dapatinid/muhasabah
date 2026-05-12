@@ -162,6 +162,86 @@ Controller0ae8bd5ae264ec9c75cf771d5afced2f.form = Controller0ae8bd5ae264ec9c75cf
 /**
 * @see \Inertia\Controller::__invoke
 * @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/halaman-dibangun'
+*/
+const Controllera0a232698784441c4a3e6e34ee783364 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: Controllera0a232698784441c4a3e6e34ee783364.url(options),
+    method: 'get',
+})
+
+Controllera0a232698784441c4a3e6e34ee783364.definition = {
+    methods: ["get","head"],
+    url: '/halaman-dibangun',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/halaman-dibangun'
+*/
+Controllera0a232698784441c4a3e6e34ee783364.url = (options?: RouteQueryOptions) => {
+    return Controllera0a232698784441c4a3e6e34ee783364.definition.url + queryParams(options)
+}
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/halaman-dibangun'
+*/
+Controllera0a232698784441c4a3e6e34ee783364.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: Controllera0a232698784441c4a3e6e34ee783364.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/halaman-dibangun'
+*/
+Controllera0a232698784441c4a3e6e34ee783364.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: Controllera0a232698784441c4a3e6e34ee783364.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/halaman-dibangun'
+*/
+const Controllera0a232698784441c4a3e6e34ee783364Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllera0a232698784441c4a3e6e34ee783364.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/halaman-dibangun'
+*/
+Controllera0a232698784441c4a3e6e34ee783364Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllera0a232698784441c4a3e6e34ee783364.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/halaman-dibangun'
+*/
+Controllera0a232698784441c4a3e6e34ee783364Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllera0a232698784441c4a3e6e34ee783364.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+Controllera0a232698784441c4a3e6e34ee783364.form = Controllera0a232698784441c4a3e6e34ee783364Form
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
 * @route '/dashboard'
 */
 const Controller42a740574ecbfbac32f8cc353fc32db9 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -323,6 +403,7 @@ Controllere19ee86e9cf603ce1a59a1ec5d21dec5.form = Controllere19ee86e9cf603ce1a59
 const Controller = {
     '/laporan-riyadhoh': Controllerd695224dce3196d1787d0802ce2060c0,
     '/amal-ibadah': Controller0ae8bd5ae264ec9c75cf771d5afced2f,
+    '/halaman-dibangun': Controllera0a232698784441c4a3e6e34ee783364,
     '/dashboard': Controller42a740574ecbfbac32f8cc353fc32db9,
     '/settings/appearance': Controllere19ee86e9cf603ce1a59a1ec5d21dec5,
 }

@@ -142,12 +142,12 @@ function formatNilai(key: string, value: any): string {
 
 function nilaiClass(key: string, value: any): string {
     if (value === null || value === undefined || value === 0 || value === '0' || value === 'tidak') {
-        return value === 'tidak' ? 'text-rose-500' : 'text-slate-300';
+        return value === 'tidak' ? 'text-rose-500' : 'text-zinc-300';
     }
     if (['sempurna', 'ya', 'jamaah'].includes(String(value))) return 'text-emerald-600 font-bold';
     if (['sebagian', 'sendiri'].includes(String(value))) return 'text-amber-500 font-semibold';
     if (!isNaN(Number(value)) && Number(value) > 0) return 'text-emerald-600 font-semibold';
-    return 'text-slate-500';
+    return 'text-zinc-500';
 }
 
 function skorColor(skor: number): string {
@@ -253,15 +253,15 @@ const statsFrontend = computed(() => {
     <!-- Screen UI -->
     <div class="print:hidden flex flex-col gap-6 p-4 max-w-3xl mx-auto">
         <div class="flex flex-col gap-1">
-            <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Rapor Riyadhoh</h1>
-            <p class="text-sm text-slate-500 dark:text-slate-400">Masukkan nomor WhatsApp peserta untuk melihat rapor</p>
+            <h1 class="text-2xl font-bold text-zinc-800 dark:text-zinc-100">Rapor Riyadhoh</h1>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400">Masukkan nomor WhatsApp peserta untuk melihat rapor</p>
         </div>
 
         <!-- Search -->
         <div class="rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-white dark:bg-sidebar p-4">
                 <div class="flex gap-3 flex-col sm:flex-row items-end">
                     <div class="flex-1 w-full text-left">
-                        <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 text-left">Cari Peserta (Nama / No. WA)</label>
+                        <label class="block text-xs font-medium text-zinc-500 mb-1 ml-1 text-left">Cari Peserta (Nama / No. WA)</label>
                         <!-- KOMPONEN SEARCHABLE SELECT -->
                         <SearchableSelect
                             v-model="noWa"
@@ -460,7 +460,7 @@ const statsFrontend = computed(() => {
                                 v-for="col in ibadahCols"
                                 :key="col.key"
                                 class="col-ibadah"
-                                :class="entry ? nilaiClass(col.key, (entry as any)[col.key]) : 'text-slate-300'"
+                                :class="entry ? nilaiClass(col.key, (entry as any)[col.key]) : 'text-zinc-300'"
                             >
                                 <span v-if="entry">{{ formatNilai(col.key, (entry as any)[col.key]) }}</span>
                                 <span v-else class="empty-dash">—</span>

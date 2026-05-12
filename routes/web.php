@@ -1,19 +1,24 @@
 <?php
 
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\KalamController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\LaporanRiyadhohController;
 
 Route::get('/', function () {
-    $kalams = \App\Models\Kalam::with('user:id,name')
-        ->latest()
-        ->take(4)
+    $kalams = \App\Models\Kalam::with('user:id,name')->latest()->take(3)->get();
+    
+    // Urutkan berdasarkan priority (ASC), kemudian created_at (DESC)
+    $banners = \App\Models\Banner::where('is_active', true)
+        ->orderBy('priority', 'asc')
+        ->orderBy('created_at', 'desc')
         ->get();
 
     return \Inertia\Inertia::render('Welcome', [
         'canRegister' => \Laravel\Fortify\Features::enabled(\Laravel\Fortify\Features::registration()),
         'kalams' => $kalams,
+        'banners' => $banners,
     ]);
 })->name('home');
 
@@ -23,21 +28,29 @@ Route::inertia('/amal-ibadah', 'AmalIbadah')->name('amal-ibadah');
 Route::post('/laporan-riyadhoh-submit', [LaporanRiyadhohController::class, 'store'])->name('laporan-riyadhoh.store');
 Route::get('/laporan-riyadhoh/log', [LaporanRiyadhohController::class, 'log'])->name('laporan-riyadhoh.log');
 
-// Kalam publik — index & show
 Route::get('/kalam', [KalamController::class, 'index'])->name('kalam.index');
 
-// Kalam butuh login — create, store, upload-image HARUS sebelum /{kalam}
-// agar /kalam/create tidak dianggap slug
+Route::inertia('halaman-dibangun', 'HalamanDibangun')->name('halaman-dibangun');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
+    
+    Route::get('/admin/kalam', [KalamController::class, 'adminIndex'])->name('kalam.admin-index');
+    Route::get('/admin/kalam/create', [KalamController::class, 'create'])->name('kalam.create');
+    Route::post('/admin/kalam', [KalamController::class, 'store'])->name('kalam.store');
+    Route::post('/admin/kalam/upload-image', [KalamController::class, 'uploadImage'])->name('kalam.upload-image');
+    Route::get('/admin/kalam/{kalam}/edit', [KalamController::class, 'edit'])->name('kalam.edit');
+    Route::put('/admin/kalam/{kalam}', [KalamController::class, 'update'])->name('kalam.update');
+    Route::patch('/admin/kalam/{kalam}', [KalamController::class, 'update']);
+    Route::delete('/admin/kalam/{kalam}', [KalamController::class, 'destroy'])->name('kalam.destroy');
 
-    Route::get('/kalam/create', [KalamController::class, 'create'])->name('kalam.create');
-    Route::post('/kalam', [KalamController::class, 'store'])->name('kalam.store');
-    Route::post('/kalam/upload-image', [KalamController::class, 'uploadImage'])->name('kalam.upload-image');
-    Route::get('/kalam/{kalam}/edit', [KalamController::class, 'edit'])->name('kalam.edit');
-    Route::put('/kalam/{kalam}', [KalamController::class, 'update'])->name('kalam.update');
-    Route::patch('/kalam/{kalam}', [KalamController::class, 'update']);
-    Route::delete('/kalam/{kalam}', [KalamController::class, 'destroy'])->name('kalam.destroy');
+    Route::get('/admin/banner', [BannerController::class, 'index'])->name('banner.index');
+    Route::get('/admin/banner/create', [BannerController::class, 'create'])->name('banner.create');
+    Route::post('/admin/banner', [BannerController::class, 'store'])->name('banner.store');
+    Route::post('/admin/banner/upload', [BannerController::class, 'uploadImage'])->name('banner.upload');    
+    Route::get('/admin/banner/{banner}/edit', [BannerController::class, 'edit'])->name('banner.edit');
+    Route::put('/admin/banner/{banner}', [BannerController::class, 'update'])->name('banner.update');
+    Route::delete('/admin/banner/{banner}', [BannerController::class, 'destroy'])->name('banner.destroy');
 
     Route::get('/log-riyadhoh', [LaporanRiyadhohController::class, 'logRiyadhoh'])->name('log-riyadhoh');
     Route::patch('/log-riyadhoh/{id}', [LaporanRiyadhohController::class, 'updateLog'])->name('log-riyadhoh.update');

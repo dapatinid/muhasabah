@@ -14,7 +14,9 @@ createInertiaApp({
                 name === 'LaporanLog' || 
                 name === 'LaporanRiyadhoh'||
                 name === 'AmalIbadah' ||
-                name === 'Kalam/Show':
+                name === 'Kalam/Index'||
+                name === 'Kalam/Show'||
+                name === 'HalamanDibangun':
                 return null;
             case name.startsWith('auth/'):
                 return AuthLayout;

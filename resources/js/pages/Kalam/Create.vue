@@ -6,6 +6,21 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
+defineOptions({
+    layout: {
+        breadcrumbs: [
+            {
+                title: 'Kalam',
+                href: '/admin/kalam',
+            },
+            {
+                title: 'Tulis Baru',
+                href: '/admin/kalam/create',
+            },
+        ],
+    },
+});
+
 const form = useForm({
   judul: '',
   body: '',
@@ -22,14 +37,14 @@ const categories = [
 ]
 
 function submit() {
-  form.post('/kalam', {
+  form.post('/admin/kalam', {
     onSuccess: () => form.reset(),
   })
 }
 
 const breadcrumbs = [
-  { title: 'Kalam', href: '/kalam' },
-  { title: 'Tulis Baru', href: '/kalam/create' }
+  { title: 'Kalam', href: '/admin/kalam' },
+  { title: 'Tulis Baru', href: '/admin/kalam/create' }
 ]
 </script>
 
@@ -38,13 +53,13 @@ const breadcrumbs = [
 
     <div class="py-10 px-4 max-w-4xl mx-auto">
       <div class="flex items-center gap-4 mb-8">
-        <Link href="/kalam" class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+        <Link href="/admin/kalam" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500">
           <ArrowLeft class="size-5" />
         </Link>
         <h1 class="text-3xl font-bold tracking-tight">Tulis Kalam Baru</h1>
       </div>
 
-      <form @submit.prevent="submit" class="space-y-8 bg-white dark:bg-slate-900 border p-8 rounded-3xl shadow-sm">
+      <form @submit.prevent="submit" class="space-y-8 bg-white dark:bg-zinc-900 border p-8 rounded-3xl shadow-sm">
         
         <!-- Judul -->
         <div class="space-y-2">
@@ -66,7 +81,7 @@ const breadcrumbs = [
             <select 
               id="kategori"
               v-model="form.kategori"
-              class="w-full h-11 rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-900 text-sm focus:ring-emerald-500"
+              class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-emerald-500 focus:border-emerald-500"
             >
               <option v-for="cat in categories" :key="cat.value" :value="cat.value">
                 {{ cat.label }}
@@ -75,18 +90,18 @@ const breadcrumbs = [
           </div>
 
           <!-- Anonim -->
-          <div class="flex items-center space-x-3 p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+          <div class="flex items-center space-x-3 p-4 rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/50">
             <input 
               type="checkbox" 
               id="is_anonymous" 
               v-model="form.is_anonymous"
-              class="size-5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+              class="size-5 rounded border-zinc-300 text-emerald-600 focus:ring-emerald-500"
             />
             <div class="grid gap-1.5 leading-none">
               <label for="is_anonymous" class="text-sm font-medium leading-none cursor-pointer">
                 Posting sebagai Hamba Allah
               </label>
-              <p class="text-xs text-slate-500">Identitas Anda tidak akan ditampilkan ke publik.</p>
+              <p class="text-xs text-zinc-500">Identitas Anda tidak akan ditampilkan ke publik.</p>
             </div>
           </div>
         </div>

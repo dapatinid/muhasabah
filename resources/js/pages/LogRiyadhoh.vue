@@ -158,7 +158,7 @@ function formatNilai(key: string, value: any): string {
 
 function nilaiClass(key: string, value: any): string {
     if (value === null || value === undefined || value === 0 || value === '0') {
-        return 'text-slate-400 dark:text-slate-600';
+        return 'text-zinc-400 dark:text-zinc-600';
     }
     if (['sempurna', 'ya', 'jamaah'].includes(String(value))) {
         return 'text-emerald-600 dark:text-emerald-400 font-medium';
@@ -172,7 +172,7 @@ function nilaiClass(key: string, value: any): string {
     if (!isNaN(Number(value)) && Number(value) > 0) {
         return 'text-emerald-600 dark:text-emerald-400 font-medium';
     }
-    return 'text-slate-700 dark:text-slate-300';
+    return 'text-zinc-700 dark:text-zinc-300';
 }
 
 function skorClass(skor: number): string {
@@ -321,8 +321,8 @@ function submitUpdate() {
 
         <!-- Header -->
         <div class="flex flex-col gap-1">
-            <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Log Riyadhoh</h1>
-            <p class="text-sm text-slate-500 dark:text-slate-400">
+            <h1 class="text-2xl font-bold text-zinc-800 dark:text-zinc-100">Log Riyadhoh</h1>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400">
                 Data laporan ibadah harian peserta riyadhoh
             </p>
         </div>
@@ -333,11 +333,11 @@ function submitUpdate() {
 
                 <!-- Search -->
                 <div class="flex flex-col gap-1 flex-1 min-w-[200px]">
-                    <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                    <label class="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
                         Cari Nama / No. HP
                     </label>
                     <div class="relative">
-                        <span class="absolute inset-y-0 left-3 flex items-center text-slate-400 pointer-events-none">
+                        <span class="absolute inset-y-0 left-3 flex items-center text-zinc-400 pointer-events-none">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
@@ -347,32 +347,32 @@ function submitUpdate() {
                             v-model="search"
                             type="text"
                             placeholder="Ketik nama atau nomor HP..."
-                            class="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition"
+                            class="w-full pl-9 pr-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm text-zinc-800 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition"
                         />
                     </div>
                 </div>
 
                 <!-- Date From -->
                 <div class="flex flex-col gap-1">
-                    <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                    <label class="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
                         Tanggal Awal
                     </label>
                     <input
                         v-model="dateFrom"
                         type="date"
-                        class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition"
+                        class="px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition"
                     />
                 </div>
 
                 <!-- Date To -->
                 <div class="flex flex-col gap-1">
-                    <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                    <label class="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
                         Tanggal Akhir
                     </label>
                     <input
                         v-model="dateTo"
                         type="date"
-                        class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition"
+                        class="px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition"
                     />
                 </div>
 
@@ -380,7 +380,7 @@ function submitUpdate() {
                 <button
                     v-if="hasFilters"
                     @click="resetFilters"
-                    class="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                    class="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -390,8 +390,8 @@ function submitUpdate() {
             </div>
 
             <!-- Total info -->
-            <div class="mt-3 text-xs text-slate-400 dark:text-slate-500">
-                Menampilkan <span class="font-semibold text-slate-600 dark:text-slate-300">{{ meta?.total ?? 0 }}</span> entri
+            <div class="mt-3 text-xs text-zinc-400 dark:text-zinc-500">
+                Menampilkan <span class="font-semibold text-zinc-600 dark:text-zinc-300">{{ meta?.total ?? 0 }}</span> entri
             </div>
         </div>
 
@@ -400,23 +400,23 @@ function submitUpdate() {
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
-                        <tr class="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700">
-                            <th class="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">#</th>
-                            <th class="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">Nama</th>
-                            <th class="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">No. WA</th>
-                            <th class="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">Tanggal</th>
-                            <th class="px-4 py-3 text-center font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">Hari ke</th>
-                            <th class="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">Grup</th>
+                        <tr class="bg-zinc-50 dark:bg-zinc-800/60 border-b border-zinc-200 dark:border-zinc-700">
+                            <th class="px-4 py-3 text-left font-semibold text-zinc-600 dark:text-zinc-300 whitespace-nowrap">#</th>
+                            <th class="px-4 py-3 text-left font-semibold text-zinc-600 dark:text-zinc-300 whitespace-nowrap">Nama</th>
+                            <th class="px-4 py-3 text-left font-semibold text-zinc-600 dark:text-zinc-300 whitespace-nowrap">No. WA</th>
+                            <th class="px-4 py-3 text-left font-semibold text-zinc-600 dark:text-zinc-300 whitespace-nowrap">Tanggal</th>
+                            <th class="px-4 py-3 text-center font-semibold text-zinc-600 dark:text-zinc-300 whitespace-nowrap">Hari ke</th>
+                            <th class="px-4 py-3 text-left font-semibold text-zinc-600 dark:text-zinc-300 whitespace-nowrap">Grup</th>
                             <th
                                 v-for="key in ibadahKeys"
                                 :key="key"
-                                class="px-3 py-3 text-center font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap text-xs"
+                                class="px-3 py-3 text-center font-semibold text-zinc-600 dark:text-zinc-300 whitespace-nowrap text-xs"
                             >
                                 {{ ibadahLabels[key] }}
                             </th>
-                            <th class="px-4 py-3 text-center font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">Skor</th>
-                            <th class="px-4 py-3 text-center font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">Dibuat</th>
-                            <th class="px-4 py-3 text-center font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">Diubah</th>
+                            <th class="px-4 py-3 text-center font-semibold text-zinc-600 dark:text-zinc-300 whitespace-nowrap">Skor</th>
+                            <th class="px-4 py-3 text-center font-semibold text-zinc-600 dark:text-zinc-300 whitespace-nowrap">Dibuat</th>
+                            <th class="px-4 py-3 text-center font-semibold text-zinc-600 dark:text-zinc-300 whitespace-nowrap">Diubah</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -424,30 +424,30 @@ function submitUpdate() {
                             <tr
                                 v-for="(entry, index) in entries"
                                 :key="entry.id"
-                                class="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
+                                class="border-b border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors"
                             >
-                                <td class="px-4 py-3 text-slate-400 dark:text-slate-600 text-xs">
+                                <td class="px-4 py-3 text-zinc-400 dark:text-zinc-600 text-xs">
                                     {{ ((meta?.current_page - 1) * meta?.per_page) + index + 1 }}
                                 </td>
-                                <td class="px-4 py-3 font-medium text-slate-800 dark:text-slate-100 whitespace-nowrap"
+                                <td class="px-4 py-3 font-medium text-zinc-800 dark:text-zinc-100 whitespace-nowrap"
                                     @dblclick="handleDoubleClick(entry, 'nama', 'Nama')">
                                     {{ entry.nama }}
                                 </td>
-                                <td class="px-4 py-3 text-slate-500 dark:text-slate-400 whitespace-nowrap"
+                                <td class="px-4 py-3 text-zinc-500 dark:text-zinc-400 whitespace-nowrap"
                                     @dblclick="handleDoubleClick(entry, 'no_wa', 'No. WA')">
                                     {{ entry.no_wa }}
                                 </td>
-                                <td class="px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap text-xs"
+                                <td class="px-4 py-3 text-zinc-600 dark:text-zinc-300 whitespace-nowrap text-xs"
                                     @dblclick="handleDoubleClick(entry, 'tanggal', 'Tanggal')">
                                     {{ formatTanggal(entry.tanggal) }}
                                 </td>
-                                <td class="px-4 py-3 text-center text-slate-600 dark:text-slate-300"
+                                <td class="px-4 py-3 text-center text-zinc-600 dark:text-zinc-300"
                                     @dblclick="handleDoubleClick(entry, 'hari_ke', 'Hari ke')">
                                     {{ entry.hari_ke }}
                                 </td>
-                                <td class="px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap"
+                                <td class="px-4 py-3 text-zinc-600 dark:text-zinc-300 whitespace-nowrap"
                                     @dblclick="handleDoubleClick(entry, 'grup', 'Grup')">
-                                    <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium">
+                                    <span class="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-medium">
                                         {{ entry.grup }}
                                     </span>
                                 </td>
@@ -470,8 +470,8 @@ function submitUpdate() {
                                         {{ formatSkorGabung(entry) }}
                                     </span>
                                 </td>
-                                <td class="px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap">
-                                    <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium">
+                                <td class="px-4 py-3 text-zinc-600 dark:text-zinc-300 whitespace-nowrap">
+                                    <span class="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-medium">
                                         {{ entry.created_at ? new Date(entry.created_at).toLocaleString('id-ID', {
                                             year: 'numeric',
                                             month: 'short',
@@ -481,8 +481,8 @@ function submitUpdate() {
                                         }) : '-' }}
                                     </span>
                                 </td>
-                                <td class="px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap">
-                                    <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium">
+                                <td class="px-4 py-3 text-zinc-600 dark:text-zinc-300 whitespace-nowrap">
+                                    <span class="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-medium">
                                         {{ entry.updated_at ? new Date(entry.updated_at).toLocaleString('id-ID', {
                                             year: 'numeric',
                                             month: 'short',
@@ -496,7 +496,7 @@ function submitUpdate() {
                         </template>
                         <template v-else>
                             <tr>
-                                <td :colspan="ibadahKeys.length + 7" class="px-4 py-16 text-center text-slate-400 dark:text-slate-600">
+                                <td :colspan="ibadahKeys.length + 7" class="px-4 py-16 text-center text-zinc-400 dark:text-zinc-600">
                                     <div class="flex flex-col items-center gap-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
@@ -514,9 +514,9 @@ function submitUpdate() {
             <!-- Pagination -->
             <div
                 v-if="meta && meta.last_page > 1"
-                class="flex items-center justify-between px-4 py-3 border-t border-slate-100 dark:border-slate-800 overflow-x-auto"
+                class="flex items-center justify-between px-4 py-3 border-t border-zinc-100 dark:border-zinc-800 overflow-x-auto"
             >
-                <p class="text-xs text-slate-400 dark:text-slate-500 text-nowrap">
+                <p class="text-xs text-zinc-400 dark:text-zinc-500 text-nowrap">
                     Hal {{ meta.current_page }} dari {{ meta.last_page }}
                 </p>
                 <div class="flex gap-1 ms-3">              
@@ -524,14 +524,14 @@ function submitUpdate() {
                     <button
                         :disabled="meta.current_page <= 1"
                         @click="goToPage(1)"
-                        class="px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                        class="px-3 py-1.5 rounded-lg text-xs font-medium border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition"
                     >
                         <ChevronsLeft class="h-4 w-4" />
                     </button>
 
                     <button v-show="meta.current_page > 3"
                         disabled 
-                        class="px-1 py-1.5 rounded-lg text-xs font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 transition"
+                        class="px-1 py-1.5 rounded-lg text-xs font-medium border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-40 transition"
                     >
                         <Ellipsis class="h-4 w-4" />
                     </button>      
@@ -544,14 +544,14 @@ function submitUpdate() {
                         class="px-3 py-1.5 rounded-lg text-xs font-medium border transition"
                         :class="page === meta.current_page
                             ? 'bg-emerald-600 border-emerald-600 text-white'
-                            : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'"
+                            : 'border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800'"
                     >
                         {{ page }}
                     </button>
 
                     <button v-show="meta.current_page < meta.last_page - 2"
                         disabled 
-                        class="px-1 py-1.5 rounded-lg text-xs font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 transition"
+                        class="px-1 py-1.5 rounded-lg text-xs font-medium border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-40 transition"
                     >
                         <Ellipsis class="h-4 w-4" />
                     </button>   
@@ -560,7 +560,7 @@ function submitUpdate() {
                     <button
                         :disabled="meta.current_page >= meta.last_page"
                         @click="goToPage(meta.last_page)"
-                        class="px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                        class="px-3 py-1.5 rounded-lg text-xs font-medium border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition"
                     >
                         <ChevronsRight class="h-4 w-4" />
                     </button>
@@ -609,7 +609,7 @@ function submitUpdate() {
                         placeholder="Ketik nilai..."
                     />
                     
-                    <p v-if="pilihanKeys.includes(editingCell?.column || '')" class="text-[10px] text-slate-400 italic">
+                    <p v-if="pilihanKeys.includes(editingCell?.column || '')" class="text-[10px] text-zinc-400 italic">
                         Tip: Ketik "sempurna", "sebagian", atau "tidak" untuk pewarnaan otomatis.
                     </p>
                 </div>

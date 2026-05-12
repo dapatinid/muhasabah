@@ -21,28 +21,64 @@ class Kalam extends Model
         'thumbnail',
         'is_published',
         'is_anonymous',
+        'created_by', // Tambahkan ke fillable
+        'updated_by', // Tambahkan ke fillable
     ];
 
     /**
-     * Boot function untuk auto-generate slug dari judul
+     * Boot function untuk menangani logic otomatis
      */
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($kalam) {
-            if (empty($kalam->slug)) {
-                $kalam->slug = Str::slug($kalam->judul) . '-' . Str::random(5);
+            if (auth()->check()) {
+                $kalam->created_by = auth()->id();
+                $kalam->updated_by = auth()->id();
             }
         });
+
+        static::updating(function ($kalam) {
+            if (auth()->check()) {
+                $kalam->updated_by = auth()->id();
+            }
+        });
+
+        static::saving(function ($kalam) {
+            // 1. Auto-generate slug jika kosong
+            if (empty($kalam->slug)) {
+                $kalam->slug = Str::slug($kalam->judul) . '-' . Str::random(7);
+            }
+
+            // 2. Ekstrak gambar pertama dari body untuk thumbnail
+            preg_match('/<img.+?src=["\'](.+?)["\'].*?>/i', $kalam->body, $matches);
+            $kalam->thumbnail = $matches[1] ?? null;
+        });        
     }
 
     /**
-     * Relasi ke penulis (User)
+     * Relasi ke penulis asli (User)
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Relasi ke pembuat record (Audit)
+     */
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Relasi ke pengubah terakhir (Audit)
+     */
+    public function updater(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     public function komentars()

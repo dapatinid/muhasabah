@@ -15,12 +15,14 @@ const props = defineProps<{
         body: string;
         kategori: string;
         is_anonymous: boolean | number;
-    }
+    },
+    breadcrumbs: any,
 }>();
 
 // Inisialisasi form dengan data yang ada dari props
 const form = useForm({
     judul: props.kalam.judul,
+    slug: props.kalam.slug,
     body: props.kalam.body,
     kategori: props.kalam.kategori,
     // Kita pastikan menjadi boolean karena checkbox butuh boolean
@@ -36,16 +38,11 @@ const categories = [
 ]
 
 function submit() {
-    // Menggunakan metode PUT untuk update data
-    form.put(`/kalam/${props.kalam.slug}`, {
-        preserveScroll: true,
-    })
+  form.put(`/admin/kalam/${props.kalam.slug}`, {
+    preserveScroll: true,
+  })
 }
 
-const breadcrumbs = [
-    { title: 'Kalam', href: '/kalam' },
-    { title: 'Edit Kalam', href: `/kalam/${props.kalam.slug}/edit` }
-]
 </script>
 
 <template>
@@ -53,16 +50,16 @@ const breadcrumbs = [
         <div class="py-10 px-4 max-w-4xl mx-auto">
             
             <div class="flex items-center gap-4 mb-8">
-                <Link href="/kalam" class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 transition-colors">
+                <Link href="/admin/kalam" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:bg-zinc-200 transition-colors">
                     <ArrowLeft class="size-5" />
                 </Link>
                 <div>
-                    <h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Edit Kalam</h1>
-                    <p class="text-sm text-slate-500">Sesuaikan hikmah yang telah Anda bagikan.</p>
+                    <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Edit Kalam</h1>
+                    <p class="text-sm text-zinc-500">Sesuaikan hikmah yang telah Anda bagikan.</p>
                 </div>
             </div>
 
-            <form @submit.prevent="submit" class="space-y-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-3xl shadow-sm">
+            <form @submit.prevent="submit" class="space-y-8 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 rounded-3xl shadow-sm">
                 
                 <div class="space-y-2">
                     <Label for="judul">Judul Kalam</Label>
@@ -75,6 +72,17 @@ const breadcrumbs = [
                     />
                     <div v-if="form.errors.judul" class="text-red-500 text-xs mt-1">{{ form.errors.judul }}</div>
                 </div>
+                <div class="space-y-2">
+                    <Label for="slug">Slug</Label>
+                    <Input 
+                        id="slug" 
+                        v-model="form.slug" 
+                        placeholder="Masukkan slug..." 
+                        class="text-lg font-semibold h-12 rounded-xl focus:ring-emerald-500"
+                        required
+                    />
+                    <div v-if="form.errors.slug" class="text-red-500 text-xs mt-1">{{ form.errors.slug }}</div>
+                </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
@@ -82,7 +90,7 @@ const breadcrumbs = [
                         <select 
                             id="kategori"
                             v-model="form.kategori"
-                            class="w-full h-11 rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-950 text-sm focus:ring-emerald-500 focus:border-emerald-500"
+                            class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-emerald-500 focus:border-emerald-500"
                         >
                             <option v-for="cat in categories" :key="cat.value" :value="cat.value">
                                 {{ cat.label }}
@@ -91,18 +99,18 @@ const breadcrumbs = [
                         <div v-if="form.errors.kategori" class="text-red-500 text-xs mt-1">{{ form.errors.kategori }}</div>
                     </div>
 
-                    <div class="flex items-center space-x-3 p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+                    <div class="flex items-center space-x-3 p-4 rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/50">
                         <input 
                             type="checkbox" 
                             id="is_anonymous" 
                             v-model="form.is_anonymous"
-                            class="size-5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+                            class="size-5 rounded border-zinc-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
                         />
                         <div class="grid gap-1.5 leading-none">
-                            <label for="is_anonymous" class="text-sm font-medium leading-none cursor-pointer text-slate-700 dark:text-slate-300">
+                            <label for="is_anonymous" class="text-sm font-medium leading-none cursor-pointer text-zinc-700 dark:text-zinc-300">
                                 Posting sebagai Hamba Allah
                             </label>
-                            <p class="text-[11px] text-slate-500">Identitas Anda akan disembunyikan jika opsi ini aktif.</p>
+                            <p class="text-[11px] text-zinc-500">Identitas Anda akan disembunyikan jika opsi ini aktif.</p>
                         </div>
                     </div>
                 </div>
@@ -110,17 +118,17 @@ const breadcrumbs = [
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
                         <Label>Isi Kalam</Label>
-                        <span class="text-[10px] text-slate-400 italic">Terakhir diubah: {{ new Date().toLocaleTimeString() }}</span>
+                        <span class="text-[10px] text-zinc-400 italic">Terakhir diubah: {{ new Date().toLocaleTimeString() }}</span>
                     </div>
                     <TiptapEditor v-model="form.body" />
                     <div v-if="form.errors.body" class="text-red-500 text-xs mt-1">{{ form.errors.body }}</div>
                 </div>
 
-                <div class="flex justify-between items-center pt-6 border-t border-slate-100 dark:border-slate-800">
-                    <p class="text-xs text-slate-400 italic">* Perubahan akan langsung diterbitkan setelah Anda menekan tombol simpan.</p>
+                <div class="flex justify-between items-center pt-6 border-t border-zinc-100 dark:border-zinc-800">
+                    <p class="text-xs text-zinc-400 italic">* Perubahan akan langsung diterbitkan setelah Anda menekan tombol simpan.</p>
                     
                     <div class="flex gap-3">
-                        <Link href="/kalam" class="px-6 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-bold hover:bg-slate-50 transition-colors">
+                        <Link href="/admin/kalam" class="px-6 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 text-sm font-bold hover:bg-secondary transition-colors">
                             Batal
                         </Link>
                         <Button 

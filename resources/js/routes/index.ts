@@ -218,7 +218,7 @@ registerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 register.form = registerForm
 
 /**
-* @see routes/web.php:8
+* @see routes/web.php:9
 * @route '/'
 */
 export const home = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -232,7 +232,7 @@ home.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:8
+* @see routes/web.php:9
 * @route '/'
 */
 home.url = (options?: RouteQueryOptions) => {
@@ -240,7 +240,7 @@ home.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:8
+* @see routes/web.php:9
 * @route '/'
 */
 home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -249,7 +249,7 @@ home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:8
+* @see routes/web.php:9
 * @route '/'
 */
 home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -258,7 +258,7 @@ home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:8
+* @see routes/web.php:9
 * @route '/'
 */
 const homeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -267,7 +267,7 @@ const homeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:8
+* @see routes/web.php:9
 * @route '/'
 */
 homeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -276,7 +276,7 @@ homeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:8
+* @see routes/web.php:9
 * @route '/'
 */
 homeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -452,6 +452,87 @@ amalIbadahForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 })
 
 amalIbadah.form = amalIbadahForm
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/halaman-dibangun'
+*/
+export const halamanDibangun = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: halamanDibangun.url(options),
+    method: 'get',
+})
+
+halamanDibangun.definition = {
+    methods: ["get","head"],
+    url: '/halaman-dibangun',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/halaman-dibangun'
+*/
+halamanDibangun.url = (options?: RouteQueryOptions) => {
+    return halamanDibangun.definition.url + queryParams(options)
+}
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/halaman-dibangun'
+*/
+halamanDibangun.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: halamanDibangun.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/halaman-dibangun'
+*/
+halamanDibangun.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: halamanDibangun.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/halaman-dibangun'
+*/
+const halamanDibangunForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: halamanDibangun.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/halaman-dibangun'
+*/
+halamanDibangunForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: halamanDibangun.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/halaman-dibangun'
+*/
+halamanDibangunForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: halamanDibangun.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+halamanDibangun.form = halamanDibangunForm
 
 /**
 * @see \Inertia\Controller::__invoke

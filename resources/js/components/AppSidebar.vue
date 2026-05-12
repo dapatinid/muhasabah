@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { Award, BookOpen, FolderGit2, LayoutGrid, Logs } from 'lucide-vue-next';
+import { Award, BookOpen, FolderGit2, GalleryThumbnails, LayoutGrid, Logs } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -24,8 +24,13 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
+        title: 'Banner',
+        href: '/admin/banner',
+        icon: GalleryThumbnails,
+    },
+    {
         title: 'Kalam',
-        href: '/kalam',
+        href: '/admin/kalam',
         icon: BookOpen,
     },
     {

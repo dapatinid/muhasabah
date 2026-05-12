@@ -15,6 +15,27 @@ class KalamController extends Controller
 
         if ($search = $request->input('search')) {
             $query->where('judul', 'like', "%{$search}%")
+                ->orWhere('kategori', 'like', "%{$search}%");
+        }
+
+        if ($kategori = $request->input('kategori')) {
+            $query->where('kategori', $kategori);
+        }
+
+        $kalams = $query->latest()->paginate(10)->withQueryString();
+
+        return Inertia::render('Kalam/Index', [
+            'kalams' => $kalams,
+            'filters' => $request->only(['search', 'kategori']),
+        ]);
+    }
+
+    public function adminIndex(Request $request)
+    {
+        $query = Kalam::with('user:id,name');
+
+        if ($search = $request->input('search')) {
+            $query->where('judul', 'like', "%{$search}%")
                   ->orWhere('kategori', 'like', "%{$search}%");
         }
 
@@ -22,7 +43,7 @@ class KalamController extends Controller
                         ->paginate(10)
                         ->withQueryString();
 
-        return Inertia::render('Kalam/Index', [
+        return Inertia::render('Kalam/AdminIndex', [
             'kalams' => $kalams,
             'filters' => $request->only(['search'])
         ]);
@@ -45,7 +66,7 @@ class KalamController extends Controller
         // Sekarang metode kalams() sudah ada di model User
         $request->user()->kalams()->create($validated);
 
-        return redirect('/kalam')->with('success', 'Kalam berhasil diterbitkan.');
+        return redirect('/admin/kalam')->with('success', 'Kalam berhasil diterbitkan.');
     }
 
     public function edit(Kalam $kalam)
@@ -56,7 +77,11 @@ class KalamController extends Controller
         }
 
         return Inertia::render('Kalam/Edit', [
-            'kalam' => $kalam
+            'kalam' => $kalam,
+            'breadcrumbs' => [
+                ['title' => 'Kalam', 'href' => '/admin/kalam'],
+                ['title' => 'Edit Kalam', 'href' => "/admin/kalam/{$kalam->slug}/edit"],
+            ],
         ]);
     }
 
@@ -66,6 +91,7 @@ class KalamController extends Controller
 
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:kalams,slug,' . $kalam->id,
             'body' => 'required|string',
             'kategori' => 'required|string',
             'is_anonymous' => 'boolean',
@@ -73,8 +99,7 @@ class KalamController extends Controller
 
         $kalam->update($validated);
 
-        // ← Pakai route() dengan slug, bukan redirect('/kalam')
-        return redirect()->route('kalam.index')->with('success', 'Kalam berhasil diperbarui.');
+        return redirect()->route('kalam.admin-index')->with('success', 'Kalam berhasil diperbarui.');
     }
 
     public function show(Kalam $kalam)
@@ -101,14 +126,14 @@ class KalamController extends Controller
 
     public function uploadImage(Request $request)
     {
+            // dd($request->all(), $request->method(), $request->url());
+
         $request->validate(['image' => 'required|image|max:2048']);
         
         $path = $request->file('image')->store('kalam-images', 'public');
         $url = asset('storage/' . $path);
 
-        // Kirim URL ke props agar bisa ditangkap onSuccess di frontend
-        return back()->with('flash', [
-            'uploaded_image_url' => $url
-        ]);
+        // ← Simpan langsung, bukan nested dalam array 'flash'
+        return back()->with('uploaded_image_url', $url);
     }
 }
