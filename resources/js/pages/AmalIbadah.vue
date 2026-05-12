@@ -7,7 +7,7 @@ const sections = [
     { id: 'witir', label: 'Sholat Witir', icon: '⭐', kategori: 'Sholat Sunnah Malam', content: 'Sholat penutup malam. Rasulullah SAW tidak pernah meninggalkan witir baik saat mukim maupun safar. Minimal 1 rakaat, maksimal 11 rakaat.' },
     { id: 'qobliyah_subuh', label: 'Qobliyah Subuh', icon: '🌠', kategori: 'Sholat Pagi', content: 'Dua rakaat sebelum fardhu Subuh. Pahalanya lebih baik dari dunia dan seisinya. Disunnahkan membaca surah Al-Kafirun dan Al-Ikhlas.' },
     { id: 'subuh_jamaah', label: 'Subuh Berjamaah', icon: '🌅', kategori: 'Sholat Pagi', content: 'Mendapatkan jaminan perlindungan Allah sepanjang hari. Bagi laki-laki, langkah kaki menuju masjid dihitung sebagai penghapus dosa dan pengangkat derajat.' },
-    { id: 'dhuha', label: 'Sholat Dhuha', icon: '☀️', kategori: 'Sholat Pagi', content: 'Waktu dimulainya dari matahari setinggi tombak hingga menjelang Dzuhur. Sholat ini adalah sedekah bagi 360 persendian tubuh manusia.' },
+    { id: 'dhuha', label: 'Sholat Dhuha', icon: '☀️', kategori: 'Sholat Pagi', content: 'Waktu dimulainya dari matahari setinggi tombak hingga menjelang Dzuhur. Sholat ini adalah sedekah bagi 360 persendian tubuh manusia. Dikerjakan Maksimal 12 rakaat.' },
     { id: 'dhuhur_jamaah', label: 'Dhuhur Berjamaah', icon: '🕛', kategori: 'Sholat Jamaah', content: 'Awal ketaatan di siang hari. Berjamaah di awal waktu melatih kedisiplinan dan memberikan ketenangan di tengah kesibukan dunia.' },
     { id: 'ashar_jamaah', label: 'Ashar Berjamaah', icon: '🕒', kategori: 'Sholat Jamaah', content: 'Sholat Wustha yang sangat dijaga. Meninggalkannya dengan sengaja dapat menghapuskan pahala amal ibadah di hari tersebut.' },
     { id: 'maghrib_jamaah', label: 'Maghrib Berjamaah', icon: '🌆', kategori: 'Sholat Jamaah', content: 'Transisi dari terang ke gelap. Menjaga jamaah Maghrib mempererat ukhuwah dan menjaga cahaya iman di malam hari.' },
@@ -18,9 +18,9 @@ const sections = [
     { id: 'dzikir_pagi', label: 'Dzikir Pagi', icon: '📿', kategori: 'Dzikir & Wirid', content: 'Pelindung dari gangguan syaitan, sihir, dan marabahaya hingga sore hari. Waktu terbaik adalah setelah sholat Subuh.' },
     { id: 'dzikir_sore', label: 'Dzikir Sore', icon: '📿', kategori: 'Dzikir & Wirid', content: 'Pembersih jiwa setelah beraktivitas seharian. Membawa ketenangan hati menyambut istirahat malam.' },
     { id: 'istighfar', label: 'Istighfar', icon: '🤲', kategori: 'Dzikir & Wirid', content: 'Kunci pembuka pintu rezeki dan jalan keluar dari setiap kesulitan. Rasulullah SAW beristighfar lebih dari 70-100 kali sehari.' },
-    { id: 'sholawat', label: 'Sholawat', icon: '💚', kategori: 'Dzikir & Wirid', content: 'Cara terbaik mendapatkan syafaat Nabi Muhammad SAW. Satu sholawat dibalas sepuluh rahmat dari Allah Azza wa Jalla.' },
+    { id: 'sholawat', label: 'Sholawat', icon: '💚', kategori: 'Dzikir & Wirid', content: 'Cara terbaik mendapatkan syafaat Nabi Muhammad SAW. Satu sholawat dibalas sepuluh rahmat dari Allah Azza wa Jalla. Ucapan sholawat yang paling utama dan sesuai dengan sunnah adalah Sholawat Ibrahimiyah. Versi pendek "Allahumma shalli \'ala Muhammad wa sallim"' },
     { id: 'alquran', label: 'Al-Qur\'an 1 Juz', icon: '📖', kategori: 'Tilawah', content: 'Setiap hurufnya adalah 10 kebaikan. Al-Quran akan datang pada hari kiamat sebagai pemberi syafaat bagi pembacanya.' },
-    { id: 'puasa_sunnah', label: 'Puasa Sunnah', icon: '🍽️', kategori: 'Puasa', content: 'Puasa Senin-Kamis atau Ayyamul Bidh (13,14,15 Hijriah). Melatih jiwa untuk menundukkan syahwat dan menjernihkan pikiran.' },
+    { id: 'puasa_sunnah', label: 'Puasa Sunnah', icon: '🍽️', kategori: 'Puasa', content: 'Puasa Senin-Kamis atau Ayyamul Bidh (13,14,15 Hijriah). Melatih jiwa untuk menundukkan syahwat dan menjernihkan pikiran. Terdapat pula Puasa Daud, yakni puasa yang dilakukan secara selang-seling—sehari berpuasa dan sehari tidak. Puasa ini merupakan tingkatan puasa sunnah yang paling utama dan dicintai oleh Allah SWT karena menuntut konsistensi serta kedisiplinan yang tinggi.' },
 ];
 </script>
 

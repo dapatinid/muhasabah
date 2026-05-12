@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
+import { ArrowBigLeft, ArrowLeft, ChevronLeft } from 'lucide-vue-next';
 import { ref, computed, onMounted, watch } from 'vue';
 
 withDefaults(
@@ -607,6 +608,8 @@ const handleNumberInput = (e: Event, key: string) => {
                     🕌 Kirim Laporan Riyadhoh
                 </span>
             </button>
+            
+            <Link :href="'/'" class="flex flex-nowrap items-center justify-center w-full py-4 rounded-2xl text-base border group hover:text-amber-500"><span><ArrowLeft class="size-4 me-2" /></span> <span>ke Beranda</span></Link>
 
             <p class="text-center text-xs text-stone-600 pb-4">
                 وَمَا تَفْعَلُوا مِنْ خَيْرٍ فَإِنَّ اللَّهَ بِهِ عَلِيمٌ

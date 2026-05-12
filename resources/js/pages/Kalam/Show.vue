@@ -89,7 +89,7 @@ const activeReaksi = ref<string | null>(null)
               class="w-9 h-9 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center text-stone-400 hover:text-amber-400 hover:border-amber-500/50 transition-all">
           <ArrowLeft class="size-4" />
         </Link>
-        <span class="text-xs text-stone-500 tracking-wide">Kalam</span>
+        <span class="text-base text-stone-500 tracking-wide">Kalam</span>
       </nav>
 
       <main class="px-5 py-8 space-y-8 pb-20">
