@@ -235,7 +235,7 @@ onUnmounted(() => stopAutoPlay())
               </div>
             </DialogTrigger>
 
-            <DialogContent class="sm:max-w-lg bg-stone-950 border-stone-800 p-0 overflow-hidden gap-0">
+            <DialogContent class="sm:max-w-lg bg-stone-950 border-stone-800 p-0 overflow-hidden gap-0 [&>button]:hidden">
               <DialogHeader class="p-4 border-b border-stone-800">
                 <div class="relative flex items-center">
                   <Search class="absolute left-3 size-4 text-amber-500" />

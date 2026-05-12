@@ -106,7 +106,7 @@ function goToPage(url: string | null) {
           </span>
           <input
             v-model="search"
-            type="text"
+            type="search"
             placeholder="Cari judul atau kategori..."
             class="w-full bg-stone-900 border border-stone-800 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-stone-200 placeholder-stone-600 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/40 transition-all outline-none"
           >
