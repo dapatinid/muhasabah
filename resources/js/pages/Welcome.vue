@@ -241,7 +241,7 @@ onUnmounted(() => stopAutoPlay())
                   <Search class="absolute left-3 size-4 text-amber-500" />
                   <input
                     v-model="searchQuery"
-                    type="text"
+                    type="search"
                     placeholder="Ketik untuk mencari..."
                     class="w-full bg-transparent pl-10 pr-4 py-2 text-stone-100 outline-none placeholder:text-stone-600"
                     autofocus
@@ -311,38 +311,41 @@ onUnmounted(() => stopAutoPlay())
             @mouseup="handleMouseUp"
             @mousemove="handleMouseMove"
             @mouseenter="stopAutoPlay" 
-            class="flex gap-3 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-4 scroll-smooth px-10 cursor-grab active:cursor-grabbing select-none"
+            class="flex gap-3 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-4 scroll-smooth px-5 cursor-grab active:cursor-grabbing select-none"
           >
+            <!-- 
+               min-w-[92%] : Membuat banner utama hampir memenuhi layar
+               aspect-[1702/630] : Mengunci rasio persis seperti FB Cover
+            -->
             <component 
                 :is="banner.link ? 'a' : 'div'"
                 v-for="(banner, index) in extendedBanners" 
                 :key="index"
                 :href="banner.link"
                 target="_blank"
-                class="min-w-[85%] relative h-44 rounded-3xl overflow-hidden snap-center border border-stone-800 shrink-0 block transition-transform duration-500 pointer-events-none group-hover/main:pointer-events-auto"
+                class="min-w-[92%] aspect-[1702/630] relative rounded-3xl overflow-hidden snap-center border border-stone-800 shrink-0 block transition-transform duration-500 pointer-events-none group-hover/main:pointer-events-auto"
             >
-              <!-- Pointer events none di atas agar drag mouse tidak terganggu oleh link/image -->
               <img :src="banner.image" :alt="banner.title" class="absolute inset-0 w-full h-full object-cover opacity-60 pointer-events-none">
               <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent pointer-events-none"></div>
               
-              <div class="absolute bottom-5 left-5 right-5 pointer-events-none">
-                <h3 class="text-xl font-bold text-amber-100 line-clamp-1" style="font-family: 'Amiri', serif;">
+              <div class="absolute bottom-4 left-5 right-5 pointer-events-none">
+                <h3 class="text-lg md:text-xl font-bold text-amber-100 line-clamp-1" style="font-family: 'Amiri', serif;">
                   {{ banner.title }}
                 </h3>
-                <p class="text-xs text-stone-300 line-clamp-1">{{ banner.subtitle }}</p>
+                <p class="text-[10px] md:text-xs text-stone-300 line-clamp-1">{{ banner.subtitle }}</p>
               </div>
             </component>
           </div>
 
           <!-- Dots Indikator -->
-          <div class="flex justify-center gap-1.5 mt-1">
+          <div class="flex justify-center gap-1 mt-1">
             <div 
               v-for="(_, i) in banners" :key="i"
-              :class="[currentSlide % banners.length === i ? 'w-4 bg-amber-500' : 'w-1 bg-stone-800']"
+              :class="[currentSlide % banners.length === i ? 'w-3 bg-amber-500' : 'w-1 bg-stone-800']"
               class="h-1 rounded-full transition-all duration-300"
             ></div>
           </div>
-        </section>             
+        </section>               
 
         <!-- Layanan -->
         <section class="px-5">
@@ -427,6 +430,8 @@ onUnmounted(() => stopAutoPlay())
 .snap-x {
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
+  /* Tambahan untuk smooth dragging di mobile */
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Saat sedang di-drag dengan mouse, matikan snap agar mulus */
@@ -437,5 +442,13 @@ onUnmounted(() => stopAutoPlay())
 
 .snap-center {
   scroll-snap-align: center;
+}
+
+/* Memastikan rasio aspek terjaga pada browser yang lebih lama jika perlu */
+@supports not (aspect-ratio: 1702/630) {
+  .aspect-\[1702\/630\] {
+    padding-top: 37.01%; /* 630 / 1702 * 100 */
+    position: relative;
+  }
 }
 </style>
