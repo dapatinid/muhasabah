@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
-import { ArrowBigLeft, ArrowLeft, ChevronLeft } from 'lucide-vue-next';
+import { ArrowLeft, SendHorizonal } from 'lucide-vue-next';
 import { ref, computed, onMounted, watch } from 'vue';
 
 withDefaults(
@@ -591,31 +591,31 @@ const handleNumberInput = (e: Event, key: string) => {
             <button
                 @click="submit"
                 :disabled="isSubmitting"
-                class="w-full py-4 rounded-2xl font-bold text-base transition-all duration-300 relative overflow-hidden group disabled:opacity-60 disabled:cursor-not-allowed"
+                class="w-full rounded-2xl font-bold text-base transition-all duration-300 relative overflow-hidden group disabled:opacity-60 disabled:cursor-not-allowed "
                 :class="progress === 100 ? 'bg-gradient-to-r from-amber-600 to-amber-500 text-stone-950 shadow-xl shadow-amber-900/40 hover:shadow-amber-700/50 hover:scale-[1.01]' : 'bg-stone-800 text-stone-500 border border-stone-700'"
             >
-                <span v-if="isSubmitting" class="flex items-center justify-center gap-2">
+                <span v-if="isSubmitting" class="flex items-center justify-center gap-2 hover:gap-3 active:gap-3 h-14"">
                     <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                     </svg>
                     Mengirim...
                 </span>
-                <span v-else-if="progress < 18">
+                <span v-else-if="progress < 18" class="flex flex-nowrap items-center justify-center h-14">
                     Lengkapi semua ibadah dahulu ({{ totalDiisi }}/18)
                 </span>
-                <span v-else>
-                    🕌 Kirim Laporan Riyadhoh
+                <span v-else class="flex flex-nowrap items-center justify-center h-14 gap-2 hover:gap-3 active:gap-3">
+                    KIRIM LAPORAN <SendHorizonal class="-mb-0.5 size-4"/>
                 </span>
             </button>
-            
-            <Link :href="'/'" class="flex flex-nowrap items-center justify-center w-full py-4 rounded-2xl text-base border group hover:text-amber-500"><span><ArrowLeft class="size-4 me-2" /></span> <span>ke Beranda</span></Link>
 
             <p class="text-center text-xs text-stone-600 pb-4">
                 وَمَا تَفْعَلُوا مِنْ خَيْرٍ فَإِنَّ اللَّهَ بِهِ عَلِيمٌ
                 <br/>
                 <span class="text-stone-700">"Dan kebajikan apa saja yang kamu kerjakan, maka sesungguhnya Allah Maha Mengetahuinya." — QS. Al-Baqarah: 215</span>
             </p>
+
+            <Link :href="'/'" class="flex flex-nowrap items-center justify-center w-full py-4 rounded-2xl text-base group hover:text-amber-500"><span><ArrowLeft class="size-4 me-2" /></span> <span>ke Beranda</span></Link>
         </div>
     </div>
 </template>
