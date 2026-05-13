@@ -55,7 +55,7 @@ class LaporanRiyadhohController extends Controller
             })
             ->values();
 
-        return Inertia::render('LaporanLog', ['logs' => $logs]);
+        return Inertia::render('LaporanRiyadhohLog', ['logs' => $logs]);
     }
 
 public function logRiyadhoh(Request $request)
@@ -84,7 +84,7 @@ public function logRiyadhoh(Request $request)
                      ->paginate(50)
                      ->withQueryString();
 
-    return Inertia::render('LogRiyadhoh', [
+    return Inertia::render('Admin/Riyadhoh/LogRiyadhoh', [
         'entries' => $entries->items(),
         'filters' => $request->only(['search', 'date_from', 'date_to']),
         'meta'    => [
@@ -130,7 +130,7 @@ public function raporRiyadhoh(Request $request)
 
     // 2. Jika tidak ada input no_wa, tampilkan halaman kosong tapi bawa data list peserta
     if (!$noWa) {
-        return Inertia::render('RaporRiyadhoh', [
+        return Inertia::render('Admin/Riyadhoh/RaporRiyadhoh', [
             'no_wa' => null,
             'entries' => null,
             'peserta' => null,
@@ -145,7 +145,7 @@ public function raporRiyadhoh(Request $request)
 
     // Jika no_wa ada tapi data laporan tidak ada
     if ($allEntries->isEmpty()) {
-        return Inertia::render('RaporRiyadhoh', [
+        return Inertia::render('Admin/Riyadhoh/RaporRiyadhoh', [
             'no_wa' => $noWa,
             'entries' => [],
             'peserta' => null,
@@ -165,7 +165,7 @@ public function raporRiyadhoh(Request $request)
     $tanggalMulai = $deduplicated->first()->tanggal;
     $tanggalSelesai = $deduplicated->last()->tanggal;
 
-    return Inertia::render('RaporRiyadhoh', [
+    return Inertia::render('Admin/Riyadhoh/RaporRiyadhoh', [
         'no_wa'   => $noWa,
         'entries' => $deduplicated,
         'all_participants' => $allParticipants,

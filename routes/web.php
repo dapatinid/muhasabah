@@ -28,14 +28,14 @@ Route::inertia('/amal-ibadah', 'AmalIbadah')->name('amal-ibadah');
 Route::post('/laporan-riyadhoh-submit', [LaporanRiyadhohController::class, 'store'])->name('laporan-riyadhoh.store');
 Route::get('/laporan-riyadhoh/log', [LaporanRiyadhohController::class, 'log'])->name('laporan-riyadhoh.log');
 
-Route::get('/kalam', [KalamController::class, 'index'])->name('kalam.index');
+Route::get('/kalam', [KalamController::class, 'kalam'])->name('kalam');
 
 Route::inertia('halaman-dibangun', 'HalamanDibangun')->name('halaman-dibangun');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
     
-    Route::get('/admin/kalam', [KalamController::class, 'adminIndex'])->name('kalam.admin-index');
+    Route::get('/admin/kalam', [KalamController::class, 'index'])->name('kalam.index');
     Route::get('/admin/kalam/create', [KalamController::class, 'create'])->name('kalam.create');
     Route::post('/admin/kalam', [KalamController::class, 'store'])->name('kalam.store');
     Route::post('/admin/kalam/upload-image', [KalamController::class, 'uploadImage'])->name('kalam.upload-image');

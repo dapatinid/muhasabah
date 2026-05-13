@@ -103,7 +103,7 @@ const goToPage = (url: string | null) => {
           href="/admin/banner/create" 
           class="inline-flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm transition-all"
         >
-          <Plus class="size-5" /> Tambah Banner
+          <Plus class="size-5" /> Banner
         </Link>
       </div>
 
@@ -156,7 +156,7 @@ const goToPage = (url: string | null) => {
                   <Link :href="`/admin/banner/${banner.id}/edit`" class="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-blue-600 transition">
                     <Pencil class="size-4" />
                   </Link>
-                  <button @click="confirmDelete(banner)" class="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-red-600 transition">
+                  <button @click="confirmDelete(banner)" class="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-red-600 transition cursor-pointer">
                     <Trash2 class="size-4" />
                   </button>
                 </div>

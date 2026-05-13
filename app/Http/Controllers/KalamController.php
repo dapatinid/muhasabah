@@ -9,7 +9,7 @@ use Inertia\Inertia;
 
 class KalamController extends Controller
 {
-    public function index(Request $request)
+    public function kalam(Request $request)
     {
         $query = Kalam::with('user:id,name');
 
@@ -24,13 +24,13 @@ class KalamController extends Controller
 
         $kalams = $query->latest()->paginate(10)->withQueryString();
 
-        return Inertia::render('Kalam/Index', [
+        return Inertia::render('Kalam', [
             'kalams' => $kalams,
             'filters' => $request->only(['search', 'kategori']),
         ]);
     }
 
-    public function adminIndex(Request $request)
+    public function index(Request $request)
     {
         $query = Kalam::with('user:id,name');
 
@@ -43,7 +43,7 @@ class KalamController extends Controller
                         ->paginate(10)
                         ->withQueryString();
 
-        return Inertia::render('Kalam/AdminIndex', [
+        return Inertia::render('Admin/Kalam/Index', [
             'kalams' => $kalams,
             'filters' => $request->only(['search'])
         ]);
@@ -51,7 +51,7 @@ class KalamController extends Controller
 
     public function create()
     {
-        return Inertia::render('Kalam/Create');
+        return Inertia::render('Admin/Kalam/Create');
     }
 
     public function store(Request $request)
@@ -76,7 +76,7 @@ class KalamController extends Controller
             abort(403, 'Anda tidak memiliki akses untuk mengedit Kalam ini.');
         }
 
-        return Inertia::render('Kalam/Edit', [
+        return Inertia::render('Admin/Kalam/Edit', [
             'kalam' => $kalam,
             'breadcrumbs' => [
                 ['title' => 'Kalam', 'href' => '/admin/kalam'],
@@ -99,7 +99,7 @@ class KalamController extends Controller
 
         $kalam->update($validated);
 
-        return redirect()->route('kalam.admin-index')->with('success', 'Kalam berhasil diperbarui.');
+        return redirect()->route('kalam.index')->with('success', 'Kalam berhasil diperbarui.');
     }
 
     public function show(Kalam $kalam)
@@ -110,7 +110,7 @@ class KalamController extends Controller
             'reaksis',
         ]);
 
-        return Inertia::render('Kalam/Show', [
+        return Inertia::render('KalamShow', [
             'kalam' => $kalam,
         ]);
     }    

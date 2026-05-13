@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue';
 
 // Data edukasi tetap sama
 const sections = [
@@ -24,58 +25,42 @@ const sections = [
 ];
 </script>
 
-<template>
-    <Head title="Edukasi Riyadhoh" />
+<template><Head title="Edukasi Riyadhoh" />
 
-    <!-- Import Google Fonts -->
-    <component is="style">
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-    </component>
+    <AppLayoutPublic title="Edukasi Singkat" subtitle="Amal Riyadhoh" :show-back="true" back-href="/laporan-riyadhoh">
+        
+        <div class="px-5 py-6 space-y-8 pb-32">
+            <!-- List Section -->
+            <main class="space-y-6">
+                <div v-for="item in sections" :key="item.id" :id="item.id"
+                     class="scroll-mt-6 bg-stone-900/60 backdrop-blur-sm border border-stone-800 rounded-2xl overflow-hidden shadow-sm">
+                    
+                    <div class="bg-stone-800/40 px-5 py-2.5 border-b border-stone-800 flex justify-between items-center">
+                        <span class="text-[10px] text-amber-500 font-bold uppercase tracking-widest">{{ item.kategori }}</span>
+                        <span class="text-xl">{{ item.icon }}</span>
+                    </div>
 
-    <!-- Container Utama tanpa Layout Sidebar yang error -->
-    <div class="min-h-screen bg-stone-950 font-sans text-stone-100 pb-30"
-         style="font-family: 'Plus Jakarta Sans', sans-serif; background-image: radial-gradient(ellipse at 20% 20%, rgba(120,90,40,0.15) 0%, transparent 60%), radial-gradient(ellipse at 80% 80%, rgba(20,100,60,0.12) 0%, transparent 60%);">
-
-        <div class="fixed z-1000 h-1 w-full bg-gradient-to-r from-amber-700 via-amber-400 to-amber-700"></div>
-
-        <!-- Header Sederhana -->
-        <header class="relative py-12 px-4 text-center border-b border-stone-800/50">
-            <div class="max-w-2xl mx-auto">
-                <p class="text-amber-400 text-xs tracking-[0.3em] uppercase mb-2 font-semibold">Panduan Ibadah</p>
-                <h1 class="text-3xl md:text-4xl font-bold text-amber-100" style="font-family: 'Amiri', serif;">
-                    📚 Detail Amal Riyadhoh
-                </h1>
-                <p class="text-stone-400 text-sm mt-4 italic">"Maka berlomba-lombalah kamu dalam kebaikan."</p>
-            </div>
-        </header>
-
-        <!-- List Section -->
-        <main class="max-w-2xl mx-auto px-4 pt-10 space-y-8">
-            <div v-for="item in sections" :key="item.id" :id="item.id"
-                 class="scroll-mt-6 bg-stone-900/60 backdrop-blur-sm border border-stone-800 rounded-2xl overflow-hidden">
-                
-                <div class="bg-stone-800/40 px-5 py-2.5 border-b border-stone-800 flex justify-between items-center">
-                    <span class="text-[10px] text-amber-500 font-bold uppercase tracking-widest">{{ item.kategori }}</span>
-                    <span class="text-xl">{{ item.icon }}</span>
+                    <div class="p-6">
+                        <h2 class="text-xl font-bold text-amber-100 mb-3" style="font-family: 'Amiri', serif;">
+                            {{ item.label }}
+                        </h2>
+                        <p class="text-stone-300 text-sm leading-relaxed">
+                            {{ item.content }}
+                        </p>
+                    </div>
                 </div>
+            </main>
+        </div>
 
-                <div class="p-6">
-                    <h2 class="text-xl font-bold text-amber-100 mb-3">{{ item.label }}</h2>
-                    <p class="text-stone-300 text-sm leading-relaxed">
-                        {{ item.content }}
-                    </p>
-                </div>
-            </div>
-        </main>
-
-        <!-- Floating Back Button -->
-        <div class="fixed bottom-8 left-0 right-0 flex justify-center">
+        <!-- Floating Back Button (Opsional jika show-back=true sudah cukup) -->
+        <div class="fixed bottom-8 left-0 right-0 flex justify-center z-50">
             <Link href="/laporan-riyadhoh" 
                   class="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold px-6 py-3 rounded-full shadow-2xl transition-all active:scale-95 flex items-center gap-2 no-underline">
                <span>📝</span> Kembali ke Laporan
             </Link>
         </div>
-    </div>
+
+    </AppLayoutPublic>
 </template>
 
 <style scoped>

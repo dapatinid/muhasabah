@@ -1,6 +1,7 @@
 import { createInertiaApp } from '@inertiajs/vue3';
 import { initializeTheme } from '@/composables/useAppearance';
 import AppLayout from '@/layouts/AppLayout.vue';
+import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 
@@ -11,13 +12,13 @@ createInertiaApp({
     layout: (name) => {
         switch (true) {
             case name === 'Welcome' || 
-                name === 'LaporanLog' || 
-                name === 'LaporanRiyadhoh'||
+                name === 'LaporanRiyadhoh' || 
+                name === 'LaporanRiyadhohLog' ||
                 name === 'AmalIbadah' ||
-                name === 'Kalam/Index'||
-                name === 'Kalam/Show'||
+                name === 'Kalam' ||
+                name === 'KalamShow' ||
                 name === 'HalamanDibangun':
-                return null;
+                return AppLayoutPublic;
             case name.startsWith('auth/'):
                 return AuthLayout;
             case name.startsWith('settings/'):
@@ -31,5 +32,4 @@ createInertiaApp({
     },
 });
 
-// This will set light / dark mode on page load...
 initializeTheme();

@@ -1,0 +1,109 @@
+<script setup lang="ts">
+import { Head, Link } from '@inertiajs/vue3';
+import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue';
+
+interface LogGroup {
+    formatted_date: string;
+    entries: string[];
+}
+
+defineProps<{
+    logs: LogGroup[];
+}>();
+</script>
+
+<template>
+    <Head title="Log Laporan Riyadhoh" />
+
+    <!-- Bungkus dengan AppLayoutPublic -->
+    <AppLayoutPublic 
+        title="Log Riyadhoh" 
+        subtitle="بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ" 
+        :show-back="true" 
+        back-href="/laporan-riyadhoh"
+    >
+        
+        <main class="max-w-3xl mx-auto px-4 py-6 pb-32">
+            <!-- Container Log ala Terminal/Kertas -->
+            <div class="bg-stone-900/80 backdrop-blur border border-stone-700/60 rounded-2xl overflow-hidden shadow-2xl">
+                
+                <!-- Header Card Log -->
+                <div class="bg-stone-800/50 px-6 py-3 border-b border-stone-700/60 flex justify-between items-center">
+                    <span class="text-[10px] text-stone-500 uppercase tracking-[0.2em] font-bold">System Transcript</span>
+                    <div class="flex gap-1.5">
+                        <div class="w-2.5 h-2.5 rounded-full bg-stone-700"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-stone-700"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-stone-700"></div>
+                    </div>
+                </div>
+
+                <!-- Konten Log -->
+                <div class="py-6 px-4 sm:p-8 font-mono overflow-x-auto">
+                    <div v-if="logs.length > 0">
+                        <div v-for="(group, index) in logs" :key="index" class="mb-8 last:mb-0">
+                            
+                            <!-- Date Divider -->
+                            <div class="flex items-center gap-4 mb-4">
+                                <h3 class="text-amber-400 font-bold text-sm sm:text-base whitespace-nowrap uppercase tracking-tighter">
+                                    {{ group.formatted_date }}
+                                </h3>
+                                <div class="h-px w-full bg-stone-800"></div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div v-for="(line, lIndex) in group.entries" :key="lIndex" 
+                                    class="flex items-end gap-2 text-stone-400 text-xs sm:text-sm group/line hover:text-stone-200 transition-colors">
+                                    
+                                    <div class="flex-none flex items-baseline gap-1.5 whitespace-nowrap">
+                                        <span class="text-stone-600 font-mono text-[10px] sm:text-xs">[{{ lIndex + 1 }}]</span>
+                                        
+                                        <span class="font-semibold text-stone-200 uppercase tracking-tight">
+                                            {{ line.split('(')[0].trim() }}
+                                        </span>
+                                        
+                                        <span v-if="line.includes('(')" class="text-[10px] sm:text-[11px] text-stone-500 font-medium">
+                                            ({{ line.split('(')[1].split(')')[0] }})
+                                        </span>
+                                    </div>
+
+                                    <div class="flex-1 border-b border-dotted border-stone-800 mb-1 group-hover/line:border-stone-600 transition-colors"></div>
+
+                                    <div class="flex-none whitespace-nowrap font-mono text-amber-500/80 italic text-[10px] sm:text-xs tracking-tighter">
+                                        {{ line.split('...').pop().trim() }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div v-else class="text-center py-20">
+                        <span class="text-4xl mb-4 block">📂</span>
+                        <p class="text-stone-500 italic font-sans text-sm">Belum ada data yang terekam dalam sistem.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Actions -->
+            <div class="mt-10 flex flex-col items-center gap-6 text-center">
+                <Link href="/laporan-riyadhoh"
+                   class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-stone-900 border border-stone-700 text-amber-400 text-sm font-semibold hover:bg-amber-600 hover:text-stone-950 transition-all active:scale-95 shadow-lg no-underline">
+                    <span>←</span> Isi Laporan Baru
+                </Link>
+                
+                <p class="text-[9px] text-stone-700 uppercase tracking-widest leading-loose font-sans">
+                    Generated by Riyadhoh Tracking System<br/>
+                    Data updates automatically every submission
+                </p>
+            </div>
+        </main>
+
+    </AppLayoutPublic>
+</template>
+
+<style scoped>
+.font-mono {
+    font-variant-ligatures: none;
+    word-spacing: -0.1em;
+}
+</style>

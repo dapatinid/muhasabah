@@ -4,7 +4,8 @@ import { Link } from '@inertiajs/vue3'
 import { 
   House, CalendarDays, MapPin, BookOpenText, 
   HeartHandshake, LayoutGrid, Coins, 
-  ChartNoAxesCombined, Scale, HandHeart, Beef 
+  ChartNoAxesCombined, Scale, HandHeart, Beef, 
+  CircleStar
 } from 'lucide-vue-next'
 
 // Logic FAB Donasi pindah ke sini
@@ -43,7 +44,7 @@ const donationMenus = [
           <div v-if="isDonationOpen"
                class="absolute bottom-14 w-40 bg-stone-900 border border-stone-800 rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
             <div class="flex flex-col">
-              <Link v-for="menu in donationMenus" :key="menu.name" :href="menu.link"
+              <Link v-for="menu in donationMenus" :key="menu.name" :href="menu.link" @click="isDonationOpen = false"
                     class="px-4 py-3 text-[11px] font-semibold text-stone-300 hover:bg-amber-500/10 hover:text-amber-400 border-b border-stone-800/50 last:border-0 transition-colors flex items-center justify-between group">
                 <span>{{ menu.name }}</span>
                 <component :is="menu.icon" class="size-3.5 text-stone-500 group-hover:text-amber-500 transition-colors" />
@@ -69,10 +70,10 @@ const donationMenus = [
         <span class="text-[10px] font-medium">Masjid</span>
       </Link>
 
-      <!-- Riyadhoh -->
-      <Link href="/laporan-riyadhoh" class="flex flex-col items-center gap-1 w-full text-stone-500 hover:text-amber-400 transition-colors">
-        <BookOpenText class="size-5" />
-        <span class="text-[10px] font-medium">Riyadhoh</span>
+      <!-- Ukhuwah -->
+      <Link href="/halaman-dibangun" class="flex flex-col items-center gap-1 w-full text-stone-500 hover:text-amber-400 transition-colors">
+        <CircleStar class="size-5" />
+        <span class="text-[10px] font-medium">Ukhuwah</span>
       </Link>
 
     </div>

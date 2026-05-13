@@ -454,6 +454,87 @@ amalIbadahForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 amalIbadah.form = amalIbadahForm
 
 /**
+* @see \App\Http\Controllers\KalamController::kalam
+* @see app/Http/Controllers/KalamController.php:12
+* @route '/kalam'
+*/
+export const kalam = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: kalam.url(options),
+    method: 'get',
+})
+
+kalam.definition = {
+    methods: ["get","head"],
+    url: '/kalam',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\KalamController::kalam
+* @see app/Http/Controllers/KalamController.php:12
+* @route '/kalam'
+*/
+kalam.url = (options?: RouteQueryOptions) => {
+    return kalam.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\KalamController::kalam
+* @see app/Http/Controllers/KalamController.php:12
+* @route '/kalam'
+*/
+kalam.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: kalam.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\KalamController::kalam
+* @see app/Http/Controllers/KalamController.php:12
+* @route '/kalam'
+*/
+kalam.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: kalam.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\KalamController::kalam
+* @see app/Http/Controllers/KalamController.php:12
+* @route '/kalam'
+*/
+const kalamForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: kalam.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\KalamController::kalam
+* @see app/Http/Controllers/KalamController.php:12
+* @route '/kalam'
+*/
+kalamForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: kalam.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\KalamController::kalam
+* @see app/Http/Controllers/KalamController.php:12
+* @route '/kalam'
+*/
+kalamForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: kalam.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+kalam.form = kalamForm
+
+/**
 * @see \Inertia\Controller::__invoke
 * @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
 * @route '/halaman-dibangun'

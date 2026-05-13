@@ -1,8 +1,89 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
-* @see \App\Http\Controllers\KalamController::index
+* @see \App\Http\Controllers\KalamController::kalam
 * @see app/Http/Controllers/KalamController.php:12
 * @route '/kalam'
+*/
+export const kalam = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: kalam.url(options),
+    method: 'get',
+})
+
+kalam.definition = {
+    methods: ["get","head"],
+    url: '/kalam',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\KalamController::kalam
+* @see app/Http/Controllers/KalamController.php:12
+* @route '/kalam'
+*/
+kalam.url = (options?: RouteQueryOptions) => {
+    return kalam.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\KalamController::kalam
+* @see app/Http/Controllers/KalamController.php:12
+* @route '/kalam'
+*/
+kalam.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: kalam.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\KalamController::kalam
+* @see app/Http/Controllers/KalamController.php:12
+* @route '/kalam'
+*/
+kalam.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: kalam.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\KalamController::kalam
+* @see app/Http/Controllers/KalamController.php:12
+* @route '/kalam'
+*/
+const kalamForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: kalam.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\KalamController::kalam
+* @see app/Http/Controllers/KalamController.php:12
+* @route '/kalam'
+*/
+kalamForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: kalam.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\KalamController::kalam
+* @see app/Http/Controllers/KalamController.php:12
+* @route '/kalam'
+*/
+kalamForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: kalam.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+kalam.form = kalamForm
+
+/**
+* @see \App\Http\Controllers\KalamController::index
+* @see app/Http/Controllers/KalamController.php:33
+* @route '/admin/kalam'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -11,13 +92,13 @@ export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 index.definition = {
     methods: ["get","head"],
-    url: '/kalam',
+    url: '/admin/kalam',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\KalamController::index
-* @see app/Http/Controllers/KalamController.php:12
-* @route '/kalam'
+* @see app/Http/Controllers/KalamController.php:33
+* @route '/admin/kalam'
 */
 index.url = (options?: RouteQueryOptions) => {
     return index.definition.url + queryParams(options)
@@ -25,8 +106,8 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\KalamController::index
-* @see app/Http/Controllers/KalamController.php:12
-* @route '/kalam'
+* @see app/Http/Controllers/KalamController.php:33
+* @route '/admin/kalam'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -35,8 +116,8 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\KalamController::index
-* @see app/Http/Controllers/KalamController.php:12
-* @route '/kalam'
+* @see app/Http/Controllers/KalamController.php:33
+* @route '/admin/kalam'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
@@ -45,8 +126,8 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\KalamController::index
-* @see app/Http/Controllers/KalamController.php:12
-* @route '/kalam'
+* @see app/Http/Controllers/KalamController.php:33
+* @route '/admin/kalam'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url(options),
@@ -55,8 +136,8 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\KalamController::index
-* @see app/Http/Controllers/KalamController.php:12
-* @route '/kalam'
+* @see app/Http/Controllers/KalamController.php:33
+* @route '/admin/kalam'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url(options),
@@ -65,8 +146,8 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\KalamController::index
-* @see app/Http/Controllers/KalamController.php:12
-* @route '/kalam'
+* @see app/Http/Controllers/KalamController.php:33
+* @route '/admin/kalam'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url({
@@ -79,87 +160,6 @@ indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 index.form = indexForm
-
-/**
-* @see \App\Http\Controllers\KalamController::adminIndex
-* @see app/Http/Controllers/KalamController.php:33
-* @route '/admin/kalam'
-*/
-export const adminIndex = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: adminIndex.url(options),
-    method: 'get',
-})
-
-adminIndex.definition = {
-    methods: ["get","head"],
-    url: '/admin/kalam',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\KalamController::adminIndex
-* @see app/Http/Controllers/KalamController.php:33
-* @route '/admin/kalam'
-*/
-adminIndex.url = (options?: RouteQueryOptions) => {
-    return adminIndex.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\KalamController::adminIndex
-* @see app/Http/Controllers/KalamController.php:33
-* @route '/admin/kalam'
-*/
-adminIndex.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: adminIndex.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\KalamController::adminIndex
-* @see app/Http/Controllers/KalamController.php:33
-* @route '/admin/kalam'
-*/
-adminIndex.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: adminIndex.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\KalamController::adminIndex
-* @see app/Http/Controllers/KalamController.php:33
-* @route '/admin/kalam'
-*/
-const adminIndexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: adminIndex.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\KalamController::adminIndex
-* @see app/Http/Controllers/KalamController.php:33
-* @route '/admin/kalam'
-*/
-adminIndexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: adminIndex.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\KalamController::adminIndex
-* @see app/Http/Controllers/KalamController.php:33
-* @route '/admin/kalam'
-*/
-adminIndexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: adminIndex.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-adminIndex.form = adminIndexForm
 
 /**
 * @see \App\Http\Controllers\KalamController::create
@@ -838,6 +838,6 @@ showForm.head = (args: { kalam: string | { slug: string } } | [kalam: string | {
 
 show.form = showForm
 
-const KalamController = { index, adminIndex, create, store, uploadImage, edit, update, destroy, show }
+const KalamController = { kalam, index, create, store, uploadImage, edit, update, destroy, show }
 
 export default KalamController
