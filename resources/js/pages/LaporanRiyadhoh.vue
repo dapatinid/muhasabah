@@ -198,7 +198,7 @@ const openWhatsAppManual = () => {
 
     <AppLayoutPublic subtitle="Tantangan 40 Hari" title="Riyadhoh" :show-back="true" :show-nav="false">
 
-        <div class="fixed top-1 inset-x-0 z-40 bg-stone-950/90 backdrop-blur-md border-y border-stone-800/50"
+        <div class="fixed top-0 inset-x-0 z-40 bg-stone-950/90 backdrop-blur-md border-y border-stone-800/50"
             :class="submitSuccess ? 'hidden' : 'block'">
             <div class="max-w-xl mx-auto px-6 py-4">
                 <div class="flex justify-between text-xs text-stone-500 mb-2">

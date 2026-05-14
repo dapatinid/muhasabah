@@ -32,20 +32,27 @@ onUnmounted(() => removeListener())
 
 // ── Hide-on-scroll-up / show-on-scroll-down ───────────────────────────────────
 const headerVisible = ref(true)
-let lastScrollY = 0
-const THRESHOLD = 8 // px minimal sebelum trigger
+let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0 // Pastikan sinkron dengan posisi awal
+const THRESHOLD = 10 // Naikkan sedikit threshold-nya
 
 function onScroll() {
   const currentY = window.scrollY
-  const delta = currentY - lastScrollY
+  
+  // Jika di paling atas banget, paksa muncul
+  if (currentY < 10) {
+    headerVisible.value = true
+    lastScrollY = currentY
+    return
+  }
 
+  const delta = currentY - lastScrollY
   if (Math.abs(delta) < THRESHOLD) return
 
-  if (delta > 0 && currentY > 60) {
-    // Scroll ke bawah → sembunyikan header
+  // Logika sembunyikan: jika scroll ke bawah dan sudah melewati area header
+  if (delta > 0 && currentY > 80) {
     headerVisible.value = false
-  } else {
-    // Scroll ke atas → tampilkan header
+  } else if (delta < 0) {
+    // Tampilkan jika scroll ke atas
     headerVisible.value = true
   }
 
@@ -88,7 +95,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
       <!-- ── Smart Header ────────────────────────────────────────────────────── -->
       <nav
         :class="[
-            'fixed top-0 inset-x-0 z-10 max-w-xl mx-auto',
+            'fixed top-0 inset-x-0 z-[100] max-w-xl mx-auto',
             'bg-stone-950/80 backdrop-blur-md border-b border-stone-800/50',
             'sm:border-x sm:border-stone-800',   // ← tambah ini
             'px-5 flex items-center gap-3',

@@ -104,6 +104,8 @@ const donationMenus = [
 
 // Banner Animation Logic
 
+const isDragging = ref(false);
+
 const carouselRef = ref<HTMLElement | null>(null)
 const currentSlide = ref(0)
 let autoPlayInterval: any = null
@@ -143,15 +145,6 @@ const stopAutoPlay = () => {
   if (autoPlayInterval) clearInterval(autoPlayInterval)
 }
 
-// --- Logic Mouse Drag ---
-const handleMouseDown = (e: MouseEvent) => {
-  if (!carouselRef.value) return
-  isDown.value = true
-  carouselRef.value.classList.add('active-drag')
-  startX.value = e.pageX - carouselRef.value.offsetLeft
-  scrollLeft.value = carouselRef.value.scrollLeft
-  stopAutoPlay() // Berhenti saat mulai drag
-}
 
 const handleMouseLeave = () => {
   isDown.value = false
@@ -165,12 +158,36 @@ const handleMouseUp = () => {
   startAutoPlay() // Jalan lagi saat lepas klik
 }
 
+const handleMouseDown = (e: MouseEvent) => {
+  if (!carouselRef.value) return
+  isDown.value = true
+  isDragging.value = false; // Reset status drag
+  carouselRef.value.classList.add('active-drag')
+  startX.value = e.pageX - carouselRef.value.offsetLeft
+  scrollLeft.value = carouselRef.value.scrollLeft
+  stopAutoPlay()
+}
+
 const handleMouseMove = (e: MouseEvent) => {
   if (!isDown.value || !carouselRef.value) return
   e.preventDefault()
+  
   const x = e.pageX - carouselRef.value.offsetLeft
-  const walk = (x - startX.value) * 2 // Kecepatan scroll
+  const walk = (x - startX.value) * 2 
+  
+  // Jika pergerakan lebih dari 5px, anggap sedang drag
+  if (Math.abs(x - startX.value) > 5) {
+      isDragging.value = true;
+  }
+  
   carouselRef.value.scrollLeft = scrollLeft.value - walk
+}
+
+const handleBannerClick = (e: MouseEvent) => {
+  // Jika user baru saja melakukan drag, jangan jalankan link
+  if (isDragging.value) {
+    e.preventDefault();
+  }
 }
 
 onMounted(() => {
@@ -180,6 +197,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => stopAutoPlay())
+
 
 watch(isSearchOpen, (val) => {
   if (val) {
@@ -313,27 +331,26 @@ watch(isSearchOpen, (val) => {
           @mouseenter="stopAutoPlay" 
           class="flex gap-3 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-4 scroll-smooth px-5 cursor-grab active:cursor-grabbing select-none"
         >
-          <!-- 
-              min-w-[92%] : Membuat banner utama hampir memenuhi layar
-              aspect-[1702/630] : Mengunci rasio persis seperti FB Cover
-          -->
+         <!-- Ganti bagian ini di Welcome.vue -->
           <component 
               :is="banner.link ? 'a' : 'div'"
               v-for="(banner, index) in extendedBanners" 
               :key="index"
               :href="banner.link"
               target="_blank"
-              class="min-w-[92%] aspect-[1702/630] relative rounded-3xl overflow-hidden snap-center border border-stone-800 shrink-0 block transition-transform duration-500 pointer-events-none group-hover/main:pointer-events-auto"
+              class="min-w-[92%] aspect-[1702/630] relative rounded-3xl overflow-hidden snap-center border border-stone-800 shrink-0 block transition-transform duration-500"
+              @click="handleBannerClick"
           >
-            <img :src="banner.image" :alt="banner.title" class="absolute inset-0 w-full h-full object-cover opacity-60 pointer-events-none">
-            <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent pointer-events-none"></div>
-            
-            <div class="absolute bottom-4 left-5 right-5 pointer-events-none">
-              <h3 class="text-lg md:text-xl font-bold text-amber-100 line-clamp-1" style="font-family: 'Amiri', serif;">
-                {{ banner.title }}
-              </h3>
-              <p class="text-[10px] md:text-xs text-stone-300 line-clamp-1">{{ banner.subtitle }}</p>
-            </div>
+              <!-- Tambahkan 'pointer-events-none' HANYA pada elemen dalam agar tidak mengganggu klik pada parent 'a' -->
+              <img :src="banner.image" :alt="banner.title" class="absolute inset-0 w-full h-full object-cover opacity-60 pointer-events-none">
+              <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent pointer-events-none"></div>
+              
+              <div class="absolute bottom-4 left-5 right-5 pointer-events-none">
+                  <h3 class="text-lg md:text-xl font-bold text-amber-100 line-clamp-1" style="font-family: 'Amiri', serif;">
+                      {{ banner.title }}
+                  </h3>
+                  <p class="text-[10px] md:text-xs text-stone-300 line-clamp-1">{{ banner.subtitle }}</p>
+              </div>
           </component>
         </div>
 
@@ -422,21 +439,29 @@ watch(isSearchOpen, (val) => {
 </template>
 
 <style scoped>
+a, div {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y; /* Mengizinkan scroll vertikal halaman, tapi biarkan carousel urus horizontal */
+}
+
 .snap-x {
   scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  /* Tambahan untuk smooth dragging di mobile */
   -webkit-overflow-scrolling: touch;
+  display: flex;
+  overflow-x: auto;
+}
+
+/* Memastikan banner tetap bisa diklik meskipun di dalam container snap */
+.snap-center {
+  scroll-snap-align: center;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 /* Saat sedang di-drag dengan mouse, matikan snap agar mulus */
 .active-drag {
   scroll-snap-type: none;
   scroll-behavior: auto;
-}
-
-.snap-center {
-  scroll-snap-align: center;
 }
 
 /* Memastikan rasio aspek terjaga pada browser yang lebih lama jika perlu */
