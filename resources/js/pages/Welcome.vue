@@ -104,16 +104,14 @@ const donationMenus = [
 
 // Banner Animation Logic
 
-const isDragging = ref(false);
-
 const carouselRef = ref<HTMLElement | null>(null)
 const currentSlide = ref(0)
 let autoPlayInterval: any = null
 
-// State untuk Drag Mouse
-const isDown = ref(false)
-const startX = ref(0)
-const scrollLeft = ref(0)
+const isDragging = ref(false);
+const startX = ref(0);
+const scrollLeft = ref(0);
+const isDown = ref(false);
 
 const extendedBanners = computed(() => {
   if (props.banners.length === 0) return []
@@ -145,50 +143,68 @@ const stopAutoPlay = () => {
   if (autoPlayInterval) clearInterval(autoPlayInterval)
 }
 
+// --- Logic Drag & Touch ---
 
-const handleMouseLeave = () => {
-  isDown.value = false
-  carouselRef.value?.classList.remove('active-drag')
-  startAutoPlay() // Jalan lagi saat mouse keluar
-}
 
-const handleMouseUp = () => {
-  isDown.value = false
-  carouselRef.value?.classList.remove('active-drag')
-  startAutoPlay() // Jalan lagi saat lepas klik
-}
-
-const handleMouseDown = (e: MouseEvent) => {
-  if (!carouselRef.value) return
-  isDown.value = true
-  isDragging.value = false; // Reset status drag
-  carouselRef.value.classList.add('active-drag')
-  startX.value = e.pageX - carouselRef.value.offsetLeft
-  scrollLeft.value = carouselRef.value.scrollLeft
-  stopAutoPlay()
-}
-
-const handleMouseMove = (e: MouseEvent) => {
-  if (!isDown.value || !carouselRef.value) return
-  e.preventDefault()
+const handleDragStart = (e: MouseEvent | TouchEvent) => {
+  if (!carouselRef.value) return;
+  isDown.value = true;
+  isDragging.value = false;
   
-  const x = e.pageX - carouselRef.value.offsetLeft
-  const walk = (x - startX.value) * 2 
+  // Ambil posisi X baik dari Mouse atau Touch
+  const pageX = 'touches' in e ? e.touches[0].pageX : e.pageX;
   
-  // Jika pergerakan lebih dari 5px, anggap sedang drag
-  if (Math.abs(x - startX.value) > 5) {
-      isDragging.value = true;
+  startX.value = pageX - carouselRef.value.offsetLeft;
+  scrollLeft.value = carouselRef.value.scrollLeft;
+  
+  carouselRef.value.classList.add('active-drag');
+  stopAutoPlay();
+};
+
+const handleDragMove = (e: MouseEvent | TouchEvent) => {
+  if (!isDown.value || !carouselRef.value) return;
+  
+  const pageX = 'touches' in e ? e.touches[0].pageX : e.pageX;
+  const x = pageX - carouselRef.value.offsetLeft;
+  const dist = x - startX.value;
+
+  // Threshold agar tidak dianggap drag jika hanya goyang sedikit
+  if (Math.abs(dist) > 10) {
+    isDragging.value = true;
   }
-  
-  carouselRef.value.scrollLeft = scrollLeft.value - walk
-}
+
+  // Gunakan scrollLeft manual hanya untuk Mouse. 
+  // Mobile biarkan native agar "lancar" (momentum scroll).
+  if (e.type === 'mousemove') {
+    e.preventDefault();
+    carouselRef.value.scrollLeft = scrollLeft.value - dist * 1.5;
+  }
+};
+
+const handleDragEnd = () => {
+  isDown.value = false;
+  carouselRef.value?.classList.remove('active-drag');
+  startAutoPlay();
+};
 
 const handleBannerClick = (e: MouseEvent) => {
-  // Jika user baru saja melakukan drag, jangan jalankan link
+  // Cegah link terbuka jika user sebenarnya sedang nge-drag/swipe
   if (isDragging.value) {
     e.preventDefault();
+    e.stopPropagation();
   }
-}
+};
+
+// Update scroll listener untuk mengupdate dot indikator secara akurat
+const handleScroll = () => {
+  if (!carouselRef.value || props.banners.length === 0) return;
+  const width = carouselRef.value.querySelector('div, a')?.clientWidth || 0;
+  if (width > 0) {
+    // Hitung slide aktif berdasarkan posisi scroll
+    const index = Math.round(carouselRef.value.scrollLeft / (width + 12));
+    currentSlide.value = index;
+  }
+};
 
 onMounted(() => {
   if (props.banners.length > 1) {
@@ -320,31 +336,31 @@ watch(isSearchOpen, (val) => {
         </Dialog>
       </section>
 
-      <!-- Banner Carousel (Center Focus) -->
+      <!-- Banner Carousel -->
       <section class="relative group/main">
         <div 
           ref="carouselRef"
-          @mousedown="handleMouseDown"
-          @mouseleave="handleMouseLeave"
-          @mouseup="handleMouseUp"
-          @mousemove="handleMouseMove"
-          @mouseenter="stopAutoPlay" 
+          @mousedown="handleDragStart"
+          @touchstart="handleDragStart"
+          @mousemove="handleDragMove"
+          @touchmove="handleDragMove"
+          @mouseup="handleDragEnd"
+          @touchend="handleDragEnd"
+          @mouseleave="handleDragEnd"
+          @scroll="handleScroll"
           class="flex gap-3 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-4 scroll-smooth px-5 cursor-grab active:cursor-grabbing select-none"
         >
-         <!-- Ganti bagian ini di Welcome.vue -->
           <component 
               :is="banner.link ? 'a' : 'div'"
               v-for="(banner, index) in extendedBanners" 
               :key="index"
-              :href="banner.link"
-              target="_blank"
+              :href="banner.link ?? undefined"
               class="min-w-[92%] aspect-[1702/630] relative rounded-3xl overflow-hidden snap-center border border-stone-800 shrink-0 block transition-transform duration-500"
               @click="handleBannerClick"
           >
-              <!-- Tambahkan 'pointer-events-none' HANYA pada elemen dalam agar tidak mengganggu klik pada parent 'a' -->
+              <!-- Konten banner tetap sama -->
               <img :src="banner.image" :alt="banner.title" class="absolute inset-0 w-full h-full object-cover opacity-60 pointer-events-none">
               <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent pointer-events-none"></div>
-              
               <div class="absolute bottom-4 left-5 right-5 pointer-events-none">
                   <h3 class="text-lg md:text-xl font-bold text-amber-100 line-clamp-1" style="font-family: 'Amiri', serif;">
                       {{ banner.title }}
@@ -354,7 +370,7 @@ watch(isSearchOpen, (val) => {
           </component>
         </div>
 
-        <!-- Dots Indikator -->
+        <!-- Dots (Gunakan modulo agar tetap sinkron dengan list asli) -->
         <div class="flex justify-center gap-1 mt-1">
           <div 
             v-for="(_, i) in banners" :key="i"
@@ -362,7 +378,7 @@ watch(isSearchOpen, (val) => {
             class="h-1 rounded-full transition-all duration-300"
           ></div>
         </div>
-      </section>               
+      </section>                 
 
       <!-- Fitur -->
       <section class="px-5">
@@ -439,29 +455,26 @@ watch(isSearchOpen, (val) => {
 </template>
 
 <style scoped>
-a, div {
-  -webkit-tap-highlight-color: transparent;
-  touch-action: pan-y; /* Mengizinkan scroll vertikal halaman, tapi biarkan carousel urus horizontal */
-}
-
 .snap-x {
   scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  display: flex;
-  overflow-x: auto;
+  /* Penting: Memungkinkan momentum scroll di iOS/Chrome Mobile */
+  -webkit-overflow-scrolling: touch; 
 }
 
-/* Memastikan banner tetap bisa diklik meskipun di dalam container snap */
-.snap-center {
-  scroll-snap-align: center;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-/* Saat sedang di-drag dengan mouse, matikan snap agar mulus */
+/* Matikan snap saat sedang drag dengan mouse agar tidak "melawan" */
 .active-drag {
   scroll-snap-type: none;
   scroll-behavior: auto;
+}
+
+.snap-center {
+  scroll-snap-align: center;
+}
+
+/* Optimasi klik di mobile */
+a, div {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
 }
 
 /* Memastikan rasio aspek terjaga pada browser yang lebih lama jika perlu */
