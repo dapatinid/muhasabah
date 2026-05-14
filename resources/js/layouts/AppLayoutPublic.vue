@@ -1,23 +1,24 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { router, usePage, Link } from '@inertiajs/vue3'
 import { Toaster, toast } from 'vue-sonner'
 import 'vue-sonner/style.css'
 import BottomNavigation from '@/components/BottomNavigation.vue'
 import { ArrowLeft } from 'lucide-vue-next'
 
-const props = defineProps<{
-  /** Judul kecil (subtitle) di atas, e.g. "Kalam Kalam" */
+const props = withDefaults(defineProps<{
   subtitle?: string
-  /** Judul utama header, e.g. "Perpustakaan" */
   title?: string
-  /** Tampilkan tombol back ke "/" ? Default: false */
   showBack?: boolean
-  /** Override href tombol back. Default: "/" */
   backHref?: string
-}>()
+  showNav?: boolean // Daftarkan di sini
+}>(), {
+  showBack: false,
+  showNav: true // Set default ke true
+})
 
 const page = usePage()
+const shouldShowNav = computed(() => props.showNav && !page.url.startsWith('/laporan-riyadhoh'))
 
 // ── Flash toast via Inertia finish event ──────────────────────────────────────
 const removeListener = router.on('finish', () => {
@@ -82,10 +83,12 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 
     <div class="relative z-10 max-w-xl mx-auto sm:border-x sm:border-stone-800 min-h-screen">
 
+      <div class="fixed top-0 left-0 z-[101] h-1 w-full bg-gradient-to-r from-amber-700 via-amber-400 to-amber-700 shadow-[0_1px_10px_rgba(251,191,36,0.3)]"></div>
+
       <!-- ── Smart Header ────────────────────────────────────────────────────── -->
       <nav
         :class="[
-            'fixed top-0 inset-x-0 z-50 max-w-xl mx-auto',
+            'fixed top-0 inset-x-0 z-10 max-w-xl mx-auto',
             'bg-stone-950/80 backdrop-blur-md border-b border-stone-800/50',
             'sm:border-x sm:border-stone-800',   // ← tambah ini
             'px-5 flex items-center gap-3',
@@ -124,12 +127,12 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
       </nav>
 
       <!-- ── Main Content ───────────────────────────────────────────────────── -->
-      <main class="pb-32 pt-8">
+      <main :class="[shouldShowNav ? 'pb-32' : 'pb-10', 'pt-8']">
         <slot />
       </main>
 
       <!-- ── Bottom Navigation ──────────────────────────────────────────────── -->
-      <BottomNavigation />
+      <BottomNavigation v-if="shouldShowNav" />
     </div>
 
     <!-- ── Toast ─────────────────────────────────────────────────────────────── -->

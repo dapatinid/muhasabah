@@ -58,7 +58,7 @@ const donationMenus = [
           <button @click="toggleDonation"
                   :class="[isDonationOpen ? 'scale-110' : '']"
                   class="bg-linear-to-b from-amber-400 to-amber-600 w-14 h-14 rounded-full shadow-[0_8px_20px_rgba(217,119,6,0.4)] flex items-center justify-center border-4 border-stone-950 transition-all duration-300">
-            <HeartHandshake :class="[isDonationOpen ? 'scale-110 rotate-360' : '']" class="size-6 transition-all duration-300" />
+            <HeartHandshake :class="[isDonationOpen ? 'scale-110 rotate-360' : '']" class="text-white size-6 transition-all duration-300" />
           </button>
           <span class="text-[10px] font-medium text-stone-500">Donasi</span>
         </div>

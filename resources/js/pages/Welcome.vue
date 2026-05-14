@@ -199,7 +199,7 @@ watch(isSearchOpen, (val) => {
 
     <!-- Slot header kustom: greeting + avatar -->
     <template #header>
-      <div class="flex-1">
+      <div class="flex-1 pt-2.5">
         <p class="text-[10px] text-amber-500 tracking-[0.2em] uppercase font-bold">
           {{ user ? "Ahlan wa Sahlan," : "Assalamu'alaikum," }}
         </p>

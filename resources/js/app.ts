@@ -11,13 +11,15 @@ createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     layout: (name) => {
         switch (true) {
+            case name === 'HalamanDibangun' || 
+                name === 'Welcome_backup' : 
+                return null;
             case name === 'Welcome' || 
                 name === 'LaporanRiyadhoh' || 
                 name === 'LaporanRiyadhohLog' ||
                 name === 'AmalIbadah' ||
                 name === 'Kalam' ||
-                name === 'KalamShow' ||
-                name === 'HalamanDibangun':
+                name === 'KalamShow' :
                 return AppLayoutPublic;
             case name.startsWith('auth/'):
                 return AuthLayout;

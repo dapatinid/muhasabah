@@ -10,8 +10,8 @@ import { ArrowLeft, HardHat, Hammer, Construction } from 'lucide-vue-next'
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <div class="min-h-screen bg-stone-950 relative overflow-x-hidden flex flex-col items-center justify-center"
-       style="font-family: 'Plus Jakarta Sans', sans-serif;">
+  <div class="min-h-screen bg-stone-950 relative overflow-x-hidden flex flex-col items-center justify-start md:justify-center p-6 md:p-0"
+     style="font-family: 'Plus Jakarta Sans', sans-serif;">
 
     <!-- Background pattern (Tetap konsisten dengan tema utama) -->
     <div class="fixed inset-0 z-0 opacity-10 pointer-events-none"
@@ -24,10 +24,10 @@ import { ArrowLeft, HardHat, Hammer, Construction } from 'lucide-vue-next'
          style="background: radial-gradient(circle at 50% 50%, rgba(120,90,40,0.15) 0%, transparent 70%)" />
 
     <!-- Konten Utama -->
-    <div class="relative z-10 max-w-xl mx-auto px-6 text-center">
+    <div class="relative z-10 max-w-xl mx-auto text-center">
       
       <!-- Icon Animasi -->
-      <div class="mb-8 relative inline-block">
+      <div class="mt-10 md:mt-0 mb-8 relative inline-block">
         <div class="absolute inset-0 bg-amber-500/20 blur-3xl rounded-full"></div>
         <div class="relative bg-stone-900 border border-amber-500/30 p-6 rounded-3xl">
           <Construction class="size-16 text-amber-500 animate-pulse" />
@@ -63,12 +63,14 @@ import { ArrowLeft, HardHat, Hammer, Construction } from 'lucide-vue-next'
         Kembali ke Beranda
       </Link>
 
+      <!-- Footer Copyright Simple -->
+      <div class="mt-7 text-stone-600 text-[10px] uppercase tracking-widest">
+        2026 Muhasabah.id
+      </div>      
+
     </div>
 
-    <!-- Footer Copyright Simple -->
-    <div class="absolute bottom-10 z-10 text-stone-600 text-[10px] uppercase tracking-widest">
-      2026 Muhasabah.id
-    </div>
+
 
   </div>
 </template>
