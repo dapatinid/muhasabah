@@ -2,7 +2,7 @@
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ArrowLeft, SendHorizonal } from 'lucide-vue-next';
 import { ref, computed, onMounted, watch } from 'vue';
-import AppLayoutPublic from '@/Layouts/AppLayoutPublic.vue';
+import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue';
 
 withDefaults(
     defineProps<{
@@ -220,7 +220,6 @@ const openWhatsAppManual = () => {
 
             <!-- Header -->
             <header class="relative overflow-hidden py-10 px-4 text-center">
-                <div class="absolute inset-0 opacity-5" :style="{ backgroundImage: `url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22><path d=%22M30 5 L55 20 L55 40 L30 55 L5 40 L5 20 Z%22 fill=%22none%22 stroke=%22%23d4a017%22 stroke-width=%221%22/></svg>')` }" style="background-size: 60px 60px;"></div>
                 <div class="relative z-10 max-w-2xl mx-auto">
                     <p class="text-amber-400 text-sm tracking-[0.3em] uppercase mb-2 font-medium">بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ</p>
                     <h1 class="text-3xl md:text-4xl font-bold text-amber-100 mb-1" style="font-family: 'Amiri', serif; letter-spacing: 0.02em;">

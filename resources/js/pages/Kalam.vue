@@ -41,7 +41,7 @@ function tanggal(dateStr: string): string {
   })
 }
 
-const kategoriList = ['Semua', 'hikmah', 'doa', 'kisah', 'tips', 'berita']
+const kategoriList = ['Semua', 'berita', 'hikmah', 'doa', 'kisah', 'tips']
 const aktifKategori = ref('Semua')
 
 const kategoriEmoji: Record<string, string> = {
