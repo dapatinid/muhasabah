@@ -85,7 +85,7 @@ donasi.form = donasiForm
 * @see app/Http/Controllers/DonasiController.php:137
 * @route '/donasi/{donasi}/payment'
 */
-export const payment = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const payment = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: payment.url(args, options),
     method: 'get',
 })
@@ -100,7 +100,7 @@ payment.definition = {
 * @see app/Http/Controllers/DonasiController.php:137
 * @route '/donasi/{donasi}/payment'
 */
-payment.url = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
+payment.url = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { donasi: args }
     }
@@ -133,7 +133,7 @@ payment.url = (args: { donasi: string | { slug: string } } | [donasi: string | {
 * @see app/Http/Controllers/DonasiController.php:137
 * @route '/donasi/{donasi}/payment'
 */
-payment.get = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+payment.get = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: payment.url(args, options),
     method: 'get',
 })
@@ -143,7 +143,7 @@ payment.get = (args: { donasi: string | { slug: string } } | [donasi: string | {
 * @see app/Http/Controllers/DonasiController.php:137
 * @route '/donasi/{donasi}/payment'
 */
-payment.head = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+payment.head = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: payment.url(args, options),
     method: 'head',
 })
@@ -153,7 +153,7 @@ payment.head = (args: { donasi: string | { slug: string } } | [donasi: string | 
 * @see app/Http/Controllers/DonasiController.php:137
 * @route '/donasi/{donasi}/payment'
 */
-const paymentForm = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const paymentForm = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: payment.url(args, options),
     method: 'get',
 })
@@ -163,7 +163,7 @@ const paymentForm = (args: { donasi: string | { slug: string } } | [donasi: stri
 * @see app/Http/Controllers/DonasiController.php:137
 * @route '/donasi/{donasi}/payment'
 */
-paymentForm.get = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+paymentForm.get = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: payment.url(args, options),
     method: 'get',
 })
@@ -173,7 +173,7 @@ paymentForm.get = (args: { donasi: string | { slug: string } } | [donasi: string
 * @see app/Http/Controllers/DonasiController.php:137
 * @route '/donasi/{donasi}/payment'
 */
-paymentForm.head = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+paymentForm.head = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: payment.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -190,7 +190,7 @@ payment.form = paymentForm
 * @see app/Http/Controllers/DonasiController.php:144
 * @route '/donasi/{donasi}/payment'
 */
-export const storePayment = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const storePayment = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: storePayment.url(args, options),
     method: 'post',
 })
@@ -205,7 +205,7 @@ storePayment.definition = {
 * @see app/Http/Controllers/DonasiController.php:144
 * @route '/donasi/{donasi}/payment'
 */
-storePayment.url = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
+storePayment.url = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { donasi: args }
     }
@@ -238,7 +238,7 @@ storePayment.url = (args: { donasi: string | { slug: string } } | [donasi: strin
 * @see app/Http/Controllers/DonasiController.php:144
 * @route '/donasi/{donasi}/payment'
 */
-storePayment.post = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+storePayment.post = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: storePayment.url(args, options),
     method: 'post',
 })
@@ -248,7 +248,7 @@ storePayment.post = (args: { donasi: string | { slug: string } } | [donasi: stri
 * @see app/Http/Controllers/DonasiController.php:144
 * @route '/donasi/{donasi}/payment'
 */
-const storePaymentForm = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const storePaymentForm = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: storePayment.url(args, options),
     method: 'post',
 })
@@ -258,7 +258,7 @@ const storePaymentForm = (args: { donasi: string | { slug: string } } | [donasi:
 * @see app/Http/Controllers/DonasiController.php:144
 * @route '/donasi/{donasi}/payment'
 */
-storePaymentForm.post = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+storePaymentForm.post = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: storePayment.url(args, options),
     method: 'post',
 })
@@ -544,7 +544,7 @@ uploadImage.form = uploadImageForm
 * @see app/Http/Controllers/DonasiController.php:82
 * @route '/admin/donasi/{donasi}/edit'
 */
-export const edit = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -559,7 +559,7 @@ edit.definition = {
 * @see app/Http/Controllers/DonasiController.php:82
 * @route '/admin/donasi/{donasi}/edit'
 */
-edit.url = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
+edit.url = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { donasi: args }
     }
@@ -592,7 +592,7 @@ edit.url = (args: { donasi: string | { slug: string } } | [donasi: string | { sl
 * @see app/Http/Controllers/DonasiController.php:82
 * @route '/admin/donasi/{donasi}/edit'
 */
-edit.get = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -602,7 +602,7 @@ edit.get = (args: { donasi: string | { slug: string } } | [donasi: string | { sl
 * @see app/Http/Controllers/DonasiController.php:82
 * @route '/admin/donasi/{donasi}/edit'
 */
-edit.head = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -612,7 +612,7 @@ edit.head = (args: { donasi: string | { slug: string } } | [donasi: string | { s
 * @see app/Http/Controllers/DonasiController.php:82
 * @route '/admin/donasi/{donasi}/edit'
 */
-const editForm = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const editForm = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -622,7 +622,7 @@ const editForm = (args: { donasi: string | { slug: string } } | [donasi: string 
 * @see app/Http/Controllers/DonasiController.php:82
 * @route '/admin/donasi/{donasi}/edit'
 */
-editForm.get = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.get = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -632,7 +632,7 @@ editForm.get = (args: { donasi: string | { slug: string } } | [donasi: string | 
 * @see app/Http/Controllers/DonasiController.php:82
 * @route '/admin/donasi/{donasi}/edit'
 */
-editForm.head = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.head = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -649,7 +649,7 @@ edit.form = editForm
 * @see app/Http/Controllers/DonasiController.php:93
 * @route '/admin/donasi/{donasi}'
 */
-export const update = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -664,7 +664,7 @@ update.definition = {
 * @see app/Http/Controllers/DonasiController.php:93
 * @route '/admin/donasi/{donasi}'
 */
-update.url = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
+update.url = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { donasi: args }
     }
@@ -697,7 +697,7 @@ update.url = (args: { donasi: string | { slug: string } } | [donasi: string | { 
 * @see app/Http/Controllers/DonasiController.php:93
 * @route '/admin/donasi/{donasi}'
 */
-update.put = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -707,7 +707,7 @@ update.put = (args: { donasi: string | { slug: string } } | [donasi: string | { 
 * @see app/Http/Controllers/DonasiController.php:93
 * @route '/admin/donasi/{donasi}'
 */
-const updateForm = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PUT',
@@ -722,7 +722,7 @@ const updateForm = (args: { donasi: string | { slug: string } } | [donasi: strin
 * @see app/Http/Controllers/DonasiController.php:93
 * @route '/admin/donasi/{donasi}'
 */
-updateForm.put = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.put = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PUT',
@@ -739,7 +739,7 @@ update.form = updateForm
 * @see app/Http/Controllers/DonasiController.php:121
 * @route '/admin/donasi/{donasi}'
 */
-export const destroy = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -754,7 +754,7 @@ destroy.definition = {
 * @see app/Http/Controllers/DonasiController.php:121
 * @route '/admin/donasi/{donasi}'
 */
-destroy.url = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
+destroy.url = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { donasi: args }
     }
@@ -787,7 +787,7 @@ destroy.url = (args: { donasi: string | { slug: string } } | [donasi: string | {
 * @see app/Http/Controllers/DonasiController.php:121
 * @route '/admin/donasi/{donasi}'
 */
-destroy.delete = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -797,7 +797,7 @@ destroy.delete = (args: { donasi: string | { slug: string } } | [donasi: string 
 * @see app/Http/Controllers/DonasiController.php:121
 * @route '/admin/donasi/{donasi}'
 */
-const destroyForm = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -812,7 +812,7 @@ const destroyForm = (args: { donasi: string | { slug: string } } | [donasi: stri
 * @see app/Http/Controllers/DonasiController.php:121
 * @route '/admin/donasi/{donasi}'
 */
-destroyForm.delete = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -829,7 +829,7 @@ destroy.form = destroyForm
 * @see app/Http/Controllers/DonasiController.php:112
 * @route '/donasi/{donasi}'
 */
-export const show = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -844,7 +844,7 @@ show.definition = {
 * @see app/Http/Controllers/DonasiController.php:112
 * @route '/donasi/{donasi}'
 */
-show.url = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
+show.url = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { donasi: args }
     }
@@ -877,7 +877,7 @@ show.url = (args: { donasi: string | { slug: string } } | [donasi: string | { sl
 * @see app/Http/Controllers/DonasiController.php:112
 * @route '/donasi/{donasi}'
 */
-show.get = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -887,7 +887,7 @@ show.get = (args: { donasi: string | { slug: string } } | [donasi: string | { sl
 * @see app/Http/Controllers/DonasiController.php:112
 * @route '/donasi/{donasi}'
 */
-show.head = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -897,7 +897,7 @@ show.head = (args: { donasi: string | { slug: string } } | [donasi: string | { s
 * @see app/Http/Controllers/DonasiController.php:112
 * @route '/donasi/{donasi}'
 */
-const showForm = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const showForm = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -907,7 +907,7 @@ const showForm = (args: { donasi: string | { slug: string } } | [donasi: string 
 * @see app/Http/Controllers/DonasiController.php:112
 * @route '/donasi/{donasi}'
 */
-showForm.get = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.get = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -917,7 +917,7 @@ showForm.get = (args: { donasi: string | { slug: string } } | [donasi: string | 
 * @see app/Http/Controllers/DonasiController.php:112
 * @route '/donasi/{donasi}'
 */
-showForm.head = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.head = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
