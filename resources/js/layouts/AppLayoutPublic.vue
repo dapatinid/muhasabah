@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { router, usePage, Link } from '@inertiajs/vue3'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { usePage, Link, router } from '@inertiajs/vue3'
 import { Toaster, toast } from 'vue-sonner'
 import 'vue-sonner/style.css'
 import BottomNavigation from '@/components/BottomNavigation.vue'
@@ -21,14 +21,27 @@ const page = usePage()
 const shouldShowNav = computed(() => props.showNav && !page.url.startsWith('/laporan-riyadhoh'))
 
 // ── Flash toast via Inertia finish event ──────────────────────────────────────
-const removeListener = router.on('finish', () => {
-  const flash = page.props.flash as any
-  if (flash?.success) toast.success(flash.success)
-  if (flash?.error)   toast.error(flash.error)
-  if (flash?.info)    toast.info(flash.info)
-})
+const removeListener = router.on('finish', (event) => {
+    const flash = page.props.flash as any;
+    
+    // Ambil pesan
+    const msg = flash?.success || flash?.error || flash?.info;
+    
+    if (msg) {
+        // Tampilkan toast berdasarkan jenisnya
+        if (flash.success) toast.success(flash.success);
+        else if (flash.error) toast.error(flash.error);
+        else if (flash.info) toast.info(flash.info);
 
-onUnmounted(() => removeListener())
+        // Hapus flash dari props secara paksa agar tidak muncul lagi
+        // jika user melakukan navigasi internal (seperti klik menu nav)
+        flash.success = null;
+        flash.error = null;
+        flash.info = null;
+    }
+});
+
+onUnmounted(() => removeListener());
 
 // ── Hide-on-scroll-up / show-on-scroll-down ───────────────────────────────────
 const headerVisible = ref(true)

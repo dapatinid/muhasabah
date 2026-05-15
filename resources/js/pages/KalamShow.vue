@@ -65,7 +65,7 @@ const activeReaksi = ref<string | null>(null)
 <template>
   <Head :title="kalam.judul" />
 
-  <AppLayoutPublic subtitle="Kalam" :title="kalam.judul" :show-back="true" back-href="/kalam">  
+  <AppLayoutPublic :subtitle="kalam.kategori" :title="kalam.judul" :show-back="true" back-href="/kalam">  
 
       <main class="px-5 py-8 space-y-8 pb-20">
 

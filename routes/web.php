@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\DonasiController;
 use App\Http\Controllers\KalamController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -8,7 +9,7 @@ use App\Http\Controllers\LaporanRiyadhohController;
 
 Route::get('/', function () {
     $kalams = \App\Models\Kalam::with('user:id,name')->latest()->take(3)->get();
-    
+    $donasis = \App\Models\Donasi::where('is_published', true)->latest()->take(3)->get();
     // Urutkan berdasarkan priority (ASC), kemudian created_at (DESC)
     $banners = \App\Models\Banner::where('is_active', true)
         ->orderBy('priority', 'asc')
@@ -16,9 +17,10 @@ Route::get('/', function () {
         ->get();
 
     return \Inertia\Inertia::render('Welcome', [
-        'canRegister' => \Laravel\Fortify\Features::enabled(\Laravel\Fortify\Features::registration()),
+        'canRegister' => Features::enabled(\Laravel\Fortify\Features::registration()),
         'kalams' => $kalams,
         'banners' => $banners,
+        'donasis' => $donasis,
     ]);
 })->name('home');
 
@@ -29,6 +31,10 @@ Route::post('/laporan-riyadhoh-submit', [LaporanRiyadhohController::class, 'stor
 Route::get('/laporan-riyadhoh/log', [LaporanRiyadhohController::class, 'log'])->name('laporan-riyadhoh.log');
 
 Route::get('/kalam', [KalamController::class, 'kalam'])->name('kalam');
+Route::get('/donasi', [DonasiController::class, 'donasi'])->name('donasi'); 
+
+Route::get('/donasi/{donasi:slug}/payment', [DonasiController::class, 'payment'])->name('donasi.payment');
+Route::post('/donasi/{donasi:slug}/payment', [DonasiController::class, 'storePayment'])->name('donasi.payment.store');
 
 Route::inertia('halaman-dibangun', 'HalamanDibangun')->name('halaman-dibangun');
 
@@ -43,6 +49,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/admin/kalam/{kalam}', [KalamController::class, 'update'])->name('kalam.update');
     Route::patch('/admin/kalam/{kalam}', [KalamController::class, 'update']);
     Route::delete('/admin/kalam/{kalam}', [KalamController::class, 'destroy'])->name('kalam.destroy');
+
+    Route::get('/admin/donasi', [DonasiController::class, 'index'])->name('donasi.index');
+    Route::get('/admin/donasi/create', [DonasiController::class, 'create'])->name('donasi.create');
+    Route::post('/admin/donasi', [DonasiController::class, 'store'])->name('donasi.store');
+    Route::post('/admin/donasi/upload-image', [DonasiController::class, 'uploadImage'])->name('donasi.upload-image');
+    Route::get('/admin/donasi/{donasi}/edit', [DonasiController::class, 'edit'])->name('donasi.edit');
+    Route::put('/admin/donasi/{donasi}', [DonasiController::class, 'update'])->name('donasi.update');
+    Route::delete('/admin/donasi/{donasi}', [DonasiController::class, 'destroy'])->name('donasi.destroy');   
+
+    Route::post('/admin/payments', [PaymentController::class, 'store'])->name('payments.store');
+    Route::delete('/admin/payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy'); 
 
     Route::get('/admin/banner', [BannerController::class, 'index'])->name('banner.index');
     Route::get('/admin/banner/create', [BannerController::class, 'create'])->name('banner.create');
@@ -59,5 +76,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Show PALING BAWAH — setelah semua route spesifik /kalam/create, /kalam/upload-image
 Route::get('/kalam/{kalam}', [KalamController::class, 'show'])->name('kalam.show');
+Route::get('/donasi/{donasi}', [DonasiController::class, 'show'])->name('donasi.show');
 
 require __DIR__.'/settings.php';

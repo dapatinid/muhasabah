@@ -14,12 +14,15 @@ createInertiaApp({
             case name === 'HalamanDibangun' || 
                 name === 'Welcome_backup' : 
                 return null;
-            case name === 'Welcome' || 
-                name === 'LaporanRiyadhoh' || 
+            case name === 'LaporanRiyadhoh' || 
                 name === 'LaporanRiyadhohLog' ||
                 name === 'AmalIbadah' ||
                 name === 'Kalam' ||
-                name === 'KalamShow' :
+                name === 'KalamShow' ||
+                name === 'Donasi' ||
+                name === 'DonasiShow' ||
+                name === 'DonasiPayment' ||
+                name === 'Welcome' :
                 return AppLayoutPublic;
             case name.startsWith('auth/'):
                 return AuthLayout;

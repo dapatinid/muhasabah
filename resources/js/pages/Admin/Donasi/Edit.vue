@@ -1,0 +1,190 @@
+<script setup lang="ts">
+import { Head, useForm, Link } from '@inertiajs/vue3'
+import TiptapEditor from '@/Components/TiptapEditor.vue'
+import { ArrowLeft, Save, Globe, Lock } from 'lucide-vue-next'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+
+const props = defineProps<{
+    donasi: {
+        id: number;
+        slug: string;
+        judul: string;
+        body: string;
+        kategori: string;
+        subkategori: string;
+        target_dana: number;
+        is_published: boolean | number;
+    }
+}>();
+
+const form = useForm({
+    judul: props.donasi.judul,
+    slug: props.donasi.slug,
+    body: props.donasi.body,
+    kategori: props.donasi.kategori,
+    subkategori: props.donasi.subkategori,
+    target_dana: props.donasi.target_dana,
+    is_published: Boolean(props.donasi.is_published),
+})
+
+const categories = [
+  { label: 'Infaq', value: 'infaq' },
+  { label: 'Program', value: 'program' },
+  { label: 'Zakat', value: 'zakat' },
+  { label: 'Waqaf', value: 'waqaf' },
+  { label: 'Qurban', value: 'qurban' },
+]
+
+const subcategories = [
+  { label: 'Infaq', value: 'infaq' },
+  { label: 'Program', value: 'program' },
+  { label: 'Zakat', value: 'zakat' },
+  { label: 'Waqaf', value: 'waqaf' },
+  { label: 'Qurban', value: 'qurban' },
+]
+
+function submit() {
+    form.put(`/admin/donasi/${props.donasi.slug}`, {
+        preserveScroll: true,
+    })
+}
+</script>
+
+<template>
+    <Head :title="`Edit Donasi: ${props.donasi.judul}`" />
+    
+    <div class="py-10 px-4 max-w-4xl mx-auto">
+        <div class="flex items-center gap-4 mb-8">
+            <Link href="/admin/donasi" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-indigo-600 transition-colors">
+                <ArrowLeft class="size-5" />
+            </Link>
+            <div>
+                <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Edit Program Donasi</h1>
+                <p class="text-sm text-zinc-500">Perbarui rincian, kategori, atau target penggalangan dana.</p>
+            </div>
+        </div>
+
+        <form @submit.prevent="submit" class="space-y-8 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 rounded-3xl shadow-sm">
+            
+            <!-- Judul & Slug -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <Label for="judul">Judul Program</Label>
+                    <Input 
+                        id="judul" 
+                        v-model="form.judul" 
+                        class="h-12 rounded-xl focus:ring-indigo-500 font-semibold"
+                        required
+                    />
+                    <div v-if="form.errors.judul" class="text-red-500 text-xs mt-1">{{ form.errors.judul }}</div>
+                </div>
+                <div class="space-y-2">
+                    <Label for="slug">URL Slug</Label>
+                    <Input 
+                        id="slug" 
+                        v-model="form.slug" 
+                        class="h-12 rounded-xl focus:ring-indigo-500"
+                        required
+                    />
+                    <div v-if="form.errors.slug" class="text-red-500 text-xs mt-1">{{ form.errors.slug }}</div>
+                </div>
+            </div>
+
+            <!-- Kategori, Subkategori & Target -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="space-y-2">
+                    <Label for="kategori">Kategori</Label>
+                    <select 
+                        id="kategori"
+                        v-model="form.kategori"
+                        class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    >
+                        <option v-for="cat in categories" :key="cat.value" :value="cat.value">
+                            {{ cat.label }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="space-y-2">
+                    <Label for="subkategori">Subkategori</Label>
+                    <select 
+                        id="subkategori"
+                        v-model="form.subkategori"
+                        class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    >
+                        <option v-for="subcat in subcategories" :key="subcat.value" :value="subcat.value">
+                            {{ subcat.label }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="space-y-2">
+                    <Label for="target_dana">Target Dana (Rp)</Label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 font-bold text-sm">Rp</span>
+                        <Input 
+                            id="target_dana" 
+                            type="number"
+                            v-model="form.target_dana" 
+                            class="pl-10 h-11 rounded-xl focus:ring-indigo-500"
+                            required
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Publikasi -->
+            <div class="p-4 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/50">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div :class="form.is_published ? 'bg-indigo-100 text-indigo-600' : 'bg-zinc-200 text-zinc-500'" class="p-2 rounded-lg">
+                            <Globe v-if="form.is_published" class="size-5" />
+                            <Lock v-else class="size-5" />
+                        </div>
+                        <div>
+                            <label for="is_published" class="text-sm font-bold cursor-pointer block">
+                                {{ form.is_published ? 'Terbit (Publik)' : 'Draft (Privat)' }}
+                            </label>
+                            <p class="text-[11px] text-zinc-500">Tentukan visibilitas program ini bagi donatur.</p>
+                        </div>
+                    </div>
+                    <input 
+                        type="checkbox" 
+                        id="is_published" 
+                        v-model="form.is_published"
+                        class="size-6 rounded-lg border-zinc-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                    />
+                </div>
+            </div>
+
+            <!-- Rich Editor -->
+            <div class="space-y-2">
+                <Label>Deskripsi Lengkap</Label>
+                <TiptapEditor v-model="form.body" />
+                <div v-if="form.errors.body" class="text-red-500 text-xs mt-1">{{ form.errors.body }}</div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-zinc-100 dark:border-zinc-800 gap-4">
+                <p class="text-xs text-zinc-400 italic">Terakhir diperbarui: {{ new Date().toLocaleDateString('id-ID') }}</p>
+                
+                <div class="flex gap-3 w-full md:w-auto">
+                    <Link href="/admin/donasi" class="flex-1 md:flex-none text-center px-6 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 text-sm font-bold hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+                        Batal
+                    </Link>
+                    <Button 
+                        type="submit" 
+                        class="flex-1 md:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-8 h-11 rounded-xl font-bold gap-2 shadow-lg shadow-indigo-500/20"
+                        :disabled="form.processing"
+                    >
+                        <Save class="size-4" />
+                        {{ form.processing ? 'Menyimpan...' : 'Simpan Perubahan' }}
+                    </Button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</template>

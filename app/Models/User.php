@@ -37,4 +37,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Kalam::class);
     }    
+
+    public function donasis(): HasMany 
+    {
+        return $this->hasMany(Donasi::class);
+    }
 }

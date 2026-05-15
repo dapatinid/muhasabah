@@ -90,7 +90,7 @@ const goToPage = (url: string | null) => {
 <template>
   <Head title="Kelola Jumbotron" />
 
-    <div class="py-6 px-4 max-w-7xl mx-auto space-y-6">
+    <div class="py-6 px-4 w-full mx-auto space-y-6">
       
       <!-- HEADER SECTION -->
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">

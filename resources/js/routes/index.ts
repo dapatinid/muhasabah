@@ -218,7 +218,7 @@ registerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 register.form = registerForm
 
 /**
-* @see routes/web.php:9
+* @see routes/web.php:10
 * @route '/'
 */
 export const home = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -232,7 +232,7 @@ home.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:9
+* @see routes/web.php:10
 * @route '/'
 */
 home.url = (options?: RouteQueryOptions) => {
@@ -240,7 +240,7 @@ home.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:9
+* @see routes/web.php:10
 * @route '/'
 */
 home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -249,7 +249,7 @@ home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:9
+* @see routes/web.php:10
 * @route '/'
 */
 home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -258,7 +258,7 @@ home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:9
+* @see routes/web.php:10
 * @route '/'
 */
 const homeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -267,7 +267,7 @@ const homeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:9
+* @see routes/web.php:10
 * @route '/'
 */
 homeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -276,7 +276,7 @@ homeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:9
+* @see routes/web.php:10
 * @route '/'
 */
 homeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -533,6 +533,87 @@ kalamForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 kalam.form = kalamForm
+
+/**
+* @see \App\Http\Controllers\DonasiController::donasi
+* @see app/Http/Controllers/DonasiController.php:16
+* @route '/donasi'
+*/
+export const donasi = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: donasi.url(options),
+    method: 'get',
+})
+
+donasi.definition = {
+    methods: ["get","head"],
+    url: '/donasi',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\DonasiController::donasi
+* @see app/Http/Controllers/DonasiController.php:16
+* @route '/donasi'
+*/
+donasi.url = (options?: RouteQueryOptions) => {
+    return donasi.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\DonasiController::donasi
+* @see app/Http/Controllers/DonasiController.php:16
+* @route '/donasi'
+*/
+donasi.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: donasi.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\DonasiController::donasi
+* @see app/Http/Controllers/DonasiController.php:16
+* @route '/donasi'
+*/
+donasi.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: donasi.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\DonasiController::donasi
+* @see app/Http/Controllers/DonasiController.php:16
+* @route '/donasi'
+*/
+const donasiForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: donasi.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\DonasiController::donasi
+* @see app/Http/Controllers/DonasiController.php:16
+* @route '/donasi'
+*/
+donasiForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: donasi.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\DonasiController::donasi
+* @see app/Http/Controllers/DonasiController.php:16
+* @route '/donasi'
+*/
+donasiForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: donasi.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+donasi.form = donasiForm
 
 /**
 * @see \Inertia\Controller::__invoke

@@ -88,8 +88,6 @@ const goToPage = (url: string | null) => {
   })
 }
 
-const breadcrumbs = [{ title: 'Kalam Riyadhoh', href: '/admin/kalam' }]
-
 // Fungsi untuk mengambil teks murni dan membatasi jumlah kata
 const getExcerpt = (html: string, wordLimit: number) => {
   // 1. Hilangkan semua tag HTML
@@ -106,7 +104,7 @@ const getExcerpt = (html: string, wordLimit: number) => {
 <template>
   <Head title="Kalam Riyadhoh" />
 
-    <div class="py-6 px-4 max-w-7xl mx-auto space-y-6">
+    <div class="py-6 px-4 w-full mx-auto space-y-6">
       
       <!-- HEADER SECTION -->
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
