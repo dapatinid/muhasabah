@@ -264,7 +264,7 @@ function submit() {
                     <!-- QRIS Placeholder -->
                     <div class="p-6 flex flex-col items-center gap-4">
                         <img 
-                            src="/QRIS_MUHASABA_ID.png" 
+                            src="/QRIS_MUHASABAH_ID.png" 
                             alt="QRIS QR Code" 
                             class="w-full object-cover rounded-lg"
                         />
