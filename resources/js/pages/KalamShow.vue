@@ -3,6 +3,7 @@ import { Head, Link } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 import { CalendarDays, Share2, Tag, User } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
+import { toast } from 'vue-sonner'
 
 
 const props = defineProps<{
