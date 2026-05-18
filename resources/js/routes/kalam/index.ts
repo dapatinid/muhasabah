@@ -278,7 +278,7 @@ uploadImage.form = uploadImageForm
 * @see app/Http/Controllers/KalamController.php:72
 * @route '/admin/kalam/{kalam}/edit'
 */
-export const edit = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -293,7 +293,7 @@ edit.definition = {
 * @see app/Http/Controllers/KalamController.php:72
 * @route '/admin/kalam/{kalam}/edit'
 */
-edit.url = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { kalam: args }
     }
@@ -326,7 +326,7 @@ edit.url = (args: { kalam: string | number | { slug: string | number } } | [kala
 * @see app/Http/Controllers/KalamController.php:72
 * @route '/admin/kalam/{kalam}/edit'
 */
-edit.get = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -336,7 +336,7 @@ edit.get = (args: { kalam: string | number | { slug: string | number } } | [kala
 * @see app/Http/Controllers/KalamController.php:72
 * @route '/admin/kalam/{kalam}/edit'
 */
-edit.head = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -346,7 +346,7 @@ edit.head = (args: { kalam: string | number | { slug: string | number } } | [kal
 * @see app/Http/Controllers/KalamController.php:72
 * @route '/admin/kalam/{kalam}/edit'
 */
-const editForm = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const editForm = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -356,7 +356,7 @@ const editForm = (args: { kalam: string | number | { slug: string | number } } |
 * @see app/Http/Controllers/KalamController.php:72
 * @route '/admin/kalam/{kalam}/edit'
 */
-editForm.get = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.get = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -366,7 +366,7 @@ editForm.get = (args: { kalam: string | number | { slug: string | number } } | [
 * @see app/Http/Controllers/KalamController.php:72
 * @route '/admin/kalam/{kalam}/edit'
 */
-editForm.head = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.head = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -383,7 +383,7 @@ edit.form = editForm
 * @see app/Http/Controllers/KalamController.php:88
 * @route '/admin/kalam/{kalam}'
 */
-export const update = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -398,7 +398,7 @@ update.definition = {
 * @see app/Http/Controllers/KalamController.php:88
 * @route '/admin/kalam/{kalam}'
 */
-update.url = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { kalam: args }
     }
@@ -431,7 +431,7 @@ update.url = (args: { kalam: string | number | { slug: string | number } } | [ka
 * @see app/Http/Controllers/KalamController.php:88
 * @route '/admin/kalam/{kalam}'
 */
-update.put = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -441,7 +441,7 @@ update.put = (args: { kalam: string | number | { slug: string | number } } | [ka
 * @see app/Http/Controllers/KalamController.php:88
 * @route '/admin/kalam/{kalam}'
 */
-const updateForm = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PUT',
@@ -456,7 +456,7 @@ const updateForm = (args: { kalam: string | number | { slug: string | number } }
 * @see app/Http/Controllers/KalamController.php:88
 * @route '/admin/kalam/{kalam}'
 */
-updateForm.put = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.put = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PUT',
@@ -473,7 +473,7 @@ update.form = updateForm
 * @see app/Http/Controllers/KalamController.php:118
 * @route '/admin/kalam/{kalam}'
 */
-export const destroy = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -488,7 +488,7 @@ destroy.definition = {
 * @see app/Http/Controllers/KalamController.php:118
 * @route '/admin/kalam/{kalam}'
 */
-destroy.url = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { kalam: args }
     }
@@ -521,7 +521,7 @@ destroy.url = (args: { kalam: string | number | { slug: string | number } } | [k
 * @see app/Http/Controllers/KalamController.php:118
 * @route '/admin/kalam/{kalam}'
 */
-destroy.delete = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -531,7 +531,7 @@ destroy.delete = (args: { kalam: string | number | { slug: string | number } } |
 * @see app/Http/Controllers/KalamController.php:118
 * @route '/admin/kalam/{kalam}'
 */
-const destroyForm = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -546,7 +546,7 @@ const destroyForm = (args: { kalam: string | number | { slug: string | number } 
 * @see app/Http/Controllers/KalamController.php:118
 * @route '/admin/kalam/{kalam}'
 */
-destroyForm.delete = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -563,7 +563,7 @@ destroy.form = destroyForm
 * @see app/Http/Controllers/KalamController.php:105
 * @route '/kalam/{kalam}'
 */
-export const show = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -578,7 +578,7 @@ show.definition = {
 * @see app/Http/Controllers/KalamController.php:105
 * @route '/kalam/{kalam}'
 */
-show.url = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+show.url = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { kalam: args }
     }
@@ -611,7 +611,7 @@ show.url = (args: { kalam: string | number | { slug: string | number } } | [kala
 * @see app/Http/Controllers/KalamController.php:105
 * @route '/kalam/{kalam}'
 */
-show.get = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -621,7 +621,7 @@ show.get = (args: { kalam: string | number | { slug: string | number } } | [kala
 * @see app/Http/Controllers/KalamController.php:105
 * @route '/kalam/{kalam}'
 */
-show.head = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -631,7 +631,7 @@ show.head = (args: { kalam: string | number | { slug: string | number } } | [kal
 * @see app/Http/Controllers/KalamController.php:105
 * @route '/kalam/{kalam}'
 */
-const showForm = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const showForm = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -641,7 +641,7 @@ const showForm = (args: { kalam: string | number | { slug: string | number } } |
 * @see app/Http/Controllers/KalamController.php:105
 * @route '/kalam/{kalam}'
 */
-showForm.get = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.get = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -651,7 +651,7 @@ showForm.get = (args: { kalam: string | number | { slug: string | number } } | [
 * @see app/Http/Controllers/KalamController.php:105
 * @route '/kalam/{kalam}'
 */
-showForm.head = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.head = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

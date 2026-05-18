@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import { ref, computed } from 'vue'
+import { Link, usePage } from '@inertiajs/vue3' // Tambahkan usePage di sini
 import { 
   House, CalendarDays, MapPin, BookOpenText, 
   HeartHandshake, LayoutGrid, Coins, 
@@ -8,14 +8,17 @@ import {
   CircleStar
 } from 'lucide-vue-next'
 
-// Logic FAB Donasi pindah ke sini
+// Ambil data page untuk mendeteksi URL aktif
+const page = usePage()
+const currentUrl = computed(() => page.url)
+
+// Logic FAB Donasi
 const isDonationOpen = ref(false)
 const toggleDonation = () => isDonationOpen.value = !isDonationOpen.value
 
 const donationMenus = [
-  { name: 'Semua', link: '/halaman-dibangun', icon: LayoutGrid },
-  { name: 'Infaq', link: '/halaman-dibangun', icon: Coins },
-  { name: 'Program', link: '/halaman-dibangun', icon: ChartNoAxesCombined },
+  { name: 'Infaq', link: '/donasi?kategori=infaq', icon: Coins },
+  { name: 'Program', link: '/donasi?kategori=program', icon: ChartNoAxesCombined },
   { name: 'Zakat', link: '/halaman-dibangun', icon: Scale },
   { name: 'Waqaf', link: '/halaman-dibangun', icon: HandHeart },
   { name: 'Qurban', link: '/halaman-dibangun', icon: Beef },
@@ -27,15 +30,19 @@ const donationMenus = [
     <div class="grid grid-cols-5 items-center justify-items-center">
       
       <!-- Beranda -->
-      <Link href="/" class="flex flex-col items-center gap-1 w-full text-amber-500">
+      <Link href="/" 
+            :class="[currentUrl === '/' ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400']"
+            class="flex flex-col items-center gap-1 w-full transition-colors">
         <House class="size-5" />
-        <span class="text-[10px] font-bold">Beranda</span>
+        <span class="text-[10px]" :class="currentUrl === '/' ? 'font-bold' : 'font-medium'">Beranda</span>
       </Link>
 
       <!-- Acara -->
-      <Link href="/halaman-dibangun" class="flex flex-col items-center gap-1 w-full text-stone-500 hover:text-amber-400 transition-colors">
+      <Link href="/halaman-dibangun" 
+            :class="currentUrl === '/halaman-dibangun' ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
+            class="flex flex-col items-center gap-1 w-full transition-colors">
         <CalendarDays class="size-5" />
-        <span class="text-[10px] font-medium">Acara</span>
+        <span class="text-[10px]" :class="currentUrl === '/halaman-dibangun' ? 'font-bold' : 'font-medium'">Acara</span>
       </Link>
 
       <!-- Donasi FAB -->
@@ -65,15 +72,21 @@ const donationMenus = [
       </div>
 
       <!-- Masjid -->
-      <Link href="/halaman-dibangun" class="flex flex-col items-center gap-1 w-full text-stone-500 hover:text-amber-400 transition-colors">
+      <!-- Catatan: Ganti href nya jika nanti sudah ada halaman spesifiknya -->
+      <Link href="/halaman-dibangun" 
+            :class="currentUrl === '/masjid' ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
+            class="flex flex-col items-center gap-1 w-full transition-colors">
         <MapPin class="size-5" />
-        <span class="text-[10px] font-medium">Masjid</span>
+        <span class="text-[10px]" :class="currentUrl === '/masjid' ? 'font-bold' : 'font-medium'">Masjid</span>
       </Link>
 
       <!-- Ukhuwah -->
-      <Link href="/halaman-dibangun" class="flex flex-col items-center gap-1 w-full text-stone-500 hover:text-amber-400 transition-colors">
+      <!-- Catatan: Ganti href nya jika nanti sudah ada halaman spesifiknya -->
+      <Link href="/halaman-dibangun" 
+            :class="currentUrl === '/ukhuwah' ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
+            class="flex flex-col items-center gap-1 w-full transition-colors">
         <CircleStar class="size-5" />
-        <span class="text-[10px] font-medium">Ukhuwah</span>
+        <span class="text-[10px]" :class="currentUrl === '/ukhuwah' ? 'font-bold' : 'font-medium'">Ukhuwah</span>
       </Link>
 
     </div>

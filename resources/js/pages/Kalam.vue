@@ -16,18 +16,30 @@ const props = defineProps<{
       is_anonymous: boolean
       created_at: string
       user: { id: number; name: string } | null
+      thumbnail?: string | null // Tambahkan ini di interface jika ada thumbnail
     }>
     links: Array<{ url: string | null; label: string; active: boolean }>
     meta?: any
   }
-  filters: { search?: string }
+  // PERBAIKAN 1: Tambahkan kategori opsional pada definisi filters props
+  filters: { search?: string; kategori?: string }
 }>()
 
 const search = ref(props.filters?.search ?? '')
+const kategoriList = ['Semua', 'berita', 'hikmah', 'doa', 'kisah', 'tips']
 
+// PERBAIKAN 2: Sinkronkan state aktifKategori dengan data dari backend saat refresh
+const aktifKategori = ref(props.filters?.kategori ?? 'Semua')
+
+// PERBAIKAN 3: Sertakan data kategori di dalam watch search agar tidak hilang saat mengetik pencarian
 watch(search, debounce((val) => {
-  router.get('/kalam', { search: val || undefined }, {
-    preserveState: true, preserveScroll: true, replace: true,
+  router.get('/kalam', { 
+    search: val || undefined,
+    kategori: aktifKategori.value === 'Semua' ? undefined : aktifKategori.value
+  }, {
+    preserveState: true, 
+    preserveScroll: true, 
+    replace: true,
   })
 }, 600))
 
@@ -40,9 +52,6 @@ function tanggal(dateStr: string): string {
     day: 'numeric', month: 'short', year: 'numeric'
   })
 }
-
-const kategoriList = ['Semua', 'berita', 'hikmah', 'doa', 'kisah', 'tips']
-const aktifKategori = ref('Semua')
 
 const kategoriEmoji: Record<string, string> = {
   hikmah: '💡', doa: '🤲', kisah: '📖', tips: '✨', berita: '📰',

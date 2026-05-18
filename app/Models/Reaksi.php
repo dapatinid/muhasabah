@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Reaksi extends Model
 {
-    protected $fillable = ['user_id', 'type', 'reaktiable_id', 'reaktiable_type'];
+    protected $fillable = ['user_id', 'ip_address', 'type', 'reaktiable_id', 'reaktiable_type'];
 
     public function reaktiable(): MorphTo
     {

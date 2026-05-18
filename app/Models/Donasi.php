@@ -14,9 +14,9 @@ class Donasi extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'user_id', 'judul', 'slug', 'body', 'kategori', 'subkategori',
+        'user_id', 'judul', 'slug', 'panduan_donasi', 'body', 'kategori', 'subkategori',
         'thumbnail', 'target_dana', 'saldo', 'tgl_mulai', 'tgl_selesai', 'is_published', 
-        'created_by', 'updated_by'
+        'created_by', 'updated_by', 'image'
     ];
 
     protected static function boot()
@@ -51,6 +51,24 @@ class Donasi extends Model
     {
         // Parameter kedua harus sesuai dengan nama kolom di migrasi (paymentable)
         return $this->morphMany(Payment::class, 'paymentable');
+    }
+
+    /**
+     * Tambahkan Relasi Komentar (Polimorfik)
+     */
+    public function komentars(): MorphMany
+    {
+        // Sesuaikan 'commentable' dengan nama prefix kolom di migrasi komentar Anda (misal: commentable_id, commentable_type)
+        return $this->morphMany(Komentar::class, 'commentable');
+    }
+
+    /**
+     * Tambahkan Relasi Reaksi (Polimorfik)
+     */
+    public function reaksis(): MorphMany
+    {
+        // Sesuaikan 'reactable' atau 'reaksiable' dengan prefix kolom di migrasi reaksi Anda
+        return $this->morphMany(Reaksi::class, 'reaktiable');
     }
 
     public function user(): BelongsTo

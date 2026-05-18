@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, useForm, Link } from '@inertiajs/vue3'
 import TiptapEditor from '@/Components/TiptapEditor.vue'
-import { ArrowLeft, Save, Target } from 'lucide-vue-next'
+import { ArrowLeft, Save, Target, Calendar } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -23,10 +23,13 @@ defineOptions({
 
 const form = useForm({
   judul: '',
+  panduan_donasi: '',
   body: '',
   kategori: 'infaq',
   subkategori: 'infaq',
   target_dana: 0,
+  tgl_mulai: '',
+  tgl_selesai: '',
 })
 
 const categories = [
@@ -54,7 +57,7 @@ function submit() {
 <template>
   <Head title="Buat Program Donasi Baru" />
 
-    <div class="py-10 px-4 max-w-4xl mx-auto">
+    <div class="py-10 px-4 w-full mx-auto">
       <div class="flex items-center gap-4 mb-8">
         <Link href="/admin/donasi" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-indigo-600 transition">
           <ArrowLeft class="size-5" />
@@ -108,8 +111,40 @@ function submit() {
             </select>
           </div>
 
-          <!-- Target Dana -->
+          <!-- Tanggal Mulai -->
           <div class="space-y-2">
+            <Label for="tgl_mulai">Tanggal Mulai</Label>
+            <div class="relative">
+              <Input 
+                id="tgl_mulai" 
+                type="date"
+                v-model="form.tgl_mulai" 
+                class="h-11 rounded-xl focus-visible:ring-indigo-500"
+              />
+            </div>
+            <div v-if="form.errors.tgl_mulai" class="text-red-500 text-xs">{{ form.errors.tgl_mulai }}</div>
+          </div>
+
+          <!-- Tanggal Selesai -->
+          <div class="space-y-2">
+            <Label for="tgl_selesai">Tanggal Selesai (Batas Penggalangan)</Label>
+            <div class="relative">
+              <Input 
+                id="tgl_selesai" 
+                type="date"
+                v-model="form.tgl_selesai" 
+                class="h-11 rounded-xl focus-visible:ring-indigo-500"
+                :disabled="Number(form.target_dana) === 0"
+              />
+            </div>
+            <p v-if="Number(form.target_dana) === 0" class="text-[11px] text-zinc-400 italic">
+              * Dinonaktifkan otomatis karena target dana bernilai 0 (Program Berkelanjutan).
+            </p>
+            <div v-if="form.errors.tgl_selesai" class="text-red-500 text-xs">{{ form.errors.tgl_selesai }}</div>
+          </div>
+
+          <!-- Target Dana -->
+          <div class="space-y-2 md:col-span-2">
             <Label for="target_dana">Target Dana (Rp)</Label>
             <div class="relative">
               <span class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 font-bold text-sm">Rp</span>
@@ -122,9 +157,28 @@ function submit() {
                 required
               />
             </div>
+            <p class="text-[11px] leading-normal text-amber-600 dark:text-amber-400 font-medium">
+              * Jika diisi <span class="font-bold font-mono">0</span>, sistem otomatis menganggap program ini sebagai <span class="font-bold underline">Donasi Rutin / Tanpa Batas Target</span>.
+            </p>
             <div v-if="form.errors.target_dana" class="text-red-500 text-xs">{{ form.errors.target_dana }}</div>
           </div>
         </div>
+
+        <!-- Panduan Donasi Singkat -->
+        <div class="space-y-2">
+          <Label for="panduan_donasi">Panduan / Aturan Singkat Donasi</Label>
+          <Input 
+            id="panduan_donasi" 
+            v-model="form.panduan_donasi" 
+            placeholder="Contoh: Minimal donasi paket Rp 50.000 atau kelipatannya." 
+            class="h-11 rounded-xl focus-visible:ring-indigo-500"
+            required
+          />
+          <p class="text-[11px] text-zinc-400 italic">
+            * Keterangan ini akan muncul di widget detail donasi untuk memandu nominal transfer donatur.
+          </p>
+          <div v-if="form.errors.panduan_donasi" class="text-red-500 text-xs">{{ form.errors.panduan_donasi }}</div>
+        </div>        
 
         <!-- Rich Editor -->
         <div class="space-y-2">
@@ -155,5 +209,4 @@ function submit() {
 
       </form>
     </div>
-
 </template>

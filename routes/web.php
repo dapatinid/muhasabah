@@ -9,7 +9,14 @@ use App\Http\Controllers\LaporanRiyadhohController;
 
 Route::get('/', function () {
     $kalams = \App\Models\Kalam::with('user:id,name')->latest()->take(3)->get();
-    $donasis = \App\Models\Donasi::where('is_published', true)->latest()->take(3)->get();
+    
+    // PERBAIKAN DI SINI: Tambahkan with('payments')
+    $donasis = \App\Models\Donasi::with('payments')
+        ->where('is_published', true)
+        ->latest()
+        ->take(3)
+        ->get();
+        
     // Urutkan berdasarkan priority (ASC), kemudian created_at (DESC)
     $banners = \App\Models\Banner::where('is_active', true)
         ->orderBy('priority', 'asc')
@@ -36,6 +43,12 @@ Route::get('/donasi', [DonasiController::class, 'donasi'])->name('donasi');
 Route::get('/donasi/{donasi:slug}/payment', [DonasiController::class, 'payment'])->name('donasi.payment');
 Route::post('/donasi/{donasi:slug}/payment', [DonasiController::class, 'storePayment'])->name('donasi.payment.store');
 
+// Rute Interaksi Publik dengan Rate Limiter Ketat (Anti Spam)
+Route::middleware(['throttle:10,1'])->group(function () {
+    Route::post('/donasi/{donasi:slug}/komentar', [DonasiController::class, 'storeKomentar'])->name('donasi.storeKomentar');
+    Route::post('/donasi/{donasi:slug}/reaksi', [DonasiController::class, 'storeReaksi'])->name('donasi.storeReaksi');
+});
+
 Route::inertia('halaman-dibangun', 'HalamanDibangun')->name('halaman-dibangun');
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -55,11 +68,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/admin/donasi', [DonasiController::class, 'store'])->name('donasi.store');
     Route::post('/admin/donasi/upload-image', [DonasiController::class, 'uploadImage'])->name('donasi.upload-image');
     Route::get('/admin/donasi/{donasi}/edit', [DonasiController::class, 'edit'])->name('donasi.edit');
+    Route::get('/admin/donasi/{donasi}/reaksi', [DonasiController::class, 'reaksi'])->name('donasi.reaksi');
+    Route::get('/admin/donasi/{donasi}/komentar', [DonasiController::class, 'komentar'])->name('donasi.komentar');
+    Route::get('/admin/donasi/{donasi}/donasi-masuk', [DonasiController::class, 'donasiMasuk'])->name('donasi.donasi-masuk');
+    Route::get('/admin/donasi/{donasi}/tasyaruf', [DonasiController::class, 'tasyaruf'])->name('donasi.tasyaruf');
+    Route::post('/admin/donasi/{donasi}/tasyaruf', [DonasiController::class, 'storeTasyaruf'])->name('donasi.tasyaruf.store');
     Route::put('/admin/donasi/{donasi}', [DonasiController::class, 'update'])->name('donasi.update');
+    Route::post('/admin/donasi/{donasi}/bulk-donasi', [DonasiController::class, 'storeBulkDonasi'])->name('admin.donasi.bulk');
     Route::delete('/admin/donasi/{donasi}', [DonasiController::class, 'destroy'])->name('donasi.destroy');   
 
-    Route::post('/admin/payments', [PaymentController::class, 'store'])->name('payments.store');
-    Route::delete('/admin/payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy'); 
+    // Route::post('/admin/payments', [PaymentController::class, 'store'])->name('payments.store');
+    // Route::delete('/admin/payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy'); 
 
     Route::get('/admin/banner', [BannerController::class, 'index'])->name('banner.index');
     Route::get('/admin/banner/create', [BannerController::class, 'create'])->name('banner.create');

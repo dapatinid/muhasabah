@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Komentar extends Model
 {
-    protected $fillable = ['user_id', 'body', 'commentable_id', 'commentable_type', 'parent_id'];
+    protected $fillable = ['user_id', 'nama_publik', 'body', 'commentable_id', 'commentable_type', 'parent_id'];
 
     // Relasi balik ke model asal (Kalam, dll)
     public function commentable(): MorphTo

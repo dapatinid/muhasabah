@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, useForm, Link } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
-import { Heart, Wallet, ShieldCheck, Check, User, Info } from 'lucide-vue-next'
+import { Heart, Wallet, ShieldCheck, Check, User, Info, Upload, FileText } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 
 const props = defineProps<{
@@ -9,6 +9,7 @@ const props = defineProps<{
         id: number;
         judul: string;
         slug: string;
+        panduan_donasi?: string; // Menampung panduan dari database
     }
 }>()
 
@@ -22,44 +23,48 @@ const form = useForm({
     notes: '',
     payment_method: 'transfer', 
     rekening: 'qris_gopay', 
+    bukti_donasi: null as File | null, // State untuk menampung file upload
 })
 
 // Fungsi untuk memformat tampilan (hanya untuk display)
 const formatDisplay = (val: any) => {
     if (!val) return '';
-    // Pastikan val adalah string dan ambil angkanya saja
     let str = val.toString().replace(/\D/g, '');
-    // Tambah titik setiap 3 digit
     return str.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
 const handleNominalInput = (e: Event) => {
     const target = e.target as HTMLInputElement;
-    
-    // 1. Simpan posisi kursor awal dan panjang teks sebelum diformat
     const start = target.selectionStart || 0;
     const oldLength = target.value.length;
     
-    // 2. Ambil angka murni untuk state form
     let rawValue = target.value.replace(/\D/g, '');
     form.nominal = rawValue;
 
-    // 3. Format untuk tampilan
     const formatted = formatDisplay(rawValue);
     target.value = formatted;
 
-    // 4. Hitung selisih panjang karakter (untuk menangani munculnya titik baru)
     const newLength = formatted.length;
     const lengthDiff = newLength - oldLength;
-
-    // 5. Geser kursor berdasarkan selisih karakter
     const newCursorPos = start + lengthDiff;
     
-    // Gunakan nextTick atau setTimeout agar posisi kursor diupdate setelah DOM stabil
     setTimeout(() => {
         target.setSelectionRange(newCursorPos, newCursorPos);
     }, 0);
 };
+
+// Handle file upload
+const handleFileChange = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+        form.bukti_donasi = target.files[0];
+    }
+};
+
+// Cek status donatur prioritas secara computed
+const isPriorityDonator = computed(() => {
+    return form.infaq_sistem === 100000;
+});
 
 /* Logic totalPembayaran tetap aman karena menggunakan parseInt */
 const totalPembayaran = computed(() => {
@@ -75,8 +80,9 @@ const infaqOptions = [
     { value: 10000, label: 'administrasi' },
     { value: 20000, label: 'administrasi + server' },
     { value: 30000, label: 'administrasi + server' },
-    { value: 40000, label: 'administrasi + server + eksekusi lapangan' },
-    { value: 50000, label: 'administrasi + server + eksekusi lapangan' },
+    { value: 40000, label: 'adm + server + eksekusi lapangan' },
+    { value: 50000, label: 'adm + server + eksekusi lapangan' },
+    { value: 100000, label: '50% muhasabah.id + 50% relawan' },
 ]
 
 const sapaanOptions = ['Bpk.', 'Ibu', 'Kak']
@@ -96,10 +102,10 @@ const displayAtasNama = computed(() => {
 })
 
 function submit() {
-    // Memastikan nominal bersih dan no_wa adalah string
     form.nominal = form.nominal.toString().replace(/\D/g, '');
-    form.no_wa = form.no_wa.toString(); // Paksa jadi string
+    form.no_wa = form.no_wa.toString();
     
+    // Gunakan Inertia post (secara otomatis menjadi FormData jika mendeteksi objek File)
     form.post(`/donasi/${props.donasi.slug}/payment`, {
         preserveScroll: true,
         onError: (errors) => {
@@ -130,6 +136,15 @@ function submit() {
                        <span class="size-4 rounded-full bg-amber-500 text-stone-950 flex items-center justify-center text-[8px]">1</span>
                        Nominal Donasi
                     </label>
+
+                    <!-- INFO PANDUAN DONASI -->
+                    <div v-if="donasi.panduan_donasi" class="flex gap-2.5 items-start p-3.5 rounded-2xl bg-stone-900/40 border border-stone-800 text-stone-400 text-xs leading-relaxed">
+                        <Info class="size-4 text-amber-500 shrink-0 mt-0.5" />
+                        <div>
+                            <span class="font-bold text-stone-300 block mb-0.5">Panduan Donasi:</span>
+                            {{ donasi.panduan_donasi }}
+                        </div>
+                    </div>
                     
                     <div class="grid grid-cols-3 gap-3">
                         <button 
@@ -175,14 +190,22 @@ function submit() {
                                 </div>
                                 <span class="text-xs font-bold">{{ formatCurrency(opt.value) }}</span>
                             </div>
-                            <span class="text-[10px] italic opacity-60">~ {{ opt.label }}</span>
+                            <span class="text-[10px] italic opacity-60 text-right ms-4">{{ opt.label }}</span>
                         </div>
+                    </div>
+
+                    <!-- KETERANGAN DONATUR PRIORITAS -->
+                    <div v-if="isPriorityDonator" class="mt-3 p-3 text-center bg-gradient-to-r from-amber-500/20 to-yellow-600/20 border border-amber-500/30 rounded-xl text-xs font-bold text-amber-400 tracking-wide animate-pulse">
+                        ⭐ Anda adalah donatur prioritas
                     </div>
                 </div>
 
                 <!-- 3. PROFIL DONATUR -->
                 <div class="space-y-4">
-                    <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Identitas Donatur</label>
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500 flex items-center gap-2">
+                       <span class="size-4 rounded-full bg-amber-500 text-stone-950 flex items-center justify-center text-[8px]">2</span>
+                       Identitas Donatur
+                    </label>
                     <div class="grid grid-cols-12 gap-3">
                         <select 
                             v-model="form.sapaan"
@@ -228,8 +251,12 @@ function submit() {
                     <textarea v-model="form.notes" rows="3" class="w-full bg-stone-900 border border-stone-800 rounded-2xl p-4 text-sm text-stone-300 outline-none focus:border-amber-500/40"></textarea>
                 </div>
 
+                <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500 flex items-center gap-2">
+                    <span class="size-4 rounded-full bg-amber-500 text-stone-950 flex items-center justify-center text-[8px]">3</span>
+                    Scan QRIS & Konfirmasi
+                </label>
                 <!-- 5. RINGKASAN & QRIS -->
-                <div class="bg-stone-900 rounded-3xl border border-stone-800 overflow-hidden">
+                <div class="bg-stone-900 rounded-3xl border border-stone-800 overflow-hidden -mt-3">
                     <div class="p-6 space-y-4">
                         <p class="text-[10px] font-black uppercase tracking-tighter text-amber-500">Ringkasan Donasi</p>
                         
@@ -270,6 +297,36 @@ function submit() {
                         />
                         <p class="text-[10px] text-stone-400 font-bold tracking-widest uppercase">Scan QRIS Untuk Donasi</p>
                     </div>
+                </div>
+
+                <!-- 6. UPLOAD BUKTI DONASI -->
+                <div class="space-y-3">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500 flex items-center gap-2">
+                        <Upload class="size-3.5 text-amber-500" /> Upload Bukti Transfer / Donasi (Opsional)
+                    </label>
+                    <div class="relative flex items-center justify-center w-full">
+                        <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-3xl cursor-pointer transition-all bg-stone-900 border-stone-800 hover:border-amber-500/40">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4 text-center">
+                                <template v-if="!form.bukti_donasi">
+                                    <Upload class="size-6 text-stone-500 mb-2" />
+                                    <p class="text-xs text-stone-400 font-medium">Klik untuk upload atau drag bukti transaksi</p>
+                                    <p class="text-[10px] text-stone-500 mt-1">Format gambar (PNG, JPG, JPEG, WEBP)</p>
+                                </template>
+                                <template v-else>
+                                    <FileText class="size-6 text-amber-500 mb-2" />
+                                    <p class="text-xs text-amber-400 font-bold max-w-[250px] truncate">{{ form.bukti_donasi.name }}</p>
+                                    <p class="text-[10px] text-stone-400 mt-1">Klik untuk mengganti gambar</p>
+                                </template>
+                            </div>
+                            <input 
+                                type="file" 
+                                accept="image/*" 
+                                class="hidden" 
+                                @change="handleFileChange"
+                            />
+                        </label>
+                    </div>
+                    <div v-if="form.errors.bukti_donasi" class="text-red-500 text-xs mt-1">{{ form.errors.bukti_donasi }}</div>
                 </div>
 
                 <!-- INFO AMAN -->

@@ -4,7 +4,7 @@ import { ref, computed, watch } from 'vue'
 import debounce from 'lodash/debounce'
 import { 
     Search, Plus, Pencil, Trash2, 
-    HandHeart, Wallet, Target, BarChart3 
+    HandHeart, Wallet, Target, BarChart3, CalendarDays
 } from 'lucide-vue-next'
 
 import {
@@ -34,7 +34,6 @@ const page = usePage()
    DATA DARI BACKEND
 ======================= */
 const donasis = computed(() => page.props.donasis)
-const auth = computed(() => page.props.auth)
 
 /* =======================
    FILTER & SEARCH STATE
@@ -51,6 +50,14 @@ watch(
     )
   }, 1000)
 )
+
+/* =======================
+   PAGINATION NAVIGATION
+======================= */
+function goToPage(url: string | null) {
+  if (!url) return
+  router.get(url, {}, { preserveState: true, preserveScroll: true })
+}
 
 /* =======================
    DELETE LOGIC
@@ -76,7 +83,7 @@ function deleteDonasi() {
 }
 
 /* =======================
-   HELPERS
+   HELPERS & CALCULATION LOGIC
 ======================= */
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('id-ID', {
@@ -86,26 +93,49 @@ const formatCurrency = (value: number) => {
   }).format(value)
 }
 
-const calculateProgress = (saldo: number, target: number) => {
-  if (!target || target <= 0) return 0;
-  const percent = (saldo / target) * 100;
-  return Math.min(Math.round(percent), 100);
+const formatRupiah = (value: any) => {
+  return formatCurrency(Number(value) || 0)
 }
 
-const goToPage = (url: string | null) => {
-  if (!url) return
-  router.get(url, { search: search.value || undefined }, {
-    preserveState: true,
-    preserveScroll: true,
-    replace: true,
-  })
+const getTotalTasyaruf = (donasi: any) => {
+  return Number(donasi?.total_tasyaruf) || 0
 }
 
-const getExcerpt = (html: string, wordLimit: number) => {
-  const plainText = html.replace(/<[^>]*>/g, ' ');
-  const words = plainText.trim().split(/\s+/);
-  if (words.length <= wordLimit) return plainText;
-  return words.slice(0, wordLimit).join(' ') + '...';
+const getTotalDonasiMasuk = (donasi: any) => {
+  return Number(donasi?.total_donasi_masuk) || 0
+}
+
+// OPSI B: Hitung Progress berdasarkan Total Donasi Masuk vs Target Dana
+const calculateProgressTarget = (donasi: any) => {
+  const masuk = getTotalDonasiMasuk(donasi)
+  const target = Number(donasi?.target_dana) || 0
+  if (target <= 0) return 0
+  const percent = (masuk / target) * 100
+  return Math.min(Math.round(percent), 100)
+}
+
+// OPSI A: Hitung Progress penyaluran Program Rutin (Tasyaruf vs Total Donasi Masuk)
+const calculateProgressRutin = (donasi: any) => {
+  const masuk = getTotalDonasiMasuk(donasi)
+  const keluar = getTotalTasyaruf(donasi)
+  if (masuk <= 0) return 0
+  const percent = (keluar / masuk) * 100
+  return Math.min(Math.round(percent), 100)
+}
+
+// Sisa Hari Konten Terkini
+const getSisaHari = (tglSelesai: string | null, createdAt: string) => {
+  if (!tglSelesai) return 'Berlanjut'
+  
+  const sekarang = new Date()
+  const selesai = new Date(tglSelesai)
+  
+  const selisihWaktu = selesai.getTime() - sekarang.getTime()
+  const selisihHari = Math.ceil(selisihWaktu / (1000 * 3600 * 24))
+  
+  if (selisihHari < 0) return 'Selesai'
+  if (selisihHari === 0) return 'Hari Ini'
+  return `${selisihHari} Hari Lagi`
 }
 </script>
 
@@ -172,37 +202,80 @@ const getExcerpt = (html: string, wordLimit: number) => {
           </div>
 
           <!-- Info Donasi -->
-          <div class="flex-1">
-            <h2 class="text-lg font-bold text-zinc-800 dark:text-zinc-100 leading-tight mb-3 line-clamp-2">
-              {{ donasi.judul }}
-            </h2>
+          <div class="flex-1 flex flex-col justify-between">
+            <div>
+              <h2 class="text-lg font-bold text-zinc-800 dark:text-zinc-100 leading-tight mb-4 line-clamp-2">
+                {{ donasi.judul }}
+              </h2>
+            </div>
 
-            <!-- Progress Bar -->
-            <div class="space-y-2 mb-4">
-              <div class="flex justify-between text-xs font-medium">
-                <span class="text-zinc-500">Progress Dana</span>
-                <span class="text-indigo-600 font-bold">{{ calculateProgress(donasi.saldo, donasi.target_dana) }}%</span>
+            <!-- OPSI A: DESAIN CARD DONASI RUTIN (TARGET DANA = 0) -->
+            <!-- Membandingkan Dana Masuk vs Dana Tasyaruf -->
+            <div v-if="Number(donasi.target_dana) === 0" class="space-y-3 mb-4">
+              <div class="grid grid-cols-2 gap-2 text-[11px]">
+                 <div class="flex flex-col">
+                   <span class="text-zinc-400 uppercase text-[9px] font-bold">Telah Disalurkan</span>
+                   <span class="text-emerald-600 dark:text-emerald-400 font-bold font-mono text-sm">
+                     {{ formatRupiah(getTotalTasyaruf(donasi)) }}
+                   </span>
+                 </div>
+                 <div class="flex flex-col text-right">
+                   <span class="text-zinc-400 uppercase text-[9px] font-bold">Total Terkumpul</span>
+                   <span class="text-amber-600 dark:text-amber-500 font-bold font-mono text-sm">
+                     {{ formatRupiah(getTotalDonasiMasuk(donasi)) }}
+                   </span>
+                 </div>
               </div>
-              <div class="w-full bg-zinc-100 dark:bg-zinc-800 h-2 rounded-full overflow-hidden">
+              
+              <!-- Progress Bar Penyaluran -->
+              <div class="h-2 w-full bg-gradient-to-r from-amber-800 to-amber-600 dark:from-amber-950 dark:to-amber-800 rounded-full overflow-hidden">
                 <div 
-                  class="bg-indigo-500 h-full transition-all duration-1000" 
-                  :style="{ width: `${calculateProgress(donasi.saldo, donasi.target_dana)}%` }"
+                  class="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full transition-all duration-1000 shadow-[0_0_8px_rgba(52,211,153,0.3)]"
+                  :style="{ width: calculateProgressRutin(donasi) + '%' }"
                 ></div>
               </div>
+
+              <div class="flex items-center justify-between text-[10px] text-zinc-500 dark:text-zinc-400 pt-1">
+                <span class="text-amber-600 dark:text-amber-500 font-bold uppercase tracking-wider text-[9px]">Program Rutin</span>
+                <span class="font-bold text-zinc-600 dark:text-zinc-300">{{ calculateProgressRutin(donasi) }}% Terdistribusi</span>
+              </div>
             </div>
 
-            <!-- Saldo Info -->
-            <div class="grid grid-cols-2 gap-2 mb-4">
-              <div class="p-2 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-100 dark:border-zinc-800">
-                <p class="text-[10px] text-zinc-400 uppercase font-bold">Saldo Saat Ini</p>
-                <p class="text-sm font-bold text-emerald-600">{{ formatCurrency(donasi.saldo) }}</p>
+            <!-- OPSI B: DESAIN CARD DONASI TARGET / PROGRAM (TARGET DANA > 0) -->
+            <!-- Sesuai Prinsip Baru: Menggunakan Dana Masuk (bukan saldo) vs Dana Target -->
+            <div v-else class="space-y-3 mb-4">
+              <div class="flex justify-between items-end text-[11px]">
+                 <div class="flex flex-col">
+                   <span class="text-zinc-400 uppercase text-[9px] font-bold">Terkumpul (Dana Masuk)</span>
+                   <span class="text-amber-600 dark:text-amber-500 font-bold font-mono text-sm">
+                     {{ formatRupiah(getTotalDonasiMasuk(donasi)) }}
+                   </span>
+                 </div>
+                 <div class="text-right">
+                   <span class="text-zinc-800 dark:text-zinc-200 font-extrabold font-mono text-sm">
+                     {{ calculateProgressTarget(donasi) }}%
+                   </span>
+                 </div>
               </div>
-              <div class="p-2 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-100 dark:border-zinc-800">
-                <p class="text-[10px] text-zinc-400 uppercase font-bold">Target</p>
-                <p class="text-sm font-bold text-zinc-700 dark:text-zinc-300">{{ formatCurrency(donasi.target_dana) }}</p>
+              
+              <!-- Progress Bar Capaian Target -->
+              <div class="h-2 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                <div 
+                  class="h-full bg-amber-500 rounded-full transition-all duration-1000 shadow-[0_0_8px_rgba(245,158,11,0.3)]"
+                  :style="{ width: calculateProgressTarget(donasi) + '%' }"
+                ></div>
+              </div>
+
+              <div class="flex items-center gap-1.5 text-[10px] text-zinc-500 dark:text-zinc-400 pt-1">
+                <Target class="size-3.5 text-zinc-400" />
+                <span class="font-medium">Target: {{ formatRupiah(donasi.target_dana) }}</span>
+                <span class="ms-auto flex items-center gap-1 font-medium bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md text-zinc-600 dark:text-zinc-300 text-[9px]">
+                  <CalendarDays class="size-3 text-zinc-400" /> 
+                  {{ getSisaHari(donasi.tgl_selesai, donasi.created_at) }}
+                </span>
               </div>
             </div>
-          </div>
+          </div>          
 
           <!-- Footer -->
           <div class="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between mt-auto">
@@ -261,8 +334,3 @@ const getExcerpt = (html: string, wordLimit: number) => {
     </Dialog>
 
 </template>
-
-<!-- <style scoped>
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-</style> -->
