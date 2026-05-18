@@ -38,7 +38,7 @@ class Donasi extends Model
 
         static::saving(function ($donasi) {
             if (empty($donasi->slug)) {
-                $donasi->slug = $donasi->kategori . '-' . Str::slug($donasi->judul) . '-' . Str::random(7);
+                $donasi->slug = $donasi->kategori . '-' . Str::slug($donasi->judul) . '-' . Str::random(12);
             }
 
             // Ekstrak thumbnail dari body (TipTap)

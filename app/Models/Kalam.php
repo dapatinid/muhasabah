@@ -48,7 +48,7 @@ class Kalam extends Model
         static::saving(function ($kalam) {
             // 1. Auto-generate slug jika kosong
             if (empty($kalam->slug)) {
-                $kalam->slug = Str::slug($kalam->judul) . '-' . Str::random(7);
+                $kalam->slug = Str::slug($kalam->judul) . '-' . Str::random(12);
             }
 
             // 2. Ekstrak gambar pertama dari body untuk thumbnail
