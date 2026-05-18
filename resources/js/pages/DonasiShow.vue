@@ -8,6 +8,7 @@ import {
   RefreshCw
 } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
+import { toast } from 'vue-sonner'
 
 const props = defineProps<{
   donasi: {
@@ -249,6 +250,25 @@ onUnmounted(() => {
     observer.unobserve(tabsTargetRef.value)
   }
 })
+
+function handleShare() {
+  if (typeof window !== 'undefined') {
+    // Menyalin URL aktif saat ini ke clipboard
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => {
+        // Memicu toast notification sukses bawaan layout Anda
+        toast.success('Link berhasil disalin ke clipboard!', {
+          description: 'Silakan bagikan ke media sosial atau pesan chat Anda.',
+          duration: 3000,
+        })
+      })
+      .catch((err) => {
+        // Penanganan error fallback jika browser memblokir akses clipboard
+        toast.error('Gagal menyalin link secara otomatis.')
+        console.error('Gagal menyalin: ', err)
+      })
+  }
+}
 </script>
 
 <template>
@@ -624,10 +644,19 @@ onUnmounted(() => {
     </main>
 
     <!-- Floating Share Button -->
-    <div class="fixed bottom-20 left-6 z-50">
-      <button type="button" class="w-8 h-8 bg-amber-500 text-stone-950 rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-transform">
-        <Share2 class="w-4 h-4" />
-      </button>
+    <!-- Menggunakan 'max-w-xl mx-auto inset-x-0 relative' dikombinasikan dengan posisi absolute internal 
+         agar tombol tetap presisi di sisi kiri layout mobile Anda meskipun dibuka di desktop -->
+    <div class="fixed bottom-30 max-w-xl mx-auto inset-x-0 z-50 pointer-events-none">
+      <div class="absolute left-5 pointer-events-auto">
+        <button 
+          @click="handleShare"
+          type="button" 
+          title="Bagikan link"
+          class="w-10 h-10 bg-amber-500 hover:bg-amber-400 text-stone-950 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.5)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer"
+        >
+          <Share2 class="w-4 h-4 stroke-[2.5]" />
+        </button>
+      </div>
     </div>
 
   </AppLayoutPublic>
