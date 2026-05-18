@@ -11,6 +11,12 @@ import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
 
 const props = defineProps<{
+  meta?: {
+    title: string
+    description: string
+    image: string
+    url: string
+  }
   donasi: {
     id: number
     judul: string
@@ -272,7 +278,17 @@ function handleShare() {
 </script>
 
 <template>
-  <Head :title="donasi.judul" />
+  <Head>
+    <title>{{ donasi.judul }}</title>
+    <meta v-if="meta" name="description" :content="meta.description" />
+    
+    <!-- Open Graph Tags untuk WhatsApp Dinamis -->
+    <meta v-if="meta" property="og:title" :content="meta.title" />
+    <meta v-if="meta" property="og:description" :content="meta.description" />
+    <meta v-if="meta" property="og:image" :content="meta.image" />
+    <meta v-if="meta" property="og:url" :content="meta.url" />
+    <meta property="og:type" content="website" />
+  </Head>
 
   <AppLayoutPublic :subtitle="donasi.subkategori" :title="donasi.judul" :show-back="true" back-href="/donasi">  
 

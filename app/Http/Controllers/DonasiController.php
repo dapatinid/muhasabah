@@ -8,6 +8,7 @@ use App\Models\Payment;
 use App\Models\Reaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class DonasiController extends Controller
@@ -304,22 +305,33 @@ class DonasiController extends Controller
      */
     public function show(Donasi $donasi)
     {
+        // Bersihkan bodi dari tag HTML untuk deskripsi pratinjau WA (Maks 150 karakter)
+        $cleanDescription = Str::limit(strip_tags($donasi->body), 150, '...');
+
+        // Asumsikan field thumbnail donasi Anda bernama 'thumbnail'. 
+        // Pastikan menghasilkan URL absolut (https://...) menggunakan asset() atau Storage::url()
+        $imageUrl = $donasi->thumbnail ? $donasi->thumbnail : asset('favicon.png');
+
         return Inertia::render('DonasiShow', [
             'donasi' => $donasi->load([
                 'user:id,name', 
-                // Muat komentar beserta data user yang berkomentar
                 'komentars' => function($q) {
                     $q->with('user:id,name')->latest();
                 },
-                // Muat riwayat reaksi emoji
                 'reaksis',
-                // Muat arus kas masuk dan keluar
                 'payments' => function($q) {
                     $q->whereIn('mutation_type', ['donasi_utama', 'infaq_sistem', 'tasyaruf'])
-                      ->latest()
-                      ->limit(50);
+                    ->latest()
+                    ->limit(50);
                 }
             ]),
+            // Kirim data SEO meta khusus ke page props
+            'meta' => [
+                'title' => $donasi->judul,
+                'description' => $cleanDescription,
+                'image' => $imageUrl,
+                'url' => request()->fullUrl(),
+            ]
         ]);
     }
 
