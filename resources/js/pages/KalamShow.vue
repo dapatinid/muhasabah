@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
-import { CalendarDays, Tag, User } from 'lucide-vue-next'
+import { CalendarDays, Share2, Tag, User } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 
 
 const props = defineProps<{
+  meta?: {
+    title: string
+    description: string
+    image: string
+    url: string
+  }
   kalam: {
     id: number
     judul: string
@@ -60,10 +66,34 @@ const reaksiCount = computed(() => {
 
 // Aktif reaksi user (untuk demo — nanti bisa disambung ke auth)
 const activeReaksi = ref<string | null>(null)
+
+function handleShare() {
+  if (typeof window !== 'undefined') {
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => {
+        toast.success('Link tulisan berhasil disalin!', {
+          description: 'Silakan bagikan hikmah dan ilmu ini ke kerabat Anda.',
+          duration: 3000,
+        })
+      })
+      .catch((err) => {
+        toast.error('Gagal menyalin tautan.')
+        console.error(err)
+      })
+  }
+}
 </script>
 
 <template>
-  <Head :title="kalam.judul" />
+  <Head>
+    <title>{{ kalam.judul }}</title>
+    <meta v-if="meta" name="description" :content="meta.description" />
+    <meta v-if="meta" property="og:title" :content="meta.title" />
+    <meta v-if="meta" property="og:description" :content="meta.description" />
+    <meta v-if="meta" property="og:image" :content="meta.image" />
+    <meta v-if="meta" property="og:url" :content="meta.url" />
+    <meta property="og:type" content="article" />
+  </Head>
 
   <AppLayoutPublic :subtitle="kalam.kategori" :title="kalam.judul" :show-back="true" back-href="/kalam">  
 
@@ -190,6 +220,19 @@ const activeReaksi = ref<string | null>(null)
         </div>
 
       </main>
+
+      <div class="fixed bottom-30 max-w-xl mx-auto inset-x-0 z-50 pointer-events-none">
+        <div class="absolute left-5 pointer-events-auto">
+          <button 
+            @click="handleShare"
+            type="button" 
+            title="Bagikan tulisan"
+            class="w-10 h-10 bg-amber-500 hover:bg-amber-400 text-stone-950 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.5)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer"
+          >
+            <Share2 class="w-4 h-4 stroke-[2.5]" />
+          </button>
+        </div>
+      </div>      
 
   </AppLayoutPublic>
 </template>
