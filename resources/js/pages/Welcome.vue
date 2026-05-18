@@ -3,7 +3,8 @@ import { Head, Link, usePage } from '@inertiajs/vue3'
 import { 
   Beef, BookOpen, CalendarDays, ChartNoAxesCombined, Coins, 
   HandHeart, HeartHandshake, LayoutGrid, Scale, Search, 
-  UserRound, Target, Heart, User, Loader2 
+  UserRound, Target, Heart, User, Loader2, 
+  ArrowRight
 } from 'lucide-vue-next'
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import debounce from 'lodash/debounce'
@@ -466,8 +467,8 @@ watch(isSearchOpen, (val) => {
       <section class="px-5">
         <div class="flex justify-between items-end mb-4">
           <h2 class="text-sm font-bold uppercase tracking-wider text-amber-200/70">Kalam Terbaru</h2>
-          <Link href="/kalam" class="text-xs text-amber-500 font-medium hover:text-amber-400 transition-colors">
-            Lihat Semua →
+          <Link href="/kalam" class="text-xs text-amber-500 font-medium hover:text-amber-400 transition-colors flex items-center gap-1">
+            <span>Lihat Semua</span> <ArrowRight class="size-3 -mb-0.5" />
           </Link>
         </div>
 
@@ -508,8 +509,8 @@ watch(isSearchOpen, (val) => {
       <section class="px-5">
         <div class="flex justify-between items-end mb-4">
           <h2 class="text-sm font-bold uppercase tracking-wider text-amber-200/70">Donasi Pilihan</h2>
-          <Link href="/donasi" class="text-xs text-amber-500 font-medium hover:text-amber-400 transition-colors">
-            Lihat Semua →
+          <Link href="/donasi" class="text-xs text-amber-500 font-medium hover:text-amber-400 transition-colors flex items-center gap-1">
+            <span>Lihat Semua</span> <ArrowRight class="size-3 -mb-0.5" />
           </Link>
         </div>
 

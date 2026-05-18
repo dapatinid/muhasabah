@@ -38,7 +38,7 @@ Route::post('/laporan-riyadhoh-submit', [LaporanRiyadhohController::class, 'stor
 Route::get('/laporan-riyadhoh/log', [LaporanRiyadhohController::class, 'log'])->name('laporan-riyadhoh.log');
 
 Route::get('/kalam', [KalamController::class, 'kalam'])->name('kalam');
-Route::get('/donasi', [DonasiController::class, 'donasi'])->name('donasi'); 
+Route::get('/donasi', [DonasiController::class, 'donasi'])->name('donasi');
 
 Route::get('/donasi/{donasi:slug}/payment', [DonasiController::class, 'payment'])->name('donasi.payment');
 Route::post('/donasi/{donasi:slug}/payment', [DonasiController::class, 'storePayment'])->name('donasi.payment.store');

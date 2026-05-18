@@ -19,9 +19,9 @@ const toggleDonation = () => isDonationOpen.value = !isDonationOpen.value
 const donationMenus = [
   { name: 'Infaq', link: '/donasi?kategori=infaq', icon: Coins },
   { name: 'Program', link: '/donasi?kategori=program', icon: ChartNoAxesCombined },
-  { name: 'Zakat', link: '/halaman-dibangun', icon: Scale },
-  { name: 'Waqaf', link: '/halaman-dibangun', icon: HandHeart },
-  { name: 'Qurban', link: '/halaman-dibangun', icon: Beef },
+  { name: 'Zakat', link: '/donasi?kategori=zakat', icon: Scale },
+  { name: 'Waqaf', link: '/donasi?kategori=waqaf', icon: HandHeart },
+  { name: 'Qurban', link: '/donasi?kategori=qurban', icon: Beef },
 ]
 </script>
 
