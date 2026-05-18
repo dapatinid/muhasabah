@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, useForm } from '@inertiajs/vue3'
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { 
   CalendarDays, Tag, Target, Wallet, 
   Share2, BookOpen, MessageCircle, 
@@ -219,6 +219,36 @@ const laporanArusKas = computed(() => {
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     })
 })
+// State untuk mendeteksi apakah tab harus mengunci (fixed)
+const isTabsSticky = ref(false)
+const tabsTargetRef = ref<HTMLElement | null>(null)
+
+let observer: IntersectionObserver | null = null
+
+onMounted(() => {
+  // Menggunakan IntersectionObserver untuk performa yang jauh lebih ringan dibanding scroll listener biasa
+  observer = new IntersectionObserver(
+    ([entry]) => {
+      // Jika penanda tab sudah keluar dari layar atas, aktifkan posisi fixed
+      isTabsSticky.value = !entry.isIntersecting
+    },
+    { 
+      // Berikan threshold offset negatif sebesar tinggi navbar Anda (~72px)
+      rootMargin: '-12px 0px 0px 0px',
+      threshold: [0]
+    }
+  )
+
+  if (tabsTargetRef.value) {
+    observer.observe(tabsTargetRef.value)
+  }
+})
+
+onUnmounted(() => {
+  if (observer && tabsTargetRef.value) {
+    observer.unobserve(tabsTargetRef.value)
+  }
+})
 </script>
 
 <template>
@@ -307,45 +337,63 @@ const laporanArusKas = computed(() => {
         </div>        
       </div>
 
-      <!-- NAVIGATION TABS -->
-      <div class="border-b border-stone-800 sticky top-0 bg-stone-950/80 backdrop-blur-md z-10 flex gap-2 overflow-x-auto">
-        <button 
-          @click="activeTab = 'cerita'"
-          type="button"
-          :class="[
-            'flex items-center gap-2 py-3.5 px-4 text-sm font-bold border-b-2 transition-all whitespace-nowrap',
-            activeTab === 'cerita' ? 'border-amber-500 text-amber-400' : 'border-transparent text-stone-500 hover:text-stone-300'
-          ]"
-        >
-          <BookOpen class="w-4 h-4" />
-          Cerita
-        </button>
-        <button 
-          @click="activeTab = 'komentar'"
-          type="button"
-          :class="[
-            'flex items-center gap-2 py-3.5 px-4 text-sm font-bold border-b-2 transition-all whitespace-nowrap',
-            activeTab === 'komentar' ? 'border-amber-500 text-amber-400' : 'border-transparent text-stone-500 hover:text-stone-300'
-          ]"
-        >
-          <MessageCircle class="w-4 h-4" />
-          Komentar & Doa
-          <span class="text-xs px-1.5 py-0.5 bg-stone-800 text-stone-400 rounded-md font-mono">
-            {{ (donasi.komentars?.length || 0) + (doaDonatur.length) }}
-          </span>
-        </button>
-        <button 
-          @click="activeTab = 'laporan'"
-          type="button"
-          :class="[
-            'flex items-center gap-2 py-3.5 px-4 text-sm font-bold border-b-2 transition-all whitespace-nowrap',
-            activeTab === 'laporan' ? 'border-amber-500 text-amber-400' : 'border-transparent text-stone-500 hover:text-stone-300'
-          ]"
-        >
-          <ClipboardList class="w-4 h-4" />
-          Laporan Keuangan
-        </button>
+      
+<!-- Element Sensor (Pembatas) -->
+      <div ref="tabsTargetRef" class="w-full h-px invisible"></div>
+
+      <!-- NAVIGATION TABS CONTAINER -->
+      <!-- Jika isTabsSticky true, kita ubah paksa posisinya menjadi fixed layar penuh, diposisikan tepat di bawah navbar (top-[68px]) -->
+      <div 
+        :class="[
+          'bg-stone-950 border-b border-stone-800 transition-all duration-150 z-40',
+          isTabsSticky 
+            ? 'fixed top-0 left-0 right-0 max-w-xl mx-auto px-5 shadow-xl pt-1' 
+            : 'relative -mx-5 px-5 mt-4'
+        ]"
+      >
+        <!-- SCROLLABLE WRAPPER FOR BUTTONS -->
+        <div class="flex gap-2 overflow-x-auto no-scrollbar">
+          <button 
+            @click="activeTab = 'cerita'"
+            type="button"
+            :class="[
+              'flex items-center gap-2 py-3.5 px-4 text-sm font-bold border-b-2 transition-all whitespace-nowrap',
+              activeTab === 'cerita' ? 'border-amber-500 text-amber-400' : 'border-transparent text-stone-500 hover:text-stone-300'
+            ]"
+          >
+            <BookOpen class="w-4 h-4" />
+            Cerita
+          </button>
+          <button 
+            @click="activeTab = 'komentar'"
+            type="button"
+            :class="[
+              'flex items-center gap-2 py-3.5 px-4 text-sm font-bold border-b-2 transition-all whitespace-nowrap',
+              activeTab === 'komentar' ? 'border-amber-500 text-amber-400' : 'border-transparent text-stone-500 hover:text-stone-300'
+            ]"
+          >
+            <MessageCircle class="w-4 h-4" />
+            Komentar & Doa
+            <span class="text-xs px-1.5 py-0.5 bg-stone-800 text-stone-400 rounded-md font-mono">
+              {{ (donasi.komentars?.length || 0) + (doaDonatur.length) }}
+            </span>
+          </button>
+          <button 
+            @click="activeTab = 'laporan'"
+            type="button"
+            :class="[
+              'flex items-center gap-2 py-3.5 px-4 text-sm font-bold border-b-2 transition-all whitespace-nowrap',
+              activeTab === 'laporan' ? 'border-amber-500 text-amber-400' : 'border-transparent text-stone-500 hover:text-stone-300'
+            ]"
+          >
+            <ClipboardList class="w-4 h-4" />
+            Laporan Keuangan
+          </button>
+        </div>
       </div>
+
+      <!-- Spacer pengganti agar tinggi layout tidak 'anjlok' saat tab berubah jadi fixed -->
+      <div v-if="isTabsSticky" class="h-[53px]"></div>      
 
       <!-- ==================== TAB 1: CERITA ==================== -->
       <div v-if="activeTab === 'cerita'" class="space-y-8">
@@ -388,7 +436,7 @@ const laporanArusKas = computed(() => {
       <div v-if="activeTab === 'komentar'" class="space-y-6">
 
         <!-- Reaksi Widget -->
-        <div class="pt-4 border-t border-stone-800 space-y-4">
+        <div class="space-y-4">
           <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Ekspresikan Dukungan Anda</p>
           <div class="flex flex-wrap gap-2">
             <button
@@ -576,7 +624,7 @@ const laporanArusKas = computed(() => {
     </main>
 
     <!-- Floating Share Button -->
-    <div class="fixed top-4 right-6 z-50">
+    <div class="fixed bottom-20 left-6 z-50">
       <button type="button" class="w-8 h-8 bg-amber-500 text-stone-950 rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-transform">
         <Share2 class="w-4 h-4" />
       </button>
@@ -595,12 +643,5 @@ const laporanArusKas = computed(() => {
   aspect-ratio: 16 / 9 !important;
   border-radius: 1.5rem;
   border: 1px solid #292524;
-}
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-none {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 </style>

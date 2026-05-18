@@ -16,7 +16,7 @@ class Donasi extends Model
     protected $fillable = [
         'user_id', 'judul', 'slug', 'panduan_donasi', 'body', 'kategori', 'subkategori',
         'thumbnail', 'target_dana', 'saldo', 'tgl_mulai', 'tgl_selesai', 'is_published', 
-        'created_by', 'updated_by', 'image'
+        'created_by', 'updated_by'
     ];
 
     protected static function boot()

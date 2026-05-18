@@ -14,7 +14,7 @@ return new class extends Migration
 Schema::create('reaksis', function (Blueprint $table) {
         $table->id();
         $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
-        $table->string('ip_address', 45)->nullable();
+        $table->string('ip_address')->nullable();
         
         // Jenis reaksi: 'like', 'love', 'aamiin', 'masyaallah', dll
         $table->string('type'); 

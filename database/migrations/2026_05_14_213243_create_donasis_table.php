@@ -15,7 +15,7 @@ return new class extends Migration
             // Konten
             $table->string('judul');
             $table->string('slug')->unique();
-            $table->text('panduan_donasi'); 
+            $table->text('panduan_donasi')->nullable();
             $table->longText('body'); 
             $table->string('kategori'); 
             $table->string('subkategori'); 
