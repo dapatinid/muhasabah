@@ -72,9 +72,9 @@ class KalamController extends Controller
     public function edit(Kalam $kalam)
     {
         // Pastikan hanya pemilik yang bisa mengedit
-        if ($kalam->user_id !== auth()->id()) {
-            abort(403, 'Anda tidak memiliki akses untuk mengedit Kalam ini.');
-        }
+        // if ($kalam->user_id !== auth()->id()) {
+        //     abort(403, 'Anda tidak memiliki akses untuk mengedit Kalam ini.');
+        // }
 
         return Inertia::render('Admin/Kalam/Edit', [
             'kalam' => $kalam,

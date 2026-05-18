@@ -145,7 +145,7 @@ const getExcerpt = (html: string, wordLimit: number) => {
               {{ kalam.kategori }}
             </span>
             
-            <div v-if="kalam.user_id === auth.user.id" class="flex gap-2">
+            <div class="flex gap-2">
               <Link :href="`/admin/kalam/${kalam.slug}/edit`" class="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-blue-600 transition">
                 <Pencil class="size-4" />
               </Link>
