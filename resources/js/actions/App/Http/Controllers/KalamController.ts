@@ -300,7 +300,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\KalamController::uploadImage
-* @see app/Http/Controllers/KalamController.php:127
+* @see app/Http/Controllers/KalamController.php:140
 * @route '/admin/kalam/upload-image'
 */
 export const uploadImage = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -315,7 +315,7 @@ uploadImage.definition = {
 
 /**
 * @see \App\Http\Controllers\KalamController::uploadImage
-* @see app/Http/Controllers/KalamController.php:127
+* @see app/Http/Controllers/KalamController.php:140
 * @route '/admin/kalam/upload-image'
 */
 uploadImage.url = (options?: RouteQueryOptions) => {
@@ -324,7 +324,7 @@ uploadImage.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\KalamController::uploadImage
-* @see app/Http/Controllers/KalamController.php:127
+* @see app/Http/Controllers/KalamController.php:140
 * @route '/admin/kalam/upload-image'
 */
 uploadImage.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -334,7 +334,7 @@ uploadImage.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\KalamController::uploadImage
-* @see app/Http/Controllers/KalamController.php:127
+* @see app/Http/Controllers/KalamController.php:140
 * @route '/admin/kalam/upload-image'
 */
 const uploadImageForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -344,7 +344,7 @@ const uploadImageForm = (options?: RouteQueryOptions): RouteFormDefinition<'post
 
 /**
 * @see \App\Http\Controllers\KalamController::uploadImage
-* @see app/Http/Controllers/KalamController.php:127
+* @see app/Http/Controllers/KalamController.php:140
 * @route '/admin/kalam/upload-image'
 */
 uploadImageForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -645,7 +645,7 @@ export const update = {
 
 /**
 * @see \App\Http\Controllers\KalamController::destroy
-* @see app/Http/Controllers/KalamController.php:118
+* @see app/Http/Controllers/KalamController.php:131
 * @route '/admin/kalam/{kalam}'
 */
 export const destroy = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -660,7 +660,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\KalamController::destroy
-* @see app/Http/Controllers/KalamController.php:118
+* @see app/Http/Controllers/KalamController.php:131
 * @route '/admin/kalam/{kalam}'
 */
 destroy.url = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -693,7 +693,7 @@ destroy.url = (args: { kalam: string | { slug: string } } | [kalam: string | { s
 
 /**
 * @see \App\Http\Controllers\KalamController::destroy
-* @see app/Http/Controllers/KalamController.php:118
+* @see app/Http/Controllers/KalamController.php:131
 * @route '/admin/kalam/{kalam}'
 */
 destroy.delete = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -703,7 +703,7 @@ destroy.delete = (args: { kalam: string | { slug: string } } | [kalam: string | 
 
 /**
 * @see \App\Http\Controllers\KalamController::destroy
-* @see app/Http/Controllers/KalamController.php:118
+* @see app/Http/Controllers/KalamController.php:131
 * @route '/admin/kalam/{kalam}'
 */
 const destroyForm = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -718,7 +718,7 @@ const destroyForm = (args: { kalam: string | { slug: string } } | [kalam: string
 
 /**
 * @see \App\Http\Controllers\KalamController::destroy
-* @see app/Http/Controllers/KalamController.php:118
+* @see app/Http/Controllers/KalamController.php:131
 * @route '/admin/kalam/{kalam}'
 */
 destroyForm.delete = (args: { kalam: string | { slug: string } } | [kalam: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

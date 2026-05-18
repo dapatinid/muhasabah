@@ -110,10 +110,23 @@ class KalamController extends Controller
             'reaksis',
         ]);
 
+        // Bersihkan isi tulisan dari kode HTML untuk deskripsi pratinjau WA
+        $cleanDescription = Str::limit(strip_tags($kalam->body), 150, '...');
+
+        // Asumsikan field thumbnail artikel Anda bernama 'thumbnail' atau 'foto'. Jika tidak ada, pakai default gambar artikel
+        $imageUrl = $kalam->thumbnail ? $kalam->thumbnail : asset('favicon.png');
+
         return Inertia::render('KalamShow', [
             'kalam' => $kalam,
+            // Kirim data SEO meta khusus agar terbaca oleh app.blade.php
+            'meta' => [
+                'title' => $kalam->judul,
+                'description' => $cleanDescription,
+                'image' => $imageUrl,
+                'url' => request()->fullUrl(),
+            ]
         ]);
-    }    
+    }  
 
     public function destroy(Kalam $kalam)
     {
