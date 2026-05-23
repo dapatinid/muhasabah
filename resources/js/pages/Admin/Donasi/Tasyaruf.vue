@@ -36,7 +36,12 @@ const submitTasyaruf = () => {
 }
 
 const total_tasyaruf = computed(() => {
-    return props.tasyarufs.data.reduce((total, item) => total + item.nominal, 0)
+    // Menambahkan ?.data dan menyediakan array kosong [] sebagai fallback
+    const listData = props.tasyarufs?.data || []; 
+    
+    return listData.reduce((total, item) => {
+        return total + (Number(item.nominal) || 0);
+    }, 0);
 })
 </script>
 

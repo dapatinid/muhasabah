@@ -45,8 +45,13 @@ Route::post('/donasi/{donasi:slug}/payment', [DonasiController::class, 'storePay
 
 // Rute Interaksi Publik dengan Rate Limiter Ketat (Anti Spam)
 Route::middleware(['throttle:10,1'])->group(function () {
+    // Donasi Interaksi
     Route::post('/donasi/{donasi:slug}/komentar', [DonasiController::class, 'storeKomentar'])->name('donasi.storeKomentar');
     Route::post('/donasi/{donasi:slug}/reaksi', [DonasiController::class, 'storeReaksi'])->name('donasi.storeReaksi');
+    
+    // Kalam Interaksi (Ditambahkan di sini sesuai KalamShow.vue)
+    Route::post('/kalam/{kalam:slug}/komentar', [KalamController::class, 'storeKomentar'])->name('kalam.storeKomentar');
+    Route::post('/kalam/{kalam:slug}/reaksi', [KalamController::class, 'storeReaksi'])->name('kalam.storeReaksi');
 });
 
 Route::inertia('halaman-dibangun', 'HalamanDibangun')->name('halaman-dibangun');
@@ -77,9 +82,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/admin/donasi/{donasi}/bulk-donasi', [DonasiController::class, 'storeBulkDonasi'])->name('admin.donasi.bulk');
     Route::delete('/admin/donasi/{donasi}', [DonasiController::class, 'destroy'])->name('donasi.destroy');   
 
-    // Route::post('/admin/payments', [PaymentController::class, 'store'])->name('payments.store');
-    // Route::delete('/admin/payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy'); 
-
     Route::get('/admin/banner', [BannerController::class, 'index'])->name('banner.index');
     Route::get('/admin/banner/create', [BannerController::class, 'create'])->name('banner.create');
     Route::post('/admin/banner', [BannerController::class, 'store'])->name('banner.store');
@@ -94,7 +96,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // Show PALING BAWAH — setelah semua route spesifik /kalam/create, /kalam/upload-image
-Route::get('/kalam/{kalam}', [KalamController::class, 'show'])->name('kalam.show');
-Route::get('/donasi/{donasi}', [DonasiController::class, 'show'])->name('donasi.show');
+// Menggunakan binding explicit slug `:slug` agar sinkron dengan parameter form frontend Anda
+Route::get('/kalam/{kalam:slug}', [KalamController::class, 'show'])->name('kalam.show');
+Route::get('/donasi/{donasi:slug}', [DonasiController::class, 'show'])->name('donasi.show');
 
 require __DIR__.'/settings.php';

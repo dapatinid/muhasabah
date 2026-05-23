@@ -455,7 +455,7 @@ amalIbadah.form = amalIbadahForm
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:12
+* @see app/Http/Controllers/KalamController.php:18
 * @route '/kalam'
 */
 export const kalam = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -470,7 +470,7 @@ kalam.definition = {
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:12
+* @see app/Http/Controllers/KalamController.php:18
 * @route '/kalam'
 */
 kalam.url = (options?: RouteQueryOptions) => {
@@ -479,7 +479,7 @@ kalam.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:12
+* @see app/Http/Controllers/KalamController.php:18
 * @route '/kalam'
 */
 kalam.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -489,7 +489,7 @@ kalam.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:12
+* @see app/Http/Controllers/KalamController.php:18
 * @route '/kalam'
 */
 kalam.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -499,7 +499,7 @@ kalam.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:12
+* @see app/Http/Controllers/KalamController.php:18
 * @route '/kalam'
 */
 const kalamForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -509,7 +509,7 @@ const kalamForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:12
+* @see app/Http/Controllers/KalamController.php:18
 * @route '/kalam'
 */
 kalamForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -519,7 +519,7 @@ kalamForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:12
+* @see app/Http/Controllers/KalamController.php:18
 * @route '/kalam'
 */
 kalamForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

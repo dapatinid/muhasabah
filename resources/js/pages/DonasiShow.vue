@@ -36,7 +36,6 @@ const props = defineProps<{
       sapaan?: string
       nominal: number
       notes: string | null
-      is_anonymous: boolean
       mutation_type: string
       created_at: string
     }>
@@ -226,11 +225,56 @@ const laporanArusKas = computed(() => {
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     })
 })
+
+
 // State untuk mendeteksi apakah tab harus mengunci (fixed)
 const isTabsSticky = ref(false)
 const tabsTargetRef = ref<HTMLElement | null>(null)
 
 let observer: IntersectionObserver | null = null
+
+// --- INFINITE SNAP TABS LOGIC ---
+const tabItems = [
+  { id: 'cerita', label: 'Cerita', icon: BookOpen },
+  { id: 'komentar', label: 'Komentar & Doa', icon: MessageCircle }, // Label asli: Komentar & Doa
+  { id: 'laporan', label: 'Laporan Keuangan', icon: ClipboardList },
+]
+
+// Ref untuk element container scroll tabs
+const tabsContainerRef = ref<HTMLElement | null>(null)
+
+// Computed untuk mengatur urutan tab secara sirkular (Tab aktif selalu di indeks tengah / indeks ke-1)
+const orderedTabs = computed(() => {
+  const index = tabItems.findIndex(tab => tab.id === activeTab.value)
+  if (index === -1) return tabItems
+
+  // Formula rotasi array: [Kiri, Aktif, Kanan]
+  const prevIndex = (index - 1 + tabItems.length) % tabItems.length
+  const nextIndex = (index + 1) % tabItems.length
+
+  return [
+    tabItems[prevIndex],
+    tabItems[index],
+    tabItems[nextIndex]
+  ]
+})
+
+// Fungsi helper untuk handle click tab sekaligus memicu snap center
+const setActiveTab = (tabId: 'cerita' | 'komentar' | 'laporan') => {
+  activeTab.value = tabId
+  
+  // Beri jeda microtask agar DOM mendeteksi perubahan urutan array, lalu snap ke tengah
+  setTimeout(() => {
+    const activeEl = tabsContainerRef.value?.querySelector('[data-active="true"]')
+    if (activeEl) {
+      activeEl.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      })
+    }
+  }, 50)
+}
 
 onMounted(() => {
   // Menggunakan IntersectionObserver untuk performa yang jauh lebih ringan dibanding scroll listener biasa
@@ -249,6 +293,13 @@ onMounted(() => {
   if (tabsTargetRef.value) {
     observer.observe(tabsTargetRef.value)
   }
+
+  setTimeout(() => {
+      const activeEl = tabsContainerRef.value?.querySelector('[data-active="true"]')
+      if (activeEl) {
+        activeEl.scrollIntoView({ block: 'nearest', inline: 'center' })
+      }
+    }, 400)  
 })
 
 onUnmounted(() => {
@@ -314,11 +365,11 @@ function handleShare() {
             <div class="grid grid-cols-2 gap-2">
               <div class="space-y-1">
                 <p class="text-[10px] text-stone-500 uppercase font-bold tracking-wider">Telah Disalurkan</p>
-                <p class="text-xl font-black text-emerald-400 font-mono">{{ formatRupiah(totalTasyaruf) }}</p>
+                <p class="sm:text-xl text-sm font-black text-emerald-400 font-mono">{{ formatRupiah(totalTasyaruf) }}</p>
               </div>
               <div class="space-y-1 text-right">
                 <p class="text-[10px] text-stone-500 uppercase font-bold tracking-wider">Dana Masuk</p>
-                <p class="text-xl font-black text-amber-400 font-mono">{{ formatRupiah(totalDonasiMasukKumulatif) }}</p>
+                <p class="sm:text-xl text-sm font-black text-amber-400 font-mono">{{ formatRupiah(totalDonasiMasukKumulatif) }}</p>
               </div>
             </div>
 
@@ -374,7 +425,7 @@ function handleShare() {
       </div>
 
       
-<!-- Element Sensor (Pembatas) -->
+      <!-- Element Sensor (Pembatas) -->
       <div ref="tabsTargetRef" class="w-full h-px invisible"></div>
 
       <!-- NAVIGATION TABS CONTAINER -->
@@ -387,49 +438,40 @@ function handleShare() {
             : 'relative -mx-5 px-5 mt-4'
         ]"
       >
-        <!-- SCROLLABLE WRAPPER FOR BUTTONS -->
-        <div class="flex gap-2 overflow-x-auto no-scrollbar">
-          <button 
-            @click="activeTab = 'cerita'"
-            type="button"
-            :class="[
-              'flex items-center gap-2 py-3.5 px-4 text-sm font-bold border-b-2 transition-all whitespace-nowrap',
-              activeTab === 'cerita' ? 'border-amber-500 text-amber-400' : 'border-transparent text-stone-500 hover:text-stone-300'
-            ]"
-          >
-            <BookOpen class="w-4 h-4" />
-            Cerita
-          </button>
-          <button 
-            @click="activeTab = 'komentar'"
-            type="button"
-            :class="[
-              'flex items-center gap-2 py-3.5 px-4 text-sm font-bold border-b-2 transition-all whitespace-nowrap',
-              activeTab === 'komentar' ? 'border-amber-500 text-amber-400' : 'border-transparent text-stone-500 hover:text-stone-300'
-            ]"
-          >
-            <MessageCircle class="w-4 h-4" />
-            Komentar & Doa
-            <span class="text-xs px-1.5 py-0.5 bg-stone-800 text-stone-400 rounded-md font-mono">
-              {{ (donasi.komentars?.length || 0) + (doaDonatur.length) }}
-            </span>
-          </button>
-          <button 
-            @click="activeTab = 'laporan'"
-            type="button"
-            :class="[
-              'flex items-center gap-2 py-3.5 px-4 text-sm font-bold border-b-2 transition-all whitespace-nowrap',
-              activeTab === 'laporan' ? 'border-amber-500 text-amber-400' : 'border-transparent text-stone-500 hover:text-stone-300'
-            ]"
-          >
-            <ClipboardList class="w-4 h-4" />
-            Laporan Keuangan
-          </button>
+        <div 
+          ref="tabsContainerRef"
+          class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth w-full"
+          style="-webkit-overflow-scrolling: touch; scroll-padding: 0 20px;"
+        >
+          <div class="flex flex-nowrap min-w-full justify-center py-0.5 px-[33%]">
+            <button 
+              v-for="tab in orderedTabs"
+              :key="tab.id"
+              @click="setActiveTab(tab.id as 'cerita' | 'komentar' | 'laporan')"
+              type="button"
+              :data-active="activeTab === tab.id"
+              :class="[
+                'flex items-center justify-center gap-2 py-4 px-6 text-sm font-bold border-b-2 transition-all whitespace-nowrap snap-center',
+                activeTab === tab.id 
+                  ? 'border-amber-500 text-amber-400 bg-gradient-to-t from-amber-500/5 to-transparent' 
+                  : 'border-transparent text-stone-500 hover:text-stone-300'
+              ]"
+            >
+              <component :is="tab.icon" class="w-4 h-4 shrink-0" />
+              <span>{{ tab.label }}</span>
+              
+              <span 
+                v-if="tab.id === 'komentar'" 
+                class="text-xs px-1.5 py-0.5 bg-stone-800 text-stone-400 rounded-md font-mono ml-1"
+              >
+                {{ (donasi.komentars?.length || 0) + (doaDonatur.length) }}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Spacer pengganti agar tinggi layout tidak 'anjlok' saat tab berubah jadi fixed -->
-      <div v-if="isTabsSticky" class="h-[53px]"></div>      
+      <div v-if="isTabsSticky" class="h-[54px]"></div>         
 
       <!-- ==================== TAB 1: CERITA ==================== -->
       <div v-if="activeTab === 'cerita'" class="space-y-8">
@@ -532,7 +574,7 @@ function handleShare() {
             <button 
               type="submit" 
               :disabled="isSubmittingComment || !commentForm.body"
-              class="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 disabled:bg-stone-800 disabled:text-stone-600 text-stone-950 font-bold px-5 py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md"
+              class="ms-auto flex items-center gap-2 bg-amber-500 hover:bg-amber-400 disabled:bg-stone-800 disabled:text-stone-600 text-stone-950 font-bold px-5 py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md"
             >
               <Send class="w-3.5 h-3.5" />
               {{ isSubmittingComment ? 'Mengirim...' : 'Komentar' }}
@@ -576,7 +618,7 @@ function handleShare() {
               <div class="flex-1 min-w-0">
                 <div class="flex justify-between items-start mb-1">
                   <h4 class="text-xs font-bold text-stone-300 uppercase truncate">
-                    {{ pay.sapaan || '' }} {{ pay.is_anonymous ? 'Hamba Allah' : pay.atas_nama }}
+                    {{  pay.atas_nama === 'Hamba Allah' ? '' : pay.sapaan }} {{ pay.atas_nama === 'Hamba Allah' ? 'Hamba Allah' : pay.atas_nama }}
                   </h4>
                   <div class="text-right shrink-0">
                     <span class="block text-[10px] text-stone-500 font-mono">{{ new Date(pay.created_at).toLocaleDateString('id-ID') }}</span>
@@ -635,7 +677,7 @@ function handleShare() {
 
                 <div class="min-w-0">
                   <h4 class="text-xs font-bold text-stone-200 truncate pr-2 uppercase">
-                    {{ log.mutation_type === 'tasyaruf' ? 'Penyaluran (Tasyaruf)' : (log.is_anonymous ? 'Hamba Allah' : log.atas_nama) }}
+                    {{ log.mutation_type === 'tasyaruf' ? 'Penyaluran (Tasyaruf)' : (log.atas_nama) }}
                   </h4>
                   <p class="text-[11px] text-stone-500 line-clamp-3 max-w-[240px] md:max-w-md">
                     {{ log.notes || 'Donasi Masuk' }}

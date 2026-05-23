@@ -218,6 +218,7 @@ function submit() {
                             type="text"
                             placeholder="Atas Nama"
                             :disabled="form.is_anonymous"
+                            required
                             class="col-span-8 bg-stone-900 border border-stone-800 rounded-2xl p-4 text-sm text-stone-300 outline-none disabled:opacity-30"
                         />
                     </div>
@@ -242,13 +243,14 @@ function submit() {
                         inputmode="numeric" 
                         placeholder="85950540055 tanpa angka 0" 
                         class="w-full bg-stone-900 border border-stone-800 rounded-2xl p-4 text-sm text-stone-300 outline-none focus:border-amber-500/40"
+                        required
                     >
                 </div>
 
                 <!-- 4. PESAN -->
                 <div class="space-y-2">
-                    <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Doa & Pesan (Opsional)</label>
-                    <textarea v-model="form.notes" rows="3" class="w-full bg-stone-900 border border-stone-800 rounded-2xl p-4 text-sm text-stone-300 outline-none focus:border-amber-500/40"></textarea>
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Doa & Pesan</label>
+                    <textarea v-model="form.notes" placeholder="Mohon isikan komentar / dukungan / doa" rows="3" required class="w-full bg-stone-900 border border-stone-800 rounded-2xl p-4 text-sm text-stone-300 outline-none focus:border-amber-500/40"></textarea>
                 </div>
 
                 <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500 flex items-center gap-2">
@@ -302,7 +304,7 @@ function submit() {
                 <!-- 6. UPLOAD BUKTI DONASI -->
                 <div class="space-y-3">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500 flex items-center gap-2">
-                        <Upload class="size-3.5 text-amber-500" /> Upload Bukti Transfer / Donasi (Opsional)
+                        <Upload class="size-3.5 text-amber-500" /> Upload Bukti Transfer (Opsional)
                     </label>
                     <div class="relative flex items-center justify-center w-full">
                         <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-3xl cursor-pointer transition-all bg-stone-900 border-stone-800 hover:border-amber-500/40">
@@ -341,7 +343,7 @@ function submit() {
                 <button 
                     type="submit"
                     :disabled="form.processing"
-                    class="w-full bg-amber-500 hover:bg-amber-400 disabled:bg-stone-800 text-stone-950 font-black py-5 rounded-2xl transition-all active:scale-95 shadow-xl shadow-amber-500/20"
+                    class="w-full bg-amber-500 hover:bg-amber-400 disabled:bg-stone-800 text-stone-950 font-black py-3 rounded-2xl transition-all active:scale-95 shadow-xl shadow-amber-500/20"
                 >
                     {{ form.processing ? 'SEDANG MEMPROSES...' : 'SELESAI' }}
                 </button>
