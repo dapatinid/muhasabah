@@ -441,9 +441,12 @@ function handleShare() {
         <div 
           ref="tabsContainerRef"
           class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth w-full"
-          style="-webkit-overflow-scrolling: touch; scroll-padding: 0 20px;"
+          style="-webkit-overflow-scrolling: touch; scroll-padding: 0 24px;"
         >
-          <div class="flex flex-nowrap min-w-full justify-center py-0.5 px-[33%]">
+          <div class="flex flex-nowrap min-w-full justify-start items-center py-0.5 px-4">
+            
+            <div class="w-[35%] shrink-0 snap-center"></div>
+
             <button 
               v-for="tab in orderedTabs"
               :key="tab.id"
@@ -451,7 +454,7 @@ function handleShare() {
               type="button"
               :data-active="activeTab === tab.id"
               :class="[
-                'flex items-center justify-center gap-2 py-4 px-6 text-sm font-bold border-b-2 transition-all whitespace-nowrap snap-center',
+                'flex items-center justify-center gap-2 py-4 px-6 text-sm font-bold border-b-2 transition-all whitespace-nowrap snap-center mx-1',
                 activeTab === tab.id 
                   ? 'border-amber-500 text-amber-400 bg-gradient-to-t from-amber-500/5 to-transparent' 
                   : 'border-transparent text-stone-500 hover:text-stone-300'
@@ -467,11 +470,14 @@ function handleShare() {
                 {{ (donasi.komentars?.length || 0) + (doaDonatur.length) }}
               </span>
             </button>
+
+            <div class="w-[35%] shrink-0 snap-center"></div>
+
           </div>
         </div>
-      </div>
+      </div>     
 
-      <div v-if="isTabsSticky" class="h-[54px]"></div>         
+      <div v-if="isTabsSticky" class="h-[53px]"></div>         
 
       <!-- ==================== TAB 1: CERITA ==================== -->
       <div v-if="activeTab === 'cerita'" class="space-y-8">

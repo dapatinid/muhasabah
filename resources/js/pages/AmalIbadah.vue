@@ -27,7 +27,7 @@ const sections = [
 
 <template><Head title="Edukasi Riyadhoh" />
 
-    <AppLayoutPublic title="Edukasi Singkat" subtitle="Amal Riyadhoh" :show-back="true" back-href="/laporan-riyadhoh">
+    <AppLayoutPublic title="Edukasi Singkat" subtitle="Amal Riyadhoh" :show-back="true" :show-nav="false" back-href="/laporan-riyadhoh">
         
         <div class="px-5 py-6 space-y-8 pb-32">
             <!-- List Section -->
@@ -53,12 +53,12 @@ const sections = [
         </div>
 
         <!-- Floating Back Button (Opsional jika show-back=true sudah cukup) -->
-        <div class="fixed bottom-8 left-0 right-0 flex justify-center z-50">
+        <!-- <div class="fixed bottom-8 left-0 right-0 flex justify-center z-50">
             <Link href="/laporan-riyadhoh" 
                   class="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold px-6 py-3 rounded-full shadow-2xl transition-all active:scale-95 flex items-center gap-2 no-underline">
                <span>📝</span> Kembali ke Laporan
             </Link>
-        </div>
+        </div> -->
 
     </AppLayoutPublic>
 </template>
