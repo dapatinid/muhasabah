@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, useForm, Link } from '@inertiajs/vue3'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Heart, Wallet, ShieldCheck, Check, User, Info, Upload, FileText } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 
@@ -75,15 +75,69 @@ const totalPembayaran = computed(() => {
 
 const quickAmounts = [10000, 25000, 50000, 100000, 250000, 500000]
 
-const infaqOptions = [
-    { value: 5000, label: 'administrasi' },
+const baseInfaqOptions = [
     { value: 10000, label: 'administrasi' },
     { value: 20000, label: 'administrasi + server' },
     { value: 30000, label: 'administrasi + server' },
     { value: 40000, label: 'adm + server + eksekusi lapangan' },
     { value: 50000, label: 'adm + server + eksekusi lapangan' },
     { value: 100000, label: '50% muhasabah.id + 50% relawan' },
-]
+];
+
+const computedInfaqOptions = computed(() => {
+    const nominalNum = parseInt(form.nominal.toString().replace(/\D/g, '')) || 0;
+
+    if (nominalNum > 45000) {
+        return [
+            { value: 5000, label: 'administrasi' },
+            ...baseInfaqOptions
+        ];
+    }
+
+    if (nominalNum === 0) {
+        return [
+            { value: 5000, label: 'administrasi' },
+            ...baseInfaqOptions
+        ];
+    }
+
+    let options = [];
+    const tenPercent = Math.floor(nominalNum * 0.1);
+    const twentyPercent = Math.floor(nominalNum * 0.2);
+
+    // 1. Masukkan 10%
+    if (tenPercent > 0) {
+        options.push({ value: tenPercent, label: 'administrasi' });
+    }
+
+    // 2. Masukkan 20% (cek agar tidak kembar dengan 10%)
+    if (twentyPercent > 0 && twentyPercent !== tenPercent) {
+        options.push({ value: twentyPercent, label: 'administrasi' });
+    }
+
+    // 3. Masukkan 5.000 (cek agar tidak kembar dengan hasil 10% / 20%)
+    if (!options.some(opt => opt.value === 5000)) {
+        options.push({ value: 5000, label: 'administrasi' });
+    }
+
+    // 4. Masukkan sisanya (10.000 dst)
+    baseInfaqOptions.forEach(opt => {
+        // Mencegah nilai dari base option kembar dengan 10% atau 20%
+        if (!options.some(existing => existing.value === opt.value)) {
+            options.push(opt);
+        }
+    });
+
+    return options;
+});
+
+// Watcher untuk memastikan pilihan ter-reset ke urutan pertama jika daftarnya berubah
+watch(computedInfaqOptions, (newOptions) => {
+    const exists = newOptions.some(opt => opt.value === form.infaq_sistem);
+    if (!exists && newOptions.length > 0) {
+        form.infaq_sistem = newOptions[0].value;
+    }
+}, { immediate: true });
 
 const sapaanOptions = ['Bpk.', 'Ibu', 'Kak']
 
@@ -178,7 +232,7 @@ function submit() {
                     </label>
                     <div class="space-y-2">
                         <div 
-                            v-for="opt in infaqOptions" 
+                            v-for="opt in computedInfaqOptions" 
                             :key="opt.value"
                             @click="form.infaq_sistem = opt.value"
                             class="flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all"

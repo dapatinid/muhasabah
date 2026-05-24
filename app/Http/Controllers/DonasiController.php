@@ -204,13 +204,20 @@ class DonasiController extends Controller
     /**
      * Halaman Manajemen Arus Kas Masuk (Donasi Utama & Infaq)
      */
-    public function donasiMasuk(Donasi $donasi)
+    public function donasiMasuk(Request $request, Donasi $donasi)
     {
-        $payments = $donasi->payments()
-            ->latest()
-            ->paginate(20);
+        // Buat base query
+        $query = $donasi->payments()->latest();
 
-        // Hitung total ringkasan internal
+        // Jika ada filter type, terapkan ke query
+        if ($request->filled('type')) {
+            $query->where('mutation_type', $request->type);
+        }
+
+        // Paginate dan bawa parameter query string (filter) ke link paginasi
+        $payments = $query->paginate(20)->withQueryString();
+
+        // Hitung total ringkasan internal (ini tetap menghitung total keseluruhan terlepas dari filter)
         $summary = [
             'total_donasi' => $donasi->payments()->where('mutation_type', 'donasi_utama')->sum('nominal'),
             'total_infaq' => $donasi->payments()->where('mutation_type', 'infaq_sistem')->sum('nominal'),
@@ -219,7 +226,9 @@ class DonasiController extends Controller
         return Inertia::render('Admin/Donasi/DonasiMasuk', [
             'donasi' => $donasi,
             'payments' => $payments,
-            'summary' => $summary
+            'summary' => $summary,
+            // Kirim state filter saat ini ke frontend
+            'filters' => $request->only(['type']) 
         ]);
     }
 

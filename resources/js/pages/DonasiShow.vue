@@ -443,7 +443,7 @@ function handleShare() {
           class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth w-full"
           style="-webkit-overflow-scrolling: touch; scroll-padding: 0 24px;"
         >
-          <div class="flex flex-nowrap min-w-full justify-start items-center py-0.5 px-4">
+          <div class="flex flex-nowrap min-w-full justify-start items-center px-4">
             
             <div class="w-[35%] shrink-0 snap-center"></div>
 

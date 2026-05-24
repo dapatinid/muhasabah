@@ -11,19 +11,20 @@ createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     layout: (name) => {
         switch (true) {
+            // Pindahkan halaman-halaman ini ke sini agar tidak di-wrap ganda oleh Inertia
             case name === 'HalamanDibangun' || 
-                name === 'Welcome_backup' : 
-                return null;
-            case name === 'LaporanRiyadhoh' || 
-                name === 'LaporanRiyadhohLog' ||
-                name === 'AmalIbadah' ||
-                name === 'Kalam' ||
-                name === 'KalamShow' ||
-                name === 'Donasi' ||
-                name === 'DonasiShow' ||
-                name === 'DonasiPayment' ||
-                name === 'Welcome' :
-                return AppLayoutPublic;
+                 name === 'Welcome_backup' ||
+                 name === 'LaporanRiyadhoh' || 
+                 name === 'LaporanRiyadhohLog' ||
+                 name === 'AmalIbadah' ||
+                 name === 'Kalam' ||
+                 name === 'KalamShow' ||
+                 name === 'Donasi' ||
+                 name === 'DonasiShow' ||
+                 name === 'DonasiPayment' ||
+                 name === 'Welcome' : 
+                return null; 
+            
             case name.startsWith('auth/'):
                 return AuthLayout;
             case name.startsWith('settings/'):
@@ -31,7 +32,7 @@ createInertiaApp({
             default:
                 return AppLayout;
         }
-    },
+    },    
     progress: {
         color: '#4B5563',
     },

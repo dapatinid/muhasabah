@@ -81,7 +81,7 @@ const submitKomentar = () => {
     onSuccess: () => {
       commentForm.reset('body', 'nama_publik')
       generateCaptcha()
-      toast.success('Komentar berhasil dikirim!')
+      // toast.success('Komentar berhasil dikirim!')
     },
     onFinish: () => {
       isSubmittingComment.value = false
