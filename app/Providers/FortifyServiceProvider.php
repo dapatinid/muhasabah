@@ -28,6 +28,11 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+            Fortify::registerView(function () {
+        // Arahkan ke 404 atau home jika ada yang mencoba buka /register
+        abort(404); 
+    });
+    
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();

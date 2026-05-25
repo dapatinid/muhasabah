@@ -41,10 +41,11 @@ Route::get('/kalam', [KalamController::class, 'kalam'])->name('kalam');
 Route::get('/donasi', [DonasiController::class, 'donasi'])->name('donasi');
 
 Route::get('/donasi/{donasi:slug}/payment', [DonasiController::class, 'payment'])->name('donasi.payment');
-Route::post('/donasi/{donasi:slug}/payment', [DonasiController::class, 'storePayment'])->name('donasi.payment.store');
 
 // Rute Interaksi Publik dengan Rate Limiter Ketat (Anti Spam)
 Route::middleware(['throttle:10,1'])->group(function () {
+    Route::post('/donasi/{donasi:slug}/payment', [DonasiController::class, 'storePayment'])->name('donasi.payment.store');
+    
     // Donasi Interaksi
     Route::post('/donasi/{donasi:slug}/komentar', [DonasiController::class, 'storeKomentar'])->name('donasi.storeKomentar');
     Route::post('/donasi/{donasi:slug}/reaksi', [DonasiController::class, 'storeReaksi'])->name('donasi.storeReaksi');
