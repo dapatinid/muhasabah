@@ -90,6 +90,7 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
         Route::get('/admin/donasi/{donasi}/tasyaruf', [DonasiController::class, 'tasyaruf'])->name('donasi.tasyaruf');
         Route::post('/admin/donasi/{donasi}/tasyaruf', [DonasiController::class, 'storeTasyaruf'])->name('donasi.tasyaruf.store');
         Route::post('/admin/donasi/{donasi}/bulk-donasi', [DonasiController::class, 'storeBulkDonasi'])->name('admin.donasi.bulk');
+        Route::put('/admin/payment/{payment}/toggle-status', [DonasiController::class, 'toggleStatus'])->name('payment.toggle_status');
         Route::delete('/admin/donasi/{donasi}', [DonasiController::class, 'destroy'])->name('donasi.destroy');   
 
         // Fitur Kelola Banner (Admin)

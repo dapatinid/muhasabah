@@ -5,7 +5,8 @@ import {
   CalendarDays, Tag, Target, Wallet, 
   Share2, BookOpen, MessageCircle, 
   ClipboardList, ArrowDownCircle, ArrowUpCircle, AlertCircle, Send,
-  RefreshCw, Newspaper, Heart, ChevronDown, Upload, FileText
+  RefreshCw, Newspaper, Heart, ChevronDown, Upload, FileText,
+  X
 } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
@@ -71,6 +72,19 @@ const expandedLogs = ref<number[]>([])
 // State Form Susulan Bukti Transfer
 const uploadFile = ref<Record<number, File | null>>({})
 const isUploading = ref<Record<number, boolean>>({})
+
+const activeQrisModal = ref<boolean>(false)
+const selectedQrisLog = ref<any>(null)
+
+const openQrisModal = (log: any) => {
+  selectedQrisLog.value = log
+  activeQrisModal.value = true
+}
+
+const closeQrisModal = () => {
+  selectedQrisLog.value = null
+  activeQrisModal.value = false
+}
 
 // --- SECURITY MATH CAPTCHA ---
 const captchaNum1 = ref(0)
@@ -542,10 +556,22 @@ function handleShare() {
             <div 
               v-for="log in laporanArusKas" 
               :key="log.id" 
-              class="border rounded-2xl p-4 transition-colors shadow-sm select-none"
+              class="border rounded-2xl p-4 transition-all duration-200 shadow-sm select-none"
               :class="[
-                log.mutation_type === 'tasyaruf' ? 'bg-red-500/5 border-red-500/10' : 'bg-stone-900/40 border-stone-800/60 hover:bg-stone-900/80 cursor-pointer',
-                expandedLogs.includes(log.id) ? 'bg-stone-900/90 border-stone-700/80' : ''
+                // 1. Kondisi khusus untuk Tasyaruf (Penyaluran Keluar)
+                log.mutation_type === 'tasyaruf' 
+                  ? 'bg-red-500/20 border-red-500/10' 
+                  : '',
+
+                // 2. Kondisi untuk Donasi Masuk saat POSISI TERTUTUP (Tidak Expanded)
+                log.mutation_type !== 'tasyaruf' && !expandedLogs.includes(log.id)
+                  ? 'bg-stone-900/40 border-stone-800/60 hover:bg-stone-900/80 hover:border-stone-700 cursor-pointer' 
+                  : '',
+
+                // 3. Kondisi untuk Donasi Masuk saat POSISI TERBUKA (Expanded) -> Jalur Aman Amber
+                log.mutation_type !== 'tasyaruf' && expandedLogs.includes(log.id)
+                  ? 'bg-stone-900/90 border-amber-500 shadow-lg shadow-amber-500/5 cursor-pointer' 
+                  : ''
               ]"
               @click="log.mutation_type !== 'tasyaruf' && toggleLog(log.id)"
             >
@@ -588,11 +614,20 @@ function handleShare() {
                 </div>
 
                 <div v-if="!log.image" class="p-4 rounded-2xl bg-stone-950 border border-stone-800/80 space-y-4">
-                  <div class="flex flex-col items-center gap-3">
-                    <img src="/QRIS_MUHASABAH_ID.png" alt="QRIS QR Code" class="w-full object-cover shadow-lg" />
-                    <p class="text-[10px] text-stone-500 font-bold tracking-widest uppercase text-center">Scan QRIS Untuk Melanjutkan</p>
+  
+                  <div class="flex flex-col items-center justify-center p-4 bg-stone-900/50 rounded-xl border border-stone-800 border-dashed">
+                    <button 
+                      type="button" 
+                      @click="openQrisModal(log)"
+                      class="w-full flex items-center justify-center gap-2 bg-stone-900 border border-stone-800 hover:border-amber-500/40 text-amber-400 hover:text-amber-300 text-xs font-bold py-3 px-4 rounded-xl transition-all active:scale-98 shadow-sm"
+                    >
+                      <Eye class="w-4 h-4" />
+                      Tampilkan QRIS
+                    </button>
+                    <p class="text-[10px] text-stone-500 font-bold tracking-widest uppercase text-center mt-3">
+                      Klik tombol untuk melihat kode QRIS pembayaran
+                    </p>
                   </div>
-                  
                   <div class="pt-4 border-t border-stone-800/60 space-y-3">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-400 flex items-center gap-2">
                         <Upload class="size-3.5 text-amber-500" /> Upload Bukti Transfer
@@ -651,6 +686,41 @@ function handleShare() {
         </button>
       </div>
     </div>
+
+    <div v-if="activeQrisModal" class="fixed inset-0 bg-stone-950/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 transition-all" @click.self="closeQrisModal">
+        <div class="relative max-w-sm w-full bg-stone-900 border border-stone-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col animate-in fade-in zoom-in-95 duration-150">
+            
+            <div class="p-4 border-b border-stone-800 flex items-center justify-between bg-stone-900/50">
+                <div class="flex items-center gap-2 text-stone-200">
+                    <Wallet class="size-4 text-amber-500" />
+                    <span class="text-xs font-bold uppercase tracking-wider">Bayar via QRIS</span>
+                </div>
+                <button @click="closeQrisModal" class="p-1.5 rounded-xl bg-stone-800 text-stone-400 hover:text-white hover:bg-stone-700 transition-colors">
+                    <X class="size-4" />
+                </button>
+            </div>
+            
+            <div class="p-6 bg-stone-950 flex flex-col items-center justify-center gap-4">
+                <div class="bg-white p-3 rounded-2xl shadow-inner border border-stone-800">
+                    <img src="/QRIS_MUHASABAH_ID.png" alt="QRIS Code" class="w-full object-cover rounded-xl shadow-md" />
+                </div>
+                
+                <div v-if="selectedQrisLog" class="w-full bg-stone-900/60 p-3 rounded-xl border border-stone-800 text-center space-y-0.5">
+                    <p class="text-[10px] text-stone-500 uppercase font-bold tracking-wider">Total Pembayaran</p>
+                    <p class="text-base font-bold font-mono text-amber-400">
+                        {{ formatRupiah(Number(selectedQrisLog.nominal) + Number(getInfaqForDonasi(selectedQrisLog)?.nominal || 0)) }}
+                    </p>
+                </div>
+            </div>
+            
+            <div class="p-3 bg-stone-900/50 border-t border-stone-800 text-center">
+                <p class="text-[10px] text-stone-400 font-medium leading-normal px-2">
+                    Silakan screenshot atau scan QRIS di atas melalui aplikasi m-banking atau e-wallet Anda.
+                </p>
+            </div>
+            
+        </div>
+    </div>    
 
   </AppLayoutPublic>
 </template>

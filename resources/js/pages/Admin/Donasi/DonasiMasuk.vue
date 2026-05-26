@@ -282,6 +282,7 @@ const customPagination = computed(() => {
                                 <th class="p-4">Rekening</th>
                                 <th class="p-4 text-center">Bukti</th>
                                 <th class="p-4 pr-6 text-right">Nominal</th>
+                                <th class="p-4 text-center">Status</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-zinc-100 dark:divide-zinc-800/60 text-sm text-zinc-600 dark:text-zinc-300">
@@ -318,9 +319,36 @@ const customPagination = computed(() => {
                                     </button>
                                     <span v-else class="text-xs text-zinc-400 dark:text-zinc-600 font-mono">-</span>
                                 </td>
+                               
+                                <td class="p-4 pr-6 text-right font-bold" :class="pay.mutation_type === 'donasi_utama' ? 'text-zinc-900 dark:text-white' : 'text-zinc-400'">
+                                    {{ formatIDR(pay.nominal) }}
+                                </td>
 
-                                <td class="p-4 pr-6 text-right font-bold" :class="pay.mutation_type === 'donasi_utama' ? 'text-zinc-900 dark:text-white' : 'text-zinc-400'">{{ formatIDR(pay.nominal) }}</td>
-                            </tr>
+                                <td class="p-4 text-center">
+                                    <label class="inline-flex items-center cursor-pointer select-none">
+                                        <input 
+                                            type="checkbox" 
+                                            :checked="pay.status === 'success'"
+                                            @change="router.put(`/admin/payment/${pay.id}/toggle-status`, {}, { preserveScroll: true })"
+                                            class="sr-only peer"
+                                        >
+                                        <div class="relative w-11 h-6 rounded-full transition-colors duration-300 peer-focus:outline-none
+                                                    /* Warna saat FALSE (Zinc) */
+                                                    bg-zinc-300 dark:bg-zinc-700 
+                                                    /* Warna saat TRUE (Emerald) */
+                                                    peer-checked:bg-emerald-500 dark:peer-checked:bg-emerald-600
+                                                    /* Pengaturan Bulatan Toggle */
+                                                    after:content-[''] after:absolute after:top-[2px] after:left-[2px] 
+                                                    after:bg-white after:rounded-full after:h-5 after:w-5 
+                                                    after:transition-all after:duration-300 
+                                                    /* Border Bulatan saat FALSE */
+                                                    after:border after:border-zinc-300 dark:after:border-zinc-600
+                                                    /* Efek saat TRUE (Geser & Ubah Border) */
+                                                    peer-checked:after:translate-x-full peer-checked:after:border-emerald-500 dark:peer-checked:after:border-emerald-600">
+                                        </div>
+                                    </label>
+                                </td>
+                            </tr>                            
                             <tr v-if="payments.data.length === 0">
                                 <!-- Colspan diubah jadi 7 karena ada tambahan kolom No -->
                                 <td colspan="7" class="p-10 text-center text-zinc-400">

@@ -735,4 +735,16 @@ class DonasiController extends Controller
         }
     }
 
+    public function toggleStatus(Payment $payment)
+    {
+        // Toggle: Jika status 'success', ubah jadi null, jika null/lainnya, ubah jadi 'success'
+        $newStatus = ($payment->status === 'success') ? null : 'success';
+        
+        $payment->update([
+            'status' => $newStatus
+        ]);
+
+        return back()->with('success', 'Status transaksi berhasil diperbarui.');
+    }    
+
 }

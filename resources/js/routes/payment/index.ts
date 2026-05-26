@@ -79,8 +79,99 @@ upload_buktiForm.post = (args: { payment: number | { id: number } } | [payment: 
 
 upload_bukti.form = upload_buktiForm
 
+/**
+* @see \App\Http\Controllers\DonasiController::toggle_status
+* @see app/Http/Controllers/DonasiController.php:738
+* @route '/admin/payment/{payment}/toggle-status'
+*/
+export const toggle_status = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: toggle_status.url(args, options),
+    method: 'put',
+})
+
+toggle_status.definition = {
+    methods: ["put"],
+    url: '/admin/payment/{payment}/toggle-status',
+} satisfies RouteDefinition<["put"]>
+
+/**
+* @see \App\Http\Controllers\DonasiController::toggle_status
+* @see app/Http/Controllers/DonasiController.php:738
+* @route '/admin/payment/{payment}/toggle-status'
+*/
+toggle_status.url = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { payment: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { payment: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            payment: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        payment: typeof args.payment === 'object'
+        ? args.payment.id
+        : args.payment,
+    }
+
+    return toggle_status.definition.url
+            .replace('{payment}', parsedArgs.payment.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\DonasiController::toggle_status
+* @see app/Http/Controllers/DonasiController.php:738
+* @route '/admin/payment/{payment}/toggle-status'
+*/
+toggle_status.put = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: toggle_status.url(args, options),
+    method: 'put',
+})
+
+/**
+* @see \App\Http\Controllers\DonasiController::toggle_status
+* @see app/Http/Controllers/DonasiController.php:738
+* @route '/admin/payment/{payment}/toggle-status'
+*/
+const toggle_statusForm = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: toggle_status.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\DonasiController::toggle_status
+* @see app/Http/Controllers/DonasiController.php:738
+* @route '/admin/payment/{payment}/toggle-status'
+*/
+toggle_statusForm.put = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: toggle_status.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+toggle_status.form = toggle_statusForm
+
 const payment = {
     upload_bukti: Object.assign(upload_bukti, upload_bukti),
+    toggle_status: Object.assign(toggle_status, toggle_status),
 }
 
 export default payment
