@@ -13,7 +13,7 @@ class Payment extends Model
     protected $guarded = [];
 
     protected $fillable = [
-        'paymentable_id', 'paymentable_type', 'image', 'notes', 
+        'paymentable_id', 'paymentable_type', 'status', 'link', 'image', 'notes', 
         'mutation_type', 'debit_akun', 'kredit_akun', 'payment_method',
         'currency', 'nominal_plus', 'nominal_mins', 'nominal', 'rekening', 'no_wa',
         'sapaan', 'atas_nama', 'user_id', 'created_by', 'updated_by', 'branch_id', 'date'

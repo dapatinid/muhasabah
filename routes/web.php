@@ -79,6 +79,7 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
         Route::get('/admin/donasi/create', [DonasiController::class, 'create'])->name('donasi.create');
         Route::post('/admin/donasi', [DonasiController::class, 'store'])->name('donasi.store');
         Route::post('/admin/donasi/upload-image', [DonasiController::class, 'uploadImage'])->name('donasi.upload-image');
+        Route::post('/payment/{payment}/upload-bukti', [DonasiController::class, 'uploadBuktiSusulan'])->name('payment.upload_bukti');
         Route::get('/admin/donasi/{donasi}/edit', [DonasiController::class, 'edit'])->name('donasi.edit');
         Route::put('/admin/donasi/{donasi}', [DonasiController::class, 'update'])->name('donasi.update');
         Route::get('/admin/donasi/{donasi}/progress', [DonasiController::class, 'progress'])->name('donasi.progress');

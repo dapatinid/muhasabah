@@ -16,6 +16,9 @@ return new class extends Migration
             $table->integer('paymentable_id');
             $table->string('paymentable_type');
             
+            $table->string('status')->nullable();
+            $table->text('link')->nullable();
+
             $table->string('image')->nullable();
             $table->text('notes')->nullable();
 

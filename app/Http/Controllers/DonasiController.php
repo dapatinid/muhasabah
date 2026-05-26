@@ -501,6 +501,48 @@ class DonasiController extends Controller
         return back()->with('uploaded_image_url', $url);
     }
 
+    /**
+     * Upload bukti transfer susulan oleh donatur
+     */
+    public function uploadBuktiSusulan(Request $request, Payment $payment)
+    {
+        $request->validate([
+            'bukti_donasi' => 'required|image|mimes:jpeg,png,jpg,webp|max:4000',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // 1. Simpan file baru
+            $imagePath = $request->file('bukti_donasi')->store('bukti-transfer', 'public');
+
+            // 2. Update record pembayaran (Donasi Utama)
+            $payment->update([
+                'image' => $imagePath,
+            ]);
+
+            // 3. Update juga record Infaq Sistem jika ada yang berpasangan
+            // Kita cari infaq yang dibuat di waktu yang sama oleh orang yang sama
+            $infaqPasangan = Payment::where('mutation_type', 'infaq_sistem')
+                ->where('created_at', $payment->created_at)
+                ->where('atas_nama', $payment->atas_nama)
+                ->where('paymentable_id', $payment->paymentable_id)
+                ->first();
+
+            if ($infaqPasangan) {
+                $infaqPasangan->update(['image' => $imagePath]);
+            }
+
+            DB::commit();
+
+            return back()->with('success', 'Bukti transfer berhasil diunggah.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['bukti_donasi' => 'Gagal mengunggah bukti: ' . $e->getMessage()]);
+        }
+    }    
+
     public function payment(Donasi $donasi)
     {
         return Inertia::render('DonasiPayment', [
