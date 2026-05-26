@@ -374,8 +374,8 @@ function handleCopyLaporan() {
 
   // 2. Susun Struktur Teks Clipboard
   const lines: string[] = []
-  lines.push('Laporan Keuangan')
-  lines.push(props.donasi.judul.toUpperCase())
+  lines.push('_Laporan Keuangan_')
+  lines.push('*'+props.donasi.judul.toUpperCase()+'*')
   lines.push('') // Jeda baris kosong setelah judul
 
   // Ambil tanggal dan pastikan berurutan dari terlama ke terbaru
@@ -391,8 +391,8 @@ function handleCopyLaporan() {
 
   // Tambahkan ringkasan saldo di akhir teks
   const saldoAkhir = formatRupiah(props.donasi.saldo || 0)
-  lines.push('SALDO')
-  lines.push(saldoAkhir)
+  lines.push('_SALDO_')
+  lines.push('*' + saldoAkhir + '*')
 
   const finalClipboardText = lines.join('\n').trim()
 
