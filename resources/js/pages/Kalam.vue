@@ -120,7 +120,7 @@ function goToPage(url: string | null) {
             v-for="kalam in kalams.data"
             :key="kalam.id"
             :href="`/kalam/${kalam.slug}`"
-            class="block bg-stone-900/50 border border-stone-800/60 rounded-2xl p-4 hover:border-amber-500/30 hover:bg-stone-900/80 transition-all group"
+            class="block backdrop-blur-xs bg-stone-900/50 border border-stone-800/60 rounded-2xl p-4 hover:border-amber-500/30 hover:bg-stone-900/80 transition-all group"
           >
             <!-- Kategori & Icon (Pindah ke atas atau tetap sebagai header card) -->
             <div class="flex items-center justify-between mb-2">

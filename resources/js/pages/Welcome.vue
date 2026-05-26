@@ -4,7 +4,8 @@ import {
   Beef, BookOpen, CalendarDays, ChartNoAxesCombined, Coins, 
   HandHeart, HeartHandshake, LayoutGrid, Scale, Search, 
   UserRound, Target, Heart, User, Loader2, 
-  ArrowRight
+  ArrowRight,
+  X
 } from 'lucide-vue-next'
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import debounce from 'lodash/debounce'
@@ -331,30 +332,42 @@ watch(isSearchOpen, (val) => {
             </div>
           </DialogTrigger>
 
-          <DialogContent class="sm:max-w-lg bg-stone-950 border-stone-800 p-0 overflow-hidden gap-0 [&>button]:hidden">
-            <DialogHeader class="p-4 border-b border-stone-800">
-              <div class="relative flex items-center">
+          <DialogContent class="sm:max-w-lg bg-stone-950 border-stone-800 p-0 overflow-visible gap-0 [&>button]:hidden fixed left-[50%] top-0 sm:top-18 -translate-x-[50%] translate-y-0 duration-200 rounded-b-3xl sm:rounded-3xl shadow-2xl">
+            
+            <div class="absolute -top-14 left-1/2 -translate-x-1/2 z-50 hidden sm:flex flex-col items-center gap-1">
+              <button 
+                @click="isSearchOpen = false" 
+                class="p-2.5 rounded-full bg-stone-900/80 hover:bg-stone-800 text-stone-400 hover:text-white border border-stone-800 backdrop-blur-xs transition-all active:scale-95 shadow-lg"
+              >
+                <X class="size-5" />
+              </button>
+            </div>
+
+            <div class="p-4 border-b border-stone-800 bg-stone-950 flex items-center gap-2">
+              <div class="relative flex-1 flex items-center">
                 <Search class="absolute left-3 size-4 text-amber-500" />
                 <input
                   v-model="searchQuery"
                   type="search"
                   placeholder="Ketik untuk mencari..."
-                  class="w-full bg-transparent pl-10 pr-4 py-2 text-stone-100 outline-none placeholder:text-stone-600"
+                  class="w-full bg-transparent pl-10 pr-4 py-2 text-stone-100 outline-none placeholder:text-stone-600 text-sm"
                   autofocus
                 />
                 <Loader2 v-if="isSearching" class="size-4 animate-spin text-stone-500" />
               </div>
-            </DialogHeader>
+              
+              <button @click="isSearchOpen = false" class="sm:hidden text-xs font-bold text-stone-400 hover:text-white px-2 py-1 bg-stone-900 border border-stone-800 rounded-xl transition-all">
+                Tutup
+              </button>
+            </div>
 
-            <!-- Search Results Area -->
-            <div class="max-h-[60vh] overflow-y-auto p-2 no-scrollbar">
+            <div class="max-h-[50vh] sm:max-h-[60vh] overflow-y-auto p-2 no-scrollbar">
               <div v-if="!searchQuery" class="p-8 text-center">
                 <p class="text-stone-500 text-xs">Cari kalam, doa, program, komunitas atau masjid.</p>
               </div>
 
               <div v-else-if="searchResultsKalam.length > 0 || searchResultsDonasi.length > 0" class="space-y-4 p-2">
                 
-                <!-- Hasil Cari Kalam -->
                 <div v-if="searchResultsKalam.length > 0">
                   <h3 class="text-[10px] font-bold text-amber-500/50 uppercase tracking-widest px-2 mb-2">Kalam & Artikel</h3>
                   <div class="space-y-1">
@@ -375,7 +388,6 @@ watch(isSearchOpen, (val) => {
                   </div>
                 </div>
 
-                <!-- Hasil Cari Donasi -->
                 <div v-if="searchResultsDonasi.length > 0">
                   <h3 class="text-[10px] font-bold text-emerald-500/50 uppercase tracking-widest px-2 mb-2">Program Donasi</h3>
                   <div class="space-y-1">
@@ -521,7 +533,7 @@ watch(isSearchOpen, (val) => {
         <div v-else class="grid grid-cols-1 gap-4">
           <Link
             v-for="donasi in donasis" :key="donasi.id" :href="`/donasi/${donasi.slug}`"
-            class="block backdrop-blur-sm bg-stone-900/10 border border-stone-800/60 rounded-3xl overflow-hidden hover:border-amber-500/30 transition-all group"
+            class="block backdrop-blur-xs bg-stone-900/10 border border-stone-800/60 rounded-3xl overflow-hidden hover:border-amber-500/30 transition-all group"
           >
             <!-- Render Thumbnail Dinamis Model -->
             <div class="aspect-video w-full bg-amber-950/30 relative overflow-hidden border-b border-stone-800">

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { Head, Link, useForm, router } from '@inertiajs/vue3'
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { 
   CalendarDays, Tag, Target, Wallet, 
   Share2, BookOpen, MessageCircle, 
   ClipboardList, ArrowDownCircle, ArrowUpCircle, AlertCircle, Send,
   RefreshCw, Newspaper, Heart, ChevronDown, Upload, FileText,
-  X
+  X,
+  QrCode
 } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
@@ -34,6 +35,7 @@ const props = defineProps<{
     user: { id: number; name: string } | null
     payments: Array<{
       id: number
+      link: string
       atas_nama: string
       sapaan?: string
       nominal: number
@@ -258,10 +260,10 @@ const tanggal = computed(() => {
 })
 
 const reaksiList = [
-  { type: 'love', emoji: '❤️', label: 'Love' },
-  { type: 'like', emoji: '👍', label: 'Like' },
-  { type: 'pray', emoji: '🙏', label: 'Hope' },
-  { type: 'sad',  emoji: '😢', label: 'Sad' },
+  { type: 'love', emoji: '❤️', label: 'Cinta' },
+  { type: 'like', emoji: '👍', label: 'Suka' },
+  { type: 'pray', emoji: '🙏', label: 'Harapan' },
+  { type: 'sad',  emoji: '😢', label: ' Prihatin' },
 ]
 
 const reaksiCount = computed(() => {
@@ -337,63 +339,92 @@ function handleShare() {
   }
 }
 
-function handleCopyDoa() {
-  if (!doaDonatur.value || doaDonatur.value.length === 0) {
-    toast.error('Tidak ada data doa untuk disalin.')
+function handleCopyLaporan() {
+  if (!laporanArusKas.value || laporanArusKas.value.length === 0) {
+    toast.error('Tidak ada data laporan keuangan untuk disalin.')
     return
   }
 
-  // Opsi format tanggal lokal Indonesia tanpa jam
   const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' }
-
-  // 1. Kelompokkan doa berdasarkan tanggal format Indonesia
   const grouped: Record<string, string[]> = {}
-  
-  doaDonatur.value.forEach(pay => {
-    const tgl = new Date(pay.created_at).toLocaleDateString('id-ID', options)
+
+  // 1. Kelompokkan data dari laporanArusKas (Urutan dibalik agar dari tanggal terlama ke terbaru)
+  const mutasiKronologis = [...laporanArusKas.value].reverse()
+
+  mutasiKronologis.forEach(log => {
+    const tgl = new Date(log.created_at).toLocaleDateString('id-ID', options)
     if (!grouped[tgl]) {
       grouped[tgl] = []
     }
-    
-    // Tentukan sapaan & nama
-    const namaTeks = pay.atas_nama === 'Hamba Allah' 
-      ? 'Hamba Allah' 
-      : `${pay.sapaan || ''} ${pay.atas_nama}`.trim()
-    
-    // Format nominal tanpa simbol Rp (misal: 50.000)
-    const nominalTeks = new Intl.NumberFormat('id-ID').format(pay.nominal)
-    
-    // Gabungkan baris data
-    grouped[tgl].push(`${namaTeks} >> ${nominalTeks}`)
+
+    const nominalTeks = new Intl.NumberFormat('id-ID').format(log.nominal)
+
+    if (log.mutation_type === 'tasyaruf') {
+      // Jika Tasyaruf / Penyaluran Keluar
+      const keterangan = log.notes || 'Penyaluran Dana'
+      grouped[tgl].push(`${keterangan} __ - ${nominalTeks}`)
+    } else {
+      // Jika Donasi Masuk
+      const namaTeks = log.atas_nama === 'Hamba Allah' 
+        ? 'Hamba Allah' 
+        : `${log.sapaan || ''} ${log.atas_nama}`.trim()
+      grouped[tgl].push(`${namaTeks} __ + ${nominalTeks}`)
+    }
   })
 
-  // 2. Susun teks akhir (Tanggal -> Baris Donatur -> Spasi antar tanggal)
+  // 2. Susun Struktur Teks Clipboard
   const lines: string[] = []
-  
-  // Ambil list tanggal lalu urutkan secara descending (terbaru di atas)
+  lines.push('Laporan Keuangan')
+  lines.push(props.donasi.judul.toUpperCase())
+  lines.push('') // Jeda baris kosong setelah judul
+
+  // Ambil tanggal dan pastikan berurutan dari terlama ke terbaru
   const sortedDates = Object.keys(grouped).sort((a, b) => {
-    return new Date(b).getTime() - new Date(a).getTime()
+    return new Date(a).getTime() - new Date(b).getTime()
   })
 
   sortedDates.forEach(tgl => {
-    lines.push(tgl) // Tambah header tanggal
-    grouped[tgl].forEach(item => lines.push(item)) // Tambah list donatur pada tanggal tsb
-    lines.push('') // Baris kosong antar kelompok tanggal
+    lines.push(tgl)
+    grouped[tgl].forEach(item => lines.push(item))
+    lines.push('') // Jeda baris kosong antar kelompok tanggal
   })
 
-  // Gabungkan semua array menjadi satu string teks utuh
+  // Tambahkan ringkasan saldo di akhir teks
+  const saldoAkhir = formatRupiah(props.donasi.saldo || 0)
+  lines.push('SALDO')
+  lines.push(saldoAkhir)
+
   const finalClipboardText = lines.join('\n').trim()
 
-  // 3. Eksekusi salin ke Clipboard
+  // 3. Eksekusi Salin
   if (typeof window !== 'undefined') {
     navigator.clipboard.writeText(finalClipboardText)
-      .then(() => toast.success('Daftar doa berhasil disalin ke clipboard!'))
+      .then(() => toast.success('Rangkuman laporan keuangan berhasil disalin!'))
       .catch((err) => {
-        toast.error('Gagal menyalin teks.')
+        toast.error('Gagal menyalin laporan.')
         console.error(err)
       })
   }
 }
+
+onMounted(() => {
+    // Ambil parameter dari URL browser
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTabParam = urlParams.get('tab')
+
+    // Jika tab adalah laporan, trigger scroll setelah DOM selesai merender
+    if (activeTabParam === 'laporan') {
+        nextTick(() => {
+            const element = document.getElementById('konten-laporan')
+            if (element) {
+                element.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' // Bisa diganti 'start' jika ingin mepet ke atas layar
+                })
+            }
+        })
+    }
+})
 </script>
 
 <template>
@@ -468,6 +499,25 @@ function handleCopyDoa() {
             <Wallet class="w-5 h-5" />
             DONASI SEKARANG
           </Link>
+        </div>   
+        
+        <div class="space-y-4 -mb-8">
+          
+          <div class="grid grid-cols-2 gap-2 w-full">
+            <button 
+              v-for="r in reaksiList" 
+              :key="r.type" 
+              type="button" 
+              @click="toggleReaksi(r.type)" 
+              :disabled="isSubmittingReaction" 
+              class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl border text-xs font-bold transition-all bg-stone-900 active:scale-95 disabled:opacity-50 w-full" 
+              :class="[selectedReaksi === r.type ? 'border-amber-500 text-amber-400 bg-amber-500/5' : 'border-stone-800 text-stone-400 hover:border-amber-500/40']"
+            >
+              <span>{{ r.emoji }}</span>
+              <span>{{ r.label }}</span>
+              <span v-if="reaksiCount[r.type]" class="ml-1 opacity-60 font-mono text-amber-400">({{ reaksiCount[r.type] }})</span>
+            </button>
+          </div>
         </div>        
       </div>
 
@@ -493,16 +543,6 @@ function handleCopyDoa() {
           <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500 border-l-2 border-amber-500 pl-3">Cerita Donasi</p>
           <div class="prose prose-invert prose-stone max-w-none prose-p:text-stone-300 prose-p:leading-relaxed prose-p:text-[15px] prose-headings:text-amber-100 prose-strong:text-amber-200 prose-img:rounded-3xl prose-img:border-stone-800" v-html="donasi.body" />
         </div>
-        <div class="pt-4 border-t border-stone-800 space-y-4">
-          <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Ekspresikan Dukungan Anda</p>
-          <div class="flex flex-wrap gap-2">
-            <button v-for="r in reaksiList" :key="r.type" type="button" @click="toggleReaksi(r.type)" :disabled="isSubmittingReaction" class="flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-bold transition-all bg-stone-900 active:scale-95 disabled:opacity-50" :class="[selectedReaksi === r.type ? 'border-amber-500 text-amber-400 bg-amber-500/5' : 'border-stone-800 text-stone-400 hover:border-amber-500/40']">
-              <span>{{ r.emoji }}</span>
-              <span>{{ r.label }}</span>
-              <span v-if="reaksiCount[r.type]" class="ml-1 opacity-60 font-mono text-amber-400">{{ reaksiCount[r.type] }}</span>
-            </button>
-          </div>
-        </div>
       </div>
 
       <div v-if="activeTab === 'berita'" class="space-y-8">
@@ -517,16 +557,6 @@ function handleCopyDoa() {
       </div>
 
       <div v-if="activeTab === 'komentar'" class="space-y-6">
-        <div class="space-y-4">
-          <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Ekspresikan Dukungan Anda</p>
-          <div class="flex flex-wrap gap-2">
-            <button v-for="r in reaksiList" :key="r.type" type="button" @click="toggleReaksi(r.type)" :disabled="isSubmittingReaction" class="flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-bold transition-all bg-stone-900 active:scale-95 disabled:opacity-50" :class="[selectedReaksi === r.type ? 'border-amber-500 text-amber-400 bg-amber-500/5' : 'border-stone-800 text-stone-400 hover:border-amber-500/40']">
-              <span>{{ r.emoji }}</span>
-              <span>{{ r.label }}</span>
-              <span v-if="reaksiCount[r.type]" class="ml-1 opacity-60 font-mono text-amber-400">{{ reaksiCount[r.type] }}</span>
-            </button>
-          </div>
-        </div>
         
         <form @submit.prevent="submitKomentar" class="bg-stone-900 border border-stone-800/80 rounded-3xl p-5 space-y-4">
           <p class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Kirim Pertanyaan / Dukungan Publik</p>
@@ -565,13 +595,7 @@ function handleCopyDoa() {
 
       <div v-if="activeTab === 'doa'" class="space-y-6">
         <div class="space-y-4">
-          <p 
-            @click="handleCopyDoa" 
-            class="text-[10px] font-bold uppercase tracking-widest text-emerald-400 hover:text-emerald-300 active:scale-98 transition-all border-l-2 border-emerald-500 pl-3 cursor-pointer select-none inline-block"
-            title="Klik untuk menyalin rekap teks doa"
-          >
-            Doa & Kebaikan Donatur
-          </p>
+          <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-500 border-l-2 border-emerald-500 pl-3">Doa & Kebaikan Donatur</p>
           <div v-if="doaDonatur.length === 0" class="text-center py-12 text-stone-600 text-xs border border-stone-800 bg-stone-900/30 border-dashed rounded-3xl">
             <Heart class="w-8 h-8 mx-auto mb-3 opacity-30" />
             Belum ada pesan doa khusus dari transaksi donasi masuk.
@@ -598,13 +622,17 @@ function handleCopyDoa() {
         </div>
       </div>
 
-      <div v-if="activeTab === 'laporan'" class="space-y-6">
+      <div v-if="activeTab === 'laporan'" id="konten-laporan" class="space-y-6">
         <div class="bg-stone-900 border border-stone-800 rounded-3xl p-5 flex items-center justify-between shadow-xl">
           <div class="space-y-1">
             <span class="text-[10px] text-stone-500 uppercase font-bold tracking-wider block">Dana Program Sekarang</span>
             <span class="text-2xl font-black text-emerald-400 font-mono">{{ formatRupiah(donasi.saldo || 0) }}</span>
           </div>
-          <div class="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl text-emerald-400">
+          <div 
+            @click="handleCopyLaporan"
+            class="p-3 bg-emerald-500/10 border border-emerald-500/20 hover:border-emerald-400/50 hover:bg-emerald-500/20 rounded-2xl text-emerald-400 active:scale-95 transition-all cursor-pointer select-none"
+            title="Klik untuk menyalin semua rekapan mutasi laporan"
+          >
             <Wallet class="w-6 h-6" />
           </div>
         </div>
@@ -649,7 +677,8 @@ function handleCopyDoa() {
                     <h4 class="text-xs font-bold text-stone-200 truncate pr-2 uppercase">
                       {{ log.mutation_type === 'tasyaruf' ? 'Penyaluran (Tasyaruf)' : (log.atas_nama) }}
                     </h4>
-                    <p class="text-[11px] text-stone-500 line-clamp-3 max-w-[240px] md:max-w-md">{{ log.notes || 'Donasi Masuk' }}</p>
+                    <p class="text-[11px] text-stone-500 line-clamp-1 max-w-[240px] md:max-w-md">{{ log.notes || 'Donasi Masuk' }}</p>
+                    <p v-if="log.link" class="text-[11px] text-foreground line-clamp-1 max-w-[240px] md:max-w-md">Link Terkait: <a :href="log.link" target="_blank" class="text-blue-500 hover:underline">klik di sini</a></p>
                   </div>
                 </div>
 
@@ -667,7 +696,7 @@ function handleCopyDoa() {
               <div v-if="log.mutation_type !== 'tasyaruf' && expandedLogs.includes(log.id)" class="mt-4 pt-4 border-t border-stone-800/60 space-y-4 cursor-default" @click.stop>
                 
                 <div class="flex items-center justify-between text-xs bg-stone-950 p-2.5 rounded-xl border border-stone-800/50">
-                  <span class="text-stone-500 font-bold uppercase tracking-widest text-[9px]">Status Verifikasi</span>
+                  <span class="text-stone-500 font-bold uppercase tracking-widest text-[9px]">Status</span>
                   <span class="font-bold flex items-center gap-1.5" :class="getPaymentStatus(log).class">
                     <span class="relative flex h-2 w-2" v-if="!log.status">
                       <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-current"></span>
@@ -685,7 +714,7 @@ function handleCopyDoa() {
                       @click="openQrisModal(log)"
                       class="w-full flex items-center justify-center gap-2 bg-stone-900 border border-stone-800 hover:border-amber-500/40 text-amber-400 hover:text-amber-300 text-xs font-bold py-3 px-4 rounded-xl transition-all active:scale-98 shadow-sm"
                     >
-                      <Eye class="w-4 h-4" />
+                      <QrCode class="w-4 h-4" />
                       Tampilkan QRIS
                     </button>
                     <p class="text-[10px] text-stone-500 font-bold tracking-widest uppercase text-center mt-3">
@@ -751,10 +780,14 @@ function handleCopyDoa() {
       </div>
     </div>
 
-    <div v-if="activeQrisModal" class="fixed inset-0 bg-stone-950/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 transition-all" @click.self="closeQrisModal">
-        <div class="relative max-w-sm w-full bg-stone-900 border border-stone-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col animate-in fade-in zoom-in-95 duration-150">
+    <div 
+        v-if="activeQrisModal" 
+        class="fixed inset-0 bg-stone-950/80 backdrop-blur-sm z-[100] grid place-items-center p-4 overflow-y-auto" 
+        @click.self="closeQrisModal"
+    >
+        <div class="relative max-w-sm w-full bg-stone-900 border border-stone-800 rounded-3xl shadow-2xl flex flex-col my-auto max-h-[calc(100vh-2rem)] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
             
-            <div class="p-4 border-b border-stone-800 flex items-center justify-between bg-stone-900/50">
+            <div class="p-4 border-b border-stone-800 flex items-center justify-between bg-stone-900/50 shrink-0">
                 <div class="flex items-center gap-2 text-stone-200">
                     <Wallet class="size-4 text-amber-500" />
                     <span class="text-xs font-bold uppercase tracking-wider">Bayar via QRIS</span>
@@ -764,12 +797,12 @@ function handleCopyDoa() {
                 </button>
             </div>
             
-            <div class="p-6 bg-stone-950 flex flex-col items-center justify-center gap-4">
-                <div class="bg-white p-3 rounded-2xl shadow-inner border border-stone-800">
-                    <img src="/QRIS_MUHASABAH_ID.png" alt="QRIS Code" class="w-full object-cover rounded-xl shadow-md" />
+            <div class="p-6 bg-stone-950 flex flex-col items-center gap-4 overflow-y-auto min-h-0 custom-scrollbar">
+                <div class="w-full max-w-[240px] xs:max-w-full mx-auto">
+                    <img src="/QRIS_MUHASABAH_ID.png" alt="QRIS Code" class="w-full h-auto object-contain shadow-md rounded-xl" />                
                 </div>
                 
-                <div v-if="selectedQrisLog" class="w-full bg-stone-900/60 p-3 rounded-xl border border-stone-800 text-center space-y-0.5">
+                <div v-if="selectedQrisLog" class="w-full bg-stone-900/60 p-3 rounded-xl border border-stone-800 text-center space-y-0.5 shrink-0">
                     <p class="text-[10px] text-stone-500 uppercase font-bold tracking-wider">Total Pembayaran</p>
                     <p class="text-base font-bold font-mono text-amber-400">
                         {{ formatRupiah(Number(selectedQrisLog.nominal) + Number(getInfaqForDonasi(selectedQrisLog)?.nominal || 0)) }}
@@ -777,14 +810,14 @@ function handleCopyDoa() {
                 </div>
             </div>
             
-            <div class="p-3 bg-stone-900/50 border-t border-stone-800 text-center">
+            <div class="p-3 bg-stone-900/50 border-t border-stone-800 text-center shrink-0">
                 <p class="text-[10px] text-stone-400 font-medium leading-normal px-2">
                     Silakan screenshot atau scan QRIS di atas melalui aplikasi m-banking atau e-wallet Anda.
                 </p>
             </div>
             
         </div>
-    </div>    
+    </div>   
 
   </AppLayoutPublic>
 </template>

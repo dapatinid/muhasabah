@@ -202,7 +202,7 @@ const customPagination = computed(() => {
                     class="ms-auto h-11 px-4 inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold shadow-sm transition-all"
                 >
                     <Plus class="size-4" />
-                    <span>Bulk Donasi</span>
+                    <span class="text-nowrap">Bulk Donasi</span>
                 </button>
 
                 <div class="relative flex">

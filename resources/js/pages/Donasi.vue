@@ -202,7 +202,7 @@ function getJumlahDonatur(donasi: any): number {
             v-for="donasi in donasis.data"
             :key="donasi.id"
             :href="`/donasi/${donasi.slug}`"
-            class="block bg-stone-900/40 border border-stone-800/60 rounded-3xl overflow-hidden hover:border-amber-500/30 transition-all group"
+            class="block backdrop-blur-xs bg-stone-900/40 border border-stone-800/60 rounded-3xl overflow-hidden hover:border-amber-500/30 transition-all group"
           >
             <!-- Thumbnail Dinamis Model -->
             <div class="aspect-video w-full bg-amber-950/30 relative overflow-hidden border-b border-stone-800">
