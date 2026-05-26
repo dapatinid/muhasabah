@@ -16,11 +16,18 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
-        $middleware->web(append: [
+        $middleware->web(append: [           
             HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
+
+        $middleware->alias([
+            'is_active'     => \App\Http\Middleware\CheckIsActive::class,
+            'admin'         => \App\Http\Middleware\AdminMiddleware::class,
+            'control.panel' => \App\Http\Middleware\CanAccessControlPanel::class,
+            'super.admin'   => \App\Http\Middleware\SuperAdmin::class,
+        ]);        
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

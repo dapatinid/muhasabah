@@ -10,14 +10,12 @@ use App\Http\Controllers\LaporanRiyadhohController;
 Route::get('/', function () {
     $kalams = \App\Models\Kalam::with('user:id,name')->latest()->take(3)->get();
     
-    // PERBAIKAN DI SINI: Tambahkan with('payments')
     $donasis = \App\Models\Donasi::with('payments')
         ->where('is_published', true)
         ->latest()
         ->take(3)
         ->get();
         
-    // Urutkan berdasarkan priority (ASC), kemudian created_at (DESC)
     $banners = \App\Models\Banner::where('is_active', true)
         ->orderBy('priority', 'asc')
         ->orderBy('created_at', 'desc')
@@ -39,65 +37,83 @@ Route::get('/laporan-riyadhoh/log', [LaporanRiyadhohController::class, 'log'])->
 
 Route::get('/kalam', [KalamController::class, 'kalam'])->name('kalam');
 Route::get('/donasi', [DonasiController::class, 'donasi'])->name('donasi');
-
 Route::get('/donasi/{donasi:slug}/payment', [DonasiController::class, 'payment'])->name('donasi.payment');
 
 // Rute Interaksi Publik dengan Rate Limiter Ketat (Anti Spam)
 Route::middleware(['throttle:10,1'])->group(function () {
     Route::post('/donasi/{donasi:slug}/payment', [DonasiController::class, 'storePayment'])->name('donasi.payment.store');
-    
-    // Donasi Interaksi
     Route::post('/donasi/{donasi:slug}/komentar', [DonasiController::class, 'storeKomentar'])->name('donasi.storeKomentar');
     Route::post('/donasi/{donasi:slug}/reaksi', [DonasiController::class, 'storeReaksi'])->name('donasi.storeReaksi');
-    
-    // Kalam Interaksi (Ditambahkan di sini sesuai KalamShow.vue)
     Route::post('/kalam/{kalam:slug}/komentar', [KalamController::class, 'storeKomentar'])->name('kalam.storeKomentar');
     Route::post('/kalam/{kalam:slug}/reaksi', [KalamController::class, 'storeReaksi'])->name('kalam.storeReaksi');
 });
 
 Route::inertia('halaman-dibangun', 'HalamanDibangun')->name('halaman-dibangun');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+
+// ==========================================
+// 1. GROUP USER: Harus Login, Verified, & Akun Aktif
+// ==========================================
+Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
+    
+    // Halaman yang bisa diakses SEMUA user yang sudah login & aktif
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
     
-    Route::get('/admin/kalam', [KalamController::class, 'index'])->name('kalam.index');
-    Route::get('/admin/kalam/create', [KalamController::class, 'create'])->name('kalam.create');
-    Route::post('/admin/kalam', [KalamController::class, 'store'])->name('kalam.store');
-    Route::post('/admin/kalam/upload-image', [KalamController::class, 'uploadImage'])->name('kalam.upload-image');
-    Route::get('/admin/kalam/{kalam}/edit', [KalamController::class, 'edit'])->name('kalam.edit');
-    Route::put('/admin/kalam/{kalam}', [KalamController::class, 'update'])->name('kalam.update');
-    Route::patch('/admin/kalam/{kalam}', [KalamController::class, 'update']);
-    Route::delete('/admin/kalam/{kalam}', [KalamController::class, 'destroy'])->name('kalam.destroy');
+    // ==========================================
+    // 2. NESTED GROUP: Khusus Admin (Kunci ditaruh di sini)
+    // ==========================================
+    Route::middleware(['admin'])->group(function () {
 
-    Route::get('/admin/donasi', [DonasiController::class, 'index'])->name('donasi.index');
-    Route::get('/admin/donasi/create', [DonasiController::class, 'create'])->name('donasi.create');
-    Route::post('/admin/donasi', [DonasiController::class, 'store'])->name('donasi.store');
-    Route::post('/admin/donasi/upload-image', [DonasiController::class, 'uploadImage'])->name('donasi.upload-image');
-    Route::get('/admin/donasi/{donasi}/edit', [DonasiController::class, 'edit'])->name('donasi.edit');
-    Route::get('/admin/donasi/{donasi}/reaksi', [DonasiController::class, 'reaksi'])->name('donasi.reaksi');
-    Route::get('/admin/donasi/{donasi}/komentar', [DonasiController::class, 'komentar'])->name('donasi.komentar');
-    Route::get('/admin/donasi/{donasi}/donasi-masuk', [DonasiController::class, 'donasiMasuk'])->name('donasi.donasi-masuk');
-    Route::get('/admin/donasi/{donasi}/tasyaruf', [DonasiController::class, 'tasyaruf'])->name('donasi.tasyaruf');
-    Route::post('/admin/donasi/{donasi}/tasyaruf', [DonasiController::class, 'storeTasyaruf'])->name('donasi.tasyaruf.store');
-    Route::put('/admin/donasi/{donasi}', [DonasiController::class, 'update'])->name('donasi.update');
-    Route::post('/admin/donasi/{donasi}/bulk-donasi', [DonasiController::class, 'storeBulkDonasi'])->name('admin.donasi.bulk');
-    Route::delete('/admin/donasi/{donasi}', [DonasiController::class, 'destroy'])->name('donasi.destroy');   
+        // Riyadhoh
+        Route::get('/log-riyadhoh', [LaporanRiyadhohController::class, 'logRiyadhoh'])->name('log-riyadhoh');
+        Route::patch('/log-riyadhoh/{id}', [LaporanRiyadhohController::class, 'updateLog'])->name('log-riyadhoh.update');
+        Route::get('/rapor-riyadhoh', [LaporanRiyadhohController::class, 'raporRiyadhoh'])->name('rapor-riyadhoh');
+        
+        // Fitur Kelola Kalam (Admin)
+        Route::get('/admin/kalam', [KalamController::class, 'index'])->name('kalam.index');
+        Route::get('/admin/kalam/create', [KalamController::class, 'create'])->name('kalam.create');
+        Route::post('/admin/kalam', [KalamController::class, 'store'])->name('kalam.store');
+        Route::post('/admin/kalam/upload-image', [KalamController::class, 'uploadImage'])->name('kalam.upload-image');
+        Route::get('/admin/kalam/{kalam}/edit', [KalamController::class, 'edit'])->name('kalam.edit');
+        Route::put('/admin/kalam/{kalam}', [KalamController::class, 'update'])->name('kalam.update');
+        Route::patch('/admin/kalam/{kalam}', [KalamController::class, 'update']);
+        Route::delete('/admin/kalam/{kalam}', [KalamController::class, 'destroy'])->name('kalam.destroy');
 
-    Route::get('/admin/banner', [BannerController::class, 'index'])->name('banner.index');
-    Route::get('/admin/banner/create', [BannerController::class, 'create'])->name('banner.create');
-    Route::post('/admin/banner', [BannerController::class, 'store'])->name('banner.store');
-    Route::post('/admin/banner/upload', [BannerController::class, 'uploadImage'])->name('banner.upload');    
-    Route::get('/admin/banner/{banner}/edit', [BannerController::class, 'edit'])->name('banner.edit');
-    Route::put('/admin/banner/{banner}', [BannerController::class, 'update'])->name('banner.update');
-    Route::delete('/admin/banner/{banner}', [BannerController::class, 'destroy'])->name('banner.destroy');
+        // Fitur Kelola Donasi (Admin)
+        Route::get('/admin/donasi', [DonasiController::class, 'index'])->name('donasi.index');
+        Route::get('/admin/donasi/create', [DonasiController::class, 'create'])->name('donasi.create');
+        Route::post('/admin/donasi', [DonasiController::class, 'store'])->name('donasi.store');
+        Route::post('/admin/donasi/upload-image', [DonasiController::class, 'uploadImage'])->name('donasi.upload-image');
+        Route::get('/admin/donasi/{donasi}/edit', [DonasiController::class, 'edit'])->name('donasi.edit');
+        Route::get('/admin/donasi/{donasi}/reaksi', [DonasiController::class, 'reaksi'])->name('donasi.reaksi');
+        Route::get('/admin/donasi/{donasi}/komentar', [DonasiController::class, 'komentar'])->name('donasi.komentar');
+        Route::get('/admin/donasi/{donasi}/donasi-masuk', [DonasiController::class, 'donasiMasuk'])->name('donasi.donasi-masuk');
+        Route::get('/admin/donasi/{donasi}/tasyaruf', [DonasiController::class, 'tasyaruf'])->name('donasi.tasyaruf');
+        Route::post('/admin/donasi/{donasi}/tasyaruf', [DonasiController::class, 'storeTasyaruf'])->name('donasi.tasyaruf.store');
+        Route::put('/admin/donasi/{donasi}', [DonasiController::class, 'update'])->name('donasi.update');
+        Route::post('/admin/donasi/{donasi}/bulk-donasi', [DonasiController::class, 'storeBulkDonasi'])->name('admin.donasi.bulk');
+        Route::delete('/admin/donasi/{donasi}', [DonasiController::class, 'destroy'])->name('donasi.destroy');   
 
-    Route::get('/log-riyadhoh', [LaporanRiyadhohController::class, 'logRiyadhoh'])->name('log-riyadhoh');
-    Route::patch('/log-riyadhoh/{id}', [LaporanRiyadhohController::class, 'updateLog'])->name('log-riyadhoh.update');
-    Route::get('/rapor-riyadhoh', [LaporanRiyadhohController::class, 'raporRiyadhoh'])->name('rapor-riyadhoh');
+        // Fitur Kelola Banner (Admin)
+        Route::get('/admin/banner', [BannerController::class, 'index'])->name('banner.index');
+
+    });
+
+    // ==========================================
+    // Super Admin, tinggal buat di sini:
+    // ==========================================
+    Route::middleware(['super.admin'])->group(function () {
+        Route::get('/admin/banner/create', [BannerController::class, 'create'])->name('banner.create');
+        Route::post('/admin/banner', [BannerController::class, 'store'])->name('banner.store');
+        Route::post('/admin/banner/upload', [BannerController::class, 'uploadImage'])->name('banner.upload');    
+        Route::get('/admin/banner/{banner}/edit', [BannerController::class, 'edit'])->name('banner.edit');
+        Route::put('/admin/banner/{banner}', [BannerController::class, 'update'])->name('banner.update');
+        Route::delete('/admin/banner/{banner}', [BannerController::class, 'destroy'])->name('banner.destroy');
+    });
+
 });
 
-// Show PALING BAWAH — setelah semua route spesifik /kalam/create, /kalam/upload-image
-// Menggunakan binding explicit slug `:slug` agar sinkron dengan parameter form frontend Anda
+// Show PALING BAWAH
 Route::get('/kalam/{kalam:slug}', [KalamController::class, 'show'])->name('kalam.show');
 Route::get('/donasi/{donasi:slug}', [DonasiController::class, 'show'])->name('donasi.show');
 
