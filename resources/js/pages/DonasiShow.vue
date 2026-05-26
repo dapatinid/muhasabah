@@ -364,7 +364,7 @@ function handleCopyDoa() {
     const nominalTeks = new Intl.NumberFormat('id-ID').format(pay.nominal)
     
     // Gabungkan baris data
-    grouped[tgl].push(`${namaTeks} _______ ${nominalTeks}`)
+    grouped[tgl].push(`${namaTeks} >> ${nominalTeks}`)
   })
 
   // 2. Susun teks akhir (Tanggal -> Baris Donatur -> Spasi antar tanggal)
@@ -570,7 +570,7 @@ function handleCopyDoa() {
             class="text-[10px] font-bold uppercase tracking-widest text-emerald-400 hover:text-emerald-300 active:scale-98 transition-all border-l-2 border-emerald-500 pl-3 cursor-pointer select-none inline-block"
             title="Klik untuk menyalin rekap teks doa"
           >
-            Doa & Kebaikan Donatur <span class="text-[9px] text-stone-600 lowercase font-normal ml-1">(klik untuk salin teks)</span>
+            Doa & Kebaikan Donatur
           </p>
           <div v-if="doaDonatur.length === 0" class="text-center py-12 text-stone-600 text-xs border border-stone-800 bg-stone-900/30 border-dashed rounded-3xl">
             <Heart class="w-8 h-8 mx-auto mb-3 opacity-30" />
