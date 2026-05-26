@@ -336,6 +336,64 @@ function handleShare() {
       })
   }
 }
+
+function handleCopyDoa() {
+  if (!doaDonatur.value || doaDonatur.value.length === 0) {
+    toast.error('Tidak ada data doa untuk disalin.')
+    return
+  }
+
+  // Opsi format tanggal lokal Indonesia tanpa jam
+  const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' }
+
+  // 1. Kelompokkan doa berdasarkan tanggal format Indonesia
+  const grouped: Record<string, string[]> = {}
+  
+  doaDonatur.value.forEach(pay => {
+    const tgl = new Date(pay.created_at).toLocaleDateString('id-ID', options)
+    if (!grouped[tgl]) {
+      grouped[tgl] = []
+    }
+    
+    // Tentukan sapaan & nama
+    const namaTeks = pay.atas_nama === 'Hamba Allah' 
+      ? 'Hamba Allah' 
+      : `${pay.sapaan || ''} ${pay.atas_nama}`.trim()
+    
+    // Format nominal tanpa simbol Rp (misal: 50.000)
+    const nominalTeks = new Intl.NumberFormat('id-ID').format(pay.nominal)
+    
+    // Gabungkan baris data
+    grouped[tgl].push(`${namaTeks} _______ ${nominalTeks}`)
+  })
+
+  // 2. Susun teks akhir (Tanggal -> Baris Donatur -> Spasi antar tanggal)
+  const lines: string[] = []
+  
+  // Ambil list tanggal lalu urutkan secara descending (terbaru di atas)
+  const sortedDates = Object.keys(grouped).sort((a, b) => {
+    return new Date(b).getTime() - new Date(a).getTime()
+  })
+
+  sortedDates.forEach(tgl => {
+    lines.push(tgl) // Tambah header tanggal
+    grouped[tgl].forEach(item => lines.push(item)) // Tambah list donatur pada tanggal tsb
+    lines.push('') // Baris kosong antar kelompok tanggal
+  })
+
+  // Gabungkan semua array menjadi satu string teks utuh
+  const finalClipboardText = lines.join('\n').trim()
+
+  // 3. Eksekusi salin ke Clipboard
+  if (typeof window !== 'undefined') {
+    navigator.clipboard.writeText(finalClipboardText)
+      .then(() => toast.success('Daftar doa berhasil disalin ke clipboard!'))
+      .catch((err) => {
+        toast.error('Gagal menyalin teks.')
+        console.error(err)
+      })
+  }
+}
 </script>
 
 <template>
@@ -507,7 +565,13 @@ function handleShare() {
 
       <div v-if="activeTab === 'doa'" class="space-y-6">
         <div class="space-y-4">
-          <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-500 border-l-2 border-emerald-500 pl-3">Doa & Kebaikan Donatur</p>
+          <p 
+            @click="handleCopyDoa" 
+            class="text-[10px] font-bold uppercase tracking-widest text-emerald-400 hover:text-emerald-300 active:scale-98 transition-all border-l-2 border-emerald-500 pl-3 cursor-pointer select-none inline-block"
+            title="Klik untuk menyalin rekap teks doa"
+          >
+            Doa & Kebaikan Donatur <span class="text-[9px] text-stone-600 lowercase font-normal ml-1">(klik untuk salin teks)</span>
+          </p>
           <div v-if="doaDonatur.length === 0" class="text-center py-12 text-stone-600 text-xs border border-stone-800 bg-stone-900/30 border-dashed rounded-3xl">
             <Heart class="w-8 h-8 mx-auto mb-3 opacity-30" />
             Belum ada pesan doa khusus dari transaksi donasi masuk.
