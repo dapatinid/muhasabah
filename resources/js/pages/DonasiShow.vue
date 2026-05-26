@@ -362,13 +362,13 @@ function handleCopyLaporan() {
     if (log.mutation_type === 'tasyaruf') {
       // Jika Tasyaruf / Penyaluran Keluar
       const keterangan = log.notes || 'Penyaluran Dana'
-      grouped[tgl].push(`${keterangan} __ - ${nominalTeks}`)
+      grouped[tgl].push(`${keterangan} ✦ - ${nominalTeks}`)
     } else {
       // Jika Donasi Masuk
       const namaTeks = log.atas_nama === 'Hamba Allah' 
         ? 'Hamba Allah' 
         : `${log.sapaan || ''} ${log.atas_nama}`.trim()
-      grouped[tgl].push(`${namaTeks} __ + ${nominalTeks}`)
+      grouped[tgl].push(`${namaTeks} ✦ + ${nominalTeks}`)
     }
   })
 
