@@ -706,7 +706,8 @@ onMounted(() => {
                   </span>
                 </div>
 
-                <div v-if="!log.image || log.status === 'success'" class="p-4 rounded-2xl bg-stone-950 border border-stone-800/80 space-y-4">
+                <template v-if="log.status !== 'success'">
+                <div v-if="!log.image" class="p-4 rounded-2xl bg-stone-950 border border-stone-800/80 space-y-4">
   
                   <div class="flex flex-col items-center justify-center p-4 bg-stone-900/50 rounded-xl border border-stone-800 border-dashed">
                     <button 
@@ -746,6 +747,7 @@ onMounted(() => {
                     </button>
                   </div>
                 </div>
+                </template>
 
                 <div class="space-y-1.5 px-1">
                   <div class="flex justify-between text-xs text-stone-400">
