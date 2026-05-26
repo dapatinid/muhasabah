@@ -186,10 +186,10 @@ function getJumlahDonatur(donasi: any): number {
 }
 
 const categories = [
-  { name: 'Tulis Kalam', icon: '📋', link: 'halaman-dibangun', color: 'bg-amber-500/20 text-amber-400' },
-  { name: 'Buat Acara',   icon: '📅', link: 'halaman-dibangun',             color: 'bg-rose-500/30 text-rose-400' },
-  { name: 'Galang Dana',  icon: '💰', link: 'halaman-dibangun',             color: 'bg-emerald-500/20 text-emerald-400' },
-  { name: 'Riyadhoh', icon: '🎖️', link: '/laporan-riyadhoh',           color: 'bg-blue-500/20 text-blue-400' },
+  { name: 'Tulis Kalam', icon: '📋', link: 'halaman-dibangun', color: 'bg-amber-500/30 text-amber-400' },
+  { name: 'Buat Acara',   icon: '📅', link: 'halaman-dibangun', color: 'bg-rose-500/40 text-rose-400' },
+  { name: 'Galang Dana',  icon: '💰', link: 'halaman-dibangun', color: 'bg-emerald-500/30 text-emerald-400' },
+  { name: 'Riyadhoh', icon: '🎖️', link: '/laporan-riyadhoh', color: 'bg-blue-500/30 text-blue-400' },
 ]
 
 const kategoriEmoji: Record<string, string> = {
@@ -423,10 +423,10 @@ watch(isSearchOpen, (val) => {
               :is="banner.link ? 'a' : 'div'"
               v-for="(banner, index) in extendedBanners" :key="index"
               :href="banner.link ?? undefined"
-              class="min-w-[92%] aspect-[1702/630] relative rounded-3xl overflow-hidden snap-center border border-stone-800 shrink-0 block"
+              class="min-w-[92%] aspect-1702/630 relative rounded-3xl overflow-hidden snap-center border border-stone-800 shrink-0 block"
               @click="handleBannerClick"
           >
-              <img :src="banner.image" :alt="banner.title" class="absolute inset-0 w-full h-full object-cover opacity-60 pointer-events-none">
+              <img :src="banner.image" :alt="banner.title" class="absolute inset-0 w-full h-full object-cover pointer-events-none">
               <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent pointer-events-none"></div>
               <div class="absolute bottom-4 left-5 right-5 pointer-events-none">
                   <h3 class="text-lg md:text-xl font-bold text-amber-100 line-clamp-1" style="font-family: 'Amiri', serif;">

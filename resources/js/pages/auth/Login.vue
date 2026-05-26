@@ -14,8 +14,8 @@ import { request } from '@/routes/password';
 
 defineOptions({
     layout: {
-        title: 'Log in to your account',
-        description: 'Enter your email and password below to log in',
+        title: 'Masuk ke Dashboard',
+        description: 'Masukkan email dan password',
     },
 });
 
@@ -44,7 +44,7 @@ defineProps<{
     >
         <div class="grid gap-6">
             <div class="grid gap-2">
-                <Label for="email">Email address</Label>
+                <Label for="email">Email</Label>
                 <Input
                     id="email"
                     type="email"
@@ -67,7 +67,7 @@ defineProps<{
                         class="text-sm"
                         :tabindex="5"
                     >
-                        Forgot password?
+                        Lupa password?
                     </TextLink>
                 </div>
                 <PasswordInput
@@ -96,7 +96,7 @@ defineProps<{
                 data-test="login-button"
             >
                 <Spinner v-if="processing" />
-                Log in
+                Masuk
             </Button>
         </div>
 
@@ -104,8 +104,8 @@ defineProps<{
             class="text-center text-sm text-muted-foreground"
             v-if="canRegister"
         >
-            Don't have an account?
-            <TextLink :href="register()" :tabindex="5">Sign up</TextLink>
+            Belum punya akun?
+            <TextLink :href="register()" :tabindex="5" class="ms-2">Daftar di sini</TextLink>
         </div>
     </Form>
 </template>

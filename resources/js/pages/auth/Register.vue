@@ -12,8 +12,8 @@ import { store } from '@/routes/register';
 
 defineOptions({
     layout: {
-        title: 'Create an account',
-        description: 'Enter your details below to create your account',
+        title: 'Buat Akun Baru',
+        description: 'Setelah menekan tombol "Buat Akun", kamu harus hubungi 085950540055 untuk aktivasi akun',
     },
 });
 </script>
@@ -44,7 +44,7 @@ defineOptions({
             </div>
 
             <div class="grid gap-2">
-                <Label for="email">Email address</Label>
+                <Label for="email">Email</Label>
                 <Input
                     id="email"
                     type="email"
@@ -91,17 +91,17 @@ defineOptions({
                 data-test="register-user-button"
             >
                 <Spinner v-if="processing" />
-                Create account
+                Buat Akun
             </Button>
         </div>
 
         <div class="text-center text-sm text-muted-foreground">
-            Already have an account?
+            Jika sudah punya akun, silakan
             <TextLink
                 :href="login()"
-                class="underline underline-offset-4"
+                class="underline underline-offset-4 ms-2"
                 :tabindex="6"
-                >Log in</TextLink
+                >Masuk di sini</TextLink
             >
         </div>
     </Form>
