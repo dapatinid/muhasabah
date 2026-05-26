@@ -63,11 +63,6 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
     // 2. NESTED GROUP: Khusus Admin (Kunci ditaruh di sini)
     // ==========================================
     Route::middleware(['admin'])->group(function () {
-
-        // Riyadhoh
-        Route::get('/log-riyadhoh', [LaporanRiyadhohController::class, 'logRiyadhoh'])->name('log-riyadhoh');
-        Route::patch('/log-riyadhoh/{id}', [LaporanRiyadhohController::class, 'updateLog'])->name('log-riyadhoh.update');
-        Route::get('/rapor-riyadhoh', [LaporanRiyadhohController::class, 'raporRiyadhoh'])->name('rapor-riyadhoh');
         
         // Fitur Kelola Kalam (Admin)
         Route::get('/admin/kalam', [KalamController::class, 'index'])->name('kalam.index');
@@ -103,12 +98,19 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
     // Super Admin, tinggal buat di sini:
     // ==========================================
     Route::middleware(['super.admin'])->group(function () {
+
+        // Banner
         Route::get('/admin/banner/create', [BannerController::class, 'create'])->name('banner.create');
         Route::post('/admin/banner', [BannerController::class, 'store'])->name('banner.store');
         Route::post('/admin/banner/upload', [BannerController::class, 'uploadImage'])->name('banner.upload');    
         Route::get('/admin/banner/{banner}/edit', [BannerController::class, 'edit'])->name('banner.edit');
         Route::put('/admin/banner/{banner}', [BannerController::class, 'update'])->name('banner.update');
         Route::delete('/admin/banner/{banner}', [BannerController::class, 'destroy'])->name('banner.destroy');
+
+        // Riyadhoh
+        Route::get('/log-riyadhoh', [LaporanRiyadhohController::class, 'logRiyadhoh'])->name('log-riyadhoh');
+        Route::patch('/log-riyadhoh/{id}', [LaporanRiyadhohController::class, 'updateLog'])->name('log-riyadhoh.update');
+        Route::get('/rapor-riyadhoh', [LaporanRiyadhohController::class, 'raporRiyadhoh'])->name('rapor-riyadhoh');        
     });
 
 });
