@@ -5,7 +5,7 @@ import {
   CalendarDays, Tag, Target, Wallet, 
   Share2, BookOpen, MessageCircle, 
   ClipboardList, ArrowDownCircle, ArrowUpCircle, AlertCircle, Send,
-  RefreshCw
+  RefreshCw, Newspaper, Heart
 } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
@@ -22,6 +22,7 @@ const props = defineProps<{
     judul: string
     slug: string
     body: string
+    progress: string | null
     kategori: string
     subkategori: string
     target_dana: number
@@ -54,8 +55,9 @@ const props = defineProps<{
   }
 }>()
 
-// --- STATE MANAGEMENT ---
-const activeTab = ref<'cerita' | 'komentar' | 'laporan'>('cerita')
+// --- TIPE & STATE MANAGEMENT ---
+type TabType = 'cerita' | 'berita' | 'komentar' | 'doa' | 'laporan'
+const activeTab = ref<TabType>('cerita')
 const isSubmittingComment = ref(false)
 const isSubmittingReaction = ref(false)
 const storageKey = `donasi_reaksi_${props.donasi.slug}`
@@ -75,16 +77,16 @@ onMounted(() => {
   generateCaptcha()
 
   const urlParams = new URLSearchParams(window.location.search)
-  const tabParam = urlParams.get('tab')
+  const tabParam = urlParams.get('tab') as TabType | null
 
-  if (tabParam === 'komentar' || tabParam === 'laporan') {
+  if (tabParam && ['cerita', 'berita', 'komentar', 'doa', 'laporan'].includes(tabParam)) {
     activeTab.value = tabParam
 
     const newUrl = window.location.pathname
     window.history.replaceState({}, document.title, newUrl)
 
     setTimeout(() => {
-      const tabElement = document.querySelector('.sticky')
+      const tabElement = document.querySelector('.sticky') || document.querySelector('[data-active="true"]')
       if (tabElement) {
         tabElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }
@@ -236,31 +238,37 @@ let observer: IntersectionObserver | null = null
 // --- INFINITE SNAP TABS LOGIC ---
 const tabItems = [
   { id: 'cerita', label: 'Cerita', icon: BookOpen },
-  { id: 'komentar', label: 'Komentar & Doa', icon: MessageCircle }, // Label asli: Komentar & Doa
+  { id: 'berita', label: 'Berita', icon: Newspaper },
+  { id: 'komentar', label: 'Komentar', icon: MessageCircle },
+  { id: 'doa', label: 'Doa Donatur', icon: Heart },
   { id: 'laporan', label: 'Laporan Keuangan', icon: ClipboardList },
 ]
 
 // Ref untuk element container scroll tabs
 const tabsContainerRef = ref<HTMLElement | null>(null)
 
-// Computed untuk mengatur urutan tab secara sirkular (Tab aktif selalu di indeks tengah / indeks ke-1)
+// Computed untuk mengatur urutan tab secara sirkular untuk 5 item (Tab aktif selalu di tengah / indeks ke-2)
 const orderedTabs = computed(() => {
   const index = tabItems.findIndex(tab => tab.id === activeTab.value)
   if (index === -1) return tabItems
 
-  // Formula rotasi array: [Kiri, Aktif, Kanan]
-  const prevIndex = (index - 1 + tabItems.length) % tabItems.length
-  const nextIndex = (index + 1) % tabItems.length
+  // Formula rotasi array 5 item: [Kiri 2, Kiri 1, Aktif, Kanan 1, Kanan 2]
+  const prev2Index = (index - 2 + tabItems.length) % tabItems.length
+  const prev1Index = (index - 1 + tabItems.length) % tabItems.length
+  const next1Index = (index + 1) % tabItems.length
+  const next2Index = (index + 2) % tabItems.length
 
   return [
-    tabItems[prevIndex],
+    tabItems[prev2Index],
+    tabItems[prev1Index],
     tabItems[index],
-    tabItems[nextIndex]
+    tabItems[next1Index],
+    tabItems[next2Index]
   ]
 })
 
 // Fungsi helper untuk handle click tab sekaligus memicu snap center
-const setActiveTab = (tabId: 'cerita' | 'komentar' | 'laporan') => {
+const setActiveTab = (tabId: TabType) => {
   activeTab.value = tabId
   
   // Beri jeda microtask agar DOM mendeteksi perubahan urutan array, lalu snap ke tengah
@@ -277,14 +285,11 @@ const setActiveTab = (tabId: 'cerita' | 'komentar' | 'laporan') => {
 }
 
 onMounted(() => {
-  // Menggunakan IntersectionObserver untuk performa yang jauh lebih ringan dibanding scroll listener biasa
   observer = new IntersectionObserver(
     ([entry]) => {
-      // Jika penanda tab sudah keluar dari layar atas, aktifkan posisi fixed
       isTabsSticky.value = !entry.isIntersecting
     },
     { 
-      // Berikan threshold offset negatif sebesar tinggi navbar Anda (~72px)
       rootMargin: '-12px 0px 0px 0px',
       threshold: [0]
     }
@@ -310,17 +315,14 @@ onUnmounted(() => {
 
 function handleShare() {
   if (typeof window !== 'undefined') {
-    // Menyalin URL aktif saat ini ke clipboard
     navigator.clipboard.writeText(window.location.href)
       .then(() => {
-        // Memicu toast notification sukses bawaan layout Anda
         toast.success('Link berhasil disalin ke clipboard!', {
           description: 'Silakan bagikan ke media sosial atau pesan chat Anda.',
           duration: 3000,
         })
       })
       .catch((err) => {
-        // Penanganan error fallback jika browser memblokir akses clipboard
         toast.error('Gagal menyalin link secara otomatis.')
         console.error('Gagal menyalin: ', err)
       })
@@ -333,7 +335,6 @@ function handleShare() {
     <title>{{ donasi.judul }}</title>
     <meta v-if="meta" name="description" :content="meta.description" />
     
-    <!-- Open Graph Tags untuk WhatsApp Dinamis -->
     <meta v-if="meta" property="og:title" :content="meta.title" />
     <meta v-if="meta" property="og:description" :content="meta.description" />
     <meta v-if="meta" property="og:image" :content="meta.image" />
@@ -345,7 +346,6 @@ function handleShare() {
 
     <main class="px-5 py-8 space-y-8 pb-32">
 
-      <!-- 1. Header & Progress Widget -->
       <div class="space-y-6">
         <div class="space-y-3">
           <span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">
@@ -357,10 +357,8 @@ function handleShare() {
           </h1>
         </div>
 
-        <!-- Progress Card -->
         <div class="bg-stone-900 border border-stone-800 rounded-3xl p-6 space-y-4 shadow-xl">
           
-          <!-- ====== OPSI A: DESAIN DONASI RUTIN (TARGET DANA = 0) ====== -->
           <template v-if="Number(donasi.target_dana) === 0">
             <div class="grid grid-cols-2 gap-2">
               <div class="space-y-1">
@@ -373,7 +371,6 @@ function handleShare() {
               </div>
             </div>
 
-            <!-- Progress Bar Efektivitas Penyaluran -->
             <div class="space-y-1.5">
               <div class="h-2 w-full bg-stone-800 rounded-full overflow-hidden">
                 <div 
@@ -388,7 +385,6 @@ function handleShare() {
             </div>
           </template>
 
-          <!-- ====== OPSI B: DESAIN DONASI TARGET / PROGRAM ====== -->
           <template v-else>
             <div class="flex justify-between items-end">
               <div class="space-y-1">
@@ -413,7 +409,6 @@ function handleShare() {
             </div>
           </template>
 
-          <!-- TOMBOL AKSI UTAMA -->
           <Link 
             :href="`/donasi/${donasi.slug}/payment`"
             class="flex items-center justify-center gap-2 w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-black py-4 rounded-2xl transition-all active:scale-95 shadow-lg shadow-amber-500/20"
@@ -425,11 +420,8 @@ function handleShare() {
       </div>
 
       
-      <!-- Element Sensor (Pembatas) -->
       <div ref="tabsTargetRef" class="w-full h-px invisible"></div>
 
-      <!-- NAVIGATION TABS CONTAINER -->
-      <!-- Jika isTabsSticky true, kita ubah paksa posisinya menjadi fixed layar penuh, diposisikan tepat di bawah navbar (top-[68px]) -->
       <div 
         :class="[
           'bg-stone-950 border-b border-stone-800 transition-all duration-150 z-40',
@@ -450,7 +442,7 @@ function handleShare() {
             <button 
               v-for="tab in orderedTabs"
               :key="tab.id"
-              @click="setActiveTab(tab.id as 'cerita' | 'komentar' | 'laporan')"
+              @click="setActiveTab(tab.id as TabType)"
               type="button"
               :data-active="activeTab === tab.id"
               :class="[
@@ -464,10 +456,16 @@ function handleShare() {
               <span>{{ tab.label }}</span>
               
               <span 
-                v-if="tab.id === 'komentar'" 
+                v-if="tab.id === 'komentar' && (donasi.komentars?.length || 0) > 0" 
                 class="text-xs px-1.5 py-0.5 bg-stone-800 text-stone-400 rounded-md font-mono ml-1"
               >
-                {{ (donasi.komentars?.length || 0) + (doaDonatur.length) }}
+                {{ donasi.komentars?.length || 0 }}
+              </span>
+              <span 
+                v-if="tab.id === 'doa' && doaDonatur.length > 0" 
+                class="text-xs px-1.5 py-0.5 bg-stone-800 text-stone-400 rounded-md font-mono ml-1"
+              >
+                {{ doaDonatur.length }}
               </span>
             </button>
 
@@ -479,7 +477,6 @@ function handleShare() {
 
       <div v-if="isTabsSticky" class="h-[53px]"></div>         
 
-      <!-- ==================== TAB 1: CERITA ==================== -->
       <div v-if="activeTab === 'cerita'" class="space-y-8">
         <div class="space-y-4">
           <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500 border-l-2 border-amber-500 pl-3">Cerita Donasi</p>
@@ -489,7 +486,6 @@ function handleShare() {
           />
         </div>
 
-        <!-- Reaksi Widget -->
         <div class="pt-4 border-t border-stone-800 space-y-4">
           <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Ekspresikan Dukungan Anda</p>
           <div class="flex flex-wrap gap-2">
@@ -516,10 +512,28 @@ function handleShare() {
         </div>
       </div>
 
-      <!-- ==================== TAB 2: KOMENTAR & REAKSI/DOA ==================== -->
+<!-- ==================== TAB 2: BERITA ==================== -->
+      <div v-if="activeTab === 'berita'" class="space-y-8">
+        <div class="space-y-4">
+          <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500 border-l-2 border-amber-500 pl-3">Berita & Progress</p>
+          
+          <!-- Jika kolom progress memiliki isi -->
+          <div 
+            v-if="donasi.progress"
+            class="prose prose-invert prose-stone max-w-none prose-p:text-stone-300 prose-p:leading-relaxed prose-p:text-[15px] prose-headings:text-amber-100 prose-strong:text-amber-200 prose-img:rounded-3xl prose-img:border-stone-800"
+            v-html="donasi.progress"
+          />
+
+          <!-- Jika kolom progress masih kosong / null -->
+          <div v-else class="text-center py-12 text-stone-600 text-xs border border-stone-800 bg-stone-900/30 border-dashed rounded-3xl">
+            <Newspaper class="w-8 h-8 mx-auto mb-3 opacity-30" />
+            Belum ada berita atau update progres terkini.
+          </div>
+        </div>
+      </div>
+
       <div v-if="activeTab === 'komentar'" class="space-y-6">
 
-        <!-- Reaksi Widget -->
         <div class="space-y-4">
           <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Ekspresikan Dukungan Anda</p>
           <div class="flex flex-wrap gap-2">
@@ -545,7 +559,6 @@ function handleShare() {
           </div>
         </div>
         
-        <!-- FORM PEMBERIAN KOMENTAR PUBLIK -->
         <form @submit.prevent="submitKomentar" class="bg-stone-900 border border-stone-800/80 rounded-3xl p-5 space-y-4">
           <p class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Kirim Pertanyaan / Dukungan Publik</p>
           
@@ -567,13 +580,13 @@ function handleShare() {
 
           <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
             <div class="flex items-center gap-2 bg-stone-950 px-3 py-2 rounded-xl border border-stone-800">
-              <span class="text-xs font-mono text-stone-400 font-bold select-none tracking-wider">Keamanan: {{ captchaNum1 }} + {{ captchaNum2 }} = </span>
+              <span class="text-xs font-mono text-stone-400 font-bold select-none tracking-wider">Jawab: {{ captchaNum1 }} + {{ captchaNum2 }} = </span>
               <input 
                 v-model="userCaptchaAnswer" 
                 type="number" 
                 required
                 placeholder="?" 
-                class="w-12 bg-transparent text-center font-bold text-xs text-amber-400 focus:outline-none font-mono"
+                class="w-20 bg-transparent text-center font-bold text-xs text-amber-400 focus:outline-none font-mono"
               />
             </div>
 
@@ -588,31 +601,33 @@ function handleShare() {
           </div>
         </form>
 
-        <!-- Doa dari Donatur -->
         <div class="space-y-4 pt-2">
-          <div class="space-y-4 pt-4 border-t border-stone-900">
-            <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Dukungan & Pertanyaan Publik</p>
-            
-            <div v-if="donasi.komentars?.length === 0" class="text-center py-6 text-stone-600 text-xs border border-stone-900 border-dashed rounded-2xl">
-              Belum ada diskusi atau pertanyaan publik.
-            </div>
-            
-            <div v-else class="space-y-3">
-              <div v-for="komentar in donasi.komentars" :key="komentar.id" class="bg-stone-900/20 border border-stone-800 rounded-2xl p-4">
-                <div class="flex items-center gap-2 mb-1">
-                  <span class="text-xs font-bold text-amber-200">
-                    {{ komentar.user ? komentar.user.name : (komentar.nama_publik || 'Hamba Allah (Anonim)') }}
-                  </span>
-                  <span class="text-[9px] text-stone-600 font-mono">• {{ new Date(komentar.created_at).toLocaleDateString('id-ID') }}</span>
-                </div>
-                <p class="text-sm text-stone-400 leading-relaxed">{{ komentar.body }}</p>
+          <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Dukungan & Pertanyaan Publik</p>
+          
+          <div v-if="donasi.komentars?.length === 0" class="text-center py-8 text-stone-600 text-xs border border-stone-900 border-dashed rounded-2xl">
+            Belum ada diskusi atau pertanyaan publik.
+          </div>
+          
+          <div v-else class="space-y-3">
+            <div v-for="komentar in donasi.komentars" :key="komentar.id" class="bg-stone-900/20 border border-stone-800 rounded-2xl p-4">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs font-bold text-amber-200">
+                  {{ komentar.user ? komentar.user.name : (komentar.nama_publik || 'Hamba Allah (Anonim)') }}
+                </span>
+                <span class="text-[9px] text-stone-600 font-mono">• {{ new Date(komentar.created_at).toLocaleDateString('id-ID') }}</span>
               </div>
+              <p class="text-sm text-stone-400 leading-relaxed">{{ komentar.body }}</p>
             </div>
           </div>
+        </div>
+      </div>
 
-          <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-500">Doa & Kebaikan Donatur</p>
+      <div v-if="activeTab === 'doa'" class="space-y-6">
+        <div class="space-y-4">
+          <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-500 border-l-2 border-emerald-500 pl-3">Doa & Kebaikan Donatur</p>
             
-          <div v-if="doaDonatur.length === 0" class="text-sm text-stone-600 italic py-2">
+          <div v-if="doaDonatur.length === 0" class="text-center py-12 text-stone-600 text-xs border border-stone-800 bg-stone-900/30 border-dashed rounded-3xl">
+            <Heart class="w-8 h-8 mx-auto mb-3 opacity-30" />
             Belum ada pesan doa khusus dari transaksi donasi masuk.
           </div>
             
@@ -642,10 +657,8 @@ function handleShare() {
         </div>
       </div>
 
-      <!-- ==================== TAB 3: LAPORAN ==================== -->
       <div v-if="activeTab === 'laporan'" class="space-y-6">
         
-        <!-- Card Saldo Riil Terkini -->
         <div class="bg-stone-900 border border-stone-800 rounded-3xl p-5 flex items-center justify-between shadow-xl">
           <div class="space-y-1">
             <span class="text-[10px] text-stone-500 uppercase font-bold tracking-wider block">Dana Program Sekarang</span>
@@ -656,7 +669,6 @@ function handleShare() {
           </div>
         </div>
 
-        <!-- List Arus Transaksi Gabungan -->
         <div class="space-y-4">
           <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Riwayat Perubahan Saldo ({{ laporanArusKas.length }})</p>
           
@@ -707,9 +719,6 @@ function handleShare() {
 
     </main>
 
-    <!-- Floating Share Button -->
-    <!-- Menggunakan 'max-w-xl mx-auto inset-x-0 relative' dikombinasikan dengan posisi absolute internal 
-         agar tombol tetap presisi di sisi kiri layout mobile Anda meskipun dibuka di desktop -->
     <div class="fixed bottom-30 max-w-xl mx-auto inset-x-0 z-50 pointer-events-none">
       <div class="absolute left-5 pointer-events-auto">
         <button 

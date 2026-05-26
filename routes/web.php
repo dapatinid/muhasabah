@@ -80,12 +80,14 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
         Route::post('/admin/donasi', [DonasiController::class, 'store'])->name('donasi.store');
         Route::post('/admin/donasi/upload-image', [DonasiController::class, 'uploadImage'])->name('donasi.upload-image');
         Route::get('/admin/donasi/{donasi}/edit', [DonasiController::class, 'edit'])->name('donasi.edit');
+        Route::put('/admin/donasi/{donasi}', [DonasiController::class, 'update'])->name('donasi.update');
+        Route::get('/admin/donasi/{donasi}/progress', [DonasiController::class, 'progress'])->name('donasi.progress');
+        Route::put('/admin/donasi/{donasi}/progress', [DonasiController::class, 'updateProgress'])->name('donasi.progress.update');
         Route::get('/admin/donasi/{donasi}/reaksi', [DonasiController::class, 'reaksi'])->name('donasi.reaksi');
         Route::get('/admin/donasi/{donasi}/komentar', [DonasiController::class, 'komentar'])->name('donasi.komentar');
         Route::get('/admin/donasi/{donasi}/donasi-masuk', [DonasiController::class, 'donasiMasuk'])->name('donasi.donasi-masuk');
         Route::get('/admin/donasi/{donasi}/tasyaruf', [DonasiController::class, 'tasyaruf'])->name('donasi.tasyaruf');
         Route::post('/admin/donasi/{donasi}/tasyaruf', [DonasiController::class, 'storeTasyaruf'])->name('donasi.tasyaruf.store');
-        Route::put('/admin/donasi/{donasi}', [DonasiController::class, 'update'])->name('donasi.update');
         Route::post('/admin/donasi/{donasi}/bulk-donasi', [DonasiController::class, 'storeBulkDonasi'])->name('admin.donasi.bulk');
         Route::delete('/admin/donasi/{donasi}', [DonasiController::class, 'destroy'])->name('donasi.destroy');   
 

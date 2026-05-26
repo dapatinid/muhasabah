@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('panduan_donasi')->nullable();
             $table->longText('body'); 
+            $table->longText('progress')->nullable(); // Baru
             $table->string('kategori'); 
             $table->string('subkategori'); 
             $table->string('thumbnail')->nullable();

@@ -143,6 +143,40 @@ class DonasiController extends Controller
     }    
 
     /**
+     * Menampilkan halaman form update progress berita donasi (Admin)
+     */
+    public function progress(Donasi $donasi)
+    {
+        return Inertia::render('Admin/Donasi/Progress', [
+            'donasi' => $donasi,
+            'breadcrumbs' => [
+                ['title' => 'Donasi', 'href' => '/admin/donasi'],
+                ['title' => 'Edit Donasi', 'href' => "/admin/donasi/{$donasi->slug}/edit"],
+                ['title' => 'Update Progress', 'href' => "/admin/donasi/{$donasi->slug}/progress"],
+            ],
+        ]);
+    }
+
+    /**
+     * Menyimpan data progress ke database
+     */
+    public function updateProgress(Request $request, Donasi $donasi)
+        {
+            $request->validate([
+                'progress' => 'nullable|string',
+            ]);
+
+            // Cek apakah data dari Tiptap / Vue benar-benar masuk?
+            // dd($request->progress); // <-- BUKA KOMENTAR INI JIKA MASIH GAGAL UNTUK MELIHAT DATA
+
+            // Set value secara eksplisit dan simpan
+            $donasi->progress = $request->input('progress');
+            $donasi->save();
+
+            return back()->with('success', 'Berita / Progress donasi berhasil diperbarui.');
+        }  
+
+    /**
      * Halaman Manajemen Reaksi / Emoticon Program Donasi
      */
     public function reaksi(Donasi $donasi)
@@ -167,7 +201,12 @@ class DonasiController extends Controller
         return Inertia::render('Admin/Donasi/Reaksi', [
             'donasi' => $donasi,
             'stats' => $stats,
-            'reaksis' => $logs
+            'reaksis' => $logs,
+            'breadcrumbs' => [
+                ['title' => 'Donasi', 'href' => '/admin/donasi'],
+                ['title' => 'Edit Donasi', 'href' => "/admin/donasi/{$donasi->slug}/edit"],
+                ['title' => 'Reaksi', 'href' => "/admin/donasi/{$donasi->slug}/reaksi"],
+            ],
         ]);
     }
 
@@ -196,6 +235,11 @@ class DonasiController extends Controller
             'donasi' => $donasi,
             'paymentsDoa' => $paymentsDoa,
             'komentarsPublik' => $komentarsPublik,
+            'breadcrumbs' => [
+                ['title' => 'Donasi', 'href' => '/admin/donasi'],
+                ['title' => 'Edit Donasi', 'href' => "/admin/donasi/{$donasi->slug}/edit"],
+                ['title' => 'Komentar', 'href' => "/admin/donasi/{$donasi->slug}/komentar"],
+            ],
             // Kirim tab aktif saat ini agar posisi tab tidak reset saat pindah halaman paginasi
             'currentTab' => $request->input('tab', 'doa_transaksi') 
         ]);
@@ -227,6 +271,11 @@ class DonasiController extends Controller
             'donasi' => $donasi,
             'payments' => $payments,
             'summary' => $summary,
+            'breadcrumbs' => [
+                ['title' => 'Donasi', 'href' => '/admin/donasi'],
+                ['title' => 'Edit Donasi', 'href' => "/admin/donasi/{$donasi->slug}/edit"],
+                ['title' => 'Donasi Masuk', 'href' => "/admin/donasi/{$donasi->slug}/donasi-masuk"],
+            ],
             // Kirim state filter saat ini ke frontend
             'filters' => $request->only(['type']) 
         ]);
@@ -246,7 +295,12 @@ class DonasiController extends Controller
 
         return Inertia::render('Admin/Donasi/Tasyaruf', [
             'donasi' => $donasi,
-            'tasyarufs' => $tasyarufs
+            'tasyarufs' => $tasyarufs,
+            'breadcrumbs' => [
+                ['title' => 'Donasi', 'href' => '/admin/donasi'],
+                ['title' => 'Edit Donasi', 'href' => "/admin/donasi/{$donasi->slug}/edit"],
+                ['title' => 'Tasyaruf', 'href' => "/admin/donasi/{$donasi->slug}/tasyaruf"],
+            ],
         ]);
     }    
 

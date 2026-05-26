@@ -14,7 +14,7 @@ class Donasi extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'user_id', 'judul', 'slug', 'panduan_donasi', 'body', 'kategori', 'subkategori',
+        'user_id', 'judul', 'slug', 'panduan_donasi', 'body', 'progress', 'kategori', 'subkategori',
         'thumbnail', 'target_dana', 'saldo', 'tgl_mulai', 'tgl_selesai', 'is_published', 
         'created_by', 'updated_by'
     ];
