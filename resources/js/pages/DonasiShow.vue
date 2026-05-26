@@ -519,7 +519,7 @@ function handleShare() {
           
           <!-- Jika kolom progress memiliki isi -->
           <div 
-            v-if="donasi.progress"
+            v-if="donasi.progress && donasi.progress.trim() !== '<p></p>'"
             class="prose prose-invert prose-stone max-w-none prose-p:text-stone-300 prose-p:leading-relaxed prose-p:text-[15px] prose-headings:text-amber-100 prose-strong:text-amber-200 prose-img:rounded-3xl prose-img:border-stone-800"
             v-html="donasi.progress"
           />
