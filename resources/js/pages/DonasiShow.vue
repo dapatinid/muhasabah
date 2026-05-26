@@ -227,7 +227,7 @@ const totalTasyaruf = computed(() => {
 
 const totalDonasiMasukKumulatif = computed(() => {
   if (!props.donasi.payments) return 0
-  return props.donasi.payments.filter(p => p.mutation_type === 'donasi_utama' && p.status === 'success').reduce((sum, p) => sum + Number(p.nominal), 0)
+  return props.donasi.payments.filter(p => p.mutation_type === 'donasi_utama').reduce((sum, p) => sum + Number(p.nominal), 0)
 })
 
 const progressRutin = computed(() => {
