@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Head, useForm, Link } from '@inertiajs/vue3'
 import { computed, ref, watch } from 'vue'
-import { Heart, Wallet, ShieldCheck, Check, User, Info, Upload, FileText, Ticket, Landmark } from 'lucide-vue-next'
+import { Heart, Wallet, ShieldCheck, Check, User, Info, Upload, FileText, Ticket, CheckCircle2 } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 
-// Mendefinisikan properti dari backend Inertia
+// Struktur properti baru yang membawa relasi variants dari backend
 const props = defineProps<{
     acara: {
         id: number
@@ -12,24 +12,32 @@ const props = defineProps<{
         slug: string
         subkategori: string
         accept_tiket: boolean | number
-        harga_tiket: number
         kuota_tiket: number
+        tiket_terjual: number
         accept_donasi: boolean | number
         target_donasi: number
         panduan_donasi?: string 
+        variants: Array<{
+            id: number
+            nama_varian: string
+            harga: number
+            jumlah_kursi: number
+        }>
     }
 }>()
 
 // State Tipe Kontribusi: 'tiket' atau 'donasi'
-// Jika acara tidak menyediakan salah satu modul, otomatis default dipindahkan
 const jenisKontribusi = ref<'tiket' | 'donasi'>(Boolean(props.acara.accept_tiket) ? 'tiket' : 'donasi')
 
-// Inisialisasi Form Pendaftaran/Donasi Acara
+// Menyimpan ID Varian yang dipilih user (Default: ambil ID varian pertama jika ada)
+const variantTerpilihId = ref<number | null>(props.acara.variants && props.acara.variants.length > 0 ? props.acara.variants[0].id : null)
+
+// Inisialisasi Form Payload Inertia
 const form = useForm({
-    buy_type: jenisKontribusi.value, // dikirim untuk identifikasi backend ('tiket' / 'donasi')
-    jumlah_tiket: 1,                       // default untuk pemesanan tiket
-    nominal: props.acara.harga_tiket ? props.acara.harga_tiket.toString() : '', 
-    infaq_sistem: 5000,                    // default pilihan pertama infaq keberlanjutan sistem
+    buy_type: jenisKontribusi.value,
+    acara_variant_id: variantTerpilihId.value, // Mengirimkan ID varian tiket ke backend
+    nominal: '', 
+    infaq_sistem: 5000,
     no_wa: '',
     sapaan: 'Kak',
     atas_nama: '',
@@ -37,37 +45,43 @@ const form = useForm({
     notes: '',
     payment_method: 'transfer', 
     rekening: 'qris_gopay', 
-    bukti_acara: null as File | null, // Berkas gambar mutasi transfer
+    bukti_acara: null as File | null, // Menggunakan properti valid sesuai backend validator
 })
 
-// Sinkronisasi otomatis form payload jika user mengubah tab jenis kontribusi
+// Melacak detail objek dari varian yang sedang aktif dipilih user
+const detailVariantAktif = computed(() => {
+    if (jenisKontribusi.value !== 'tiket' || !variantTerpilihId.value) return null
+    return props.acara.variants.find(v => v.id === variantTerpilihId.value) || null
+})
+
+// Sinkronisasi otomatis saat user berpindah tab kontribusi
 watch(jenisKontribusi, (newType) => {
     form.buy_type = newType
     if (newType === 'tiket') {
-        form.nominal = (Number(props.acara.harga_tiket) * form.jumlah_tiket).toString()
-        form.is_anonymous = false // manifest pendaftaran tiket sebaiknya tidak anonim
+        form.is_anonymous = false
+        form.acara_variant_id = variantTerpilihId.value
+        form.nominal = detailVariantAktif.value ? detailVariantAktif.value.harga.toString() : '0'
     } else {
-        form.nominal = '' // Reset nominal donasi agar donatur bisa input mandiri
+        form.acara_variant_id = null
+        form.nominal = '' // Kosongkan agar donatur input manual
+    }
+}, { immediate: true })
+
+// Sinkronisasi nominal otomatis saat user mengubah jenis pilihan varian radio button
+watch(variantTerpilihId, (newId) => {
+    if (jenisKontribusi.value === 'tiket' && newId) {
+        form.acara_variant_id = newId
+        const selected = props.acara.variants.find(v => v.id === newId)
+        form.nominal = selected ? selected.harga.toString() : '0'
     }
 })
 
-// Fungsi untuk memformat input tampilan (Rupiah masking)
+// Fungsi format Rupiah masking pada ketikan text input
 const formatDisplay = (val: any) => {
     if (!val) return '';
     let str = val.toString().replace(/\D/g, '');
     return str.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
-
-// Pengendali perubahan jumlah tiket (kuantitas)
-const handleJumlahTiket = (aksi: 'tambah' | 'kurang') => {
-    if (aksi === 'tambah') {
-        form.jumlah_tiket++
-    } else if (aksi === 'kurang' && form.jumlah_tiket > 1) {
-        form.jumlah_tiket--
-    }
-    // Update nominal otomatis berdasarkan perkalian harga tiket dasar
-    form.nominal = (Number(props.acara.harga_tiket) * form.jumlah_tiket).toString()
-}
 
 const handleNominalInput = (e: Event) => {
     const target = e.target as HTMLInputElement;
@@ -92,13 +106,9 @@ const handleNominalInput = (e: Event) => {
 const handleFileChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
-        form.bukti_pendaftaran = target.files[0];
+        form.bukti_acara = target.files[0]; // Memperbaiki penugasan key input file
     }
 };
-
-const isPriorityDonator = computed(() => {
-    return form.infaq_sistem === 100000;
-});
 
 const totalPembayaran = computed(() => {
     const n = parseInt(form.nominal) || 0
@@ -164,7 +174,6 @@ function submit() {
     form.nominal = form.nominal.toString().replace(/\D/g, '');
     form.no_wa = form.no_wa.toString();
     
-    // Kirim data registrasi ke endpoint simpan pendaftaran/donasi acara publik
     form.post(`/acara/${props.acara.slug}/payment`, {
         preserveScroll: true,
         onError: (errors) => {
@@ -210,39 +219,38 @@ function submit() {
 
             <form @submit.prevent="submit" class="space-y-8">
                 
-                <div v-if="jenisKontribusi === 'tiket'" class="space-y-4 bg-stone-900/50 border border-stone-800/80 p-5 rounded-3xl">
+                <div v-if="jenisKontribusi === 'tiket'" class="space-y-4">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-400 flex items-center gap-2">
-                        <Ticket class="size-3.5 text-amber-400" /> Tentukan Jumlah Kursi / Tiket
+                        <Ticket class="size-3.5 text-amber-400" /> Pilih Jenis Paket Tiket Kehadiran
                     </label>
-                    <div class="flex items-center justify-between bg-stone-950 p-4 rounded-2xl border border-stone-800">
-                        <div>
-                            <span class="text-xs font-bold block text-stone-200">Kuantitas Pemesanan</span>
-                            <span class="text-[11px] text-stone-500 font-medium">Maksimal disesuaikan kuota tersisa</span>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <button 
-                                type="button" 
-                                @click="handleJumlahTiket('kurang')"
-                                class="w-9 h-9 border border-stone-800 rounded-xl bg-stone-900 text-stone-300 font-bold flex items-center justify-center hover:bg-stone-800 active:scale-90"
-                            >
-                                -
-                            </button>
-                            <span class="font-mono text-base font-black text-amber-400 w-5 text-center">{{ form.jumlah_tiket }}</span>
-                            <button 
-                                type="button" 
-                                @click="handleJumlahTiket('tambah')"
-                                class="w-9 h-9 border border-stone-800 rounded-xl bg-stone-900 text-stone-300 font-bold flex items-center justify-center hover:bg-stone-800 active:scale-90"
-                            >
-                                +
-                            </button>
-                        </div>
-                    </div>
                     
-                    <div class="flex justify-between items-center text-xs px-1">
-                        <span class="text-stone-500">Harga Satuan Tiket:</span>
-                        <span class="font-bold text-stone-300 font-mono">
-                            {{ Number(acara.harga_tiket) === 0 ? 'Gratis (Rp 0)' : formatCurrency(acara.harga_tiket) }}
-                        </span>
+                    <div class="grid grid-cols-1 gap-3">
+                        <div 
+                            v-for="v in acara.variants" 
+                            :key="v.id"
+                            @click="variantTerpilihId = v.id"
+                            class="p-4 rounded-2xl border bg-stone-900/50 cursor-pointer transition-all flex items-center justify-between group"
+                            :class="variantTerpilihId === v.id ? 'border-amber-500/60 bg-amber-500/5' : 'border-stone-800 hover:border-stone-700'"
+                        >
+                            <div class="flex items-center gap-4">
+                                <div class="size-5 rounded-full border border-stone-700 flex items-center justify-center shrink-0 bg-stone-950">
+                                    <div v-if="variantTerpilihId === v.id" class="size-2.5 rounded-full bg-amber-500"></div>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-bold text-stone-100 block group-hover:text-amber-400 transition-colors">
+                                        {{ v.nama_varian }}
+                                    </span>
+                                    <span class="text-xs text-stone-500 font-medium">
+                                        Tiket: <span class="text-stone-300 font-mono ms-1">{{ v.jumlah_kursi }} Kursi</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-sm font-black text-amber-400 font-mono">
+                                    {{ v.harga == 0 ? 'GRATIS' : formatCurrency(v.harga) }}
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -287,7 +295,7 @@ function submit() {
 
                 <div class="space-y-4 bg-stone-900/40 border border-stone-800/80 p-5 rounded-3xl">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-400 flex items-center gap-2">
-                        <Info class="size-3.5 text-amber-400" /> Titipan Infaq Pemeliharaan Aplikasi (BaaS)
+                        <Info class="size-3.5 text-amber-400" /> Infaq Sistem
                     </label>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <div 
@@ -389,9 +397,11 @@ function submit() {
                                     <span class="text-stone-500">Tipe Kontribusi</span>
                                     <span class="text-stone-200 font-bold capitalize">{{ form.buy_type }}</span>
                                 </div>
-                                <div v-if="jenisKontribusi === 'tiket'" class="flex justify-between">
-                                    <span class="text-stone-500">Jumlah Booking</span>
-                                    <span class="text-stone-200 font-mono">{{ form.jumlah_tiket }} Kursi</span>
+                                <div v-if="jenisKontribusi === 'tiket' && detailVariantAktif" class="flex justify-between bg-stone-950/40 p-2 rounded-lg my-1 border border-stone-800/60">
+                                    <span class="text-amber-400/90 font-medium">Paket Pilihan</span>
+                                    <span class="text-amber-400 font-bold font-sans text-right">
+                                        {{ detailVariantAktif.nama_varian }} ({{ detailVariantAktif.jumlah_kursi }} Kursi)
+                                    </span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-stone-500">Nominal Pokok</span>
@@ -427,13 +437,13 @@ function submit() {
                         <div class="relative flex items-center justify-center w-full">
                             <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-3xl cursor-pointer transition-all bg-stone-900 border-stone-800 hover:border-amber-500/30">
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4 text-center">
-                                    <template v-if="!form.bukti_pendaftaran">
+                                    <template v-if="!form.bukti_acara">
                                         <Upload class="size-6 text-stone-500 mb-2" />
                                         <p class="text-xs text-stone-400 font-medium">Klik untuk upload berkas atau screenshot bukti pembayaran</p>
                                     </template>
                                     <template v-else>
                                         <FileText class="size-6 text-amber-400 mb-2" />
-                                        <p class="text-xs text-amber-400 font-bold max-w-[250px] truncate">{{ form.bukti_pendaftaran.name }}</p>
+                                        <p class="text-xs text-amber-400 font-bold max-w-[250px] truncate">{{ form.bukti_acara.name }}</p>
                                         <p class="text-[10px] text-stone-500 mt-1">Klik kembali untuk mengganti dokumen</p>
                                     </template>
                                 </div>
@@ -445,7 +455,7 @@ function submit() {
                                 />
                             </label>
                         </div>
-                        <div v-if="form.errors.bukti_pendaftaran" class="text-red-500 text-xs mt-1">{{ form.errors.bukti_pendaftaran }}</div>
+                        <div v-if="form.errors.bukti_acara" class="text-red-500 text-xs mt-1">{{ form.errors.bukti_acara }}</div>
                     </div>
                 </div>
 

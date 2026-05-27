@@ -78,13 +78,26 @@ const props = defineProps<{
     kategori: string
     subkategori: string
     lokasi: string
+
+    // Modul Tiket
     accept_tiket: boolean | number
-    harga_tiket: number
     kuota_tiket: number
     tiket_terjual: number
+
+    // Relasi Varian Tiket Baru
+    variants: Array<{
+      id: number
+      nama_varian: string
+      harga: number
+      jumlah_kursi: number
+    }>
+
+    // Modul Donasi
     accept_donasi: boolean | number
     target_donasi: number
     donasi_masuk_sum_nominal?: number
+
+    // Batas Waktu
     tgl_mulai: string
     tgl_selesai: string
     batas_registrasi: string
@@ -314,7 +327,7 @@ watch(isSearchOpen, (val) => {
   }
 })
 
-// Acara
+// --- LOGIKA TERKAIT MODUL ACARA BARU ---
 
 function getStatusRegistrasi(batas_registrasi: string | null): { teks: string; tutup: boolean } {
   if (!batas_registrasi) return { teks: 'Buka', tutup: false }
@@ -334,6 +347,37 @@ function getProgressDonasiAcara(acara: any): number {
   if (!acara.target_donasi || acara.target_donasi <= 0) return 0
   const percent = ((acara.donasi_masuk_sum_nominal ?? 0) / acara.target_donasi) * 100
   return Math.min(100, Math.round(percent))
+}
+
+/**
+ * 🛠️ DISESUAIKAN: Logika badge harga adaptif diselaraskan dengan Acara.vue
+ */
+function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
+  if (Boolean(acara.accept_tiket)) {
+    if (!acara.variants || acara.variants.length === 0) {
+      return { teks: 'GRATIS (REGISTRASI)', isGratis: true }
+    }
+
+    const listHarga = acara.variants.map(v => Number(v.harga))
+    const hargaMin = Math.min(...listHarga)
+    const hargaMax = Math.max(...listHarga)
+
+    if (hargaMax === 0) {
+      return { teks: 'GRATIS (REGISTRASI)', isGratis: true }
+    }
+
+    if (hargaMin === hargaMax) {
+      return { teks: formatRupiah(hargaMin), isGratis: false }
+    }
+
+    return { teks: `${formatRupiah(hargaMin)} - ${formatRupiah(hargaMax)}`, isGratis: false }
+  }
+
+  if (Boolean(acara.accept_donasi)) {
+    return { teks: 'OPEN DONASI', isGratis: false }
+  }
+
+  return { teks: 'GRATIS / UMUM', isGratis: true }
 }
 </script>
 
@@ -361,7 +405,6 @@ function getProgressDonasiAcara(acara: any): number {
     </template>
 
     <main class="space-y-8 pb-32">
-      <!-- Search Bar UI Dialog -->
       <section class="relative mt-5 px-5">
         <Dialog v-model:open="isSearchOpen">
           <DialogTrigger as-child>
@@ -464,7 +507,6 @@ function getProgressDonasiAcara(acara: any): number {
         </Dialog>
       </section>
 
-      <!-- Banner Carousel -->
       <section class="relative group/main">
         <div 
           ref="carouselRef"
@@ -501,7 +543,6 @@ function getProgressDonasiAcara(acara: any): number {
         </div>
       </section>                 
 
-      <!-- Menu Grid Fitur -->
       <section class="px-5">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-sm font-bold uppercase tracking-wider text-amber-200/70">Amal apa hari ini?</h2>
@@ -518,7 +559,6 @@ function getProgressDonasiAcara(acara: any): number {
         </div>
       </section>
 
-      <!-- Kalam Terbaru -->
       <section class="px-5">
         <div class="flex justify-between items-end mb-4">
           <h2 class="text-sm font-bold uppercase tracking-wider text-amber-200/70">Kalam Terbaru</h2>
@@ -560,7 +600,6 @@ function getProgressDonasiAcara(acara: any): number {
         </div>
       </section>
 
-      <!-- Section List Donasi Pilihan -->
       <section class="px-5">
         <div class="flex justify-between items-end mb-4">
           <h2 class="text-sm font-bold uppercase tracking-wider text-amber-200/70">Donasi Pilihan</h2>
@@ -578,7 +617,6 @@ function getProgressDonasiAcara(acara: any): number {
             v-for="donasi in donasis" :key="donasi.id" :href="`/donasi/${donasi.slug}`"
             class="block backdrop-blur-xs bg-stone-900/10 border border-stone-800/60 rounded-3xl overflow-hidden hover:border-amber-500/30 transition-all group"
           >
-            <!-- Render Thumbnail Dinamis Model -->
             <div class="aspect-video w-full bg-amber-950/30 relative overflow-hidden border-b border-stone-800">
               <img v-if="donasi.thumbnail" :src="donasi.thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <img v-else-if="donasi.image" :src="donasi.image" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
@@ -602,7 +640,6 @@ function getProgressDonasiAcara(acara: any): number {
                 </p>
               </div>
 
-              <!-- OPSI A: DONASI RUTIN/BERKELANJUTAN (TARGET DANA = 0) -->
               <div v-if="Number(donasi.target_dana) === 0" class="space-y-2">
                 <div class="grid grid-cols-2 gap-2 text-[11px]">
                    <div class="flex flex-col">
@@ -623,7 +660,6 @@ function getProgressDonasiAcara(acara: any): number {
                 </div>
               </div>
 
-              <!-- OPSI B: DONASI TARGET TERTENTU (TARGET DANA > 0) -->
               <div v-else class="space-y-2">
                 <div class="flex justify-between items-end text-[11px]">
                    <div class="flex flex-col">
@@ -647,7 +683,6 @@ function getProgressDonasiAcara(acara: any): number {
                 </div>
               </div>
 
-              <!-- Footer Card Aksi Donasi -->
               <div class="pt-2 flex items-center justify-between border-t border-stone-800/50">
                  <div class="flex items-center gap-2">
                     <div class="flex -space-x-2">
@@ -710,12 +745,7 @@ function getProgressDonasiAcara(acara: any): number {
                   <span class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] uppercase font-bold text-stone-300 border border-stone-800 tracking-wide">
                     {{ acara.kategori }}
                   </span>
-                  <span
-                    class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] font-mono font-bold border border-stone-800 tracking-wide"
-                    :class="Boolean(acara.accept_tiket) && Number(acara.harga_tiket) === 0 ? 'text-emerald-400' : 'text-amber-400'"
-                  >
-                    {{ Boolean(acara.accept_tiket) ? (Number(acara.harga_tiket) === 0 ? 'GRATIS' : formatRupiah(acara.harga_tiket)) : 'DONASI' }}
-                  </span>
+
                   <span 
                     class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] uppercase font-bold border tracking-wide"
                     :class="getStatusRegistrasi(acara.batas_registrasi).tutup ? 'text-red-400 border-red-800' : 'text-emerald-400 border-emerald-800'"
@@ -770,6 +800,15 @@ function getProgressDonasiAcara(acara: any): number {
                   </div>
                 </div>
 
+                <div>                   
+                  <span
+                    class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] font-mono font-bold border border-stone-800 tracking-wide"
+                    :class="getHargaBadgeInfo(acara).isGratis ? 'text-emerald-400' : 'text-amber-400'"
+                  >
+                    {{ getHargaBadgeInfo(acara).teks }}
+                  </span>
+                </div>
+
                 <div class="pt-4 border-t border-stone-800/60 mt-auto grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-stone-500">
                   <div class="flex items-center gap-2 truncate">
                     <span class="shrink-0 text-stone-600">📍</span>
@@ -790,6 +829,7 @@ function getProgressDonasiAcara(acara: any): number {
     </main>
   </AppLayoutPublic>
 </template>
+
 
 <style scoped>
 .snap-x {

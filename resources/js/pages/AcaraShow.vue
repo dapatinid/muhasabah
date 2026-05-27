@@ -101,6 +101,36 @@ const kuotaTersisa = computed(() => {
   return sisa < 0 ? 0 : sisa
 })
 
+/**
+ * LOGIKA BARU: Menghitung informasi ringkasan harga berdasarkan varian tiket
+ */
+const hargaInvestasiInfo = computed(() => {
+  if (!props.acara.accept_tiket) {
+    return { teks: 'DONASI', isGratis: false }
+  }
+
+  if (!props.acara.variants || props.acara.variants.length === 0) {
+    return { teks: 'GRATIS', isGratis: true }
+  }
+
+  const listHarga = props.acara.variants.map(v => Number(v.harga))
+  const hargaMin = Math.min(...listHarga)
+  const hargaMax = Math.max(...listHarga)
+
+  // Jika harga tertinggi adalah 0, maka gratis
+  if (hargaMax === 0) {
+    return { teks: 'GRATIS', isGratis: true }
+  }
+
+  // Jika semua varian harganya sama
+  if (hargaMin === hargaMax) {
+    return { teks: formatRupiah(hargaMin), isGratis: false }
+  }
+
+  // Jika ada rentang harga antar varian (misal: Rp50.000 - Rp150.000)
+  return { teks: `${formatRupiah(hargaMin)} - ${formatRupiah(hargaMax)}`, isGratis: false }
+})
+
 // Status Registrasi Pendaftaran
 const getStatusRegistrasiPendaftaran = computed(() => {
   if (props.acara.batas_registrasi) {
@@ -336,14 +366,14 @@ onUnmounted(() => {
 
         <div class="bg-stone-900 border border-stone-800 rounded-3xl p-6 space-y-4 shadow-xl">
           
-          <div v-if="Boolean(acara.accept_tiket)" class="grid grid-cols-2 gap-2 border-b border-stone-800/60 pb-4">
+          <div v-if="Boolean(acara.accept_tiket)" class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-stone-800/60 pb-4">
             <div class="space-y-1">
               <p class="text-[10px] text-stone-500 uppercase font-bold tracking-wider">Investasi Kegiatan</p>
-              <p class="text-xl font-black font-mono" :class="Number(acara.harga_tiket) === 0 ? 'text-emerald-400' : 'text-stone-100'">
-                {{ Number(acara.harga_tiket) === 0 ? 'GRATIS' : formatRupiah(acara.harga_tiket) }}
+              <p class="text-xl font-black font-mono" :class="hargaInvestasiInfo.isGratis ? 'text-emerald-400' : 'text-stone-100'">
+                {{ hargaInvestasiInfo.teks }}
               </p>
             </div>
-            <div class="space-y-1 text-right">
+            <div class="space-y-1 sm:text-right">
               <p class="text-[10px] text-stone-500 uppercase font-bold tracking-wider">Sisa Kuota Kursi</p>
               <p class="text-xl font-black text-amber-400 font-mono">{{ kuotaTersisa }} / {{ acara.kuota_tiket }}</p>
             </div>
@@ -434,7 +464,6 @@ onUnmounted(() => {
       </div>     
       <div v-if="isTabsSticky" class="h-[53px]"></div>         
 
-      <!-- TAB: DETAIL ACARA -->
       <div v-if="activeTab === 'cerita'" class="space-y-8">
         <div class="space-y-4">
           <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500 border-l-2 border-amber-500 pl-3">Deskripsi Lengkap Kegiatan</p>
@@ -442,7 +471,6 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <!-- TAB: MAKLUMAT -->
       <div v-if="activeTab === 'berita'" class="space-y-8">
         <div class="space-y-4">
           <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500 border-l-2 border-amber-500 pl-3">Informasi Terkini / Instruksi Panitia</p>
@@ -454,7 +482,6 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <!-- TAB: TANYA JAWAB -->
       <div v-if="activeTab === 'komentar'" class="space-y-6">
         <form @submit.prevent="submitKomentar" class="bg-stone-900 border border-stone-800/80 rounded-3xl p-5 space-y-4">
           <p class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Ajukan Pertanyaan Kegiatan</p>
@@ -491,7 +518,6 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <!-- TAB: DONATUR / SPONSOR -->
       <div v-if="activeTab === 'doa'" class="space-y-6">
         <div class="space-y-4">
           <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-500 border-l-2 border-emerald-500 pl-3">Catatan & Harapan Donatur</p>
@@ -521,12 +547,14 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <!-- TAB: PESERTA -->
       <div v-if="activeTab === 'peserta'" id="konten-peserta" class="space-y-6">
         <div class="bg-stone-900 border border-stone-800 rounded-3xl p-5 flex items-center justify-between shadow-xl">
           <div class="space-y-1">
             <span class="text-[10px] text-stone-500 uppercase font-bold tracking-wider block">Total Terdaftar</span>
-            <span class="text-2xl font-black text-emerald-400 font-mono">{{ totalPesertaTerdaftar }} <span class="text-xs text-stone-500 font-normal -ms-2 me-3">Pendaftar</span> {{ acara.tiket_terjual ? `${acara.tiket_terjual}` : '0' }}<span class="text-xs text-stone-500 font-normal"> Tiket</span></span>
+            <span class="text-2xl font-black text-emerald-400 font-mono">
+              {{ totalPesertaTerdaftar }} <span class="text-xs text-stone-500 font-normal -ms-2 me-3">Pendaftar</span>
+              {{ acara.tiket_terjual ? `${acara.tiket_terjual}` : '0' }}<span class="text-xs text-stone-500 font-normal"> Tiket</span>
+            </span>
           </div>
           <div 
             @click="handleCopyPeserta"
@@ -668,7 +696,6 @@ onUnmounted(() => {
 
     </main>
 
-    <!-- SHARE BUTTON -->
     <div class="fixed bottom-30 max-w-xl mx-auto inset-x-0 z-50 pointer-events-none">
       <div class="absolute left-5 pointer-events-auto">
         <button @click="handleShare" type="button" title="Bagikan link" class="w-10 h-10 bg-amber-600 hover:bg-amber-50 text-white hover:text-stone-950 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.5)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer">
@@ -677,7 +704,6 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <!-- QRIS MODAL -->
     <div 
       v-if="activeQrisModal" 
       class="fixed inset-0 bg-stone-950/80 backdrop-blur-sm z-[100] grid place-items-center p-4 overflow-y-auto" 
@@ -718,3 +744,8 @@ onUnmounted(() => {
 
   </AppLayoutPublic>
 </template>
+
+<style scoped>
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>

@@ -22,10 +22,11 @@ Route::get('/', function () {
         ->orderBy('created_at', 'desc')
         ->get();
 
-    // Mengambil maksimal 3 Acara/Agenda Kegiatan aktif
+    // 🌟 PERBAIKAN: Tambahkan eager loading untuk relasi 'variants'
     $acaras = \App\Models\Acara::where('is_published', true)
+        ->with(['variants']) // <--- Memanggil relasi varian tiket baru
         ->withSum(['payments as donasi_masuk_sum_nominal' => function ($query) {
-            $query->where('mutation_type', 'sponsor'); // Menghitung donasi/sponsor masuk khusus acara
+            $query->where('mutation_type', 'sponsor'); 
         }], 'nominal')
         ->latest()
         ->take(3)
@@ -36,7 +37,7 @@ Route::get('/', function () {
         'kalams' => $kalams,
         'banners' => $banners,
         'donasis' => $donasis,
-        'acaras' => $acaras, // Dilempar ke frontend berupa Array murni
+        'acaras' => $acaras,
     ]);
 })->name('home');
 

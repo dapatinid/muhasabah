@@ -96,4 +96,13 @@ class Acara extends Model
     {
         return 'slug';
     }
+
+
+    /**
+     * Relasi ke Varian / Jenis Paket Tiket Acara
+     */
+    public function variants(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(AcaraVariant::class);
+    }
 }

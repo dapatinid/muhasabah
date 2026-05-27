@@ -20,10 +20,10 @@ class AcaraController extends Controller
     public function acara(Request $request)
     {
         $query = Acara::where('is_published', true)
-            // Mengambil akumulasi gabungan dana masuk yang sukses (Tiket + Sponsor)
-            ->withSum(['payments as donasi_masuk_sum_nominal' => function ($q) {
-                $q->whereIn('mutation_type', ['tiket', 'sponsor'])->where('status', 'success');
-            }], 'nominal');
+                    ->with(['variants']) // 👈 Tambah eager load varian untuk cek list harga
+                    ->withSum(['payments as donasi_masuk_sum_nominal' => function ($q) {
+                        $q->whereIn('mutation_type', ['tiket', 'sponsor'])->where('status', 'success');
+                    }], 'nominal');
 
         // Filter Kategori
         $query->when($request->input('kategori'), function ($q, $kategori) {
@@ -40,9 +40,9 @@ class AcaraController extends Controller
         });
 
         return Inertia::render('Acara', [
-            'acaras' => $query->latest()->paginate(9)->withQueryString(),
-            'filters' => $request->only(['search', 'kategori'])
-        ]);
+                    'acaras' => $query->latest()->paginate(9)->withQueryString(),
+                    'filters' => $request->only(['search', 'kategori'])
+                ]);
     }  
 
     /**
@@ -83,6 +83,7 @@ class AcaraController extends Controller
         return Inertia::render('Admin/Acara/Create');
     }
 
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -94,15 +95,29 @@ class AcaraController extends Controller
             'lokasi' => 'required|string|max:255',
             'accept_tiket' => 'required|boolean',
             'accept_donasi' => 'required|boolean',
-            'harga_tiket' => 'required_if:accept_tiket,true|numeric|min:0',
-            'kuota_tiket' => 'required_if:accept_tiket,true|integer|min:0',
+            'kuota_tiket' => 'required_if:accept_tiket,true|integer|min:0', // hapus harga_tiket dari baris ini
             'target_donasi' => 'required_if:accept_donasi,true|numeric|min:0',
             'tgl_mulai' => 'nullable|date',
             'tgl_selesai' => 'nullable|date|after_or_equal:tgl_mulai',
             'batas_registrasi' => 'nullable|date|before_or_equal:tgl_mulai',
+            
+            // Aturan Validasi Varian Baru
+            'variants' => 'required_if:accept_tiket,true|array',
+            'variants.*.nama_varian' => 'required|string|max:100',
+            'variants.*.harga' => 'required|numeric|min:0',
+            'variants.*.jumlah_kursi' => 'required|integer|min:1',
         ]);
 
-        $request->user()->acaras()->create($validated);
+        DB::transaction(function () use ($request, $validated) {
+            // Buat data acara dasar tanpa array variants
+            $acaraData = collect($validated)->except('variants')->toArray();
+            $acara = $request->user()->acaras()->create($acaraData);
+
+            // Simpan varian tiket jika fitur tiket aktif
+            if ($validated['accept_tiket'] && !empty($validated['variants'])) {
+                $acara->variants()->createMany($validated['variants']);
+            }
+        });
 
         return redirect()->route('acara.index')->with('success', 'Event/Acara baru berhasil diterbitkan.');
     }
@@ -112,6 +127,8 @@ class AcaraController extends Controller
         $acara->tgl_mulai = $acara->tgl_mulai ? Carbon::parse($acara->tgl_mulai)->format('Y-m-d\TH:i') : '';
         $acara->tgl_selesai = $acara->tgl_selesai ? Carbon::parse($acara->tgl_selesai)->format('Y-m-d\TH:i') : '';
         $acara->batas_registrasi = $acara->batas_registrasi ? Carbon::parse($acara->batas_registrasi)->format('Y-m-d\TH:i') : '';
+        
+        $acara->load('variants'); // 👈 Pastikan varian ter-load saat masuk halaman edit admin
 
         return Inertia::render('Admin/Acara/Edit', [
             'acara' => $acara,
@@ -124,6 +141,7 @@ class AcaraController extends Controller
 
     public function update(Request $request, Acara $acara)
     {
+        $acara = Acara::findOrFail($acara->id);
         $validated = $request->validate([
             'judul'             => 'required|string|max:255',
             'slug'              => 'required|string|unique:acaras,slug,' . $acara->id,
@@ -132,14 +150,19 @@ class AcaraController extends Controller
             'kategori'          => 'required|string',
             'subkategori'       => 'required|string',
             'accept_tiket'      => 'required|boolean',
-            'harga_tiket'       => 'required|numeric|min:0',
-            'kuota_tiket'       => 'required|integer|min:0',
+            'kuota_tiket'       => 'required|integer|min:0', // hapus harga_tiket
             'accept_donasi'     => 'required|boolean',
             'target_donasi'     => 'required|numeric|min:0',
             'panduan_acara'     => 'nullable|string',
             'tgl_mulai'         => 'nullable|date',
             'tgl_selesai'       => 'nullable|date',
             'batas_registrasi'  => 'nullable|date',
+            
+            // Aturan Validasi Varian Baru pada Update
+            'variants' => 'required_if:accept_tiket,true|array',
+            'variants.*.nama_varian' => 'required|string|max:100',
+            'variants.*.harga' => 'required|numeric|min:0',
+            'variants.*.jumlah_kursi' => 'required|integer|min:1',
         ]);
 
         if ($request->tgl_mulai) {
@@ -152,10 +175,21 @@ class AcaraController extends Controller
             $validated['batas_registrasi'] = Carbon::parse($request->batas_registrasi, 'Asia/Jakarta')->toDateTimeString();
         }
 
-        $acara->update($validated);
+        DB::transaction(function () use ($acara, $validated) {
+            $acaraData = collect($validated)->except('variants')->toArray();
+            $acara->update($acaraData);
+
+            // Perbarui data varian: hapus yang lama dan insert yang baru
+            if ($validated['accept_tiket']) {
+                $acara->variants()->delete();
+                $acara->variants()->createMany($validated['variants']);
+            } else {
+                $acara->variants()->delete();
+            }
+        });
 
         return redirect()->route('acara.index')->with('success', 'Acara berhasil diperbarui.');
-    }
+    }    
 
     public function progress(Acara $acara)
     {
@@ -328,7 +362,9 @@ class AcaraController extends Controller
                     // Update sisa saldo kas utama di tabel acara
                     $lockedAcara->increment('saldo_donasi', $nominal);
                     if ($row['mutation_type'] === 'tiket') {
-                        $lockedAcara->increment('tiket_terjual', 1);
+                        // Ubah dari angka statis 1 menjadi dinamis mengikuti isi transaksi baris data
+                        $inputKursi = isset($row['jumlah_tiket']) ? (int)$row['jumlah_tiket'] : 1;
+                        $lockedAcara->increment('tiket_terjual', $inputKursi);
                     }
                 }
 
@@ -431,6 +467,7 @@ class AcaraController extends Controller
 
         $acara->load([
             'user:id,name', 
+            'variants',
             'komentars' => function($q) { 
                 $q->with('user:id,name')->latest(); 
             },
@@ -507,6 +544,8 @@ class AcaraController extends Controller
 
     public function payment(Acara $acara, Request $request)
     {
+        $acara->load('variants'); // 👈 Kirim daftar varian tiket ke view checkout
+
         return Inertia::render('AcaraPayment', [
             'acara' => $acara,
             'buyType' => $request->input('buy_type', 'tiket') 
@@ -527,7 +566,7 @@ class AcaraController extends Controller
 
         $request->validate([
             'buy_type' => 'required|string|in:tiket,donasi',
-            'jumlah_tiket' => 'required_if:buy_type,tiket|integer|min:1', 
+            'acara_variant_id' => 'required_if:buy_type,tiket|nullable|exists:acara_variants,id', // 👈 Validasi varian id pilihan
             'nominal' => 'required|numeric|min:0',
             'infaq_sistem' => 'required|numeric|min:0',
             'no_wa' => 'required|string', 
@@ -544,16 +583,28 @@ class AcaraController extends Controller
             DB::beginTransaction();
 
             $lockedAcara = Acara::where('id', $acara->id)->lockForUpdate()->first();
-            $jumlahTiket = $request->buy_type === 'tiket' ? (int) $request->jumlah_tiket : 0;
+            
+            // Default awal multiplier kapasitas kursi terpotong
+            $kursiYangDibeli = 0; 
+            $namaVarianTerpilih = '';
 
             if ($request->buy_type === 'tiket' && $lockedAcara->accept_tiket) {
-                if (($lockedAcara->tiket_terjual + $jumlahTiket) > $lockedAcara->kuota_tiket) {
-                    throw new \Exception('Maaf, sisa kuota kursi tidak mencukupi untuk jumlah pesanan Anda.');
+                // Cari data varian dari database backend untuk menghindari manipulasi request harga/kursi
+                $variant = \App\Models\AcaraVariant::where('acara_id', $lockedAcara->id)
+                    ->where('id', $request->acara_variant_id)
+                    ->firstOrFail();
+
+                $kursiYangDibeli = $variant->jumlah_kursi;
+                $namaVarianTerpilih = $variant->nama_varian;
+
+                // Cek ketersediaan kuota keseluruhan di lokasi
+                if (($lockedAcara->tiket_terjual + $kursiYangDibeli) > $lockedAcara->kuota_tiket) {
+                    throw new \Exception('Maaf, sisa kuota kursi tidak mencukupi untuk jenis paket tiket pilihan Anda.');
                 }
 
-                $expectedNominal = (int) $lockedAcara->harga_tiket * $jumlahTiket;
-                if ((int) $request->nominal !== $expectedNominal) {
-                    throw new \Exception('Terjadi ketidakcocokan nilai kalkulasi harga tiket.');
+                // Bandingkan nominal kiriman dengan database asli
+                if ((int) $request->nominal !== (int) $variant->harga) {
+                    throw new \Exception('Terjadi ketidakcocokan nilai kalkulasi skema harga tiket varian.');
                 }
             }
 
@@ -564,7 +615,7 @@ class AcaraController extends Controller
 
             $namaDonatur = $isAnonymous && $request->buy_type === 'donasi' ? 'Hamba Allah' : $request->atas_nama;
 
-            // 1. Log Jurnal Infaq Sistem
+            // 1. Log Jurnal Infaq Sistem (Kode tetap sama)
             if ((int) $request->infaq_sistem > 0) {
                 $lockedAcara->payments()->create([
                     'nominal' => $request->infaq_sistem,
@@ -586,10 +637,10 @@ class AcaraController extends Controller
                 ]);
             }
 
-            // 2. Log Jurnal Arus Utama (tiket / sponsor)
+            // 2. Log Jurnal Arus Utama (Simpan referensi nama varian ke notes & isi kapasitas jumlah_tiket secara akurat)
             $mType = $request->buy_type === 'tiket' ? 'tiket' : 'sponsor';
             $kreditAkun = $request->buy_type === 'tiket' ? 'NR-DB TIKET ACARA' : 'NR-DB SPONSOR ACARA';
-            $prefixNotes = $request->buy_type === 'tiket' ? "[Booking {$jumlahTiket} Tiket] " : "[Sponsor/Donasi] ";
+            $prefixNotes = $request->buy_type === 'tiket' ? "[Paket: {$namaVarianTerpilih} - {$kursiYangDibeli} Kursi] " : "[Sponsor/Donasi] ";
 
             $lockedAcara->payments()->create([
                 'nominal' => $request->nominal,
@@ -607,14 +658,13 @@ class AcaraController extends Controller
                 'user_id' => auth()->id(),
                 'image' => $imagePath,
                 'status' => 'pending',
-                'jumlah_tiket' => $jumlahTiket
+                'jumlah_tiket' => $kursiYangDibeli // 👈 Otomatis menyimpan 1, 2 atau 4 sesuai kapasitas paket!
             ]);
 
+            // Jika tiket, asumsikan penambahan langsung kuota booking terjual
             if ($request->buy_type === 'tiket') {
-                $lockedAcara->increment('tiket_terjual', $jumlahTiket);
+                $lockedAcara->increment('tiket_terjual', $kursiYangDibeli);
             }
-
-            // Catatan: Sisa saldo (`saldo`) akan di-increment otomatis oleh sistem/admin setelah status transaksi diubah dari 'pending' ke 'success'.
 
             DB::commit();
             return redirect()->route('acara.show', [$lockedAcara->slug])
@@ -624,5 +674,5 @@ class AcaraController extends Controller
             DB::rollBack();
             return back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
-    }
+    }    
 }

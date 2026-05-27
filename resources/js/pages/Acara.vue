@@ -19,14 +19,21 @@ const props = defineProps<{
 
       // Modul Tiket
       accept_tiket: boolean | number
-      harga_tiket: number
       kuota_tiket: number
-      tiket_terjual: number       // ✅ Kolom nyata di DB, di-increment saat storePayment
+      tiket_terjual: number
+
+      // Relasi Varian Tiket Baru
+      variants: Array<{
+        id: number
+        nama_varian: string
+        harga: number
+        jumlah_kursi: number
+      }>
 
       // Modul Donasi
       accept_donasi: boolean | number
       target_donasi: number
-      donasi_masuk_sum_nominal?: number  // ✅ Dari withSum di controller
+      donasi_masuk_sum_nominal?: number
 
       panduan_acara: string | null
 
@@ -59,6 +66,44 @@ function formatRupiah(nominal: number): string {
     currency: 'IDR',
     minimumFractionDigits: 0,
   }).format(nominal)
+}
+
+/**
+ * 🛠️ LOGIKA UPDATE: Menghitung representasi teks harga dengan fallback 
+ * yang presisi berdasarkan modul yang aktif (Tiket vs Donasi vs Terbuka)
+ */
+function getHargaBadgeInfo(acara: typeof props.acaras.data[0]) {
+  // 1. Jika menggunakan modul registrasi kursi/tiket
+  if (Boolean(acara.accept_tiket)) {
+    if (!acara.variants || acara.variants.length === 0) {
+      return { teks: 'GRATIS PADAFTARAN', isGratis: true }
+    }
+
+    const listHarga = acara.variants.map(v => Number(v.harga))
+    const hargaMin = Math.min(...listHarga)
+    const hargaMax = Math.max(...listHarga)
+
+    // Jika varian dengan harga tertinggi pun adalah 0, berarti gratis dengan memesan kursi
+    if (hargaMax === 0) {
+      return { teks: 'GRATIS (REGISTRASI)', isGratis: true }
+    }
+
+    // Jika flat satu harga di semua varian
+    if (hargaMin === hargaMax) {
+      return { teks: formatRupiah(hargaMin), isGratis: false }
+    }
+
+    // Rentang harga tiket terendah sampai tertinggi
+    return { teks: `${formatRupiah(hargaMin)} - ${formatRupiah(hargaMax)}`, isGratis: false }
+  }
+
+  // 2. Jika modul tiket mati, tapi modul penggalangan dana/patungan operasional aktif
+  if (Boolean(acara.accept_donasi)) {
+    return { teks: 'OPEN DONASI', isGratis: false }
+  }
+
+  // 3. Jika kedua modul mati (Acara bertipe Kajian Umum / Bebas Hadir tanpa batas)
+  return { teks: 'GRATIS / UMUM', isGratis: true }
 }
 
 function filterKategori(kat: string) {
@@ -96,7 +141,6 @@ function getTglMulai(tgl: string): string {
   })
 }
 
-// ✅ Sisa tiket = kuota - tiket_terjual (kolom DB yang di-increment saat booking)
 function getSisaTiket(acara: { kuota_tiket: number; tiket_terjual: number }): number {
   return Math.max(0, acara.kuota_tiket - (acara.tiket_terjual ?? 0))
 }
@@ -110,11 +154,10 @@ function getProgressDonasi(acara: { donasi_masuk_sum_nominal?: number; target_do
 
 <template>
   <Head title="Agenda Kegiatan & Acara" />
-  <AppLayoutPublic subtitle="Informasi Kegiatan Masjid" title="Agenda Acara" :show-back="true">
+  <AppLayoutPublic subtitle="Informasi Kegiatan" title="Agenda Acara" :show-back="true">
 
     <div class="px-5 py-6 space-y-6 pb-50">
 
-      <!-- Search -->
       <div class="relative group">
         <span class="absolute left-4 top-1/2 -translate-y-1/2 text-stone-500 group-focus-within:text-amber-400 transition-colors">
           <Search class="size-4" />
@@ -122,12 +165,11 @@ function getProgressDonasi(acara: { donasi_masuk_sum_nominal?: number; target_do
         <input
           v-model="search"
           type="search"
-          placeholder="Cari agenda kegiatan masjid..."
+          placeholder="Cari agenda kegiatan..."
           class="w-full bg-stone-900 border border-stone-800 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-stone-200 placeholder-stone-600 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/40 transition-all outline-none"
         >
       </div>
 
-      <!-- Filter Kategori -->
       <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
         <button
           v-for="kat in kategoriList"
@@ -144,7 +186,6 @@ function getProgressDonasi(acara: { donasi_masuk_sum_nominal?: number; target_do
         </button>
       </div>
 
-      <!-- Kosong -->
       <div
         v-if="acaras.data.length === 0"
         class="text-center py-20 text-stone-600 text-sm border border-dashed border-stone-800 rounded-2xl"
@@ -153,7 +194,6 @@ function getProgressDonasi(acara: { donasi_masuk_sum_nominal?: number; target_do
         <p>Belum ada agenda acara terdekat</p>
       </div>
 
-      <!-- List Acara — desain poster IMDB: 1/3 gambar + 2/3 konten -->
       <div v-else class="grid grid-cols-1 gap-6">
         <Link
           v-for="acara in acaras.data"
@@ -188,12 +228,7 @@ function getProgressDonasi(acara: { donasi_masuk_sum_nominal?: number; target_do
                 <span class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] uppercase font-bold text-stone-300 border border-stone-800 tracking-wide">
                   {{ acara.kategori }}
                 </span>
-                <span
-                  class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] font-mono font-bold border border-stone-800 tracking-wide"
-                  :class="Boolean(acara.accept_tiket) && Number(acara.harga_tiket) === 0 ? 'text-emerald-400' : 'text-amber-400'"
-                >
-                  {{ Boolean(acara.accept_tiket) ? (Number(acara.harga_tiket) === 0 ? 'GRATIS' : formatRupiah(acara.harga_tiket)) : 'DONASI' }}
-                </span>
+
                 <span 
                   class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] uppercase font-bold border tracking-wide"
                   :class="getStatusRegistrasi(acara.batas_registrasi).tutup ? 'text-red-400 border-red-800' : 'text-emerald-400 border-emerald-800'"
@@ -251,6 +286,15 @@ function getProgressDonasi(acara: { donasi_masuk_sum_nominal?: number; target_do
                 </div>
               </div>
 
+              <div>                 
+                <span
+                  class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] font-mono font-bold border border-stone-800 tracking-wide"
+                  :class="getHargaBadgeInfo(acara).isGratis ? 'text-emerald-400 border-emerald-900/50 bg-emerald-950/20' : 'text-amber-400 border-amber-900/50 bg-amber-950/20'"
+                >
+                  {{ getHargaBadgeInfo(acara).teks }}
+                </span>
+              </div>              
+
               <div class="pt-4 border-t border-stone-800/60 mt-auto grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-stone-500">
                 <div class="flex items-center gap-2 truncate">
                   <span class="shrink-0 text-stone-600">📍</span>
@@ -267,7 +311,6 @@ function getProgressDonasi(acara: { donasi_masuk_sum_nominal?: number; target_do
         </Link>
       </div>     
 
-      <!-- Pagination -->
       <div v-if="acaras.links.length > 3" class="flex justify-center gap-1.5 pt-6 flex-wrap">
         <button
           v-for="(link, i) in acaras.links"
