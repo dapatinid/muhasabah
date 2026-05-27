@@ -112,7 +112,7 @@ const calculateDonasiProgress = (acara: any) => {
 
 // Menghitung persentase okupansi kuota tiket terjual
 const calculateTiketProgress = (acara: any) => {
-  const terjual = Number(acara?.tiket_terverifikasi_count) || 0
+  const terjual = Number(acara?.tiket_terjual) || 0
   const kuota = Number(acara?.kuota_tiket) || 0
   if (kuota <= 0) return 0
   const percent = (terjual / kuota) * 100
@@ -212,7 +212,7 @@ const getStatusWaktu = (tglMulai: string | null) => {
                     <Ticket class="size-3 text-indigo-500" /> Tiket Peserta ({{ acara.harga_tiket == 0 ? 'Gratis' : formatRupiah(acara.harga_tiket) }})
                   </span>
                   <span class="font-mono font-bold text-indigo-600 dark:text-indigo-400">
-                    {{ acara.tiket_terverifikasi_count ?? 0 }} / {{ acara.kuota_tiket }} Terjual
+                    {{ acara.tiket_terjual ?? 0 }} / {{ acara.kuota_tiket }} Terjual
                   </span>
                 </div>
                 
@@ -265,7 +265,7 @@ const getStatusWaktu = (tglMulai: string | null) => {
             <div class="flex items-center gap-2">
               <BarChart3 class="size-4 text-zinc-400" />
               <span class="text-[11px] text-zinc-500 font-medium">
-                {{ (acara.tiket_terverifikasi_count ?? 0) }} Peserta Registrasi
+                {{ (acara.tiket_terjual ?? 0) }} Peserta Registrasi
               </span>
             </div>
             

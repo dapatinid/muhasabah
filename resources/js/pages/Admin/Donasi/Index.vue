@@ -153,7 +153,7 @@ const getSisaHari = (tglSelesai: string | null, createdAt: string) => {
         
         <Link 
           href="/admin/donasi/create" 
-          class="inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm transition-all"
+          class="inline-flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm transition-all"
         >
           <Plus class="size-5" /> Donasi
         </Link>
@@ -166,7 +166,7 @@ const getSisaHari = (tglSelesai: string | null, createdAt: string) => {
           v-model="search"
           type="text" 
           placeholder="Cari program donasi..." 
-          class="w-full pl-11 pr-4 py-3 rounded-2xl border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+          class="w-full pl-11 pr-4 py-3 rounded-2xl border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 shadow-sm"
         />
       </div>
 
@@ -179,12 +179,12 @@ const getSisaHari = (tglSelesai: string | null, createdAt: string) => {
         >
           <!-- Status & Actions -->
           <div class="flex justify-between items-start mb-4">
-            <span class="px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold uppercase tracking-widest">
+            <span class="px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] font-bold uppercase tracking-widest">
               {{ donasi.kategori }}
             </span>
             
             <div class="flex gap-2">
-              <Link :href="`/admin/donasi/${donasi.slug}/edit`" class="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-indigo-600 transition">
+              <Link :href="`/admin/donasi/${donasi.slug}/edit`" class="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-amber-600 transition">
                 <Pencil class="size-4" />
               </Link>
               <button @click="confirmDelete(donasi)" class="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-red-600 transition cursor-pointer">
@@ -286,7 +286,7 @@ const getSisaHari = (tglSelesai: string | null, createdAt: string) => {
               </span>
             </div>
             
-            <Link :href="`/donasi/${donasi.slug}`" class="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700 transition">
+            <Link :href="`/donasi/${donasi.slug}`" class="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 hover:text-amber-700 transition">
               Detail <HandHeart class="size-4" />
             </Link>
           </div>
@@ -310,7 +310,7 @@ const getSisaHari = (tglSelesai: string | null, createdAt: string) => {
           v-html="link.label"
           class="shrink-0 px-4 py-2 rounded-xl text-sm transition-all"
           :class="[
-            link.active ? 'bg-indigo-600 text-white font-bold' : 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50',
+            link.active ? 'bg-amber-600 text-white font-bold' : 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50',
             !link.url ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'
           ]"
         />

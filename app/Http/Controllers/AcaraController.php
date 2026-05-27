@@ -20,11 +20,9 @@ class AcaraController extends Controller
     public function acara(Request $request)
     {
         $query = Acara::where('is_published', true)
-            // tiket_terjual sudah ada sebagai kolom di tabel (di-increment saat storePayment)
-            // sehingga tidak perlu withCount/withSum lagi untuk tiket.
-            // Hanya butuh donasi_masuk_sum_nominal untuk progress bar donasi di card.
+            // Mengambil akumulasi gabungan dana masuk yang sukses (Tiket + Sponsor)
             ->withSum(['payments as donasi_masuk_sum_nominal' => function ($q) {
-                $q->where('mutation_type', 'donasi_acara')->where('status', 'success');
+                $q->whereIn('mutation_type', ['tiket', 'sponsor'])->where('status', 'success');
             }], 'nominal');
 
         // Filter Kategori
@@ -54,13 +52,16 @@ class AcaraController extends Controller
     {
         $query = Acara::with('user:id,name')
             ->withCount(['payments as tiket_terverifikasi_count' => function ($query) {
-                $query->where('mutation_type', 'tiket_utama')->where('status', 'success');
+                $query->where('mutation_type', 'tiket')->where('status', 'success');
             }])
+            ->withSum(['payments as total_tiket_masuk' => function ($query) {
+                $query->where('mutation_type', 'tiket')->where('status', 'success');
+            }], 'nominal')
             ->withSum(['payments as total_donasi_masuk' => function ($query) {
-                $query->where('mutation_type', 'donasi_acara')->where('status', 'success');
+                $query->where('mutation_type', 'sponsor')->where('status', 'success');
             }], 'nominal')
             ->withSum(['payments as total_pengeluaran' => function ($query) {
-                $query->where('mutation_type', 'tasyaruf_acara');
+                $query->where('mutation_type', 'tasyaruf'); // Mutasi keluar/pengeluaran kas
             }], 'nominal');
 
         if ($search = $request->input('search')) {
@@ -108,9 +109,9 @@ class AcaraController extends Controller
 
     public function edit(Acara $acara)
     {
-        $acara->tgl_mulai = $acara->tgl_mulai ? \Carbon\Carbon::parse($acara->tgl_mulai)->format('Y-m-d\TH:i') : '';
-        $acara->tgl_selesai = $acara->tgl_selesai ? \Carbon\Carbon::parse($acara->tgl_selesai)->format('Y-m-d\TH:i') : '';
-        $acara->batas_registrasi = $acara->batas_registrasi ? \Carbon\Carbon::parse($acara->batas_registrasi)->format('Y-m-d\TH:i') : '';
+        $acara->tgl_mulai = $acara->tgl_mulai ? Carbon::parse($acara->tgl_mulai)->format('Y-m-d\TH:i') : '';
+        $acara->tgl_selesai = $acara->tgl_selesai ? Carbon::parse($acara->tgl_selesai)->format('Y-m-d\TH:i') : '';
+        $acara->batas_registrasi = $acara->batas_registrasi ? Carbon::parse($acara->batas_registrasi)->format('Y-m-d\TH:i') : '';
 
         return Inertia::render('Admin/Acara/Edit', [
             'acara' => $acara,
@@ -121,17 +122,26 @@ class AcaraController extends Controller
         ]);
     }
 
-   public function update(Request $request, Acara $acara)
+    public function update(Request $request, Acara $acara)
     {
         $validated = $request->validate([
-            'judul' => 'required|string|max:255',
-            'tgl_mulai' => 'nullable',
-            'tgl_selesai' => 'nullable',
-            'batas_registrasi' => 'nullable',
-            // validasi field lainnya...
+            'judul'             => 'required|string|max:255',
+            'slug'              => 'required|string|unique:acaras,slug,' . $acara->id,
+            'lokasi'            => 'required|string',
+            'body'              => 'required|string', 
+            'kategori'          => 'required|string',
+            'subkategori'       => 'required|string',
+            'accept_tiket'      => 'required|boolean',
+            'harga_tiket'       => 'required|numeric|min:0',
+            'kuota_tiket'       => 'required|integer|min:0',
+            'accept_donasi'     => 'required|boolean',
+            'target_donasi'     => 'required|numeric|min:0',
+            'panduan_acara'     => 'nullable|string',
+            'tgl_mulai'         => 'nullable|date',
+            'tgl_selesai'       => 'nullable|date',
+            'batas_registrasi'  => 'nullable|date',
         ]);
 
-        // Paksa Carbon membaca input mentah dari browser sebagai timezone lokal Anda (tanpa konversi)
         if ($request->tgl_mulai) {
             $validated['tgl_mulai'] = Carbon::parse($request->tgl_mulai, 'Asia/Jakarta')->toDateTimeString();
         }
@@ -144,7 +154,7 @@ class AcaraController extends Controller
 
         $acara->update($validated);
 
-        return redirect()->back()->with('success', 'Acara berhasil diperbarui.');
+        return redirect()->route('acara.index')->with('success', 'Acara berhasil diperbarui.');
     }
 
     public function progress(Acara $acara)
@@ -161,22 +171,31 @@ class AcaraController extends Controller
 
     public function updateProgress(Request $request, Acara $acara)
     {
-        $request->validate(['progress' => 'nullable|string']);
-        $acara->progress = $request->input('progress');
-        $acara->save();
+        $request->validate([
+            'progress' => 'required|string'
+        ]);
 
-        return back()->with('success', 'Progress jalannya acara berhasil diperbarui.');
+        $acara->update([
+            'progress' => $request->input('progress')
+        ]);
+
+        return back()->with('success', 'Maklumat progress jalannya acara berhasil diperbarui.');
     }  
 
     public function reaksi(Acara $acara)
     {
-        $summaryReaksi = $acara->reaksis()->select('type', DB::raw('count(*) as total'))->groupBy('type')->pluck('total', 'type')->toArray();
-        $stats = array_merge(['love' => 0, 'pray' => 0, 'sad' => 0, 'like' => 0], $summaryReaksi);
+        $summaryReaksi = $acara->reaksis()
+            ->select('type', DB::raw('count(*) as total'))
+            ->groupBy('type')
+            ->pluck('total', 'type')
+            ->toArray();
+
+        $stats = array_merge(['love' => 0, 'like' => 0, 'pray' => 0, 'sad' => 0], $summaryReaksi);
         $logs = $acara->reaksis()->with('user:id,name')->latest()->paginate(20);
 
         return Inertia::render('Admin/Acara/Reaksi', [
             'acara' => $acara,
-            'stats' => $stats,
+            'statReaksi' => $stats, 
             'reaksis' => $logs,
             'breadcrumbs' => [
                 ['title' => 'Acara', 'href' => '/admin/acara'],
@@ -188,13 +207,24 @@ class AcaraController extends Controller
 
     public function komentar(Acara $acara, Request $request)
     {
-        $paymentsNotes = $acara->payments()->whereIn('mutation_type', ['tiket_utama', 'donasi_acara'])->whereNotNull('notes')->where('notes', '!=', '-')->latest()->paginate(15, ['*'], 'page_notes')->withQueryString();
-        $komentarsPublik = $acara->komentars()->latest()->paginate(15, ['*'], 'page_komentar')->withQueryString();
+        $paymentsNotes = $acara->payments()
+            ->whereIn('mutation_type', ['tiket', 'sponsor'])
+            ->whereNotNull('notes')
+            ->where('notes', '!=', '-')
+            ->latest()
+            ->paginate(15, ['*'], 'page_notes')
+            ->withQueryString();
+
+        $komentarsPublik = $acara->komentars()
+            ->with('user:id,name')
+            ->latest()
+            ->paginate(15, ['*'], 'page_komentar')
+            ->withQueryString();
 
         return Inertia::render('Admin/Acara/Komentar', [
             'acara' => $acara,
             'paymentsNotes' => $paymentsNotes,
-            'komentarsPublik' => $komentarsPublik,
+            'komentarsPublik' => $komentarsPublik, 
             'breadcrumbs' => [
                 ['title' => 'Acara', 'href' => '/admin/acara'],
                 ['title' => 'Edit Acara', 'href' => "/admin/acara/{$acara->slug}/edit"],
@@ -204,105 +234,201 @@ class AcaraController extends Controller
         ]);
     }
 
-    public function transaksiMasuk(Request $request, Acara $acara)
+    /**
+     * TAMPILAN: Ledger Buku Kas / Laporan Keuangan Acara (Admin)
+     */
+    public function keuangan(Acara $acara, Request $request)
     {
+        // 1. Ambil Summary Akumulasi Sesuai Kategori Komponen Baru
+        $summary = [
+            'total_tiket' => (int) $acara->payments()->where('mutation_type', 'tiket')->where('status', 'success')->sum('nominal'),
+            'total_infaq' => (int) $acara->payments()->where('mutation_type', 'infaq_sistem')->where('status', 'success')->sum('nominal'),
+            'total_sponsor' => (int) $acara->payments()->where('mutation_type', 'sponsor')->where('status', 'success')->sum('nominal'),
+            'total_pengeluaran' => (int) $acara->payments()->where('mutation_type', 'tasyaruf')->where('status', 'success')->sum('nominal'),
+        ];
+
+        // 2. Siapkan query mutasi ledger keuangan
         $query = $acara->payments()->latest();
+
+        // 3. Filter Alokasi berdasarkan data kiriman frontend Vue
         if ($request->filled('type')) {
             $query->where('mutation_type', $request->type);
         }
 
-        $payments = $query->paginate(20)->withQueryString();
-        $summary = [
-            'total_tiket' => $acara->payments()->where('mutation_type', 'tiket_utama')->sum('nominal'),
-            'total_donasi' => $acara->payments()->where('mutation_type', 'donasi_acara')->sum('nominal'),
-            'total_infaq' => $acara->payments()->where('mutation_type', 'infaq_sistem')->sum('nominal'),
-        ];
+        // 4. Paginate agar sinkron dengan interface komponen table pagination Vue Anda
+        $payments = $query->paginate(15)->withQueryString();
 
-        return Inertia::render('Admin/Acara/TransaksiMasuk', [
-            'acara' => $acara,
+        return Inertia::render('Admin/Acara/Keuangan', [
+            'acara' => [
+                'id' => $acara->id,
+                'judul' => $acara->judul,
+                'slug' => $acara->slug,
+                'saldo' => (int) $acara->saldo_donasi // Kolom dinamis total keuangan sisa kas
+            ],
             'payments' => $payments,
             'summary' => $summary,
+            'filters' => $request->only(['type']),
+            'errors' => (object) [],
             'breadcrumbs' => [
                 ['title' => 'Acara', 'href' => '/admin/acara'],
                 ['title' => 'Edit Acara', 'href' => "/admin/acara/{$acara->slug}/edit"],
-                ['title' => 'Transaksi Masuk', 'href' => "/admin/acara/{$acara->slug}/transaksi-masuk"],
+                ['title' => 'Buku Kas Keuangan', 'href' => "/admin/acara/{$acara->slug}/keuangan"],
             ],
-            'filters' => $request->only(['type']) 
         ]);
     }
 
-    public function tasyaruf(Acara $acara)
+    /**
+     * PROSES: Input Massal/Bulk Jurnal Pembayaran Tunai Keuangan Acara
+     */
+    public function bulkKeuangan(Request $request, Acara $acara)
     {
-        $tasyarufs = $acara->payments()->where('mutation_type', 'tasyaruf_acara')->latest()->paginate(20);
-
-        return Inertia::render('Admin/Acara/Tasyaruf', [
-            'acara' => $acara,
-            'tasyarufs' => $tasyarufs,
-            'breadcrumbs' => [
-                ['title' => 'Acara', 'href' => '/admin/acara'],
-                ['title' => 'Edit Acara', 'href' => "/admin/acara/{$acara->slug}/edit"],
-                ['title' => 'Pengeluaran Acara', 'href' => "/admin/acara/{$acara->slug}/tasyaruf"],
-            ],
-        ]);
-    }    
-
-    public function storeTasyaruf(Request $request, Acara $acara)
-    {
-        if ($request->has('nominal')) {
-            $request->merge(['nominal' => str_replace('.', '', $request->nominal)]);
-        }
-
         $request->validate([
-            'nominal' => 'required|numeric|min:1000',
-            'notes' => 'required|string|max:500',
-            'rekening' => 'required|string',
+            'transactions' => 'required|array|min:1|max:10',
+            'transactions.*.atas_nama' => 'required_without:transactions.*.is_anonymous|nullable|string|max:255',
+            'transactions.*.nominal' => 'required|string',
+            'transactions.*.infaq_sistem' => 'required|string',
+            'transactions.*.mutation_type' => 'required|string|in:tiket,sponsor',
+            'transactions.*.via' => 'required|string',
+            'transactions.*.date' => 'required|date',
+            'transactions.*.notes' => 'nullable|string'
         ]);
 
         try {
             DB::beginTransaction();
             $lockedAcara = Acara::where('id', $acara->id)->lockForUpdate()->first();
 
-            if ($request->nominal > $lockedAcara->saldo_donasi) {
-                throw new \Exception('Nominal pengeluaran melebihi sisa saldo donasi acara.');
+            foreach ($request->transactions as $row) {
+                $nominal = (int) str_replace('.', '', $row['nominal']);
+                $infaq = (int) str_replace('.', '', $row['infaq_sistem']);
+                $isAnonymous = filter_var($row['is_anonymous'] ?? false, FILTER_VALIDATE_BOOLEAN);
+                $namaEntitas = $isAnonymous ? 'Hamba Allah' : $row['atas_nama'];
+
+                // Input Hasil Pokok (Tiket / Sponsor)
+                if ($nominal > 0) {
+                    $kreditAkun = $row['mutation_type'] === 'tiket' ? 'NR-DB TIKET ACARA' : 'NR-DB SPONSOR ACARA';
+                    
+                    $lockedAcara->payments()->create([
+                        'nominal' => $nominal,
+                        'nominal_plus' => $nominal,
+                        'debit_akun' => 'NR-DB CASH/BANK (' . $row['via'] . ')',
+                        'kredit_akun' => $kreditAkun,
+                        'mutation_type' => $row['mutation_type'],
+                        'no_wa' => $row['no_wa'] ?? null,
+                        'sapaan' => $row['sapaan'] ?? 'Sdr/i',
+                        'atas_nama' => $namaEntitas,
+                        'notes' => '[Bulk Manual] ' . ($row['notes'] ?? '-'),
+                        'payment_method' => 'CASH',
+                        'rekening' => $row['via'],
+                        'date' => $row['date'],
+                        'status' => 'success', // Entri manual kas langsung diset sukses
+                        'user_id' => auth()->id(),
+                        'jumlah_tiket' => $row['mutation_type'] === 'tiket' ? 1 : 0
+                    ]);
+
+                    // Update sisa saldo kas utama di tabel acara
+                    $lockedAcara->increment('saldo_donasi', $nominal);
+                    if ($row['mutation_type'] === 'tiket') {
+                        $lockedAcara->increment('tiket_terjual', 1);
+                    }
+                }
+
+                // Input Infaq Tambahan
+                if ($infaq > 0) {
+                    $lockedAcara->payments()->create([
+                        'nominal' => $infaq,
+                        'nominal_plus' => $infaq,
+                        'debit_akun' => 'NR-DB CASH/BANK (' . $row['via'] . ')',
+                        'kredit_akun' => 'NR-DB INFAQ SISTEM',
+                        'mutation_type' => 'infaq_sistem',
+                        'no_wa' => $row['no_wa'] ?? null,
+                        'sapaan' => $row['sapaan'] ?? 'Sdr/i',
+                        'atas_nama' => $namaEntitas,
+                        'notes' => '[Bulk Infaq Sistem]',
+                        'payment_method' => 'CASH',
+                        'rekening' => $row['via'],
+                        'date' => $row['date'],
+                        'status' => 'success',
+                        'user_id' => auth()->id(),
+                        'jumlah_tiket' => 0
+                    ]);
+
+                    $lockedAcara->increment('saldo_donasi', $infaq);
+                }
             }
 
-            $tasyaruf = new Payment([
-                'nominal' => $request->nominal,
-                'nominal_plus' => $request->nominal,
-                'debit_akun' => 'LR-KR OPERASIONAL ACARA', 
-                'kredit_akun' => 'NR-DB CASH/BANK (' . $request->rekening . ')', 
-                'mutation_type' => 'tasyaruf_acara',
-                'no_wa' => '-', 'sapaan' => '-', 'atas_nama' => 'Penyaluran Sistem',
-                'notes' => $request->notes, 'payment_method' => 'transfer',
-                'rekening' => $request->rekening, 'date' => now(), 'user_id' => auth()->id(), 'is_anonymous' => false,
-                'jumlah_tiket' => 0
-            ]);
-            
-            $lockedAcara->payments()->save($tasyaruf);
-            $lockedAcara->decrement('saldo_donasi', $request->nominal);
-
             DB::commit();
-            return back()->with('success', 'Pengeluaran kas acara berhasil dicatat.');
+            return back()->with('success', 'Gabungan data kas transaksi massal berhasil dicatat.');
+
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Gagal mencatat pengeluaran: ' . $e->getMessage()]);
+            return back()->withErrors(['bulk_error' => 'Gagal menyimpan transaksi: ' . $e->getMessage()]);
         }
-    }  
+    }
 
     /**
-     * Detail Acara Publik (FIXED DATA SEPARATE & PROGRESS BAR)
+     * PROSES: Input Jurnal Pengeluaran Kas / Tasyaruf Acara (Admin)
      */
+    public function storeTasyaruf(Request $request, Acara $acara)
+    {
+        if ($request->has('nominal')) {
+            $request->merge([
+                'nominal' => str_replace('.', '', $request->nominal),
+            ]);
+        }
+
+        $request->validate([
+            'date'      => 'required|date',
+            'atas_nama' => 'required|string|max:255',
+            'nominal'   => 'required|numeric|min:1',
+            'via'       => 'required|string|max:50',
+            'notes'     => 'nullable|string|max:1000',
+        ]);
+
+        $nominalKeluar = (int) $request->nominal;
+
+        if ($acara->saldo_donasi < $nominalKeluar) {
+            return back()->withErrors(['bulk_error' => 'Gagal! Saldo kas tidak mencukupi.']);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $acara->payments()->create([
+                'nominal'         => $nominalKeluar,
+                'nominal_mins'    => $nominalKeluar,
+                'debit_akun'      => 'NR-DB BIAYA OPERASIONAL ACARA',
+                'kredit_akun'     => 'NR-DB CASH/BANK (' . $request->via . ')',
+                'mutation_type'   => 'tasyaruf',
+                'sapaan'          => 'Pihak',
+                'atas_nama'       => $request->atas_nama,
+                'notes'           => '[Pengeluaran] ' . ($request->notes ?? '-'),
+                'payment_method'  => 'CASH',
+                'rekening'        => $request->via,
+                'date'            => $request->date,
+                'status'          => 'success',
+                'user_id'         => auth()->id(),
+            ]);
+
+            $acara->decrement('saldo_donasi', $nominalKeluar);
+
+            DB::commit();
+            return back()->with('success', 'Pengeluaran kas berhasil dicatat.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['bulk_error' => $e->getMessage()]);
+        }
+    }   
+
     public function show(Acara $acara)
     {
         $cleanDescription = Str::limit(strip_tags($acara->body), 150, '...');
         $imageUrl = $acara->thumbnail ? $acara->thumbnail : asset('favicon.png');
 
-        // Tambahkan kalkulasi total donasi masuk (hanya yang sudah sukses terverifikasi)
         $acara->loadSum(['payments as total_donasi_masuk' => function ($q) {
-            $q->where('mutation_type', 'donasi_acara')->where('status', 'success');
+            $q->whereIn('mutation_type', ['tiket', 'sponsor'])->where('status', 'success');
         }], 'nominal');
 
-        // Load relasi pendukung secara rapi dan pastikan 'infaq_sistem' juga ikut dimuat untuk log verifikasi frontend
         $acara->load([
             'user:id,name', 
             'komentars' => function($q) { 
@@ -310,8 +436,7 @@ class AcaraController extends Controller
             },
             'reaksis',
             'payments' => function($q) {
-                $q->whereIn('mutation_type', ['tiket_utama', 'donasi_acara', 'infaq_sistem', 'tasyaruf_acara'])
-                  ->latest();
+                $q->whereIn('mutation_type', ['tiket', 'infaq_sistem', 'sponsor', 'tasyaruf'])->latest();
             }
         ]);
 
@@ -389,7 +514,7 @@ class AcaraController extends Controller
     }
 
     /**
-     * Store Payment (FIXED JUMLAH TIKET PADA DONASI)
+     * Store Payment Publik (Melalui form Gate)
      */
     public function storePayment(Request $request, Acara $acara)
     {
@@ -419,8 +544,6 @@ class AcaraController extends Controller
             DB::beginTransaction();
 
             $lockedAcara = Acara::where('id', $acara->id)->lockForUpdate()->first();
-            
-            // Jika tiket = ambil request asli, jika donasi = set 0 (bukan kuota kursi) agar tidak merusak manifest peserta utama
             $jumlahTiket = $request->buy_type === 'tiket' ? (int) $request->jumlah_tiket : 0;
 
             if ($request->buy_type === 'tiket' && $lockedAcara->accept_tiket) {
@@ -435,16 +558,15 @@ class AcaraController extends Controller
             }
 
             $isAnonymous = filter_var($request->is_anonymous, FILTER_VALIDATE_BOOLEAN);
-            
             $imagePath = $request->hasFile('bukti_acara') 
                 ? $request->file('bukti_acara')->store('bukti-transfer', 'public') 
                 : null;
 
             $namaDonatur = $isAnonymous && $request->buy_type === 'donasi' ? 'Hamba Allah' : $request->atas_nama;
 
-            // Jurnal Infaq Sistem
+            // 1. Log Jurnal Infaq Sistem
             if ((int) $request->infaq_sistem > 0) {
-                $lockedAcara->payments()->save(new Payment([
+                $lockedAcara->payments()->create([
                     'nominal' => $request->infaq_sistem,
                     'nominal_plus' => $request->infaq_sistem,
                     'debit_akun' => 'NR-DB CASH/BANK (' . $request->rekening . ')',
@@ -453,26 +575,23 @@ class AcaraController extends Controller
                     'no_wa' => $request->no_wa,
                     'sapaan' => $request->sapaan,
                     'atas_nama' => $namaDonatur,
-                    'notes' => 'Infaq Pemeliharaan Aplikasi Event: ' . ($request->notes ?? '-'),
+                    'notes' => 'Infaq Sistem: ' . ($request->notes ?? '-'),
                     'payment_method' => $request->payment_method,
                     'rekening' => $request->rekening,
                     'date' => now(),
                     'user_id' => auth()->id(),
                     'image' => $imagePath,
                     'status' => 'pending',
-                    'jumlah_tiket' => 0 // Infaq sistem tidak memakai kuota kursi
-                ]));
+                    'jumlah_tiket' => 0
+                ]);
             }
 
-            // Jurnal Utama (Tiket VS Donasi)
-            $mType = $request->buy_type === 'tiket' ? 'tiket_utama' : 'donasi_acara';
-            $kreditAkun = $request->buy_type === 'tiket' ? 'NR-DB TIKET ACARA' : 'NR-DB DONASI ACARA';
-            
-            $prefixNotes = $request->buy_type === 'tiket' 
-                ? "[Booking {$jumlahTiket} Tiket] " 
-                : "[Donasi Sukarela] ";
+            // 2. Log Jurnal Arus Utama (tiket / sponsor)
+            $mType = $request->buy_type === 'tiket' ? 'tiket' : 'sponsor';
+            $kreditAkun = $request->buy_type === 'tiket' ? 'NR-DB TIKET ACARA' : 'NR-DB SPONSOR ACARA';
+            $prefixNotes = $request->buy_type === 'tiket' ? "[Booking {$jumlahTiket} Tiket] " : "[Sponsor/Donasi] ";
 
-            $lockedAcara->payments()->save(new Payment([
+            $lockedAcara->payments()->create([
                 'nominal' => $request->nominal,
                 'nominal_plus' => $request->nominal,
                 'debit_akun' => 'NR-DB CASH/BANK (' . $request->rekening . ')',
@@ -488,19 +607,18 @@ class AcaraController extends Controller
                 'user_id' => auth()->id(),
                 'image' => $imagePath,
                 'status' => 'pending',
-                'jumlah_tiket' => $jumlahTiket // FIXED: Menyimpan data kuantitas tiket ke tabel pivot ledger
-            ]));
+                'jumlah_tiket' => $jumlahTiket
+            ]);
 
             if ($request->buy_type === 'tiket') {
                 $lockedAcara->increment('tiket_terjual', $jumlahTiket);
-            } else {
-                $lockedAcara->increment('saldo_donasi', $request->nominal);
             }
 
+            // Catatan: Sisa saldo (`saldo`) akan di-increment otomatis oleh sistem/admin setelah status transaksi diubah dari 'pending' ke 'success'.
+
             DB::commit();
-            
             return redirect()->route('acara.show', [$lockedAcara->slug])
-                             ->with('success', 'Registrasi dan data pembayaran berhasil disimpan. Mohon tunggu verifikasi tim admin.');
+                             ->with('success', 'Registrasi berhasil dikirim. Mohon tunggu verifikasi admin.');
 
         } catch (\Exception $e) {
             DB::rollBack();

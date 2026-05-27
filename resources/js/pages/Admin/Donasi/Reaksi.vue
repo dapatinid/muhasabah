@@ -22,7 +22,7 @@ const renderEmoji = (type: string) => {
     switch (type) {
         case 'love': return { char: '❤️', label: 'Cinta / Peduli', bg: 'bg-rose-50 dark:bg-rose-950/30 border-rose-100 dark:border-rose-900/50 text-rose-600' }
         case 'like': return { char: '👍', label: 'Suka / Dukung', bg: 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-100 dark:border-emerald-900/50 text-emerald-600' }
-        case 'pray': return { char: '🙏', label: 'Doa / Harapan', bg: 'bg-indigo-50 dark:bg-indigo-950/30 border-indigo-100 dark:border-indigo-900/50 text-indigo-600' }
+        case 'pray': return { char: '🙏', label: 'Doa / Harapan', bg: 'bg-amber-50 dark:bg-amber-950/30 border-amber-100 dark:border-amber-900/50 text-amber-600' }
         case 'sad': return { char: '😢', label: 'Sedih / Empati', bg: 'bg-amber-50 dark:bg-amber-950/30 border-amber-100 dark:border-amber-900/50 text-amber-600' }
         default: return { char: '✨', label: 'Reaksi', bg: 'bg-zinc-50 dark:bg-zinc-800 border-zinc-100 dark:border-zinc-700 text-zinc-600' }
     }
@@ -41,7 +41,7 @@ const goToPagination = (url: string | null) => {
         <!-- HEADER SECTION (Tetap sama seperti kode Anda) -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
-                <Link href="/admin/donasi" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-indigo-600 transition-colors">
+                <Link href="/admin/donasi" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-amber-600 transition-colors">
                     <ArrowLeft class="size-5" />
                 </Link>
                 <div>
@@ -61,7 +61,7 @@ const goToPagination = (url: string | null) => {
                     <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/edit`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><SquarePen class="size-4 text-zinc-400" />Edit Konten</Link></div>
                     <div class="px-2"><Link :href="`/donasi/${donasi.slug}`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><Eye class="size-4 text-zinc-400" />Preview Publik</Link></div>
                     <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/progress`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><Newspaper class="size-4 text-zinc-400" />Progress / Berita</Link></div>
-                    <div class="px-2"><span class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl"><HeartHandshake class="size-4" />Reaksi / Emoticon</span></div>
+                    <div class="px-2"><span class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 rounded-xl"><HeartHandshake class="size-4" />Reaksi / Emoticon</span></div>
                     <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/komentar`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><MessageSquare class="size-4 text-zinc-400" />Komentar & Doa</Link></div>
                     <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/donasi-masuk`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><ArrowDownCircle class="size-4 text-emerald-500" />Donasi Masuk</Link></div>
                     <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/tasyaruf`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><ArrowUpCircle class="size-4 text-amber-500" />Tasyaruf Keluar</Link></div>
@@ -116,7 +116,7 @@ const goToPagination = (url: string | null) => {
 
                 <!-- PAGINASI LOG -->
                 <div v-if="reaksis.links.length > 3" class="p-4 flex justify-center gap-1 border-t border-zinc-100 dark:border-zinc-800">
-                    <button v-for="(link, idx) in reaksis.links" :key="idx" @click="goToPagination(link.url)" v-html="link.label" class="px-3 py-1.5 rounded-lg text-xs" :class="[link.active ? 'bg-indigo-600 text-white font-bold' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400', !link.url ? 'opacity-40 cursor-not-allowed' : '']" />
+                    <button v-for="(link, idx) in reaksis.links" :key="idx" @click="goToPagination(link.url)" v-html="link.label" class="px-3 py-1.5 rounded-lg text-xs" :class="[link.active ? 'bg-amber-600 text-white font-bold' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400', !link.url ? 'opacity-40 cursor-not-allowed' : '']" />
                 </div>
             </div>
 

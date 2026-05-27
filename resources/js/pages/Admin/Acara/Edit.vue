@@ -130,19 +130,50 @@ function submit() {
             </div>
 
             <div class="relative flex">
-                <button type="button" @click="dropdownOpen = !dropdownOpen" @blur="setTimeout(() => dropdownOpen = false, 200)" class="ms-auto h-11 px-5 inline-flex items-center gap-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-bold text-zinc-700 dark:text-zinc-200 shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-all">
+                <button 
+                    type="button" 
+                    @click="dropdownOpen = !dropdownOpen" 
+                    @blur="setTimeout(() => dropdownOpen = false, 200)" 
+                    class="ms-auto h-11 px-5 inline-flex items-center gap-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-bold text-zinc-700 dark:text-zinc-200 shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-all"
+                >
                     <Settings class="size-4 text-zinc-400" />
                     <span>Kelola Acara</span>
                     <ChevronDown class="size-4 text-zinc-400" :class="{ 'rotate-180': dropdownOpen }" />
                 </button>
+                
                 <div v-if="dropdownOpen" class="absolute right-0 mt-12 w-56 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl z-50 py-2">
-                    <div class="px-2"><span class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl"><SquarePen class="size-4" />Edit Konten</span></div>
-                    <div class="px-2"><Link :href="`/acara/${acara.slug}`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><Eye class="size-4 text-zinc-400" />Preview Publik</Link></div>
-                    <div class="px-2"><Link :href="`/admin/acara/${acara.slug}/absensi`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><Newspaper class="size-4 text-zinc-400" />Log Absensi Peserta</Link></div>
-                    <div class="px-2"><Link :href="`/admin/acara/${acara.slug}/peserta`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><Ticket class="size-4 text-emerald-500" />Daftar Manifes Tiket</Link></div>
-                    <div class="px-2"><Link :href="`/admin/acara/${acara.slug}/donasi-masuk`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><ArrowDownCircle class="size-4 text-amber-500" />Sponsor / Donasi Masuk</Link></div>
+                    <div class="px-2">
+                        <span class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl">
+                            <SquarePen class="size-4" />Edit Konten
+                        </span>
+                    </div>
+                    <div class="px-2">
+                        <Link :href="`/acara/${acara.slug}`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl">
+                            <Eye class="size-4 text-zinc-400" />Preview Publik
+                        </Link>
+                    </div>
+                    <div class="px-2">
+                        <Link :href="`/admin/acara/${acara.slug}/progress`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl">
+                            <Newspaper class="size-4 text-zinc-400" />Progress / Berita
+                        </Link>
+                    </div>
+                    <div class="px-2">
+                        <Link :href="`/admin/acara/${acara.slug}/reaksi`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl">
+                            <HeartHandshake class="size-4 text-zinc-400" />Reaksi / Emoticon
+                        </Link>
+                    </div>
+                    <div class="px-2">
+                        <Link :href="`/admin/acara/${acara.slug}/komentar`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl">
+                            <MessageSquare class="size-4 text-zinc-400" />Komentar & Doa
+                        </Link>
+                    </div>
+                    <div class="px-2">
+                        <Link :href="`/admin/acara/${acara.slug}/keuangan`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl">
+                            <Ticket class="size-4 text-indigo-500" />Buku Kas Keuangan
+                        </Link>
+                    </div>
                 </div>
-            </div>             
+            </div>            
         </div>
 
         <div v-if="Object.keys(form.errors).length > 0" class="mb-6 p-4 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 text-sm flex gap-2 items-start">

@@ -41,7 +41,7 @@ const goToPagination = (url: string | null) => {
         <!-- HEADER SECTION -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
-                <Link href="/admin/donasi" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-indigo-600 transition-colors">
+                <Link href="/admin/donasi" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-amber-600 transition-colors">
                     <ArrowLeft class="size-5" />
                 </Link>
                 <div>
@@ -62,7 +62,7 @@ const goToPagination = (url: string | null) => {
                     <div class="px-2"><Link :href="`/donasi/${donasi.slug}`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><Eye class="size-4 text-zinc-400" />Preview Publik</Link></div>
                     <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/progress`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><Newspaper class="size-4 text-zinc-400" />Progress / Berita</Link></div>
                     <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/reaksi`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><HeartHandshake class="size-4 text-zinc-400" />Reaksi / Emoticon</Link></div>
-                    <div class="px-2"><span class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl"><MessageSquare class="size-4" />Komentar & Doa</span></div>
+                    <div class="px-2"><span class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 rounded-xl"><MessageSquare class="size-4" />Komentar & Doa</span></div>
                     <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/donasi-masuk`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><ArrowDownCircle class="size-4 text-emerald-500" />Donasi Masuk</Link></div>
                     <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/tasyaruf`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><ArrowUpCircle class="size-4 text-amber-500" />Tasyaruf Keluar</Link></div>
                 </div>
@@ -74,7 +74,7 @@ const goToPagination = (url: string | null) => {
             <button 
                 @click="switchTab('doa_transaksi')"
                 class="flex items-center gap-2 px-6 py-3 border-b-2 font-bold text-sm transition-all"
-                :class="[activeTab === 'doa_transaksi' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-zinc-400 hover:text-zinc-600']"
+                :class="[activeTab === 'doa_transaksi' ? 'border-amber-600 text-amber-600 dark:text-amber-400' : 'border-transparent text-zinc-400 hover:text-zinc-600']"
             >
                 <Landmark class="size-4" />
                 Doa dari Transaksi Donasi
@@ -82,7 +82,7 @@ const goToPagination = (url: string | null) => {
             <button 
                 @click="switchTab('komentar_publik')"
                 class="flex items-center gap-2 px-6 py-3 border-b-2 font-bold text-sm transition-all"
-                :class="[activeTab === 'komentar_publik' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-zinc-400 hover:text-zinc-600']"
+                :class="[activeTab === 'komentar_publik' ? 'border-amber-600 text-amber-600 dark:text-amber-400' : 'border-transparent text-zinc-400 hover:text-zinc-600']"
             >
                 <MessageSquareText class="size-4" />
                 Komentar Umum Publik
@@ -107,7 +107,7 @@ const goToPagination = (url: string | null) => {
 
                 <!-- Paginasi Tab Payments -->
                 <div v-if="paymentsDoa.links.length > 3" class="flex justify-center gap-1 pt-4">
-                    <button v-for="(link, idx) in paymentsDoa.links" :key="idx" @click="goToPagination(link.url)" v-html="link.label" class="px-3 py-1.5 rounded-lg text-xs" :class="[link.active ? 'bg-indigo-600 text-white font-bold' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400', !link.url ? 'opacity-40 cursor-not-allowed' : '']" />
+                    <button v-for="(link, idx) in paymentsDoa.links" :key="idx" @click="goToPagination(link.url)" v-html="link.label" class="px-3 py-1.5 rounded-lg text-xs" :class="[link.active ? 'bg-amber-600 text-white font-bold' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400', !link.url ? 'opacity-40 cursor-not-allowed' : '']" />
                 </div>
             </div>
 
@@ -134,7 +134,7 @@ const goToPagination = (url: string | null) => {
 
                 <!-- Paginasi Tab Komentar Publik -->
                 <div v-if="komentarsPublik.links.length > 3" class="flex justify-center gap-1 pt-4">
-                    <button v-for="(link, idx) in komentarsPublik.links" :key="idx" @click="goToPagination(link.url)" v-html="link.label" class="px-3 py-1.5 rounded-lg text-xs" :class="[link.active ? 'bg-indigo-600 text-white font-bold' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400', !link.url ? 'opacity-40 cursor-not-allowed' : '']" />
+                    <button v-for="(link, idx) in komentarsPublik.links" :key="idx" @click="goToPagination(link.url)" v-html="link.label" class="px-3 py-1.5 rounded-lg text-xs" :class="[link.active ? 'bg-amber-600 text-white font-bold' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400', !link.url ? 'opacity-40 cursor-not-allowed' : '']" />
                 </div>
             </div>
 

@@ -73,7 +73,7 @@ function submit() {
         <!-- HEADER SECTION DENGAN DROPDOWN -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div class="flex items-center gap-4">
-                <Link href="/admin/donasi" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-indigo-600 transition-colors">
+                <Link href="/admin/donasi" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-amber-600 transition-colors">
                     <ArrowLeft class="size-5" />
                 </Link>
                 <div>
@@ -90,7 +90,7 @@ function submit() {
                     <ChevronDown class="size-4 text-zinc-400" :class="{ 'rotate-180': dropdownOpen }" />
                 </button>
                 <div v-if="dropdownOpen" class="absolute right-0 mt-12 w-56 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl z-50 py-2">
-                    <div class="px-2"><span class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl"><SquarePen class="size-4" />Edit Konten</span></div>
+                    <div class="px-2"><span class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 rounded-xl"><SquarePen class="size-4" />Edit Konten</span></div>
                     <div class="px-2"><Link :href="`/donasi/${donasi.slug}`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><Eye class="size-4 text-zinc-400" />Preview Publik</Link></div>
                     <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/progress`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><Newspaper class="size-4 text-zinc-400" />Progress / Berita</Link></div>
                     <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/reaksi`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><HeartHandshake class="size-4 text-zinc-400" />Reaksi / Emoticon</Link></div>
@@ -107,7 +107,7 @@ function submit() {
             <div class="p-4 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/50">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div :class="form.is_published ? 'bg-indigo-100 text-indigo-600' : 'bg-zinc-200 text-zinc-500'" class="p-2 rounded-lg">
+                        <div :class="form.is_published ? 'bg-blue-100 text-blue-600' : 'bg-zinc-200 text-zinc-500'" class="p-2 rounded-lg">
                             <Globe v-if="form.is_published" class="size-5" />
                             <Lock v-else class="size-5" />
                         </div>
@@ -122,7 +122,7 @@ function submit() {
                         type="checkbox" 
                         id="is_published" 
                         v-model="form.is_published"
-                        class="size-6 rounded-lg border-zinc-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                        class="size-6 rounded-lg border-zinc-300 text-amber-600 focus:ring-amber-500 cursor-pointer"
                     />
                 </div>
             </div>
@@ -134,7 +134,7 @@ function submit() {
                     <Input 
                         id="judul" 
                         v-model="form.judul" 
-                        class="h-12 rounded-xl focus:ring-indigo-500 font-semibold"
+                        class="h-12 rounded-xl focus:ring-amber-500 font-semibold"
                         required
                     />
                     <div v-if="form.errors.judul" class="text-red-500 text-xs mt-1">{{ form.errors.judul }}</div>
@@ -144,7 +144,7 @@ function submit() {
                     <Input 
                         id="slug" 
                         v-model="form.slug" 
-                        class="h-12 rounded-xl focus:ring-indigo-500"
+                        class="h-12 rounded-xl focus:ring-amber-500"
                         required
                     />
                     <div v-if="form.errors.slug" class="text-red-500 text-xs mt-1">{{ form.errors.slug }}</div>
@@ -158,7 +158,7 @@ function submit() {
                     <select 
                         id="kategori"
                         v-model="form.kategori"
-                        class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-amber-500 focus:border-amber-500"
                     >
                         <option v-for="cat in categories" :key="cat.value" :value="cat.value">
                             {{ cat.label }}
@@ -171,7 +171,7 @@ function submit() {
                     <select 
                         id="subkategori"
                         v-model="form.subkategori"
-                        class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-amber-500 focus:border-amber-500"
                     >
                         <option v-for="subcat in subcategories" :key="subcat.value" :value="subcat.value">
                             {{ subcat.label }}
@@ -186,7 +186,7 @@ function submit() {
                         id="tgl_mulai" 
                         type="date"
                         v-model="form.tgl_mulai" 
-                        class="h-11 rounded-xl focus-visible:ring-indigo-500"
+                        class="h-11 rounded-xl focus-visible:ring-amber-500"
                     />
                     <div v-if="form.errors.tgl_mulai" class="text-red-500 text-xs mt-1">{{ form.errors.tgl_mulai }}</div>
                 </div>
@@ -198,7 +198,7 @@ function submit() {
                         id="tgl_selesai" 
                         type="date"
                         v-model="form.tgl_selesai" 
-                        class="h-11 rounded-xl focus-visible:ring-indigo-500"
+                        class="h-11 rounded-xl focus-visible:ring-amber-500"
                         :disabled="Number(form.target_dana) === 0"
                     />
                     <p v-if="Number(form.target_dana) === 0" class="text-[11px] text-zinc-400 italic mt-1">
@@ -216,7 +216,7 @@ function submit() {
                             id="target_dana" 
                             type="number"
                             v-model="form.target_dana" 
-                            class="pl-10 h-11 rounded-xl focus:ring-indigo-500"
+                            class="pl-10 h-11 rounded-xl focus:ring-amber-500"
                             required
                         />
                     </div>
@@ -234,7 +234,7 @@ function submit() {
                     id="panduan_donasi" 
                     v-model="form.panduan_donasi" 
                     placeholder="Contoh: Minimal donasi paket Rp 50.000 atau kelipatannya." 
-                    class="h-11 rounded-xl focus-visible:ring-indigo-500"
+                    class="h-11 rounded-xl focus-visible:ring-amber-500"
                     required
                 />
                 <p class="text-[11px] text-zinc-400 italic">
@@ -260,7 +260,7 @@ function submit() {
                     </Link>
                     <Button 
                         type="submit" 
-                        class="flex-1 md:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-8 h-11 rounded-xl font-bold gap-2 shadow-lg shadow-indigo-500/20"
+                        class="flex-1 md:flex-none bg-amber-600 hover:bg-amber-700 text-white px-8 h-11 rounded-xl font-bold gap-2 shadow-lg shadow-amber-500/20"
                         :disabled="form.processing"
                     >
                         <Save class="size-4" />

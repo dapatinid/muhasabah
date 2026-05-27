@@ -59,7 +59,7 @@ function submit() {
 
     <div class="py-10 px-4 w-full mx-auto">
       <div class="flex items-center gap-4 mb-8">
-        <Link href="/admin/donasi" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-indigo-600 transition">
+        <Link href="/admin/donasi" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-amber-600 transition">
           <ArrowLeft class="size-5" />
         </Link>
         <div>
@@ -77,7 +77,7 @@ function submit() {
             id="judul" 
             v-model="form.judul" 
             placeholder="Contoh: Renovasi Atap Masjid Al-Ikhlas" 
-            class="text-lg font-semibold h-12 rounded-xl focus-visible:ring-indigo-500"
+            class="text-lg font-semibold h-12 rounded-xl focus-visible:ring-amber-500"
             required
           />
           <div v-if="form.errors.judul" class="text-red-500 text-xs">{{ form.errors.judul }}</div>
@@ -90,7 +90,7 @@ function submit() {
             <select 
               id="kategori"
               v-model="form.kategori"
-              class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-indigo-500 focus:border-indigo-500"
+              class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-amber-500 focus:border-amber-500"
             >
               <option v-for="cat in categories" :key="cat.value" :value="cat.value">
                 {{ cat.label }}
@@ -103,7 +103,7 @@ function submit() {
             <select 
               id="subkategori"
               v-model="form.subkategori"
-              class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-indigo-500 focus:border-indigo-500"
+              class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-amber-500 focus:border-amber-500"
             >
               <option v-for="subcat in subcategories" :key="subcat.value" :value="subcat.value">
                 {{ subcat.label }}
@@ -119,7 +119,7 @@ function submit() {
                 id="tgl_mulai" 
                 type="date"
                 v-model="form.tgl_mulai" 
-                class="h-11 rounded-xl focus-visible:ring-indigo-500"
+                class="h-11 rounded-xl focus-visible:ring-amber-500"
               />
             </div>
             <div v-if="form.errors.tgl_mulai" class="text-red-500 text-xs">{{ form.errors.tgl_mulai }}</div>
@@ -133,7 +133,7 @@ function submit() {
                 id="tgl_selesai" 
                 type="date"
                 v-model="form.tgl_selesai" 
-                class="h-11 rounded-xl focus-visible:ring-indigo-500"
+                class="h-11 rounded-xl focus-visible:ring-amber-500"
                 :disabled="Number(form.target_dana) === 0"
               />
             </div>
@@ -152,7 +152,7 @@ function submit() {
                 id="target_dana" 
                 type="number"
                 v-model="form.target_dana" 
-                class="pl-10 h-11 rounded-xl focus-visible:ring-indigo-500"
+                class="pl-10 h-11 rounded-xl focus-visible:ring-amber-500"
                 placeholder="0"
                 required
               />
@@ -171,7 +171,7 @@ function submit() {
             id="panduan_donasi" 
             v-model="form.panduan_donasi" 
             placeholder="Contoh: Minimal donasi paket Rp 50.000 atau kelipatannya." 
-            class="h-11 rounded-xl focus-visible:ring-indigo-500"
+            class="h-11 rounded-xl focus-visible:ring-amber-500"
             required
           />
           <p class="text-[11px] text-zinc-400 italic">
@@ -193,13 +193,13 @@ function submit() {
         <!-- Action -->
         <div class="flex flex-col md:flex-row gap-4 items-center justify-between pt-6 border-t border-zinc-100 dark:border-zinc-800">
           <div class="flex items-center gap-2 text-zinc-500">
-            <Target class="size-4 text-indigo-500" />
+            <Target class="size-4 text-amber-500" />
             <span class="text-xs italic">Data saldo akan otomatis terakumulasi dari histori payment.</span>
           </div>
 
           <Button 
             type="submit" 
-            class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-10 h-12 rounded-xl font-bold gap-2 shadow-lg shadow-indigo-200 dark:shadow-none transition-all"
+            class="w-full md:w-auto bg-amber-600 hover:bg-amber-700 text-white px-10 h-12 rounded-xl font-bold gap-2 shadow-lg shadow-amber-200 dark:shadow-none transition-all"
             :disabled="form.processing"
           >
             <Save class="size-5" />

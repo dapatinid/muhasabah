@@ -187,7 +187,7 @@ const customPagination = computed(() => {
         <!-- HEADER SECTION -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
-                <Link href="/admin/donasi" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-indigo-600 transition-colors">
+                <Link href="/admin/donasi" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-amber-600 transition-colors">
                     <ArrowLeft class="size-5" />
                 </Link>
                 <div>
@@ -214,10 +214,10 @@ const customPagination = computed(() => {
                     <div v-if="dropdownOpen" class="absolute right-0 mt-12 w-56 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl z-50 py-2">
                         <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/edit`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><SquarePen class="size-4 text-zinc-400" />Edit Konten</Link></div>
                         <div class="px-2"><Link :href="`/donasi/${donasi.slug}`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><Eye class="size-4 text-zinc-400" />Preview Publik</Link></div>
-                    <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/progress`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><Newspaper class="size-4 text-zinc-400" />Progress / Berita</Link></div>
+                        <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/progress`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><Newspaper class="size-4 text-zinc-400" />Progress / Berita</Link></div>
                         <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/reaksi`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><HeartHandshake class="size-4 text-zinc-400" />Reaksi / Emoticon</Link></div>
                         <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/komentar`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><MessageSquare class="size-4" />Komentar & Doa</Link></div>
-                        <div class="px-2"><span class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl"><ArrowDownCircle class="size-4 text-emerald-500" />Donasi Masuk</span></div>
+                        <div class="px-2"><span class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 rounded-xl"><ArrowDownCircle class="size-4 text-emerald-500" />Donasi Masuk</span></div>
                         <div class="px-2"><Link :href="`/admin/donasi/${donasi.slug}/tasyaruf`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><ArrowUpCircle class="size-4 text-amber-500" />Tasyaruf Keluar</Link></div>
                     </div>
                 </div>
@@ -228,7 +228,7 @@ const customPagination = computed(() => {
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="p-5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm">
                 <span class="text-xs text-zinc-400 block font-medium">Saldo Program Saat Ini</span>
-                <span class="text-xl font-bold text-indigo-600 dark:text-indigo-400">{{ formatIDR(donasi.saldo) }}</span>
+                <span class="text-xl font-bold text-blue-600 dark:text-blue-400">{{ formatIDR(donasi.saldo) }}</span>
             </div>
             <div class="p-5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm">
                 <span class="text-xs text-zinc-400 block font-medium">Akumulasi Pokok Donasi</span>
@@ -477,8 +477,8 @@ const customPagination = computed(() => {
                                 </div>
                             </div>
                             <div class="flex flex-col gap-1">
-                                <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-wider">Sumber / Via</span>
-                                <select v-model="row.via" class="h-10 px-3 text-xs font-bold bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:ring-1 focus:ring-indigo-500 text-zinc-700 dark:text-zinc-200">
+                                <span class="text-[10px] font-bold text-amber-500 uppercase tracking-wider">Sumber / Via</span>
+                                <select v-model="row.via" class="h-10 px-3 text-xs font-bold bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:ring-1 focus:ring-amber-500 text-zinc-700 dark:text-zinc-200">
                                     <option value="CASH">CASH (TUNAI)</option><option value="BCA">BANK BCA</option><option value="BSI">BANK BSI</option><option value="MANDIRI">BANK MANDIRI</option><option value="BRI">BANK BRI</option><option value="QRIS">QRIS</option>
                                 </select>
                             </div>
@@ -486,7 +486,7 @@ const customPagination = computed(() => {
 
                         <div class="w-full md:pl-7 border-t border-zinc-100 dark:border-zinc-800/60 pt-3">
                             <div class="w-full relative">
-                                <input type="text" placeholder="Tulis baris untaian doa, amanah pesan spiritual, atau harapan khusus donatur disini..." v-model="row.notes" class="w-full h-10 px-3.5 pr-24 text-xs italic text-zinc-600 dark:text-zinc-300 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:ring-1 focus:ring-indigo-500 placeholder-zinc-400" />
+                                <input type="text" placeholder="Tulis baris untaian doa, amanah pesan spiritual, atau harapan khusus donatur disini..." v-model="row.notes" class="w-full h-10 px-3.5 pr-24 text-xs italic text-zinc-600 dark:text-zinc-300 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:ring-1 focus:ring-amber-500 placeholder-zinc-400" />
                                 <span class="absolute right-3 top-2.5 text-[9px] uppercase tracking-wider font-extrabold text-zinc-300 dark:text-zinc-600 pointer-events-none select-none">Pesan & Doa</span>
                             </div>
                         </div>

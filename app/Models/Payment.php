@@ -10,8 +10,6 @@ class Payment extends Model
 {
     use SoftDeletes;
 
-    protected $guarded = [];
-
     protected $fillable = [
         'paymentable_id', 'paymentable_type', 'status', 'link', 'image', 'notes', 
         'mutation_type', 'debit_akun', 'kredit_akun', 'payment_method',

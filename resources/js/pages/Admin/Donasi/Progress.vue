@@ -55,7 +55,7 @@ function submit() {
     <div class="py-10 px-4 w-full mx-auto">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div class="flex items-center gap-4">
-                <Link href="/admin/donasi" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-indigo-600 transition-colors">
+                <Link href="/admin/donasi" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-amber-600 transition-colors">
                     <ArrowLeft class="size-5" />
                 </Link>
                 <div>
@@ -86,7 +86,7 @@ function submit() {
                             <Eye class="size-4 text-zinc-400" />Preview Publik
                         </Link>
                     </div>
-                    <div class="px-2"><span class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl"><Newspaper class="size-4" />Progress / Berita</span></div>
+                    <div class="px-2"><span class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 rounded-xl"><Newspaper class="size-4" />Progress / Berita</span></div>
                     <div class="px-2">
                         <Link :href="`/admin/donasi/${donasi.slug}/reaksi`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl">
                             <HeartHandshake class="size-4 text-zinc-400" />Reaksi / Emoticon
@@ -113,11 +113,11 @@ function submit() {
 
         <form @submit.prevent="submit" class="space-y-8 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 rounded-3xl shadow-sm">   
             
-            <div class="flex items-start gap-3 p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/50 text-indigo-600 dark:text-indigo-400 text-sm">
+            <div class="flex items-start gap-3 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900/50 text-amber-600 dark:text-amber-400 text-sm">
                 <Info class="size-5 shrink-0 mt-0.5" />
                 <div class="space-y-1">
                     <p class="font-bold">Informasi Tampilan Halaman Publik</p>
-                    <p class="opacity-90 text-xs leading-relaxed text-indigo-700 dark:text-indigo-300">
+                    <p class="opacity-90 text-xs leading-relaxed text-amber-700 dark:text-amber-300">
                         Tulisan yang Anda masukkan di sini akan menggantikan tampilan "Belum ada berita" pada tab <strong>Berita</strong> di halaman donasi publik.
                     </p>
                 </div>
@@ -141,7 +141,7 @@ function submit() {
                     </Link>
                     <Button 
                         type="submit" 
-                        class="flex-1 md:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-8 h-11 rounded-xl font-bold gap-2 shadow-lg shadow-indigo-500/20"
+                        class="flex-1 md:flex-none bg-amber-600 hover:bg-amber-700 text-white px-8 h-11 rounded-xl font-bold gap-2 shadow-lg shadow-amber-500/20"
                         :disabled="form.processing"
                     >
                         <Save class="size-4" />

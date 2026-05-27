@@ -387,7 +387,7 @@ function submit() {
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-stone-500">Tipe Kontribusi</span>
-                                    <span class="text-stone-200 font-bold capitalize">{{ form.tipe_kontribusi }}</span>
+                                    <span class="text-stone-200 font-bold capitalize">{{ form.buy_type }}</span>
                                 </div>
                                 <div v-if="jenisKontribusi === 'tiket'" class="flex justify-between">
                                     <span class="text-stone-500">Jumlah Booking</span>
@@ -398,7 +398,7 @@ function submit() {
                                     <span class="text-stone-200 font-mono">{{ formatCurrency(parseInt(form.nominal) || 0) }}</span>
                                 </div>
                                 <div class="flex justify-between text-amber-400/80">
-                                    <span class="italic">Infaq Pemeliharaan Sistem</span>
+                                    <span class="italic">Infaq Sistem</span>
                                     <span class="font-mono">{{ formatCurrency(form.infaq_sistem) }}</span>
                                 </div>
                                 <div class="pt-2 border-t border-stone-800 flex justify-between text-base font-black">

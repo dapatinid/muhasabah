@@ -69,6 +69,27 @@ const props = defineProps<{
     total_donasi_masuk?: number
     payments_count?: number
   }>
+  acaras: Array<{
+    id: number
+    judul: string
+    slug: string
+    thumbnail: string | null
+    body: string
+    kategori: string
+    subkategori: string
+    lokasi: string
+    accept_tiket: boolean | number
+    harga_tiket: number
+    kuota_tiket: number
+    tiket_terjual: number
+    accept_donasi: boolean | number
+    target_donasi: number
+    donasi_masuk_sum_nominal?: number
+    tgl_mulai: string
+    tgl_selesai: string
+    batas_registrasi: string
+    created_at: string
+  }>  
 }>()
 
 // State Search
@@ -292,6 +313,28 @@ watch(isSearchOpen, (val) => {
     }, 0)
   }
 })
+
+// Acara
+
+function getStatusRegistrasi(batas_registrasi: string | null): { teks: string; tutup: boolean } {
+  if (!batas_registrasi) return { teks: 'Buka', tutup: false }
+  const batas = new Date(batas_registrasi)
+  const sekarang = new Date()
+  if (sekarang > batas) return { teks: 'Ditutup', tutup: true }
+  const selisihWaktu = batas.getTime() - sekarang.getTime()
+  const sisaHari = Math.ceil(selisihWaktu / (1000 * 60 * 60 * 24))
+  return sisaHari > 1 ? { teks: `${sisaHari} hari lagi`, tutup: false } : { teks: 'Hari ini', tutup: false }
+}
+
+function getSisaTiket(acara: any): number {
+  return Math.max(0, acara.kuota_tiket - (acara.tiket_terjual ?? 0))
+}
+
+function getProgressDonasiAcara(acara: any): number {
+  if (!acara.target_donasi || acara.target_donasi <= 0) return 0
+  const percent = ((acara.donasi_masuk_sum_nominal ?? 0) / acara.target_donasi) * 100
+  return Math.min(100, Math.round(percent))
+}
 </script>
 
 <template>
@@ -617,6 +660,127 @@ watch(isSearchOpen, (val) => {
                  <div class="px-4 py-1.5 rounded-xl bg-amber-600 text-white text-[10px] font-bold group-hover:bg-amber-400 group-hover:text-stone-950 transition-colors">
                     Donasi
                  </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      <section class="px-5">
+        <div class="flex justify-between items-end mb-4">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-amber-200/70">Acara Terdekat</h2>
+          <Link href="/acara" class="text-xs text-amber-500 font-medium hover:text-amber-400 transition-colors flex items-center gap-1">
+            <span>Lihat Semua</span> <ArrowRight class="size-3 -mb-0.5" />
+          </Link>
+        </div>
+
+        <div v-if="acaras.length === 0" class="text-center py-10 text-stone-600 text-sm border border-dashed border-stone-800 rounded-2xl">
+          <p class="text-2xl mb-2">📅</p>
+          Belum ada agenda kegiatan terdekat.
+        </div>
+
+        <div v-else class="grid grid-cols-1 gap-6">
+          <Link
+            v-for="acara in acaras"
+            :key="acara.id"
+            :href="`/acara/${acara.slug}`"
+            class="block backdrop-blur-xs bg-stone-900/40 border border-stone-800/80 overflow-hidden hover:border-stone-700 hover:bg-stone-900/60 transition-all group shadow-sm"
+          >
+            <div class="flex">
+              <div class="w-1/3 aspect-[1/1.41] bg-stone-950 border-r border-stone-800 shrink-0 overflow-hidden relative">
+                <img
+                  v-if="acara.thumbnail"
+                  :src="acara.thumbnail.startsWith('http') ? acara.thumbnail : `/storage/${acara.thumbnail}`"
+                  :alt="acara.judul"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 will-change-transform"
+                  loading="lazy"
+                />
+                <div v-else class="absolute inset-0 flex flex-col items-center justify-center p-3 text-center bg-gradient-to-br from-stone-900 to-stone-950 select-none group-hover:scale-105 transition-transform duration-500">
+                  <span class="text-3xl mb-1.5 filter drop-shadow">
+                    {{ acara.kategori === 'kajian' ? '📖' : acara.kategori === 'workshop' ? '💻' : acara.kategori === 'sosial' ? '🤝' : '🕌' }}
+                  </span>
+                  <span class="text-[10px] text-stone-500 uppercase tracking-widest font-black truncate max-w-full">
+                    {{ acara.kategori }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="w-2/3 p-6 flex flex-col min-w-0">
+                <div class="flex flex-wrap items-center gap-2 mb-3">
+                  <span class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] uppercase font-bold text-stone-300 border border-stone-800 tracking-wide">
+                    {{ acara.kategori }}
+                  </span>
+                  <span
+                    class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] font-mono font-bold border border-stone-800 tracking-wide"
+                    :class="Boolean(acara.accept_tiket) && Number(acara.harga_tiket) === 0 ? 'text-emerald-400' : 'text-amber-400'"
+                  >
+                    {{ Boolean(acara.accept_tiket) ? (Number(acara.harga_tiket) === 0 ? 'GRATIS' : formatRupiah(acara.harga_tiket)) : 'DONASI' }}
+                  </span>
+                  <span 
+                    class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] uppercase font-bold border tracking-wide"
+                    :class="getStatusRegistrasi(acara.batas_registrasi).tutup ? 'text-red-400 border-red-800' : 'text-emerald-400 border-emerald-800'"
+                  >
+                    {{ getStatusRegistrasi(acara.batas_registrasi).teks }}
+                  </span>
+                </div>
+
+                <h2 class="text-lg font-bold text-stone-100 leading-tight group-hover:text-amber-400 transition-colors mb-5 line-clamp-2">
+                  {{ acara.judul }}
+                </h2>
+
+                <div v-if="Boolean(acara.accept_tiket)" class="space-y-2 mb-6">
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-4 text-xs">
+                    <div class="flex flex-col">
+                      <span class="text-[10px] text-stone-500 uppercase font-bold tracking-tight">Total Kuota</span>
+                      <span class="font-bold text-stone-300 font-sans text-xs">
+                        {{ acara.kuota_tiket }} <span class="text-[11px] text-stone-500 font-normal">Kursi</span>
+                      </span>
+                    </div>
+                    <div class="h-8 w-[1px] bg-stone-800 hidden sm:block"></div>
+                    <div class="flex flex-col">
+                      <span class="text-[10px] text-stone-500 uppercase font-bold tracking-tight">Sisa Tiket</span>
+                      <span class="text-xs font-black" :class="getSisaTiket(acara) === 0 ? 'text-red-400' : 'text-emerald-400'">
+                        {{ getSisaTiket(acara) }}
+                      </span>
+                    </div>
+                    <div class="h-8 w-[1px] bg-stone-800 hidden sm:block"></div>
+                    <div class="flex flex-col">
+                      <span class="text-[10px] text-stone-500 uppercase font-bold tracking-tight">Terjual</span>
+                      <span class="font-bold text-stone-300 text-xs">
+                        {{ acara.tiket_terjual ?? 0 }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div v-else-if="Boolean(acara.accept_donasi)" class="space-y-2 mb-6">
+                  <div class="flex justify-between items-end text-[11px]">
+                    <span class="text-stone-500 uppercase text-[10px] font-bold">Dana Terkumpul</span>
+                    <span class="text-amber-400 font-bold font-mono">{{ getProgressDonasiAcara(acara) }}%</span>
+                  </div>
+                  <div class="h-2 w-full bg-stone-800 rounded-full overflow-hidden border border-stone-800">
+                    <div
+                      class="h-full bg-gradient-to-r from-amber-600 to-amber-400 rounded-full transition-all duration-1000"
+                      :style="{ width: getProgressDonasiAcara(acara) + '%' }"
+                    ></div>
+                  </div>
+                  <div class="text-[11px] text-stone-500 font-mono">
+                    {{ formatRupiah(acara.donasi_masuk_sum_nominal ?? 0) }}
+                    <span class="text-stone-600"> / {{ formatRupiah(acara.target_donasi) }}</span>
+                  </div>
+                </div>
+
+                <div class="pt-4 border-t border-stone-800/60 mt-auto grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-stone-500">
+                  <div class="flex items-center gap-2 truncate">
+                    <span class="shrink-0 text-stone-600">📍</span>
+                    <span class="truncate text-stone-300 font-medium">{{ acara.lokasi }}</span>
+                  </div>
+                  <div class="flex items-center gap-2 truncate sm:justify-end">
+                    <CalendarDays class="size-3.5 shrink-0 text-indigo-400" />
+                    <span class="text-stone-300 font-medium">{{ tanggal(acara.tgl_mulai) }}</span>
+                  </div>
+                </div>
+
               </div>
             </div>
           </Link>

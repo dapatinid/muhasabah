@@ -22,11 +22,21 @@ Route::get('/', function () {
         ->orderBy('created_at', 'desc')
         ->get();
 
+    // Mengambil maksimal 3 Acara/Agenda Kegiatan aktif
+    $acaras = \App\Models\Acara::where('is_published', true)
+        ->withSum(['payments as donasi_masuk_sum_nominal' => function ($query) {
+            $query->where('mutation_type', 'sponsor'); // Menghitung donasi/sponsor masuk khusus acara
+        }], 'nominal')
+        ->latest()
+        ->take(3)
+        ->get();
+
     return \Inertia\Inertia::render('Welcome', [
         'canRegister' => Features::enabled(\Laravel\Fortify\Features::registration()),
         'kalams' => $kalams,
         'banners' => $banners,
         'donasis' => $donasis,
+        'acaras' => $acaras, // Dilempar ke frontend berupa Array murni
     ]);
 })->name('home');
 
@@ -113,10 +123,10 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
         Route::put('/admin/acara/{acara:slug}/progress', [AcaraController::class, 'updateProgress'])->name('acara.progress.update');
         Route::get('/admin/acara/{acara:slug}/reaksi', [AcaraController::class, 'reaksi'])->name('acara.reaksi');
         Route::get('/admin/acara/{acara:slug}/komentar', [AcaraController::class, 'komentar'])->name('acara.komentar');
-        Route::get('/admin/acara/{acara:slug}/transaksi-masuk', [AcaraController::class, 'transaksiMasuk'])->name('acara.transaksi-masuk');
-        Route::get('/admin/acara/{acara:slug}/tasyaruf', [AcaraController::class, 'tasyaruf'])->name('acara.tasyaruf');
-        Route::post('/admin/acara/{acara:slug}/tasyaruf', [AcaraController::class, 'storeTasyaruf'])->name('acara.tasyaruf.store');
         Route::delete('/admin/acara/{acara:slug}', [AcaraController::class, 'destroy'])->name('acara.destroy');
+        Route::get('/admin/acara/{acara:slug}/keuangan', [AcaraController::class, 'keuangan'])->name('acara.keuangan');
+        Route::post('/admin/acara/{acara:slug}/bulk-keuangan', [AcaraController::class, 'bulkKeuangan'])->name('admin.acara.bulk');
+        Route::post('/admin/acara/{acara:slug}/tasyaruf', [AcaraController::class, 'storeTasyaruf'])->name('acara.tasyaruf.store');
 
         // Fitur Kelola Banner (Admin)
         Route::get('/admin/banner', [BannerController::class, 'index'])->name('banner.index');

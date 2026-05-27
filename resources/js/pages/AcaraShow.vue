@@ -78,14 +78,14 @@ const progressDonasiAcara = computed(() => {
   return Math.min(Math.round(percent), 100)
 })
 
-// Memisahkan data Doa/Harapan (Hanya dari mutasi donasi_acara)
+// Memisahkan data Doa/Harapan (Hanya dari mutasi sponsor)
 const doaParaPeserta = computed(() => {
-  return props.acara.payments?.filter(p => p.mutation_type === 'donasi_acara' && p.notes && p.notes !== '-') || []
+  return props.acara.payments?.filter(p => p.mutation_type === 'sponsor' && p.notes && p.notes !== '-') || []
 })
 
-// Memisahkan data Manifest Peserta (Hanya dari mutasi tiket_utama)
+// Memisahkan data Manifest Peserta (Hanya dari mutasi tiket)
 const logDaftarPeserta = computed(() => {
-  return props.acara.payments?.filter(p => p.mutation_type === 'tiket_utama') || []
+  return props.acara.payments?.filter(p => p.mutation_type === 'tiket') || []
 })
 
 // Menghitung total pendaftar valid yang sukses/terverifikasi
@@ -449,7 +449,7 @@ onUnmounted(() => {
           <div v-if="acara.progress && acara.progress.trim() !== '<p></p>'" class="prose prose-invert prose-stone max-w-none prose-p:text-stone-300 prose-p:leading-relaxed prose-p:text-[15px] prose-headings:text-amber-100 prose-strong:text-amber-200 prose-img:rounded-3xl prose-img:border-stone-800" v-html="acara.progress" />
           <div v-else class="text-center py-12 text-stone-600 text-xs border border-stone-800 bg-stone-900/30 border-dashed rounded-3xl">
             <Newspaper class="w-8 h-8 mx-auto mb-3 opacity-30" />
-            Belum ada maklumat atau perubahan jadwal terkini dari panitia masjid.
+            Belum ada maklumat atau info baru dari panitia.
           </div>
         </div>
       </div>
@@ -494,7 +494,7 @@ onUnmounted(() => {
       <!-- TAB: DONATUR / SPONSOR -->
       <div v-if="activeTab === 'doa'" class="space-y-6">
         <div class="space-y-4">
-          <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-500 border-l-2 border-emerald-500 pl-3">Catatan & Harapan Para Pendaftar</p>
+          <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-500 border-l-2 border-emerald-500 pl-3">Catatan & Harapan Donatur</p>
           <div v-if="doaParaPeserta.length === 0" class="text-center py-12 text-stone-600 text-xs border border-stone-800 bg-stone-900/30 border-dashed rounded-3xl">
             <Heart class="w-8 h-8 mx-auto mb-3 opacity-30" />
             Belum ada catatan khusus atau motivasi donasi yang ditulis oleh jamaah.
@@ -525,8 +525,8 @@ onUnmounted(() => {
       <div v-if="activeTab === 'peserta'" id="konten-peserta" class="space-y-6">
         <div class="bg-stone-900 border border-stone-800 rounded-3xl p-5 flex items-center justify-between shadow-xl">
           <div class="space-y-1">
-            <span class="text-[10px] text-stone-500 uppercase font-bold tracking-wider block">Total Terdaftar (Valid)</span>
-            <span class="text-2xl font-black text-emerald-400 font-mono">{{ totalPesertaTerdaftar }} <span class="text-xs text-stone-500 font-normal">Jamaah</span></span>
+            <span class="text-[10px] text-stone-500 uppercase font-bold tracking-wider block">Total Terdaftar</span>
+            <span class="text-2xl font-black text-emerald-400 font-mono">{{ totalPesertaTerdaftar }} <span class="text-xs text-stone-500 font-normal -ms-2 me-3">Pendaftar</span> {{ acara.tiket_terjual ? `${acara.tiket_terjual}` : '0' }}<span class="text-xs text-stone-500 font-normal"> Tiket</span></span>
           </div>
           <div 
             @click="handleCopyPeserta"
@@ -566,7 +566,7 @@ onUnmounted(() => {
                       {{ log.atas_nama }}
                     </h4>
                     <p class="text-[11px] text-stone-500 line-clamp-1 max-w-[240px] md:max-w-md">
-                      Booking: {{ log.jumlah_tiket ?? 1 }} Kursi {{ log.notes ? `· "${log.notes}"` : '' }}
+                      {{ log.notes ? `"${log.notes}"` : '' }}
                     </p>
                   </div>
                 </div>
