@@ -3,6 +3,7 @@
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\DonasiController;
 use App\Http\Controllers\KalamController;
+use App\Http\Controllers\AcaraController; // Controller Baru
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\LaporanRiyadhohController;
@@ -37,13 +38,22 @@ Route::get('/laporan-riyadhoh/log', [LaporanRiyadhohController::class, 'log'])->
 
 Route::get('/kalam', [KalamController::class, 'kalam'])->name('kalam');
 Route::get('/donasi', [DonasiController::class, 'donasi'])->name('donasi');
+Route::get('/acara', [AcaraController::class, 'acara'])->name('acara'); // Public List Acara
+
 Route::get('/donasi/{donasi:slug}/payment', [DonasiController::class, 'payment'])->name('donasi.payment');
+Route::get('/acara/{acara:slug}/payment', [AcaraController::class, 'payment'])->name('acara.payment'); // Public Payment Acara
 
 // Rute Interaksi Publik dengan Rate Limiter Ketat (Anti Spam)
 Route::middleware(['throttle:10,1'])->group(function () {
     Route::post('/donasi/{donasi:slug}/payment', [DonasiController::class, 'storePayment'])->name('donasi.payment.store');
     Route::post('/donasi/{donasi:slug}/komentar', [DonasiController::class, 'storeKomentar'])->name('donasi.storeKomentar');
     Route::post('/donasi/{donasi:slug}/reaksi', [DonasiController::class, 'storeReaksi'])->name('donasi.storeReaksi');
+    
+    // Antispam Acara
+    Route::post('/acara/{acara:slug}/payment', [AcaraController::class, 'storePayment'])->name('acara.payment.store');
+    Route::post('/acara/{acara:slug}/komentar', [AcaraController::class, 'storeKomentar'])->name('acara.storeKomentar');
+    Route::post('/acara/{acara:slug}/reaksi', [AcaraController::class, 'storeReaksi'])->name('acara.storeReaksi');
+
     Route::post('/kalam/{kalam:slug}/komentar', [KalamController::class, 'storeKomentar'])->name('kalam.storeKomentar');
     Route::post('/kalam/{kalam:slug}/reaksi', [KalamController::class, 'storeReaksi'])->name('kalam.storeReaksi');
 });
@@ -93,6 +103,21 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
         Route::put('/admin/payment/{payment}/toggle-status', [DonasiController::class, 'toggleStatus'])->name('payment.toggle_status');
         Route::delete('/admin/donasi/{donasi}', [DonasiController::class, 'destroy'])->name('donasi.destroy');   
 
+        // Fitur Kelola Acara (Admin)
+        Route::get('/admin/acara', [AcaraController::class, 'index'])->name('acara.index');
+        Route::get('/admin/acara/create', [AcaraController::class, 'create'])->name('acara.create');
+        Route::post('/admin/acara', [AcaraController::class, 'store'])->name('acara.store');
+        Route::get('/admin/acara/{acara:slug}/edit', [AcaraController::class, 'edit'])->name('acara.edit');
+        Route::put('/admin/acara/{acara:slug}', [AcaraController::class, 'update'])->name('acara.update');
+        Route::get('/admin/acara/{acara:slug}/progress', [AcaraController::class, 'progress'])->name('acara.progress');
+        Route::put('/admin/acara/{acara:slug}/progress', [AcaraController::class, 'updateProgress'])->name('acara.progress.update');
+        Route::get('/admin/acara/{acara:slug}/reaksi', [AcaraController::class, 'reaksi'])->name('acara.reaksi');
+        Route::get('/admin/acara/{acara:slug}/komentar', [AcaraController::class, 'komentar'])->name('acara.komentar');
+        Route::get('/admin/acara/{acara:slug}/transaksi-masuk', [AcaraController::class, 'transaksiMasuk'])->name('acara.transaksi-masuk');
+        Route::get('/admin/acara/{acara:slug}/tasyaruf', [AcaraController::class, 'tasyaruf'])->name('acara.tasyaruf');
+        Route::post('/admin/acara/{acara:slug}/tasyaruf', [AcaraController::class, 'storeTasyaruf'])->name('acara.tasyaruf.store');
+        Route::delete('/admin/acara/{acara:slug}', [AcaraController::class, 'destroy'])->name('acara.destroy');
+
         // Fitur Kelola Banner (Admin)
         Route::get('/admin/banner', [BannerController::class, 'index'])->name('banner.index');
 
@@ -122,5 +147,6 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
 // Show PALING BAWAH
 Route::get('/kalam/{kalam:slug}', [KalamController::class, 'show'])->name('kalam.show');
 Route::get('/donasi/{donasi:slug}', [DonasiController::class, 'show'])->name('donasi.show');
+Route::get('/acara/{acara:slug}', [AcaraController::class, 'show'])->name('acara.show'); // Detail Acara Publik
 
 require __DIR__.'/settings.php';

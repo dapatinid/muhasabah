@@ -19,6 +19,9 @@ createInertiaApp({
                  name === 'AmalIbadah' ||
                  name === 'Kalam' ||
                  name === 'KalamShow' ||
+                 name === 'Acara' ||
+                 name === 'AcaraShow' ||
+                 name === 'AcaraPayment' ||
                  name === 'Donasi' ||
                  name === 'DonasiShow' ||
                  name === 'DonasiPayment' ||

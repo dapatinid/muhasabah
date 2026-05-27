@@ -38,11 +38,11 @@ const donationMenus = [
       </Link>
 
       <!-- Acara -->
-      <Link href="/halaman-dibangun" 
-            :class="currentUrl === '/halaman-dibangun' ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
+      <Link href="/acara" 
+            :class="currentUrl === '/acara' ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
             class="flex flex-col items-center gap-1 w-full transition-colors">
         <CalendarDays class="size-5" />
-        <span class="text-[10px]" :class="currentUrl === '/halaman-dibangun' ? 'font-bold' : 'font-medium'">Acara</span>
+        <span class="text-[10px]" :class="currentUrl === '/acara' ? 'font-bold' : 'font-medium'">Acara</span>
       </Link>
 
       <!-- Donasi FAB -->

@@ -218,7 +218,7 @@ registerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 register.form = registerForm
 
 /**
-* @see routes/web.php:10
+* @see routes/web.php:11
 * @route '/'
 */
 export const home = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -232,7 +232,7 @@ home.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:10
+* @see routes/web.php:11
 * @route '/'
 */
 home.url = (options?: RouteQueryOptions) => {
@@ -240,7 +240,7 @@ home.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:10
+* @see routes/web.php:11
 * @route '/'
 */
 home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -249,7 +249,7 @@ home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:10
+* @see routes/web.php:11
 * @route '/'
 */
 home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -258,7 +258,7 @@ home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:10
+* @see routes/web.php:11
 * @route '/'
 */
 const homeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -267,7 +267,7 @@ const homeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:10
+* @see routes/web.php:11
 * @route '/'
 */
 homeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -276,7 +276,7 @@ homeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:10
+* @see routes/web.php:11
 * @route '/'
 */
 homeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -614,6 +614,87 @@ donasiForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 })
 
 donasi.form = donasiForm
+
+/**
+* @see \App\Http\Controllers\AcaraController::acara
+* @see app/Http/Controllers/AcaraController.php:20
+* @route '/acara'
+*/
+export const acara = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: acara.url(options),
+    method: 'get',
+})
+
+acara.definition = {
+    methods: ["get","head"],
+    url: '/acara',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\AcaraController::acara
+* @see app/Http/Controllers/AcaraController.php:20
+* @route '/acara'
+*/
+acara.url = (options?: RouteQueryOptions) => {
+    return acara.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\AcaraController::acara
+* @see app/Http/Controllers/AcaraController.php:20
+* @route '/acara'
+*/
+acara.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: acara.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\AcaraController::acara
+* @see app/Http/Controllers/AcaraController.php:20
+* @route '/acara'
+*/
+acara.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: acara.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\AcaraController::acara
+* @see app/Http/Controllers/AcaraController.php:20
+* @route '/acara'
+*/
+const acaraForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: acara.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\AcaraController::acara
+* @see app/Http/Controllers/AcaraController.php:20
+* @route '/acara'
+*/
+acaraForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: acara.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\AcaraController::acara
+* @see app/Http/Controllers/AcaraController.php:20
+* @route '/acara'
+*/
+acaraForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: acara.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+acara.form = acaraForm
 
 /**
 * @see \Inertia\Controller::__invoke

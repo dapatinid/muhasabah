@@ -42,4 +42,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Donasi::class);
     }
+    
+    public function acaras(): HasMany
+    {
+        return $this->hasMany(Acara::class);
+    }    
 }
