@@ -231,13 +231,6 @@ function getProgressDonasi(acara: { donasi_masuk_sum_nominal?: number; target_do
                   {{ acara.kategori }}
                 </span>
 
-                <span
-                  class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] font-mono font-bold border tracking-wide"
-                  :class="getHargaBadgeInfo(acara).isGratis ? 'text-emerald-400 border-emerald-900/50 bg-emerald-950/20' : 'text-amber-400 border-amber-900/50 bg-amber-950/20'"
-                >
-                  {{ getHargaBadgeInfo(acara).teks }}
-                </span>
-
                 <span 
                   class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] uppercase font-bold border tracking-wide"
                   :class="getStatusRegistrasi(acara.batas_registrasi).tutup ? 'text-red-400 border-red-800' : 'text-emerald-400 border-emerald-800'"
@@ -289,6 +282,16 @@ function getProgressDonasi(acara: { donasi_masuk_sum_nominal?: number; target_do
                   <span class="text-stone-600"> / {{ formatRupiah(acara.target_donasi) }}</span>
                 </div>
               </div>
+
+              <div class="flex flex-wrap items-center justify-center gap-2">                
+                <span
+                  class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] font-mono font-bold border tracking-wide"
+                  :class="getHargaBadgeInfo(acara).isGratis ? 'text-emerald-400 border-emerald-900/50 bg-emerald-950/20' : 'text-amber-400 border-amber-900/50 bg-amber-950/20'"
+                >
+                  {{ getHargaBadgeInfo(acara).teks }}
+                </span>
+              </div>
+
 
               <div class="pt-3 border-t border-stone-800/60 flex items-center justify-between gap-3 text-xs text-stone-500">
                 <div class="flex items-center gap-1.5 min-w-0">

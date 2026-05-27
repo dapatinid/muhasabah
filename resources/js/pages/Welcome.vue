@@ -748,13 +748,6 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
                     {{ acara.kategori }}
                   </span>
 
-                  <span
-                    class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] font-mono font-bold border border-stone-800 tracking-wide"
-                    :class="getHargaBadgeInfo(acara).isGratis ? 'text-emerald-400' : 'text-amber-400'"
-                  >
-                    {{ getHargaBadgeInfo(acara).teks }}
-                  </span>
-
                   <span 
                     class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] uppercase font-bold border tracking-wide"
                     :class="getStatusRegistrasi(acara.batas_registrasi).tutup ? 'text-red-400 border-red-800' : 'text-emerald-400 border-emerald-800'"
@@ -801,6 +794,15 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
                     {{ formatRupiah(acara.donasi_masuk_sum_nominal ?? 0) }}
                     <span class="text-stone-600"> / {{ formatRupiah(acara.target_donasi) }}</span>
                   </div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-center gap-2">  
+                  <span
+                    class="px-3 py-1 rounded bg-stone-950/80 backdrop-blur-xs text-[10px] font-mono font-bold border border-stone-800 tracking-wide"
+                    :class="getHargaBadgeInfo(acara).isGratis ? 'text-emerald-400' : 'text-amber-400'"
+                  >
+                    {{ getHargaBadgeInfo(acara).teks }}
+                  </span>
                 </div>
 
                 <div class="pt-3 border-t border-stone-800/60 flex items-center justify-between gap-3 text-xs text-stone-500">
