@@ -193,7 +193,7 @@ function getJumlahDonatur(donasi: any): number {
         <div v-if="donasis.data.length === 0"
              class="text-center py-20 text-stone-600 text-sm border border-dashed border-stone-800 rounded-2xl">
           <p class="text-3xl mb-3">🤝</p>
-          <p>Belum ada program donasi aktif</p>
+          <p>Belum ada donasi aktif</p>
         </div>
 
         <!-- List Donasi -->

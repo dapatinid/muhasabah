@@ -332,7 +332,7 @@ watch(isSearchOpen, (val) => {
             </div>
           </DialogTrigger>
 
-          <DialogContent class="sm:max-w-lg bg-stone-950 border-stone-800 p-0 overflow-visible gap-0 [&>button]:hidden fixed left-[50%] top-0 sm:top-18 -translate-x-[50%] translate-y-0 duration-200 rounded-b-3xl sm:rounded-3xl shadow-2xl">
+          <DialogContent class="sm:max-w-lg bg-stone-950 border-stone-800 p-0 overflow-visible gap-0 [&>button]:hidden fixed left-[50%] top-8 sm:top-18 -translate-x-[50%] translate-y-0 duration-200 rounded-3xl shadow-2xl">
             
             <div class="absolute -top-14 left-1/2 -translate-x-1/2 z-50 hidden sm:flex flex-col items-center gap-1">
               <button 
@@ -343,7 +343,7 @@ watch(isSearchOpen, (val) => {
               </button>
             </div>
 
-            <div class="p-4 border-b border-stone-800 bg-stone-950 flex items-center gap-2">
+            <div class="p-4 rounded-t-3xl bg-stone-950 flex items-center gap-2 border-b border-stone-800">
               <div class="relative flex-1 flex items-center">
                 <Search class="absolute left-3 size-4 text-amber-500" />
                 <input

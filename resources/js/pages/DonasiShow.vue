@@ -362,13 +362,13 @@ function handleCopyLaporan() {
     if (log.mutation_type === 'tasyaruf') {
       // Jika Tasyaruf / Penyaluran Keluar
       const keterangan = log.notes || 'Penyaluran Dana'
-      grouped[tgl].push(`${keterangan} ✦ - ${nominalTeks}`)
+      grouped[tgl].push(`${keterangan} · - ${nominalTeks}`)
     } else {
       // Jika Donasi Masuk
       const namaTeks = log.atas_nama === 'Hamba Allah' 
         ? 'Hamba Allah' 
         : `${log.sapaan || ''} ${log.atas_nama}`.trim()
-      grouped[tgl].push(`${namaTeks} ✦ + ${nominalTeks}`)
+      grouped[tgl].push(`${namaTeks} · + ${nominalTeks}`)
     }
   })
 
@@ -393,6 +393,8 @@ function handleCopyLaporan() {
   const saldoAkhir = formatRupiah(props.donasi.saldo || 0)
   lines.push('_SALDO_')
   lines.push('*' + saldoAkhir + '*')
+  lines.push('') // Jeda baris kosong setelah judul
+  lines.push(props.donasi.slug ? `Lihat detail: https://muhasabah.id/donasi/${props.donasi.slug}` : 'Lihat detail di website Muhasabah.id')
 
   const finalClipboardText = lines.join('\n').trim()
 

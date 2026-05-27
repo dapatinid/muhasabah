@@ -222,15 +222,14 @@ function handleShare() {
       </div>
 
       <div class="space-y-3">
-        <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Ekspresikan Reaksi Anda</p>
-        <div class="flex flex-wrap gap-2">
+        <div class="grid grid-cols-2 gap-2">
           <button
             v-for="r in reaksiList"
             :key="r.type"
             type="button"
             @click="toggleReaksi(r.type)"
             :disabled="isSubmittingReaction"
-            class="flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-bold transition-all bg-stone-900 active:scale-95 disabled:opacity-50"
+            class="flex items-center justify-center gap-2 px-4 py-2.5 w-full rounded-2xl border text-xs font-bold transition-all bg-stone-900 active:scale-95 disabled:opacity-50"
             :class="[
               selectedReaksi === r.type 
                 ? 'border-amber-500 text-amber-400 bg-amber-500/5' 
@@ -267,7 +266,7 @@ function handleShare() {
 
         <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
           <div class="flex items-center gap-2 bg-stone-950 px-3 py-2 rounded-xl border border-stone-800">
-            <span class="text-xs font-mono text-stone-400 font-bold select-none tracking-wider">Keamanan: {{ captchaNum1 }} + {{ captchaNum2 }} = </span>
+            <span class="text-xs font-mono text-stone-400 font-bold select-none tracking-wider">Jawab: {{ captchaNum1 }} + {{ captchaNum2 }} = </span>
             <input 
               v-model="userCaptchaAnswer" 
               type="number" 

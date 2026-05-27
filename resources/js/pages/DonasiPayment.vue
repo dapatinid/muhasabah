@@ -304,7 +304,7 @@ function submit() {
                 <!-- 4. PESAN -->
                 <div class="space-y-2">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Doa & Pesan</label>
-                    <textarea v-model="form.notes" placeholder="Mohon isikan komentar / dukungan / doa" rows="3" required class="w-full bg-stone-900 border border-stone-800 rounded-2xl p-4 text-sm text-stone-300 outline-none focus:border-amber-500/40"></textarea>
+                    <textarea v-model="form.notes" placeholder="Tambahkan komentar dukungan & doa" rows="3" required class="w-full bg-stone-900 border border-stone-800 rounded-2xl p-4 text-sm text-stone-300 outline-none focus:border-amber-500/40"></textarea>
                 </div>
 
                 <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500 flex items-center gap-2">
