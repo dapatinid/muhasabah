@@ -9,13 +9,13 @@ const props = defineProps<{
         id: number;
         judul: string;
         slug: string;
-        panduan_donasi?: string; // Menampung panduan dari database
+        panduan_donasi?: string;
     }
 }>()
 
 const form = useForm({
     nominal: '',
-    infaq_sistem: 5000, // Default pilihan pertama
+    infaq_sistem: 5000 as number | string,
     no_wa: '',
     sapaan: 'Kak',
     atas_nama: '',
@@ -23,10 +23,9 @@ const form = useForm({
     notes: '',
     payment_method: 'transfer', 
     rekening: 'qris_gopay', 
-    bukti_donasi: null as File | null, // State untuk menampung file upload
+    bukti_donasi: null as File | null,
 })
 
-// Fungsi untuk memformat tampilan (hanya untuk display)
 const formatDisplay = (val: any) => {
     if (!val) return '';
     let str = val.toString().replace(/\D/g, '');
@@ -53,7 +52,6 @@ const handleNominalInput = (e: Event) => {
     }, 0);
 };
 
-// Handle file upload
 const handleFileChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
@@ -61,21 +59,27 @@ const handleFileChange = (e: Event) => {
     }
 };
 
-// Cek status donatur prioritas secara computed
 const isPriorityDonator = computed(() => {
     return form.infaq_sistem === 100000;
 });
 
-/* Logic totalPembayaran tetap aman karena menggunakan parseInt */
-const totalPembayaran = computed(() => {
-    const n = parseInt(form.nominal) || 0
-    const i = parseInt(form.infaq_sistem.toString()) || 0
-    return n + i
-})
-
 const quickAmounts = [10000, 25000, 50000, 100000, 250000, 500000]
 
+/* =======================
+   KONFIGURASI OPSI INFAQ
+======================= */
+
+// Opsi Potongan Persentase (Deducted)
+const percentageInfaqOptions = [
+    { percent: 0.02, label: 'diambil 2% dari donasi' },
+    { percent: 0.05, label: 'diambil 5% dari donasi' },
+    { percent: 0.07, label: 'diambil 7% dari donasi' },
+    { percent: 0.10, label: 'diambil 10% dari donasi' },
+];
+
+// Opsi Nominal Tetap Tambahan (Added)
 const baseInfaqOptions = [
+    { value: 0, label: 'tanpa infaq' },
     { value: 10000, label: 'administrasi' },
     { value: 20000, label: 'administrasi + server' },
     { value: 30000, label: 'administrasi + server' },
@@ -86,69 +90,91 @@ const baseInfaqOptions = [
 
 const computedInfaqOptions = computed(() => {
     const nominalNum = parseInt(form.nominal.toString().replace(/\D/g, '')) || 0;
+    let options: Array<{id: string | number, value: number, label: string, type: 'added' | 'deducted'}> = [];
 
-    if (nominalNum > 45000) {
-        return [
-            { value: 5000, label: 'administrasi' },
-            ...baseInfaqOptions
-        ];
+    // 1. Loop dan tambahkan opsi persentase (deducted)
+    if (nominalNum > 0) {
+        percentageInfaqOptions.forEach(opt => {
+            const deductionValue = Math.floor(nominalNum * opt.percent);
+            if (deductionValue > 0) {
+                options.push({
+                    id: `${opt.percent * 100}_percent`, // Menghasilkan id unik seperti '2_percent', '5_percent'
+                    value: deductionValue,
+                    label: opt.label,
+                    type: 'deducted'
+                });
+            }
+        });
     }
 
-    if (nominalNum === 0) {
-        return [
-            { value: 5000, label: 'administrasi' },
-            ...baseInfaqOptions
-        ];
+    // Helper untuk menambah opsi base tanpa duplikasi nilai
+    const addOption = (val: number, lbl: string) => {
+        if (!options.some(opt => opt.value === val && opt.type === 'added')) {
+            options.push({ id: val, value: val, label: lbl, type: 'added' });
+        }
+    };
+
+    // 2. Logika tambahan untuk Nominal Tetap (Added)
+    if (nominalNum > 45000 || nominalNum === 0) {
+        addOption(5000, 'administrasi');
+        baseInfaqOptions.forEach(opt => addOption(opt.value, opt.label));
+        return options;
     }
 
-    let options = [];
     const tenPercent = Math.floor(nominalNum * 0.1);
     const twentyPercent = Math.floor(nominalNum * 0.2);
 
-    // 1. Masukkan 10%
-    if (tenPercent > 0) {
-        options.push({ value: tenPercent, label: 'administrasi' });
-    }
-
-    // 2. Masukkan 20% (cek agar tidak kembar dengan 10%)
-    if (twentyPercent > 0 && twentyPercent !== tenPercent) {
-        options.push({ value: twentyPercent, label: 'administrasi' });
-    }
-
-    // 3. Masukkan 5.000 (cek agar tidak kembar dengan hasil 10% / 20%)
-    if (!options.some(opt => opt.value === 5000)) {
-        options.push({ value: 5000, label: 'administrasi' });
-    }
-
-    // 4. Masukkan sisanya (10.000 dst)
+    if (tenPercent > 0) addOption(tenPercent, 'administrasi');
+    if (twentyPercent > 0 && twentyPercent !== tenPercent) addOption(twentyPercent, 'administrasi');
+    if (!options.some(opt => opt.value === 5000)) addOption(5000, 'administrasi');
+    
     baseInfaqOptions.forEach(opt => {
-        // Mencegah nilai dari base option kembar dengan 10% atau 20%
-        if (!options.some(existing => existing.value === opt.value)) {
-            options.push(opt);
+        if (!options.some(existing => existing.value === opt.value && existing.type === 'added')) {
+            addOption(opt.value, opt.label);
         }
     });
 
     return options;
 });
 
-// Watcher untuk memastikan pilihan ter-reset ke urutan pertama jika daftarnya berubah
+// Watcher agar reset ke opsi pertama jika pilihan saat ini hilang dari list (misal user hapus input nominal)
 watch(computedInfaqOptions, (newOptions) => {
-    const exists = newOptions.some(opt => opt.value === form.infaq_sistem);
+    const exists = newOptions.some(opt => opt.id === form.infaq_sistem);
     if (!exists && newOptions.length > 0) {
-        form.infaq_sistem = newOptions[0].value;
+        form.infaq_sistem = newOptions[0].id;
     }
 }, { immediate: true });
-
-const sapaanOptions = ['Bpk.', 'Ibu', 'Kak']
 
 /* =======================
    LOGIKA PERHITUNGAN
 ======================= */
+const selectedInfaq = computed(() => {
+    return computedInfaqOptions.value.find(opt => opt.id === form.infaq_sistem) || computedInfaqOptions.value[0];
+});
+
+const finalNominal = computed(() => {
+    const nominalNum = parseInt(form.nominal.toString().replace(/\D/g, '')) || 0;
+    if (selectedInfaq.value?.type === 'deducted') {
+        return nominalNum - selectedInfaq.value.value;
+    }
+    return nominalNum;
+});
+
+const finalInfaq = computed(() => {
+    return selectedInfaq.value?.value || 0;
+});
+
+const totalPembayaran = computed(() => {
+    return finalNominal.value + finalInfaq.value;
+});
+
 const formatCurrency = (val: number) => {
     return new Intl.NumberFormat('id-ID', {
         style: 'currency', currency: 'IDR', minimumFractionDigits: 0
     }).format(val)
 }
+
+const sapaanOptions = ['Bpk.', 'Ibu', 'Kak']
 
 const displayAtasNama = computed(() => {
     if (form.is_anonymous) return 'Hamba Allah'
@@ -156,11 +182,14 @@ const displayAtasNama = computed(() => {
 })
 
 function submit() {
-    form.nominal = form.nominal.toString().replace(/\D/g, '');
     form.no_wa = form.no_wa.toString();
     
-    // Gunakan Inertia post (secara otomatis menjadi FormData jika mendeteksi objek File)
-    form.post(`/donasi/${props.donasi.slug}/payment`, {
+    // Transform data sebelum di POST ke backend
+    form.transform((data) => ({
+        ...data,
+        nominal: finalNominal.value,
+        infaq_sistem: finalInfaq.value,
+    })).post(`/donasi/${props.donasi.slug}/payment`, {
         preserveScroll: true,
         onError: (errors) => {
             console.log(errors);
@@ -191,7 +220,6 @@ function submit() {
                        Nominal Donasi
                     </label>
 
-                    <!-- INFO PANDUAN DONASI -->
                     <div v-if="donasi.panduan_donasi" class="flex gap-2.5 items-start p-3.5 rounded-2xl bg-stone-900/40 border border-stone-800 text-stone-400 text-xs leading-relaxed">
                         <Info class="size-4 text-amber-500 shrink-0 mt-0.5" />
                         <div>
@@ -233,22 +261,23 @@ function submit() {
                     <div class="space-y-2">
                         <div 
                             v-for="opt in computedInfaqOptions" 
-                            :key="opt.value"
-                            @click="form.infaq_sistem = opt.value"
+                            :key="opt.id"
+                            @click="form.infaq_sistem = opt.id"
                             class="flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all"
-                            :class="form.infaq_sistem === opt.value ? 'bg-amber-500/20 border-amber-500/50 text-amber-200' : 'bg-stone-900/50 border-stone-800 text-stone-500'"
+                            :class="form.infaq_sistem === opt.id ? 'bg-amber-500/20 border-amber-500/50 text-amber-200' : 'bg-stone-900/50 border-stone-800 text-stone-500'"
                         >
                             <div class="flex items-center gap-3">
                                 <div class="size-4 rounded-full border border-stone-700 flex items-center justify-center">
-                                    <div v-if="form.infaq_sistem === opt.value" class="size-2 rounded-full bg-amber-500"></div>
+                                    <div v-if="form.infaq_sistem === opt.id" class="size-2 rounded-full bg-amber-500"></div>
                                 </div>
-                                <span class="text-xs font-bold">{{ formatCurrency(opt.value) }}</span>
+                                <span class="text-xs font-bold">
+                                    {{ formatCurrency(opt.value) }}
+                                </span>
                             </div>
                             <span class="text-[10px] italic opacity-60 text-right ms-4">{{ opt.label }}</span>
                         </div>
                     </div>
 
-                    <!-- KETERANGAN DONATUR PRIORITAS -->
                     <div v-if="isPriorityDonator" class="mt-3 p-3 text-center bg-gradient-to-r from-amber-500/20 to-yellow-600/20 border border-amber-500/30 rounded-xl text-xs font-bold text-amber-400 tracking-wide animate-pulse">
                         ⭐ Anda adalah donatur prioritas
                     </div>
@@ -288,7 +317,7 @@ function submit() {
                     </label>
                 </div>
 
-                <!-- 4. PESAN -->
+                <!-- 4. WA -->
                 <div class="space-y-2">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500">No. WhatsApp</label>
                     <input 
@@ -301,7 +330,7 @@ function submit() {
                     >
                 </div>
 
-                <!-- 4. PESAN -->
+                <!-- 5. PESAN -->
                 <div class="space-y-2">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Doa & Pesan</label>
                     <textarea v-model="form.notes" placeholder="Tambahkan komentar dukungan & doa" rows="3" required class="w-full bg-stone-900 border border-stone-800 rounded-2xl p-4 text-sm text-stone-300 outline-none focus:border-amber-500/40"></textarea>
@@ -311,7 +340,8 @@ function submit() {
                     <span class="size-4 rounded-full bg-amber-500 text-stone-950 flex items-center justify-center text-[8px]">3</span>
                     Scan QRIS & Konfirmasi
                 </label>
-                <!-- 5. RINGKASAN & QRIS -->
+                
+                <!-- 6. RINGKASAN & QRIS -->
                 <div class="bg-stone-900 rounded-3xl border border-stone-800 overflow-hidden -mt-3">
                     <div class="p-6 space-y-4">
                         <p class="text-[10px] font-black uppercase tracking-tighter text-amber-500">Ringkasan Donasi</p>
@@ -329,13 +359,17 @@ function submit() {
                                 <span class="text-stone-500">No. WhatsApp</span>
                                 <span class="text-stone-200">{{ form.no_wa }}</span>
                             </div>
+                            <!-- PENGGUNAAN FINAL NOMINAL -->
                             <div class="flex justify-between">
                                 <span class="text-stone-500">Nominal Donasi</span>
-                                <span class="text-stone-200">{{ formatCurrency(parseInt(form.nominal) || 0) }}</span>
+                                <span class="text-stone-200">
+                                    {{ formatCurrency(finalNominal) }}
+                                </span>
                             </div>
+                            <!-- PENGGUNAAN FINAL INFAQ -->
                             <div class="flex justify-between text-emerald-400/80">
                                 <span class="italic">Infaq Sistem</span>
-                                <span>{{ formatCurrency(form.infaq_sistem) }}</span>
+                                <span>{{ formatCurrency(finalInfaq) }}</span>
                             </div>
                             <div class="pt-2 border-t border-stone-800 flex justify-between text-base font-black">
                                 <span class="text-stone-400 uppercase">Total</span>
@@ -355,7 +389,7 @@ function submit() {
                     </div>
                 </div>
 
-                <!-- 6. UPLOAD BUKTI DONASI -->
+                <!-- 7. UPLOAD BUKTI DONASI -->
                 <div class="space-y-3">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500 flex items-center gap-2">
                         <Upload class="size-3.5 text-amber-500" /> Upload Bukti Transfer (Opsional)

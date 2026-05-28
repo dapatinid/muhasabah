@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { Head, Link, useForm, router } from '@inertiajs/vue3'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
 import { 
-  Tag, MapPin, HandHeart, CalendarDays, Ticket, 
+  Tag, MapPin, HandHeart, CalendarDays, Calendar, Ticket, 
   Newspaper, Send, Heart, Users, AlertCircle, 
   ArrowDownCircle, ChevronDown, QrCode, Upload, FileText, X, Share2 
 } from 'lucide-vue-next'
@@ -34,7 +34,7 @@ const formatRupiah = (value) => {
 const activeTab = ref('cerita')
 
 const tabItems = [
-  { id: 'cerita',  label: 'Detail Acara',    icon: Heart },
+  { id: 'cerita',  label: 'Detail Acara',    icon: Calendar },
   { id: 'berita',  label: 'Maklumat',         icon: Newspaper },
   { id: 'komentar',label: 'Tanya Jawab',      icon: Send },
   { id: 'doa',     label: 'Donatur/Sponsor',  icon: HandHeart },
@@ -80,7 +80,7 @@ const progressDonasiAcara = computed(() => {
 
 // Memisahkan data Doa/Harapan (Hanya dari mutasi sponsor)
 const doaParaPeserta = computed(() => {
-  return props.acara.payments?.filter(p => p.mutation_type === 'sponsor' && p.notes && p.notes !== '-') || []
+  return props.acara.payments?.filter(p => p.mutation_type === 'sponsor') || []
 })
 
 // Memisahkan data Manifest Peserta (Hanya dari mutasi tiket)
@@ -156,8 +156,14 @@ const getInfaqSistemUntukPeserta = (logPeserta) => {
 
 // Status style pembayaran
 const getPaymentStatus = (log) => {
-  if (log.status === 'success') return { text: 'Terverifikasi (Hadir)', class: 'text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20 text-[10px]' }
-  if (log.status === 'failed')  return { text: 'Dibatalkan',           class: 'text-rose-400 bg-rose-500/10 px-2.5 py-1 rounded-lg border border-rose-500/20 text-[10px]' }
+  if (log.status === 'success') {
+    // Bedakan teks status sukses antara peserta tiket dan donatur sponsor
+    const teksSukses = log.mutation_type === 'tiket' ? 'Terverifikasi (Hadir)' : 'Terverifikasi (Donatur)'
+    return { text: teksSukses, class: 'text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20 text-[10px]' }
+  }
+  if (log.status === 'failed') {
+    return { text: 'Dibatalkan', class: 'text-rose-400 bg-rose-500/10 px-2.5 py-1 rounded-lg border border-rose-500/20 text-[10px]' }
+  }
   return { text: 'Menunggu Verifikasi', class: 'text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20 text-[10px]' }
 }
 
@@ -207,10 +213,10 @@ const submitKomentar = () => {
 const selectedReaksi = ref(null)
 const isSubmittingReaction = ref(false)
 const reaksiList = [
-  { type: 'love',  emoji: '❤️',  label: 'Bantu Share'      },
+  { type: 'love',  emoji: '❤️',  label: 'Takjub'      },
   { type: 'like',  emoji: '👍',  label: 'Suka'             },
-  { type: 'pray',  emoji: '🤲',  label: 'Insyaallah Hadir' },
-  { type: 'sad',   emoji: '😢',  label: 'Belum Bisa'       },
+  { type: 'pray',  emoji: '🤲',  label: 'Penuh Doa' },
+  { type: 'sad',   emoji: '😢',  label: 'Tidak Hadir'       },
 ]
 
 const reaksiCount = computed(() => {
@@ -335,6 +341,65 @@ onMounted(() => {
 onUnmounted(() => {
   if (observer && tabsTargetRef.value) observer.unobserve(tabsTargetRef.value)
 })
+
+onMounted(() => {
+  // Ambil parameter dari URL browser
+  const urlParams = new URLSearchParams(window.location.search)
+  const activeTabParam = urlParams.get('tab')
+
+  // Jika parameternya adalah 'pendaftaran' atau 'peserta'
+  if (activeTabParam === 'pendaftaran') {
+    
+    // 1. Wajib ubah activeTab terlebih dahulu agar konten dirender
+    activeTab.value = 'peserta' 
+    
+    // 2. (Opsional) Bersihkan URL seperti di fitur Donasi agar rapi
+    const newUrl = window.location.pathname
+    window.history.replaceState({}, document.title, newUrl)
+
+    // 3. Gunakan setTimeout (seperti di Donasi) untuk memastikan DOM sudah selesai dirender
+    setTimeout(() => {
+      const element = document.getElementById('konten-peserta') || document.querySelector('[data-active="true"]')
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 300)
+
+  } 
+
+  else if (activeTabParam === 'donatur') {
+    
+    // 1. Wajib ubah activeTab terlebih dahulu agar konten dirender
+    activeTab.value = 'doa' 
+    
+    // 2. (Opsional) Bersihkan URL seperti di fitur Donasi agar rapi
+    const newUrl = window.location.pathname
+    window.history.replaceState({}, document.title, newUrl)
+
+    // 3. Gunakan setTimeout (seperti di Donasi) untuk memastikan DOM sudah selesai dirender
+    setTimeout(() => {
+      const element = document.getElementById('donasi-sponsor') || document.querySelector('[data-active="true"]')
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 300)
+
+  } 
+  // Dukungan tambahan jika user membuka ?tab=berita atau tab lainnya
+  else if (activeTabParam && tabItems.some(t => t.id === activeTabParam)) {
+    activeTab.value = activeTabParam
+    
+    const newUrl = window.location.pathname
+    window.history.replaceState({}, document.title, newUrl)
+    
+    setTimeout(() => {
+      const element = document.querySelector('[data-active="true"]')
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 300)
+  }
+})
 </script>
 
 <template>
@@ -366,16 +431,16 @@ onUnmounted(() => {
 
         <div class="bg-stone-900 border border-stone-800 rounded-3xl p-6 space-y-4 shadow-xl">
           
-          <div v-if="Boolean(acara.accept_tiket)" class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-stone-800/60 pb-4">
+          <div v-if="Boolean(acara.accept_tiket)" class="flex flex-wrap gap-4 border-b border-stone-800/60 pb-4">
             <div class="space-y-1">
               <p class="text-[10px] text-stone-500 uppercase font-bold tracking-wider">Investasi Kegiatan</p>
-              <p class="text-xl font-black font-mono" :class="hargaInvestasiInfo.isGratis ? 'text-emerald-400' : 'text-stone-100'">
+              <p class="md:text-xl text-lg text-wrap font-black font-mono truncate" :class="hargaInvestasiInfo.isGratis ? 'text-emerald-400' : 'text-stone-100'">
                 {{ hargaInvestasiInfo.teks }}
               </p>
             </div>
-            <div class="space-y-1 sm:text-right">
+            <div class="space-y-1 text-right ms-auto">
               <p class="text-[10px] text-stone-500 uppercase font-bold tracking-wider">Sisa Kuota Kursi</p>
-              <p class="text-xl font-black text-amber-400 font-mono">{{ kuotaTersisa }} / {{ acara.kuota_tiket }}</p>
+              <p class="md:text-xl text-lg text-wrap font-black text-amber-400 font-mono">{{ kuotaTersisa }} / {{ acara.kuota_tiket }}</p>
             </div>
           </div>
 
@@ -384,7 +449,7 @@ onUnmounted(() => {
               <span class="text-stone-400 font-medium flex items-center gap-1">
                 <HandHeart class="size-3.5 text-amber-500" /> Patungan Operasional Acara
               </span>
-              <span class="font-bold text-amber-400 font-mono">{{ formatRupiah(totalDonasiMasukKepanitiaan) }} / {{ formatRupiah(acara.target_donasi) }}</span>
+              <span class="font-bold text-amber-400 font-mono text-right">{{ formatRupiah(totalDonasiMasukKepanitiaan) }} / {{ formatRupiah(acara.target_donasi) }}</span>
             </div>
             <div class="h-2 w-full bg-stone-800 rounded-full overflow-hidden">
               <div 
@@ -518,29 +583,134 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <div v-if="activeTab === 'doa'" class="space-y-6">
+      <div v-if="activeTab === 'doa'" id="donasi-sponsor" class="space-y-6">
         <div class="space-y-4">
-          <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-500 border-l-2 border-emerald-500 pl-3">Catatan & Harapan Donatur</p>
-          <div v-if="doaParaPeserta.length === 0" class="text-center py-12 text-stone-600 text-xs border border-stone-800 bg-stone-900/30 border-dashed rounded-3xl">
-            <Heart class="w-8 h-8 mx-auto mb-3 opacity-30" />
-            Belum ada catatan khusus atau motivasi donasi yang ditulis oleh jamaah.
+          <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-500 border-l-2 border-emerald-500 pl-3">
+            Daftar Patungan & Harapan Donatur ({{ doaParaPeserta.length }})
+          </p>
+          
+          <div v-if="doaParaPeserta.length === 0" class="text-center py-10 border border-dashed border-stone-900 rounded-3xl text-stone-600 text-sm">
+            <Heart class="w-5 h-5 mx-auto mb-2 opacity-30" />
+            Belum ada catatan khusus atau motivasi donasi yang masuk.
           </div>
+
           <div v-else class="space-y-3">
-            <div v-for="pay in doaParaPeserta" :key="pay.id" class="bg-stone-900/40 border border-stone-800/50 rounded-2xl p-4 flex gap-4 items-start">
-              <div class="w-9 h-9 rounded-full bg-amber-500/10 flex items-center justify-center shrink-0 border border-amber-500/20 text-amber-400">🤲</div>
-              <div class="flex-1 min-w-0">
-                <div class="flex justify-between items-start mb-1">
-                  <h4 class="text-xs font-bold text-stone-300 uppercase truncate">
-                    {{ pay.atas_nama === 'Hamba Allah' ? '' : pay.sapaan }} {{ pay.atas_nama }}
-                  </h4>
-                  <div class="text-right shrink-0">
-                    <span class="block text-[10px] text-stone-500 font-mono">{{ new Date(pay.created_at).toLocaleDateString('id-ID') }}</span>
+            <div 
+              v-for="pay in doaParaPeserta" 
+              :key="pay.id" 
+              class="border rounded-2xl p-4 transition-all duration-200 shadow-sm select-none"
+              :class="[
+                !expandedLogs.includes(pay.id)
+                  ? 'bg-stone-900/40 border-stone-800/60 hover:bg-stone-900/80 hover:border-stone-700 cursor-pointer' 
+                  : 'bg-stone-900/90 border-amber-500 shadow-lg shadow-amber-500/5 cursor-pointer'
+              ]"
+              @click="toggleLog(pay.id)"
+            >
+              <div class="flex gap-4 items-center justify-between">
+                <div class="flex items-center gap-3.5 min-w-0">
+                  <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border bg-amber-500/10 border-amber-500/20 text-amber-400">
+                    <HandHeart class="w-4.5 h-4.5" />
+                  </div>
+                  <div class="min-w-0">
+                    <h4 class="text-xs font-bold text-stone-200 truncate pr-2 uppercase">
+                      {{ pay.atas_nama === 'Hamba Allah' ? '' : pay.sapaan }} {{ pay.atas_nama }}
+                    </h4>
+                    <p class="text-[11px] text-stone-500 line-clamp-1 max-w-[240px] md:max-w-md italic">
+                      {{ pay.notes && pay.notes !== '-' ? `"${pay.notes}"` : 'Donasi Operasional' }}
+                    </p>
                   </div>
                 </div>
-                <div class="flex justify-between items-start gap-3">
-                  <p class="text-sm text-stone-400 italic font-medium leading-relaxed">"{{ pay.notes }}"</p>
-                  <span class="block text-[11px] font-black text-emerald-400 font-mono shrink-0">+{{ formatRupiah(pay.nominal) }}</span>
+
+                <div class="flex items-center gap-3 shrink-0">
+                  <div class="text-right space-y-0.5">
+                    <span class="text-sm font-bold font-mono block text-emerald-400">
+                      + {{ formatRupiah(pay.nominal) }}
+                    </span>
+                    <span class="block text-[10px] text-stone-600 font-medium font-mono">{{ new Date(pay.created_at).toLocaleDateString('id-ID') }}</span>
+                  </div>
+                  <ChevronDown class="w-4 h-4 text-stone-600 transition-transform duration-300" :class="expandedLogs.includes(pay.id) ? 'rotate-180' : ''" />
                 </div>
+              </div>
+
+              <!-- ACCORDION DETAIL DONASI -->
+              <div v-if="expandedLogs.includes(pay.id)" class="mt-4 pt-4 border-t border-stone-800/60 space-y-4 cursor-default" @click.stop>
+                
+                <div class="flex items-center justify-between text-xs bg-stone-950 p-2.5 rounded-xl border border-stone-800/50">
+                  <span class="text-stone-500 font-bold uppercase tracking-widest text-[9px]">Status Validasi</span>
+                  <span class="font-bold flex items-center gap-1.5" :class="getPaymentStatus(pay).class">
+                    <span class="relative flex h-2 w-2" v-if="pay.status !== 'success'">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-current"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-current"></span>
+                    </span>
+                    {{ getPaymentStatus(pay).text }}
+                  </span>
+                </div>
+
+                <template v-if="pay.status !== 'success'">
+                  <div v-if="!pay.image" class="p-4 rounded-2xl bg-stone-950 border border-stone-800/80 space-y-4">
+                    <div class="flex flex-col items-center justify-center p-4 bg-stone-900/50 rounded-xl border border-stone-800 border-dashed">
+                      <button 
+                        type="button" 
+                        @click="openQrisModal(pay)"
+                        class="w-full flex items-center justify-center gap-2 bg-stone-900 border border-stone-800 hover:border-amber-500/40 text-amber-400 hover:text-amber-300 text-xs font-bold py-3 px-4 rounded-xl transition-all active:scale-98 shadow-sm"
+                      >
+                        <QrCode class="w-4 h-4" />
+                        Tampilkan QRIS Infaq
+                      </button>
+                    </div>
+                    
+                    <div class="pt-4 border-t border-stone-800/60 space-y-3">
+                      <label class="text-[10px] font-bold uppercase tracking-widest text-stone-400 flex items-center gap-2">
+                        <Upload class="size-3.5 text-amber-500" /> Upload Bukti Transfer Susulan
+                      </label>
+                      <div class="relative flex items-center justify-center w-full">
+                        <label
+                          class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed rounded-2xl cursor-pointer transition-all bg-stone-900 border-stone-800 hover:border-amber-500/40"
+                          :class="{ 'bg-amber-500/5 border-amber-500/30': uploadFile[pay.id] }"
+                        >
+                          <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4 text-center">
+                            <template v-if="!uploadFile[pay.id]">
+                              <Upload class="size-5 text-stone-600 mb-2" />
+                              <p class="text-[11px] text-stone-400 font-medium">Klik untuk upload gambar bukti</p>
+                            </template>
+                            <template v-else>
+                              <FileText class="size-5 text-amber-500 mb-2" />
+                              <p class="text-[11px] text-amber-400 font-bold max-w-[200px] truncate">{{ uploadFile[pay.id]?.name }}</p>
+                              <p class="text-[9px] text-stone-500 mt-1">Klik untuk mengganti gambar</p>
+                            </template>
+                          </div>
+                          <input type="file" accept="image/*" class="hidden" @change="(e) => handleBuktiChange(e, pay.id)" />
+                        </label>
+                      </div>
+                      <button
+                        v-if="uploadFile[pay.id]"
+                        @click="submitBukti(pay.id)"
+                        class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md"
+                        :disabled="isUploading[pay.id]"
+                      >
+                        {{ isUploading[pay.id] ? 'MENGUPLOAD...' : 'KIRIM BUKTI VERIFIKASI' }}
+                      </button>
+                    </div>
+                  </div>
+                </template>
+
+                <div class="space-y-1.5 px-1">
+                  <div class="flex justify-between text-xs text-stone-400">
+                    <span>Nominal Donasi Operasional</span>
+                    <span>{{ formatRupiah(pay.nominal) }}</span>
+                  </div>
+                  <div v-if="getInfaqSistemUntukPeserta(pay)" class="flex justify-between text-xs text-stone-400">
+                    <span>Infaq Sistem (Ditambahkan/Dipotong)</span>
+                    <span class="text-amber-400">{{ formatRupiah(getInfaqSistemUntukPeserta(pay)?.nominal || 0) }}</span>
+                  </div>
+                  <div class="flex justify-between text-xs font-bold text-stone-300 pt-2 mt-1 border-t border-stone-800 border-dashed">
+                    <span>Total Aktual Transfer</span>
+                    <span class="text-amber-400 font-mono">
+                      {{ formatRupiah(Number(pay.nominal) + Number(getInfaqSistemUntukPeserta(pay)?.nominal || 0)) }}
+                    </span>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>

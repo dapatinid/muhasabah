@@ -136,7 +136,24 @@ const submit = () => {
         return
     }
 
-    form.put(`/admin/acara/${props.acara.slug}`)
+    // Gunakan transform untuk mencegat dan membersihkan payload sebelum dikirim ke backend
+    form.transform((data) => ({
+        ...data,
+        // 1. Paksa konversi boolean ke 1 atau 0 agar PHP dan MySQL memprosesnya tanpa error casting
+        accept_tiket: data.accept_tiket ? 1 : 0,
+        accept_donasi: data.accept_donasi ? 1 : 0,
+        
+        // 2. Kosongkan array variants jika tiket dimatikan, 
+        // agar tidak memicu error validasi "variants.*" secara diam-diam di backend
+        variants: data.accept_tiket ? data.variants : [],
+    })).put(`/admin/acara/${props.acara.slug}`, {
+        preserveScroll: true,
+        onError: (errors) => {
+            // Tampilkan alert jika terjadi error (sangat berguna untuk melacak error di field yang tersembunyi)
+            console.error('Validation Errors:', errors);
+            alert("Gagal menyimpan!\n\nTerdapat error validasi (mungkin di kolom yang disembunyikan):\n" + Object.values(errors).join("\n"));
+        }
+    })
 }
 </script>
 
@@ -183,6 +200,11 @@ const submit = () => {
                         <Label :class="{'text-red-500': form.errors.judul}">Nama / Judul Agenda Kegiatan</Label>
                         <Input v-model="form.judul" required class="h-11 rounded-xl" :class="{'border-red-500 focus-visible:ring-red-500': form.errors.judul}" />
                         <div v-if="form.errors.judul" class="text-red-500 text-xs mt-1">{{ form.errors.judul }}</div>
+                    </div>
+                    <div class="space-y-2">
+                        <Label :class="{'text-red-500': form.errors.slug}">Slug / URL</Label>
+                        <Input v-model="form.slug" required class="h-11 rounded-xl" :class="{'border-red-500 focus-visible:ring-red-500': form.errors.slug}" />
+                        <div v-if="form.errors.slug" class="text-red-500 text-xs mt-1">{{ form.errors.slug }}</div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

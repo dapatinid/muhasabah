@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, Link, useForm } from '@inertiajs/vue3'
 import { computed, ref, onMounted } from 'vue'
-import { CalendarDays, Share2, Tag, User, Send } from 'lucide-vue-next'
+import { CalendarDays, Share2, Tag, User, Send, MessageCircle } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
 
@@ -128,7 +128,7 @@ const kategoriLabel: Record<string, string> = {
 const reaksiList = [
   { type: 'barakallah',  emoji: '🤲', label: 'Barakallah' },
   { type: 'masya_allah', emoji: '✨', label: "Masyaa Allah" },
-  { type: 'subhanallah', emoji: '💚', label: 'Subhanallah' },
+  { type: 'subhanallah', emoji: '❤️', label: 'Subhanallah' },
   { type: 'aamiin',      emoji: '🙏', label: 'Aamiin' },
 ]
 
@@ -153,6 +153,14 @@ function handleShare() {
         toast.error('Gagal menyalin tautan.')
         console.error(err)
       })
+  }
+}
+
+// SCROLL HANDLER
+function scrollToRespon() {
+  const el = document.getElementById('respon')
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 }
 </script>
@@ -221,106 +229,116 @@ function handleShare() {
         <div class="h-px flex-1 bg-stone-800" />
       </div>
 
-      <div class="space-y-3">
-        <div class="grid grid-cols-2 gap-2">
-          <button
-            v-for="r in reaksiList"
-            :key="r.type"
-            type="button"
-            @click="toggleReaksi(r.type)"
-            :disabled="isSubmittingReaction"
-            class="flex items-center justify-center gap-2 px-4 py-2.5 w-full rounded-2xl border text-xs font-bold transition-all bg-stone-900 active:scale-95 disabled:opacity-50"
-            :class="[
-              selectedReaksi === r.type 
-                ? 'border-amber-500 text-amber-400 bg-amber-500/5' 
-                : 'border-stone-800 text-stone-400 hover:border-amber-500/40'
-            ]"
-          >
-            <span>{{ r.emoji }}</span>
-            <span>{{ r.label }}</span>
-            <span v-if="reaksiCount[r.type]" class="ml-1 opacity-60 font-mono text-amber-400">
-              {{ reaksiCount[r.type] }}
-            </span>
-          </button>
-        </div>
-      </div>
-
-      <form @submit.prevent="submitKomentar" class="bg-stone-900 border border-stone-800/80 rounded-3xl p-5 space-y-4">
-        <p class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Kirim Pertanyaan / Tanggapan Publik</p>
-        
+      <section id="respon" class="space-y-8 pt-8">
         <div class="space-y-3">
-          <input 
-            v-model="commentForm.nama_publik" 
-            type="text" 
-            placeholder="Nama Anda (Wajib isi)" 
-            class="w-full bg-stone-950 border border-stone-800 rounded-xl px-4 py-2.5 text-xs text-stone-200 placeholder-stone-600 focus:outline-none focus:border-amber-500/50 transition-colors"
-          />
-          <textarea 
-            v-model="commentForm.body" 
-            required
-            rows="3"
-            placeholder="Tulis diskusi, tanggapan, atau apresiasi Anda di sini..." 
-            class="w-full bg-stone-950 border border-stone-800 rounded-xl px-4 py-3 text-xs text-stone-200 placeholder-stone-600 focus:outline-none focus:border-amber-500/50 transition-colors resize-none"
-          ></textarea>
-        </div>
-
-        <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
-          <div class="flex items-center gap-2 bg-stone-950 px-3 py-2 rounded-xl border border-stone-800">
-            <span class="text-xs font-mono text-stone-400 font-bold select-none tracking-wider">Jawab: {{ captchaNum1 }} + {{ captchaNum2 }} = </span>
-            <input 
-              v-model="userCaptchaAnswer" 
-              type="number" 
-              required
-              placeholder="?" 
-              class="w-12 bg-transparent text-center font-bold text-xs text-amber-400 focus:outline-none font-mono"
-            />
-          </div>
-
-          <button 
-            type="submit" 
-            :disabled="isSubmittingComment || !commentForm.body"
-            class="ms-auto flex items-center gap-2 bg-amber-500 hover:bg-amber-400 disabled:bg-stone-800 disabled:text-stone-600 text-stone-950 font-bold px-5 py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md"
-          >
-            <Send class="w-3.5 h-3.5" />
-            {{ isSubmittingComment ? 'Mengirim...' : 'Komentar' }}
-          </button>
-        </div>
-      </form>
-
-      <div class="space-y-4">
-        <div class="flex items-center justify-between">
-          <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500">
-            Diskusi Publik 
-            <span class="text-amber-400 font-mono ml-1">({{ kalam.komentars?.length || 0 }})</span>
-          </p>
-        </div>
-
-        <div v-if="!kalam.komentars || kalam.komentars.length === 0"
-             class="text-center py-10 rounded-3xl border border-dashed border-stone-850 bg-stone-900/10 text-stone-600 text-sm">
-          Belum ada diskusi atau tanggapan publik.
-        </div>
-
-        <div v-else class="space-y-3">
-          <div
-            v-for="komentar in kalam.komentars"
-            :key="komentar.id"
-            class="bg-stone-900/20 border border-stone-800 rounded-2xl p-4 space-y-1 hover:border-amber-500/20 transition-colors"
-          >
-            <div class="flex items-center gap-2 mb-1">
-              <span class="text-xs font-bold text-amber-200">
-                {{ komentar.user ? komentar.user.name : (komentar.nama_publik || 'Hamba Allah (Anonim)') }}
+          <div class="grid grid-cols-2 gap-2">
+            <button
+              v-for="r in reaksiList"
+              :key="r.type"
+              type="button"
+              @click="toggleReaksi(r.type)"
+              :disabled="isSubmittingReaction"
+              class="flex items-center justify-center gap-2 px-4 py-2.5 w-full rounded-2xl border text-xs font-bold transition-all bg-stone-900 active:scale-95 disabled:opacity-50"
+              :class="[
+                selectedReaksi === r.type 
+                  ? 'border-amber-500 text-amber-400 bg-amber-500/5' 
+                  : 'border-stone-800 text-stone-400 hover:border-amber-500/40'
+              ]"
+            >
+              <span>{{ r.emoji }}</span>
+              <span>{{ r.label }}</span>
+              <span v-if="reaksiCount[r.type]" class="ml-1 opacity-60 font-mono text-amber-400">
+                {{ reaksiCount[r.type] }}
               </span>
-              <span class="text-[9px] text-stone-600 font-mono">• {{ new Date(komentar.created_at).toLocaleDateString('id-ID') }}</span>
-            </div>
-            <p class="text-sm text-stone-400 leading-relaxed">{{ komentar.body }}</p>
+            </button>
           </div>
         </div>
-      </div>
 
-    </main>
+        <form @submit.prevent="submitKomentar" class="bg-stone-900 border border-stone-800/80 rounded-3xl p-5 space-y-4">
+          <p class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Kirim Pertanyaan / Tanggapan Publik</p>
+          
+          <div class="space-y-3">
+            <input 
+              v-model="commentForm.nama_publik" 
+              type="text" 
+              placeholder="Nama Anda (Wajib isi)" 
+              class="w-full bg-stone-950 border border-stone-800 rounded-xl px-4 py-2.5 text-xs text-stone-200 placeholder-stone-600 focus:outline-none focus:border-amber-500/50 transition-colors"
+            />
+            <textarea 
+              v-model="commentForm.body" 
+              required
+              rows="3"
+              placeholder="Tulis diskusi, tanggapan, atau apresiasi Anda di sini..." 
+              class="w-full bg-stone-950 border border-stone-800 rounded-xl px-4 py-3 text-xs text-stone-200 placeholder-stone-600 focus:outline-none focus:border-amber-500/50 transition-colors resize-none"
+            ></textarea>
+          </div>
 
-    <div class="fixed bottom-30 max-w-xl mx-auto inset-x-0 z-50 pointer-events-none">
-      <div class="absolute left-5 pointer-events-auto">
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+            <div class="flex items-center gap-2 bg-stone-950 px-3 py-2 rounded-xl border border-stone-800">
+              <span class="text-xs font-mono text-stone-400 font-bold select-none tracking-wider">Jawab: {{ captchaNum1 }} + {{ captchaNum2 }} = </span>
+              <input 
+                v-model="userCaptchaAnswer" 
+                type="number" 
+                required
+                placeholder="?" 
+                class="w-12 bg-transparent text-center font-bold text-xs text-amber-400 focus:outline-none font-mono"
+              />
+            </div>
+
+            <button 
+              type="submit" 
+              :disabled="isSubmittingComment || !commentForm.body"
+              class="ms-auto flex items-center gap-2 bg-amber-500 hover:bg-amber-400 disabled:bg-stone-800 disabled:text-stone-600 text-stone-950 font-bold px-5 py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md"
+            >
+              <Send class="w-3.5 h-3.5" />
+              {{ isSubmittingComment ? 'Mengirim...' : 'Komentar' }}
+            </button>
+          </div>
+        </form>
+
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500">
+              Diskusi Publik 
+              <span class="text-amber-400 font-mono ml-1">({{ kalam.komentars?.length || 0 }})</span>
+            </p>
+          </div>
+
+          <div v-if="!kalam.komentars || kalam.komentars.length === 0"
+               class="text-center py-10 rounded-3xl border border-dashed border-stone-850 bg-stone-900/10 text-stone-600 text-sm">
+            Belum ada diskusi atau tanggapan publik.
+          </div>
+
+          <div v-else class="space-y-3">
+            <div
+              v-for="komentar in kalam.komentars"
+              :key="komentar.id"
+              class="bg-stone-900/20 border border-stone-800 rounded-2xl p-4 space-y-1 hover:border-amber-500/20 transition-colors"
+            >
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs font-bold text-amber-200">
+                  {{ komentar.user ? komentar.user.name : (komentar.nama_publik || 'Hamba Allah (Anonim)') }}
+                </span>
+                <span class="text-[9px] text-stone-600 font-mono">• {{ new Date(komentar.created_at).toLocaleDateString('id-ID') }}</span>
+              </div>
+              <p class="text-sm text-stone-400 leading-relaxed">{{ komentar.body }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      </main>
+
+    <div class="fixed bottom-46 max-w-xl mx-auto inset-x-0 z-50 pointer-events-none">
+      <div class="absolute left-5 pointer-events-auto flex flex-col gap-3">
+        <button 
+          @click="scrollToRespon"
+          type="button" 
+          title="Ke bagian komentar"
+          class="w-10 h-10 bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-300 hover:text-amber-400 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.5)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer"
+        >
+          <MessageCircle class="w-4 h-4 stroke-[2.5]" />
+        </button>
+
         <button 
           @click="handleShare"
           type="button" 

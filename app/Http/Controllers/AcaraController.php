@@ -88,7 +88,7 @@ class AcaraController extends Controller
     {
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
-            'panduan_acara' => 'required|string|max:1000',
+            'panduan_acara' => 'nullable|string|max:1000',
             'body' => 'required|string',
             'kategori' => 'required|string',
             'subkategori' => 'required|string',
@@ -667,8 +667,14 @@ class AcaraController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('acara.show', [$lockedAcara->slug])
-                             ->with('success', 'Registrasi berhasil dikirim. Mohon tunggu verifikasi admin.');
+
+            if ($request->buy_type === 'tiket') {
+                return redirect()->route('acara.show', [$lockedAcara->slug,  'tab' => 'pendaftaran'])
+                                 ->with('success', 'Registrasi berhasil dikirim. Mohon tunggu verifikasi admin.');
+            } else {
+                return redirect()->route('acara.show', [$lockedAcara->slug,  'tab' => 'donatur'])
+                                 ->with('success', 'Donasi Anda berhasil dikirim. Terima kasih atas dukungan Anda!');
+            }
 
         } catch (\Exception $e) {
             DB::rollBack();
