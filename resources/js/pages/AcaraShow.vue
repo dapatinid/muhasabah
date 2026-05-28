@@ -400,6 +400,39 @@ onMounted(() => {
     }, 300)
   }
 })
+
+// Formating helper untuk teks
+function formatSingkat(teks) {
+  if (!teks) return '';
+
+  // Fungsi internal untuk mengubah satu angka (string/number) menjadi teks singkat
+  const formatAngka = (nilai) => {
+    // Ambil hanya angka dari string (menghapus 'Rp', titik, atau spasi jika ada)
+    const angka = parseInt(nilai.toString().replace(/[^0-9]/g, ''), 10);
+    
+    if (isNaN(angka)) return nilai; // Kembalikan teks asli jika bukan angka
+
+    if (angka >= 1000000) {
+      const juta = angka / 1000000;
+      // .replace('.', ',') digunakan jika ada desimal seperti 1,5 juta
+      return `Rp ${juta.toString().replace('.', ',')}juta`;
+    } else if (angka >= 1000) {
+      const ribu = angka / 1000;
+      return `Rp ${ribu}ribu`;
+    }
+    
+    return `Rp ${angka}`;
+  };
+
+  // Jika inputnya adalah rentang (misal: "Rp 100.000 - Rp 2.000.000")
+  if (teks.includes('-')) {
+    const bagian = teks.split('-');
+    return `${formatAngka(bagian[0]).trim()} - ${formatAngka(bagian[1]).trim()}`;
+  }
+
+  // Jika inputnya hanya satu angka biasa (misal: "Rp 100.000")
+  return formatAngka(teks);
+}
 </script>
 
 <template>
@@ -435,11 +468,11 @@ onMounted(() => {
           <div class="space-y-1 min-w-0 flex-1">
             <p class="text-[10px] text-stone-500 uppercase font-bold tracking-wider">Investasi Kegiatan</p>
             <p class="md:text-xl text-lg font-black font-mono truncate" :class="hargaInvestasiInfo.isGratis ? 'text-emerald-400' : 'text-stone-100'">
-              {{ hargaInvestasiInfo.teks }}
+              {{ formatSingkat(hargaInvestasiInfo.teks) }}
             </p>
           </div>
           
-          <div class="space-y-1 text-right flex-shrink-0">
+          <div class="space-y-1 text-right shrink-0">
             <p class="text-[10px] text-stone-500 uppercase font-bold tracking-wider">Sisa Kuota Kursi</p>
             <p class="md:text-xl text-lg font-black text-amber-400 font-mono">{{ kuotaTersisa }} / {{ acara.kuota_tiket }}</p>
           </div>
