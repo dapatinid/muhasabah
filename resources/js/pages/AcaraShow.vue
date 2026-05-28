@@ -467,13 +467,13 @@ function formatSingkat(teks) {
         <div v-if="Boolean(acara.accept_tiket)" class="flex items-center justify-between gap-4 border-b border-stone-800/60 pb-4 w-full min-w-0">
           <div class="space-y-1 min-w-0 flex-1">
             <p class="text-[10px] text-stone-500 uppercase font-bold tracking-wider">Investasi Kegiatan</p>
-            <p class="md:text-xl text-lg font-black font-mono truncate" :class="hargaInvestasiInfo.isGratis ? 'text-emerald-400' : 'text-stone-100'">
+            <p class="md:text-xl text-sm font-black font-mono truncate" :class="hargaInvestasiInfo.isGratis ? 'text-emerald-400' : 'text-stone-100'">
               {{ formatSingkat(hargaInvestasiInfo.teks) }}
             </p>
           </div>
           
           <div class="space-y-1 text-right shrink-0">
-            <p class="text-[10px] text-stone-500 uppercase font-bold tracking-wider">Sisa Kuota Kursi</p>
+            <p class="text-[10px] text-stone-500 uppercase font-bold tracking-wider">Sisa Kursi</p>
             <p class="md:text-xl text-lg font-black text-amber-400 font-mono">{{ kuotaTersisa }} / {{ acara.kuota_tiket }}</p>
           </div>
         </div>
