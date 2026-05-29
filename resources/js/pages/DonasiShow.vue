@@ -11,6 +11,7 @@ import {
 } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
+import QrcodeVue from 'qrcode.vue'
 
 const props = defineProps<{
   meta?: {
@@ -87,6 +88,46 @@ const closeQrisModal = () => {
   selectedQrisLog.value = null
   activeQrisModal.value = false
 }
+
+// === TAMBAHKAN LOGIKA QRIS DINAMIS DI SINI ===
+const dynamicQrisString = computed(() => {
+  if (!selectedQrisLog.value) return "";
+
+  // Hitung total bayar = Nominal Donasi + Nominal Infaq (jika ada)
+  const amount = Number(selectedQrisLog.value.nominal) + Number(getInfaqForDonasi(selectedQrisLog.value)?.nominal || 0);
+  
+  const baseQris = "00020101021126610014COM.GO-JEK.WWW01189360091438029302900210G8029302900303UMI51440014ID.CO.QRIS.WWW0215ID10265182630370303UMI5204839853033605802ID5925muhasabah id, Sosial Kema6006KENDAL61055135562070703A0163041A3A";
+  
+  if (amount <= 0) return baseQris;
+
+  // 1. Potong 4 digit CRC lama ('1A3A')
+  let qris = baseQris.slice(0, -4);
+  
+  // 2. Ubah tipe menjadi Dinamis
+  qris = qris.replace("010211", "010212");
+  
+  // 3. Bangun & Sisipkan Nominal Tag 54
+  const amtStr = amount.toString();
+  const amtLen = amtStr.length.toString().padStart(2, '0');
+  const tag54 = `54${amtLen}${amtStr}`;
+  qris = qris.replace("5303360", `5303360${tag54}`);
+  
+  // 4. Kalkulasi ulang CRC-16
+  let crc = 0xFFFF;
+  for (let c = 0; c < qris.length; c++) {
+      crc ^= qris.charCodeAt(c) << 8;
+      for (let i = 0; i < 8; i++) {
+          if (crc & 0x8000) {
+              crc = (crc << 1) ^ 0x1021;
+          } else {
+              crc = crc << 1;
+          }
+      }
+  }
+  const crcHex = (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+  
+  return qris + crcHex;
+});
 
 // --- SECURITY MATH CAPTCHA ---
 const captchaNum1 = ref(0)
@@ -802,8 +843,25 @@ onMounted(() => {
             </div>
             
             <div class="p-6 bg-stone-950 flex flex-col items-center gap-4 overflow-y-auto min-h-0 custom-scrollbar">
-                <div class="w-full max-w-[240px] xs:max-w-full mx-auto">
-                    <img src="/QRIS_MUHASABAH_ID.png" alt="QRIS Code" class="w-full h-auto object-contain shadow-md rounded-xl" />                
+                <p class="text-base font-bold font-mono text-white">
+                  MUHASABAH ID
+                </p>
+                <p class="text-base font-bold font-mono text-white -mt-4">
+                  Sosial Kemanusian
+                </p>
+                <div class="w-full max-w-[240px] xs:max-w-full mx-auto flex justify-center">
+                    <!-- Background putih agar mudah di-scan -->
+                    <div class="p-3 rounded-2xl transition-all">
+                        <qrcode-vue 
+                            v-if="dynamicQrisString"
+                            :value="dynamicQrisString" 
+                            :size="200" 
+                            level="M" 
+                            render-as="svg" 
+                                    foreground="#f59e0b" 
+                                    background="transparent"
+                        />
+                    </div>
                 </div>
                 
                 <div v-if="selectedQrisLog" class="w-full bg-stone-900/60 p-3 rounded-xl border border-stone-800 text-center space-y-0.5 shrink-0">

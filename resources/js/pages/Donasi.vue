@@ -252,7 +252,7 @@ function getJumlahDonatur(donasi: any): number {
                 </div>
                 
                 <!-- Progress Bar Penyaluran (Hijau Emerald) -->
-                <div class="h-1.5 w-full bg-linear-to-r from-amber-700 to-amber-400 rounded-full overflow-hidden">
+                <div class="h-1.5 w-full bg-stone-800 rounded-full overflow-hidden">
                   <div 
                     class="h-full bg-linear-to-r from-emerald-600 to-emerald-400 rounded-full transition-all duration-1000 shadow-[0_0_8px_rgba(52,211,153,0.3)]"
                     :style="{ width: calculateProgressRutin(donasi) + '%' }"

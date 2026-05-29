@@ -3,6 +3,7 @@ import { Head, useForm, Link } from '@inertiajs/vue3'
 import { computed, ref, watch } from 'vue'
 import { Heart, Wallet, ShieldCheck, Check, User, Info, Upload, FileText, Ticket, CheckCircle2 } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
+import QrcodeVue from 'qrcode.vue' // <-- IMPORT LIBRARY QR CODE
 
 // Struktur properti baru yang membawa relasi variants dari backend
 const props = defineProps<{
@@ -135,9 +136,6 @@ const baseInfaqOptions = [
 /* =======================
    KONFIGURASI OPSI INFAQ
 ======================= */
-/* =======================
-   KONFIGURASI OPSI INFAQ
-======================= */
 const computedInfaqOptions = computed(() => {
     const nominalNum = parseInt(form.nominal.toString().replace(/\D/g, '')) || 0;
     
@@ -241,6 +239,48 @@ const displayAtasNama = computed(() => {
     if (form.is_anonymous && jenisKontribusi.value === 'donasi') return 'Hamba Allah'
     return form.atas_nama || '...'
 })
+
+/* =======================================
+   ALGORITMA QRIS DINAMIS (FRONTEND ONLY)
+======================================= */
+const dynamicQrisString = computed(() => {
+    const amount = totalPembayaran.value;
+    // Ini adalah string QRIS Statis mentah
+    const baseQris = "00020101021126610014COM.GO-JEK.WWW01189360091438029302900210G8029302900303UMI51440014ID.CO.QRIS.WWW0215ID10265182630370303UMI5204839853033605802ID5925muhasabah id, Sosial Kema6006KENDAL61055135562070703A0163041A3A";
+    
+    if (amount <= 0) return baseQris; 
+
+    // 1. Hapus CRC lama di 4 digit terakhir ('1A3A')
+    let qris = baseQris.slice(0, -4);
+    
+    // 2. Ubah dari Statis (11) menjadi Dinamis (12)
+    qris = qris.replace("010211", "010212");
+    
+    // 3. Bangun Tag 54 (Nominal)
+    const amtStr = amount.toString();
+    const amtLen = amtStr.length.toString().padStart(2, '0'); // Panjang digit nominal (misal 5 digit = '05')
+    const tag54 = `54${amtLen}${amtStr}`;
+    
+    // 4. Sisipkan Tag 54 tepat setelah kode IDR (5303360)
+    qris = qris.replace("5303360", `5303360${tag54}`);
+    
+    // 5. Kalkulasi ulang CRC-16 (Standar CCITT-FALSE)
+    let crc = 0xFFFF;
+    for (let c = 0; c < qris.length; c++) {
+        crc ^= qris.charCodeAt(c) << 8;
+        for (let i = 0; i < 8; i++) {
+            if (crc & 0x8000) {
+                crc = (crc << 1) ^ 0x1021;
+            } else {
+                crc = crc << 1;
+            }
+        }
+    }
+    const crcHex = (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+    
+    // 6. Gabungkan string dengan CRC baru
+    return qris + crcHex;
+});
 
 function submit() {
     form.no_wa = form.no_wa.toString();
@@ -374,7 +414,6 @@ function submit() {
                         <Info class="size-3.5 text-amber-400" /> Infaq Sistem
                     </label>
                     <div class="grid grid-cols-1 gap-2">
-                        <!-- Menghapus .slice(0, 4) agar opsi infaq baru + base dapat terlihat penuh -->
                         <div 
                             v-for="opt in computedInfaqOptions" 
                             :key="opt.id"
@@ -497,13 +536,26 @@ function submit() {
                             </div>
                         </div>
 
-                        <div class="p-6 flex flex-col items-center gap-3 bg-stone-950 border-t border-stone-800/60">
-                            <img 
-                                src="/QRIS_MUHASABAH_ID.png" 
-                                alt="QRIS Kupon Pembayaran" 
-                                class="w-full max-w-[260px] object-cover rounded-2xl shadow-lg border border-stone-800"
-                            />
-                            <p class="text-[10px] text-stone-500 font-bold tracking-widest uppercase text-center mt-2">
+                        <!-- IMPLEMENTASI VUE QRCODE -->
+                        <div class="p-6 pt-4 flex flex-col items-center gap-4 bg-stone-950 border-t border-stone-800/60">
+                            <p class="text-base font-bold font-mono text-white">
+                                MUHASABAH ID
+                            </p>
+                            <p class="text-base font-bold font-mono text-white -mt-4">
+                                Sosial Kemanusian
+                            </p>
+                            <!-- Latar belakang diatur ke putih agar mudah di-scan -->
+                            <div class="p-3 rounded-2xl transition-all" :class="{'opacity-50 blur-sm pointer-events-none': totalPembayaran <= 0}">
+                                <qrcode-vue 
+                                    :value="dynamicQrisString" 
+                                    :size="200" 
+                                    level="M" 
+                                    render-as="svg" 
+                                    foreground="#f59e0b" 
+                                    background="transparent"
+                                />
+                            </div>
+                            <p class="text-[10px] text-stone-500 font-bold tracking-widest uppercase text-center mt-1">
                                 Pindai QRIS Menggunakan e-Wallet atau m-Banking Anda
                             </p>
                         </div>

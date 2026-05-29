@@ -3,6 +3,7 @@ import { Head, useForm, Link } from '@inertiajs/vue3'
 import { computed, ref, watch } from 'vue'
 import { Heart, Wallet, ShieldCheck, Check, User, Info, Upload, FileText } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
+import QrcodeVue from 'qrcode.vue' // <-- IMPORT LIBRARY QR CODE
 
 const props = defineProps<{
     donasi: {
@@ -68,8 +69,6 @@ const quickAmounts = [10000, 25000, 50000, 100000, 250000, 500000]
 /* =======================
    KONFIGURASI OPSI INFAQ
 ======================= */
-
-// Opsi Potongan Persentase (Deducted)
 const percentageInfaqOptions = [
     { percent: 0.02, label: 'diambil 2% dari donasi' },
     { percent: 0.05, label: 'diambil 5% dari donasi' },
@@ -77,7 +76,6 @@ const percentageInfaqOptions = [
     { percent: 0.10, label: 'diambil 10% dari donasi' },
 ];
 
-// Opsi Nominal Tetap Tambahan (Added)
 const baseInfaqOptions = [
     { value: 5000, label: 'administrasi' },
     { value: 10000, label: 'administrasi' },
@@ -88,24 +86,19 @@ const baseInfaqOptions = [
     { value: 100000, label: '50% muhasabah.id + 50% relawan' },
 ];
 
-/* =======================
-   KONFIGURASI OPSI INFAQ
-======================= */
 const computedInfaqOptions = computed(() => {
     const nominalNum = parseInt(form.nominal.toString().replace(/\D/g, '')) || 0;
     
-    // 1. Inisialisasi opsi paling pertama dengan "Tanpa Infaq" (Value: 0)
     let options: Array<{id: string | number, value: number, label: string, type: 'added' | 'deducted'}> = [
         { id: 0, value: 0, label: 'tanpa infaq', type: 'added' }
     ];
 
-    // 2. Loop dan tambahkan opsi persentase (deducted)
     if (nominalNum > 0) {
         percentageInfaqOptions.forEach(opt => {
             const deductionValue = Math.floor(nominalNum * opt.percent);
             if (deductionValue > 0) {
                 options.push({
-                    id: `${opt.percent * 100}_percent`, // Menghasilkan id unik seperti '2_percent', '5_percent'
+                    id: `${opt.percent * 100}_percent`, 
                     value: deductionValue,
                     label: opt.label,
                     type: 'deducted'
@@ -114,14 +107,12 @@ const computedInfaqOptions = computed(() => {
         });
     }
 
-    // Helper untuk menambah opsi base tanpa duplikasi nilai (sifatnya added)
     const addOption = (val: number, lbl: string) => {
         if (!options.some(opt => opt.value === val && opt.type === 'added')) {
             options.push({ id: val, value: val, label: lbl, type: 'added' });
         }
     };
 
-    // 3. Logika tambahan untuk Nominal Tetap (Added)
     if (nominalNum > 45000 || nominalNum === 0) {
         addOption(3000, 'administrasi');
         baseInfaqOptions.forEach(opt => addOption(opt.value, opt.label));
@@ -144,11 +135,9 @@ const computedInfaqOptions = computed(() => {
     return options;
 });
 
-// Watcher HARUS di luar computed agar berfungsi dengan benar
 watch(computedInfaqOptions, (newOptions) => {
     const exists = newOptions.some(opt => opt.id === form.infaq_sistem);
     if (!exists && newOptions.length > 0) {
-        // Otomatis akan terset ke '0' (tanpa infaq) karena berada di index ke-0
         form.infaq_sistem = newOptions[0].id;
     }
 }, { immediate: true });
@@ -189,6 +178,50 @@ const displayAtasNama = computed(() => {
     return form.atas_nama || '...'
 })
 
+/* =======================================
+   ALGORITMA QRIS DINAMIS (FRONTEND ONLY)
+======================================= */
+const dynamicQrisString = computed(() => {
+    const amount = totalPembayaran.value;
+    // Ini adalah string QRIS Statis mentah Anda dari gambar sebelumnya
+    const baseQris = "00020101021126610014COM.GO-JEK.WWW01189360091438029302900210G8029302900303UMI51440014ID.CO.QRIS.WWW0215ID10265182630370303UMI5204839853033605802ID5925muhasabah id, Sosial Kema6006KENDAL61055135562070703A0163041A3A";
+    
+    // Jika belum ada input, tampilkan QRIS Statis asli
+    if (amount <= 0) return baseQris; 
+
+    // 1. Hapus CRC lama di 4 digit terakhir ('1A3A')
+    let qris = baseQris.slice(0, -4);
+    
+    // 2. Ubah dari Statis (11) menjadi Dinamis (12)
+    qris = qris.replace("010211", "010212");
+    
+    // 3. Bangun Tag 54 (Nominal)
+    const amtStr = amount.toString();
+    const amtLen = amtStr.length.toString().padStart(2, '0'); // Panjang digit nominal (misal 5 digit = '05')
+    const tag54 = `54${amtLen}${amtStr}`;
+    
+    // 4. Sisipkan Tag 54 tepat setelah kode IDR (5303360)
+    qris = qris.replace("5303360", `5303360${tag54}`);
+    
+    // 5. Kalkulasi ulang CRC-16 (Standar CCITT-FALSE / 0x1021 / 0xFFFF)
+    let crc = 0xFFFF;
+    for (let c = 0; c < qris.length; c++) {
+        crc ^= qris.charCodeAt(c) << 8;
+        for (let i = 0; i < 8; i++) {
+            if (crc & 0x8000) {
+                crc = (crc << 1) ^ 0x1021;
+            } else {
+                crc = crc << 1;
+            }
+        }
+    }
+    // Konversi hasil int ke Hexadecimal 4 digit
+    const crcHex = (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+    
+    // 6. Gabungkan string dengan CRC baru
+    return qris + crcHex;
+});
+
 function submit() {
     form.no_wa = form.no_wa.toString();
     
@@ -221,7 +254,6 @@ function submit() {
 
             <form @submit.prevent="submit" class="space-y-8">
                 
-                <!-- 1. NOMINAL DONASI -->
                 <div class="space-y-4">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500 flex items-center gap-2">
                        <span class="size-4 rounded-full bg-amber-500 text-stone-950 flex items-center justify-center text-[8px]">1</span>
@@ -261,7 +293,6 @@ function submit() {
                     </div>
                 </div>
 
-                <!-- 2. BANTU SISTEM -->
                 <div class="space-y-4 bg-amber-500/5 border border-amber-500/10 p-5 rounded-3xl">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-amber-500 flex items-center gap-2">
                         <Info class="size-3" /> Bantu sistem kami tetap hidup
@@ -291,7 +322,6 @@ function submit() {
                     </div>
                 </div>
 
-                <!-- 3. PROFIL DONATUR -->
                 <div class="space-y-4">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500 flex items-center gap-2">
                        <span class="size-4 rounded-full bg-amber-500 text-stone-950 flex items-center justify-center text-[8px]">2</span>
@@ -325,7 +355,6 @@ function submit() {
                     </label>
                 </div>
 
-                <!-- 4. WA -->
                 <div class="space-y-2">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500">No. WhatsApp</label>
                     <input 
@@ -338,7 +367,6 @@ function submit() {
                     >
                 </div>
 
-                <!-- 5. PESAN -->
                 <div class="space-y-2">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Doa & Pesan</label>
                     <textarea v-model="form.notes" placeholder="Tambahkan komentar dukungan & doa" rows="3" required class="w-full bg-stone-900 border border-stone-800 rounded-2xl p-4 text-sm text-stone-300 outline-none focus:border-amber-500/40"></textarea>
@@ -349,7 +377,6 @@ function submit() {
                     Scan QRIS & Konfirmasi
                 </label>
                 
-                <!-- 6. RINGKASAN & QRIS -->
                 <div class="bg-stone-900 rounded-3xl border border-stone-800 overflow-hidden -mt-3">
                     <div class="p-6 space-y-4">
                         <p class="text-[10px] font-black uppercase tracking-tighter text-amber-500">Ringkasan Donasi</p>
@@ -367,37 +394,46 @@ function submit() {
                                 <span class="text-stone-500">No. WhatsApp</span>
                                 <span class="text-stone-200">{{ form.no_wa }}</span>
                             </div>
-                            <!-- PENGGUNAAN FINAL NOMINAL -->
                             <div class="flex justify-between">
                                 <span class="text-stone-500">Nominal Donasi</span>
                                 <span class="text-stone-200">
                                     {{ formatCurrency(finalNominal) }}
                                 </span>
                             </div>
-                            <!-- PENGGUNAAN FINAL INFAQ -->
                             <div class="flex justify-between text-emerald-400/80">
                                 <span class="italic">Infaq Sistem</span>
                                 <span>{{ formatCurrency(finalInfaq) }}</span>
                             </div>
                             <div class="pt-2 border-t border-stone-800 flex justify-between text-base font-black">
-                                <span class="text-stone-400 uppercase">Total</span>
+                                <span class="text-stone-400 uppercase">Total Bayar QRIS</span>
                                 <span class="text-amber-500">{{ formatCurrency(totalPembayaran) }}</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- QRIS Placeholder -->
-                    <div class="p-6 flex flex-col items-center gap-4">
-                        <img 
-                            src="/QRIS_MUHASABAH_ID.png" 
-                            alt="QRIS QR Code" 
-                            class="w-full object-cover rounded-lg"
-                        />
-                        <p class="text-[10px] text-stone-400 font-bold tracking-widest uppercase">Scan QRIS Untuk Donasi</p>
+                    <div class="p-6 pt-4 flex flex-col items-center gap-4 bg-stone-950 border-t border-stone-800/50">
+                        <p class="text-base font-bold font-mono text-white">
+                            MUHASABAH ID
+                        </p>
+                        <p class="text-base font-bold font-mono text-white -mt-4">
+                            Sosial Kemanusian
+                        </p>
+                        <div class="p-3 rounded-2xl transition-all" :class="{'opacity-50 blur-sm pointer-events-none': totalPembayaran <= 0}">
+                            <qrcode-vue 
+                                :value="dynamicQrisString" 
+                                :size="200" 
+                                level="M" 
+                                render-as="svg" 
+                                foreground="#f59e0b" 
+                                background="transparent"
+                            />
+                        </div>
+                        <p class="text-[10px] text-stone-500 font-bold tracking-widest uppercase mt-1">
+                            {{ totalPembayaran > 0 ? 'Scan QRIS untuk menyelesaikan' : 'Masukkan nominal terlebih dahulu' }}
+                        </p>
                     </div>
                 </div>
 
-                <!-- 7. UPLOAD BUKTI DONASI -->
                 <div class="space-y-3">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500 flex items-center gap-2">
                         <Upload class="size-3.5 text-amber-500" /> Upload Bukti Transfer (Opsional)
@@ -427,7 +463,6 @@ function submit() {
                     <div v-if="form.errors.bukti_donasi" class="text-red-500 text-xs mt-1">{{ form.errors.bukti_donasi }}</div>
                 </div>
 
-                <!-- INFO AMAN -->
                 <div class="flex gap-3 px-2">
                     <ShieldCheck class="size-5 text-emerald-500 shrink-0" />
                     <p class="text-xs text-stone-500 leading-relaxed italic">
@@ -435,7 +470,6 @@ function submit() {
                     </p>
                 </div>
 
-                <!-- BUTTON SELESAI -->
                 <button 
                     type="submit"
                     :disabled="form.processing"
