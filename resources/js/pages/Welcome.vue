@@ -1,19 +1,12 @@
 <script setup lang="ts">
 import { Head, Link, usePage } from '@inertiajs/vue3'
 import { 
-  Beef, BookOpen, CalendarDays, ChartNoAxesCombined, Coins, 
-  HandHeart, HeartHandshake, LayoutGrid, Scale, Search, 
-  UserRound, Target, Heart, User, Loader2, 
-  ArrowRight,
-  X
+  BookOpen, CalendarDays, Search, UserRound, Target, Heart, User, Loader2, ArrowRight, X
 } from 'lucide-vue-next'
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
-import debounce from 'lodash/debounce'
 import {
     Dialog,
     DialogContent,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
@@ -24,7 +17,7 @@ const user = computed(() => page.props.auth?.user)
 // Integrasi Props sesuai dengan struktur Model Donasi & Kalam
 const props = defineProps<{
   canRegister: boolean
-  kalams: Array<{
+  kalams?: Array<{
     id: number
     judul: string
     slug: string
@@ -34,14 +27,14 @@ const props = defineProps<{
     created_at: string
     user: { id: number; name: string } | null
   }>
-  banners: Array<{
+  banners?: Array<{
     id: number
     title: string
     subtitle: string
     image: string
     link: string | null
   }>
-  donasis: Array<{
+  donasis?: Array<{
     id: number
     user_id: number | null
     judul: string
@@ -60,7 +53,7 @@ const props = defineProps<{
     created_at: string
     payments?: Array<{
       id: number
-      mutation_type: string // 'donasi_utama', 'tasyaruf', dll
+      mutation_type: string
       nominal: number
       paymentable_id: number
       paymentable_type: string
@@ -69,7 +62,7 @@ const props = defineProps<{
     total_donasi_masuk?: number
     payments_count?: number
   }>
-  acaras: Array<{
+  acaras?: Array<{
     id: number
     judul: string
     slug: string
@@ -78,26 +71,18 @@ const props = defineProps<{
     kategori: string
     subkategori: string
     lokasi: string
-
-    // Modul Tiket
     accept_tiket: boolean | number
     kuota_tiket: number
     tiket_terjual: number
-
-    // Relasi Varian Tiket Baru
     variants: Array<{
       id: number
       nama_varian: string
       harga: number
       jumlah_kursi: number
     }>
-
-    // Modul Donasi
     accept_donasi: boolean | number
     target_donasi: number
     donasi_masuk_sum_nominal?: number
-
-    // Batas Waktu
     tgl_mulai: string
     tgl_selesai: string
     batas_registrasi: string
@@ -112,24 +97,40 @@ const isSearching = ref(false)
 
 const searchResultsKalam = ref<any[]>([])
 const searchResultsDonasi = ref<any[]>([])
+const searchResultsAcara = ref<any[]>([]) 
 
-// Debounce Search Logic
-const performSearch = debounce((query: string) => {
+// 🛠️ PERBAIKAN: Native Debounce untuk menghindari Crash jika Lodash tidak ter-install
+function customDebounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+  return function (...args: Parameters<T>) {
+    if (timeoutId) clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn(...args), delay);
+  };
+}
+
+const performSearch = customDebounce((query: string) => {
   if (!query) {
     searchResultsKalam.value = []
     searchResultsDonasi.value = []
+    searchResultsAcara.value = []
     isSearching.value = false
     return
   }
 
   isSearching.value = true
   
-  searchResultsKalam.value = props.kalams.filter(k => 
+  // 🛠️ PERBAIKAN: Tambahkan Null Safety (|| []) sebelum melakukan .filter()
+  searchResultsKalam.value = (props.kalams || []).filter(k => 
     k.judul.toLowerCase().includes(query.toLowerCase())
   )
   
-  searchResultsDonasi.value = props.donasis.filter(d => 
+  searchResultsDonasi.value = (props.donasis || []).filter(d => 
     d.judul.toLowerCase().includes(query.toLowerCase())
+  )
+
+  searchResultsAcara.value = (props.acaras || []).filter(a => 
+    a.judul.toLowerCase().includes(query.toLowerCase()) || 
+    (a.lokasi && a.lokasi.toLowerCase().includes(query.toLowerCase()))
   )
   
   isSearching.value = false
@@ -141,29 +142,28 @@ watch(searchQuery, (newVal: string) => {
 })
 
 // Helper Functions
-function stripHtml(html: string, length = 100): string {
+function stripHtml(html: string | null, length = 100): string {
   if (!html) return ''
   return html.replace(/<[^>]*>/g, '').substring(0, length) + '...'
 }
 
-function tanggal(dateStr: string): string {
+function tanggal(dateStr: string | null): string {
+  if (!dateStr) return '-' // 🛠️ PERBAIKAN: Hindari Invalid Date jika null
   return new Date(dateStr).toLocaleDateString('id-ID', {
     day: 'numeric', month: 'short', year: 'numeric'
   })
 }
 
-function formatRupiah(nominal: number): string {
+function formatRupiah(nominal: number | null): string {
   return new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
     minimumFractionDigits: 0
-  }).format(nominal)
+  }).format(nominal || 0)
 }
 
 function getSisaHari(tgl_selesai: string | null, created_at: string): string {
-  if (!tgl_selesai) {
-    return 'Berlanjut'
-  }
+  if (!tgl_selesai) return 'Berlanjut'
   const target = new Date(tgl_selesai)
   const sekarang = new Date()
   target.setHours(0, 0, 0, 0)
@@ -177,7 +177,6 @@ function getSisaHari(tgl_selesai: string | null, created_at: string): string {
   return 'Program selesai'
 }
 
-// 1. Menghitung Total Tasyaruf (Pengeluaran/Penyaluran Dana) Berdasarkan Model Payment
 function getTotalTasyaruf(donasi: any): number {
   if (donasi.total_tasyaruf !== undefined) return Number(donasi.total_tasyaruf)
   if (!donasi.payments) return 0
@@ -186,7 +185,6 @@ function getTotalTasyaruf(donasi: any): number {
     .reduce((sum: number, p: any) => sum + Number(p.nominal), 0)
 }
 
-// 2. Menghitung Total Dana Masuk Kumulatif Berdasarkan Model Payment
 function getTotalDonasiMasuk(donasi: any): number {
   if (donasi.total_donasi_masuk !== undefined) return Number(donasi.total_donasi_masuk)
   if (!donasi.payments) return 0
@@ -195,7 +193,6 @@ function getTotalDonasiMasuk(donasi: any): number {
     .reduce((sum: number, p: any) => sum + Number(p.nominal), 0)
 }
 
-// Opsi A Progress: Distribusi Penyaluran Dana vs Dana Masuk
 function calculateProgressRutin(donasi: any): number {
   const totalTersalurkan = getTotalTasyaruf(donasi)
   const totalDonasi = getTotalDonasiMasuk(donasi)
@@ -204,7 +201,6 @@ function calculateProgressRutin(donasi: any): number {
   return percent > 100 ? 100 : percent
 }
 
-// Opsi B Progress: Pencapaian Dana Masuk vs Target Anggaran Dana
 function calculateProgressTarget(donasi: any): number {
   const totalDonasi = getTotalDonasiMasuk(donasi)
   const target = Number(donasi.target_dana)
@@ -213,7 +209,6 @@ function calculateProgressTarget(donasi: any): number {
   return percent > 100 ? 100 : Math.round(percent)
 }
 
-// Menghitung Jumlah Donatur Terdaftar Berdasarkan Model Payment
 function getJumlahDonatur(donasi: any): number {
   if (donasi.payments_count !== undefined) return donasi.payments_count
   if (!donasi.payments) return 0
@@ -242,7 +237,8 @@ const scrollLeft = ref(0);
 const isDown = ref(false);
 
 const extendedBanners = computed(() => {
-  if (props.banners.length === 0) return []
+  // 🛠️ PERBAIKAN: Mencegah crash pembacaan .length saat props.banners kosong
+  if (!props.banners || props.banners.length === 0) return []
   return Array(20).fill(props.banners).flat()
 })
 
@@ -256,7 +252,7 @@ const startAutoPlay = () => {
     const scrollAmount = firstBanner.offsetWidth + 12
     carouselRef.value.scrollBy({ left: scrollAmount, behavior: 'smooth' })
 
-    if (currentSlide.value >= extendedBanners.value.length - 5) {
+    if (props.banners && currentSlide.value >= extendedBanners.value.length - 5) {
         currentSlide.value = props.banners.length
         carouselRef.value.scrollTo({ left: scrollAmount * props.banners.length, behavior: 'auto' })
     }
@@ -305,7 +301,7 @@ const handleBannerClick = (e: MouseEvent) => {
 };
 
 const handleScroll = () => {
-  if (!carouselRef.value || props.banners.length === 0) return;
+  if (!carouselRef.value || !props.banners || props.banners.length === 0) return;
   const width = carouselRef.value.querySelector('div, a')?.clientWidth || 0;
   if (width > 0) {
     const index = Math.round(carouselRef.value.scrollLeft / (width + 12));
@@ -314,7 +310,7 @@ const handleScroll = () => {
 };
 
 onMounted(() => {
-  if (props.banners.length > 1) startAutoPlay()
+  if (props.banners && props.banners.length > 1) startAutoPlay()
 })
 onUnmounted(() => stopAutoPlay())
 
@@ -327,8 +323,6 @@ watch(isSearchOpen, (val) => {
   }
 })
 
-// --- LOGIKA TERKAIT MODUL ACARA BARU ---
-
 function getStatusRegistrasi(batas_registrasi: string | null): { teks: string; tutup: boolean } {
   if (!batas_registrasi) return { teks: 'Buka', tutup: false }
   const batas = new Date(batas_registrasi)
@@ -340,7 +334,7 @@ function getStatusRegistrasi(batas_registrasi: string | null): { teks: string; t
 }
 
 function getSisaTiket(acara: any): number {
-  return Math.max(0, acara.kuota_tiket - (acara.tiket_terjual ?? 0))
+  return Math.max(0, (acara.kuota_tiket || 0) - (acara.tiket_terjual ?? 0))
 }
 
 function getProgressDonasiAcara(acara: any): number {
@@ -349,31 +343,23 @@ function getProgressDonasiAcara(acara: any): number {
   return Math.min(100, Math.round(percent))
 }
 
-/**
- * 🛠️ DISESUAIKAN: Logika badge harga adaptif diselaraskan dengan Acara.vue
- */
-function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
-  if (Boolean(acara.accept_tiket)) {
+function getHargaBadgeInfo(acara: any) {
+  // 🛠️ PERBAIKAN: Gunakan `Number() > 0` untuk menghindari Bug pada Tipe Data String "0" (False Positive)
+  if (Number(acara.accept_tiket) > 0) {
     if (!acara.variants || acara.variants.length === 0) {
       return { teks: 'GRATIS (REGISTRASI)', isGratis: true }
     }
 
-    const listHarga = acara.variants.map(v => Number(v.harga))
+    const listHarga = acara.variants.map((v: any) => Number(v.harga))
     const hargaMin = Math.min(...listHarga)
     const hargaMax = Math.max(...listHarga)
 
-    if (hargaMax === 0) {
-      return { teks: 'GRATIS (REGISTRASI)', isGratis: true }
-    }
-
-    if (hargaMin === hargaMax) {
-      return { teks: formatRupiah(hargaMin), isGratis: false }
-    }
-
+    if (hargaMax === 0) return { teks: 'GRATIS (REGISTRASI)', isGratis: true }
+    if (hargaMin === hargaMax) return { teks: formatRupiah(hargaMin), isGratis: false }
     return { teks: `${formatRupiah(hargaMin)} - ${formatRupiah(hargaMax)}`, isGratis: false }
   }
 
-  if (Boolean(acara.accept_donasi)) {
+  if (Number(acara.accept_donasi) > 0) {
     return { teks: 'OPEN DONASI', isGratis: false }
   }
 
@@ -451,11 +437,11 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
               <div v-if="!searchQuery" class="p-8 text-center">
                 <p class="text-stone-500 text-xs">Cari kalam, doa, program, komunitas atau masjid.</p>
               </div>
-
-              <div v-else-if="searchResultsKalam.length > 0 || searchResultsDonasi.length > 0" class="space-y-4 p-2">
+              
+              <div v-else-if="searchResultsKalam.length > 0 || searchResultsDonasi.length > 0 || searchResultsAcara.length > 0" class="space-y-4 p-2">
                 
                 <div v-if="searchResultsKalam.length > 0">
-                  <h3 class="text-[10px] font-bold text-amber-500/50 uppercase tracking-widest px-2 mb-2">Kalam & Artikel</h3>
+                  <h3 class="text-[10px] font-bold text-emerald-500/50 uppercase tracking-widest px-2 mb-2">Kalam & Artikel</h3>
                   <div class="space-y-1">
                     <Link 
                       v-for="item in searchResultsKalam" 
@@ -463,7 +449,7 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
                       :href="`/kalam/${item.slug}`"
                       class="flex items-center gap-3 p-3 rounded-xl hover:bg-stone-900 transition-colors group"
                     >
-                      <div class="size-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500">
+                      <div class="size-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
                         <BookOpen class="size-4" />
                       </div>
                       <div class="min-w-0">
@@ -475,7 +461,7 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
                 </div>
 
                 <div v-if="searchResultsDonasi.length > 0">
-                  <h3 class="text-[10px] font-bold text-emerald-500/50 uppercase tracking-widest px-2 mb-2">Program Donasi</h3>
+                  <h3 class="text-[10px] font-bold text-amber-400/50 uppercase tracking-widest px-2 mb-2">Program Donasi</h3>
                   <div class="space-y-1">
                     <Link 
                       v-for="item in searchResultsDonasi" 
@@ -483,7 +469,7 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
                       :href="`/donasi/${item.slug}`"
                       class="flex items-center gap-3 p-3 rounded-xl hover:bg-stone-900 transition-colors group"
                     >
-                      <div class="size-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                      <div class="size-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500">
                         <Heart class="size-4" />
                       </div>
                       <div class="min-w-0">
@@ -493,6 +479,27 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
                     </Link>
                   </div>
                 </div>
+
+                <div v-if="searchResultsAcara.length > 0">
+                  <h3 class="text-[10px] font-bold text-indigo-500/50 uppercase tracking-widest px-2 mb-2">Agenda & Acara</h3>
+                  <div class="space-y-1">
+                    <Link 
+                      v-for="item in searchResultsAcara" 
+                      :key="item.id" 
+                      :href="`/acara/${item.slug}`"
+                      class="flex items-center gap-3 p-3 rounded-xl hover:bg-stone-900 transition-colors group"
+                    >
+                      <div class="size-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-500">
+                        <CalendarDays class="size-4" />
+                      </div>
+                      <div class="min-w-0">
+                        <p class="text-sm font-medium text-stone-200 line-clamp-1 group-hover:text-amber-400 transition-colors">{{ item.judul }}</p>
+                        <p class="text-[10px] text-stone-500 uppercase">{{ item.kategori }} • {{ tanggal(item.tgl_mulai) }}</p>
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+
               </div>
 
               <div v-else class="p-12 text-center">
@@ -507,7 +514,7 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
         </Dialog>
       </section>
 
-      <section class="relative group/main">
+      <section v-if="banners && banners.length > 0" class="relative group/main">
         <div 
           ref="carouselRef"
           @mousedown="handleDragStart" @touchstart="handleDragStart"
@@ -536,7 +543,7 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
 
         <div class="flex justify-center gap-1 mt-1">
           <div 
-            v-for="(_, i) in banners" :key="i"
+            v-for="(_, i) in (banners || [])" :key="i"
             :class="[currentSlide % banners.length === i ? 'w-3 bg-amber-500' : 'w-1 bg-stone-800']"
             class="h-1 rounded-full transition-all duration-300"
           ></div>
@@ -567,7 +574,8 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
           </Link>
         </div>
 
-        <div v-if="kalams.length === 0" class="text-center py-10 text-stone-600 text-sm border border-dashed border-stone-800 rounded-2xl">
+        <!-- 🛠️ PERBAIKAN: Gunakan !kalams untuk handle apabila array di props undefined -->
+        <div v-if="!kalams || kalams.length === 0" class="text-center py-10 text-stone-600 text-sm border border-dashed border-stone-800 rounded-2xl">
           Belum ada kalam
         </div>
 
@@ -608,7 +616,7 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
           </Link>
         </div>
 
-        <div v-if="donasis.length === 0" class="text-center py-10 text-stone-600 text-sm border border-dashed border-stone-800 rounded-2xl">
+        <div v-if="!donasis || donasis.length === 0" class="text-center py-10 text-stone-600 text-sm border border-dashed border-stone-800 rounded-2xl">
           Belum ada program donasi aktif
         </div>
 
@@ -652,7 +660,8 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
                    </div>
                 </div>
                 <div class="h-1.5 w-full bg-stone-800 rounded-full overflow-hidden">
-                  <div class="h-full bg-linear-to-r from-emerald-600 to-emerald-400 rounded-full transition-all duration-1000" :style="{ width: calculateProgressRutin(donasi) + '%' }"></div>
+                  <!-- 🛠️ PERBAIKAN: bg-linear-to-r diubah menjadi bg-gradient-to-r -->
+                  <div class="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full transition-all duration-1000" :style="{ width: calculateProgressRutin(donasi) + '%' }"></div>
                 </div>
                 <div class="flex items-center justify-between text-[10px] text-stone-500 pt-1">
                   <span class="text-amber-500/90 font-medium">Program Rutin</span>
@@ -709,7 +718,7 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
           </Link>
         </div>
 
-        <div v-if="acaras.length === 0" class="text-center py-10 text-stone-600 text-sm border border-dashed border-stone-800 rounded-2xl">
+        <div v-if="!acaras || acaras.length === 0" class="text-center py-10 text-stone-600 text-sm border border-dashed border-stone-800 rounded-2xl">
           <p class="text-2xl mb-2">📅</p>
           Belum ada agenda kegiatan terdekat.
         </div>
@@ -760,7 +769,8 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
                   {{ acara.judul }}
                 </h2>
 
-                <div v-if="Boolean(acara.accept_tiket)" class="bg-stone-950/30 border border-stone-800/60 p-3 rounded-xl">
+                <!-- 🛠️ PERBAIKAN: Number() digunakan untuk keamanan nilai boolean string -->
+                <div v-if="Number(acara.accept_tiket) > 0" class="bg-stone-950/30 border border-stone-800/60 p-3 rounded-xl">
                   <div class="grid grid-cols-3 gap-2 text-center text-xs">
                     <div class="flex flex-col">
                       <span class="text-[9px] text-stone-500 uppercase font-bold tracking-tight mb-0.5">Total Kuota</span>
@@ -779,7 +789,7 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
                   </div>
                 </div>
 
-                <div v-else-if="Boolean(acara.accept_donasi)" class="space-y-1.5">
+                <div v-else-if="Number(acara.accept_donasi) > 0" class="space-y-1.5">
                   <div class="flex justify-between items-end text-[11px]">
                     <span class="text-stone-500 uppercase text-[9px] font-bold">Dana Terkumpul</span>
                     <span class="text-amber-400 font-bold font-mono">{{ getProgressDonasiAcara(acara) }}%</span>
@@ -825,7 +835,6 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
     </main>
   </AppLayoutPublic>
 </template>
-
 
 <style scoped>
 .snap-x {
