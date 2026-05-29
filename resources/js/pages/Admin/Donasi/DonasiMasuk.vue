@@ -294,7 +294,7 @@ const customPagination = computed(() => {
                                 </td>
                                 <td class="p-4 text-xs text-zinc-400">{{ new Date(pay.date).toLocaleDateString('id-ID') }}</td>
                                 <td class="p-4 font-semibold text-zinc-800 dark:text-white">
-                                    {{ pay.sapaan }} {{ pay.atas_nama }}
+                                    {{ pay.sapaan }} {{ pay.atas_nama }} ~ {{ pay.no_wa }}
                                 </td>
                                 <td class="p-4">
                                     <span :class="pay.mutation_type === 'donasi_utama' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-amber-500/10 text-amber-500 border-amber-500/20'" class="px-2 py-0.5 border text-xs font-bold rounded-lg uppercase tracking-wider">

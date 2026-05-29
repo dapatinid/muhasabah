@@ -251,7 +251,7 @@ const submitPengeluaran = () => {
                         <div class="px-2"><Link :href="`/acara/${acara.slug}`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><Eye class="size-4 text-zinc-400" />Preview Publik</Link></div>
                         <div class="px-2"><Link :href="`/admin/acara/${acara.slug}/progress`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><Newspaper class="size-4 text-zinc-400" />Progress / Berita</Link></div>
                         <div class="px-2"><Link :href="`/admin/acara/${acara.slug}/reaksi`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><HeartHandshake class="size-4 text-zinc-400" />Reaksi / Emoticon</Link></div>
-                        <div class="px-2"><Link :href="`/admin/acara/${acara.slug}/komentar`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><MessageSquare class="size-4" />Komentar & Doa</Link></div>
+                        <div class="px-2"><Link :href="`/admin/acara/${acara.slug}/komentar?tab=doa_transaksi`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl"><MessageSquare class="size-4" />Komentar & Doa</Link></div>
                         <div class="px-2"><span class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl"><Ticket class="size-4 text-indigo-500" />Buku Kas Keuangan</span></div>
                     </div>
                 </div>
@@ -331,7 +331,7 @@ const submitPengeluaran = () => {
                                 <td class="p-4 text-xs text-zinc-400">{{ new Date(pay.date).toLocaleDateString('id-ID') }}</td>
                                 <td class="p-4 font-semibold text-zinc-800 dark:text-white">
                                     <div class="flex flex-col">
-                                        <span>{{ pay.sapaan }} {{ pay.atas_nama }}</span>
+                                        <span>{{ pay.sapaan }} {{ pay.atas_nama }} ~ {{ pay.no_wa }}</span>
                                         <span v-if="pay.notes" class="text-xs font-normal text-zinc-400 italic mt-0.5">"{{ pay.notes }}"</span>
                                     </div>
                                 </td>

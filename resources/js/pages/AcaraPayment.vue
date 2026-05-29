@@ -16,7 +16,7 @@ const props = defineProps<{
         tiket_terjual: number
         accept_donasi: boolean | number
         target_donasi: number
-        panduan_donasi?: string 
+        panduan_acara?: string
         variants: Array<{
             id: number
             nama_varian: string
@@ -123,7 +123,7 @@ const percentageInfaqOptions = [
 
 // Opsi Nominal Tetap Tambahan (Added)
 const baseInfaqOptions = [
-    { value: 0, label: 'tanpa infaq' },
+    { value: 5000, label: 'administrasi' },
     { value: 10000, label: 'administrasi' },
     { value: 20000, label: 'administrasi + server' },
     { value: 30000, label: 'administrasi + server' },
@@ -135,11 +135,18 @@ const baseInfaqOptions = [
 /* =======================
    KONFIGURASI OPSI INFAQ
 ======================= */
+/* =======================
+   KONFIGURASI OPSI INFAQ
+======================= */
 const computedInfaqOptions = computed(() => {
     const nominalNum = parseInt(form.nominal.toString().replace(/\D/g, '')) || 0;
-    let options: Array<{id: string | number, value: number, label: string, type: 'added' | 'deducted'}> = [];
+    
+    // 1. Inisialisasi opsi paling pertama dengan "Tanpa Infaq" (Value: 0)
+    let options: Array<{id: string | number, value: number, label: string, type: 'added' | 'deducted'}> = [
+        { id: 0, value: 0, label: 'tanpa infaq', type: 'added' }
+    ];
 
-    // 1. Loop dan tambahkan opsi persentase (deducted) 
+    // 2. Loop dan tambahkan opsi persentase (deducted) 
     // HANYA JIKA TIPE KONTRIBUSI ADALAH 'DONASI'
     if (nominalNum > 0 && jenisKontribusi.value === 'donasi') {
         percentageInfaqOptions.forEach(opt => {
@@ -162,26 +169,19 @@ const computedInfaqOptions = computed(() => {
         }
     };
 
-    // 2. Logika tambahan untuk Nominal Tetap (Added) yang berlaku untuk Tiket & Donasi
+    // 3. Logika tambahan untuk Nominal Tetap (Added) yang berlaku untuk Tiket & Donasi
     if (nominalNum > 45000 || nominalNum === 0) {
-        addOption(5000, 'administrasi');
+        addOption(3000, 'administrasi');
         baseInfaqOptions.forEach(opt => addOption(opt.value, opt.label));
         return options;
     }
-
-    watch(computedInfaqOptions, (newOptions) => {
-    const exists = newOptions.some(opt => opt.id === form.infaq_sistem);
-    if (!exists && newOptions.length > 0) {
-        form.infaq_sistem = newOptions[0].id;
-    }
-    }, { immediate: true });
 
     const tenPercent = Math.floor(nominalNum * 0.1);
     const twentyPercent = Math.floor(nominalNum * 0.2);
 
     if (tenPercent > 0) addOption(tenPercent, 'administrasi');
     if (twentyPercent > 0 && twentyPercent !== tenPercent) addOption(twentyPercent, 'administrasi');
-    if (!options.some(opt => opt.value === 5000)) addOption(5000, 'administrasi');
+    if (!options.some(opt => opt.value === 3000)) addOption(3000, 'administrasi');
 
     baseInfaqOptions.forEach(opt => {
         if (!options.some(existing => existing.value === opt.value && existing.type === 'added')) {
@@ -191,6 +191,14 @@ const computedInfaqOptions = computed(() => {
 
     return options;
 });
+
+// WATCHER HARUS BERADA DI LUAR COMPUTED
+watch(computedInfaqOptions, (newOptions) => {
+    const exists = newOptions.some(opt => opt.id === form.infaq_sistem);
+    if (!exists && newOptions.length > 0) {
+        form.infaq_sistem = newOptions[0].id; // Akan otomatis mereset ke 'tanpa infaq' jika id sebelumnya tidak ada
+    }
+}, { immediate: true });
 
 /* =======================
    LOGIKA PERHITUNGAN
@@ -262,7 +270,7 @@ function submit() {
                     <Heart v-else class="size-6 text-amber-500 fill-amber-500" />
                 </div>
                 <h1 class="text-xl font-bold text-stone-100">Lengkapi Komitmen Kontribusi</h1>
-                <p class="text-xs text-stone-500">Pilih skema kehadiran atau partisipasi pendanaan di bawah ini.</p>
+                <p class="text-xs text-stone-500">{{ Boolean(acara.accept_donasi) ? 'Pilih skema kehadiran atau partisipasi pendanaan di bawah ini.' : 'Pilih skema kehadiran di bawah ini.' }}</p>
             </div>
 
             <div v-if="Boolean(acara.accept_tiket) && Boolean(acara.accept_donasi)" class="grid grid-cols-2 p-1.5 bg-stone-900/80 border border-stone-800 rounded-2xl gap-1">
@@ -288,6 +296,7 @@ function submit() {
                 
                 <div v-if="jenisKontribusi === 'tiket'" class="space-y-4">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-400 flex items-center gap-2">
+                        <span class="size-4 rounded-full bg-amber-500 text-white flex items-center justify-center text-[8px]">1</span>
                         <Ticket class="size-3.5 text-amber-400" /> Pilih Jenis Paket Tiket Kehadiran
                     </label>
                     
@@ -323,15 +332,15 @@ function submit() {
 
                 <div v-if="jenisKontribusi === 'donasi'" class="space-y-4">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500 flex items-center gap-2">
-                       <span class="size-4 rounded-full bg-amber-500 text-stone-950 flex items-center justify-center text-[8px]">1</span>
+                       <span class="size-4 rounded-full bg-amber-500 text-white flex items-center justify-center text-[8px]">1</span>
                        Nominal Dukungan Dana
                     </label>
 
-                    <div v-if="acara.panduan_donasi" class="flex gap-2.5 items-start p-3.5 rounded-2xl bg-stone-900/40 border border-stone-800 text-stone-400 text-xs leading-relaxed">
+                    <div v-if="acara.panduan_acara && jenisKontribusi === 'donasi'" class="flex gap-2.5 items-start p-3.5 rounded-2xl bg-stone-900/40 border border-stone-800 text-stone-400 text-xs leading-relaxed">
                         <Info class="size-4 text-amber-500 shrink-0 mt-0.5" />
                         <div>
-                            <span class="font-bold text-stone-300 block mb-0.5">Catatan Kebutuhan:</span>
-                            {{ acara.panduan_donasi }}
+                            <span class="font-bold text-stone-300 block mb-0.5">Panduan Donasi:</span>
+                            {{ acara.panduan_acara }}
                         </div>
                     </div>
                     
@@ -364,7 +373,7 @@ function submit() {
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-400 flex items-center gap-2">
                         <Info class="size-3.5 text-amber-400" /> Infaq Sistem
                     </label>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <div class="grid grid-cols-1 gap-2">
                         <!-- Menghapus .slice(0, 4) agar opsi infaq baru + base dapat terlihat penuh -->
                         <div 
                             v-for="opt in computedInfaqOptions" 
@@ -387,7 +396,7 @@ function submit() {
                 <div class="space-y-4">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500 flex items-center gap-2">
                        <span class="size-4 rounded-full bg-amber-500 text-white flex items-center justify-center text-[8px]">2</span>
-                       Identitas Penanggung Jawab / Jamaah
+                       Identitas Penanggung Jawab
                     </label>
                     <div class="grid grid-cols-12 gap-3">
                         <select 
@@ -399,7 +408,7 @@ function submit() {
                         <input 
                             v-model="form.atas_nama"
                             type="text"
-                            placeholder="Nama Lengkap Sesuai KTP/Sertifikat"
+                            placeholder="Nama Lengkap Sesuai KTP"
                             :disabled="form.is_anonymous && jenisKontribusi === 'donasi'"
                             required
                             class="col-span-8 bg-stone-900 border border-stone-800 rounded-2xl p-4 text-xs font-medium text-stone-300 outline-none disabled:opacity-30"
@@ -423,7 +432,7 @@ function submit() {
                         v-model="form.no_wa" 
                         type="text" 
                         inputmode="numeric" 
-                        placeholder="Contoh: 8123456789 (Tanpa angka 0 di depan)" 
+                        placeholder="Contoh: 08123456789" 
                         class="w-full bg-stone-900 border border-stone-800 rounded-2xl p-4 text-sm font-mono text-stone-300 outline-none focus:border-amber-500/40"
                         required
                     >
@@ -549,8 +558,8 @@ function submit() {
                     class="w-full disabled:bg-stone-800 font-black py-4 rounded-2xl transition-all active:scale-95 shadow-xl"
                     :class="[
                         jenisKontribusi === 'tiket' 
-                            ? 'bg-amber-600 hover:bg-amber-500 text-white shadow-amber-600/10' 
-                            : 'bg-amber-500 hover:bg-amber-400 text-stone-950 shadow-amber-500/10'
+                            ? 'bg-amber-500 hover:bg-amber-400 text-white shadow-amber-600/10' 
+                            : 'bg-amber-400 hover:bg-amber-300 text-stone-950 shadow-amber-500/10'
                     ]"
                 >
                     {{ form.processing ? 'SEDANG MEMPROSES PENDAFTARAN...' : 'SELESAI & DAFTAR' }}

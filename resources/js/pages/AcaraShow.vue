@@ -164,6 +164,7 @@ const getPaymentStatus = (log) => {
   if (log.status === 'failed') {
     return { text: 'Dibatalkan', class: 'text-rose-400 bg-rose-500/10 px-2.5 py-1 rounded-lg border border-rose-500/20 text-[10px]' }
   }
+  if (!log.image) return { text: 'Menunggu Bukti Transfer', class: 'text-rose-400 bg-rose-500/10 px-2.5 py-1 rounded-lg border border-rose-500/20 text-[10px]' }
   return { text: 'Menunggu Verifikasi', class: 'text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20 text-[10px]' }
 }
 
@@ -454,7 +455,7 @@ function formatSingkat(teks) {
         <div class="space-y-3">
           <span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">
             <Tag class="w-3 h-3" />
-            {{ acara.kategori }} / Target: {{ acara.subkategori }}
+            {{ acara.kategori }} / {{ acara.subkategori }}
           </span>
           <h1 class="text-2xl md:text-3xl font-bold leading-tight text-amber-100">{{ acara.judul }}</h1>
           <p class="text-sm text-stone-400 flex items-center gap-2">
@@ -508,10 +509,12 @@ function formatSingkat(teks) {
           <Link 
             v-if="!getStatusRegistrasiPendaftaran.tutup"
             :href="`/acara/${acara.slug}/payment`"
-            class="flex items-center justify-center gap-2 w-full bg-amber-600 hover:bg-amber-500 text-white font-black py-4 rounded-2xl transition-all active:scale-95 shadow-lg shadow-amber-600/20"
+            class="flex items-center justify-center gap-2 w-full bg-amber-500 hover:bg-amber-400 text-white font-black py-4 rounded-2xl transition-all active:scale-95 shadow-lg shadow-amber-600/20"
           >
             <Ticket class="w-5 h-5" />
-            REGISTRASI / DONASI
+            <span>
+              {{ acara.accept_donasi ? 'REGISTRASI / DONASI' : 'REGISTRASI' }}
+            </span>
           </Link>
           
           <div v-else class="w-full bg-stone-800 text-stone-500 font-bold py-3.5 rounded-2xl text-center text-xs uppercase tracking-wider border border-stone-700/50">
@@ -649,7 +652,7 @@ function formatSingkat(teks) {
                     <h4 class="text-xs font-bold text-stone-200 truncate pr-2 uppercase">
                       {{ pay.atas_nama === 'Hamba Allah' ? '' : pay.sapaan }} {{ pay.atas_nama }}
                     </h4>
-                    <p class="text-[11px] text-stone-500 line-clamp-1 max-w-[240px] md:max-w-md italic">
+                    <p class="text-[11px] text-stone-500 line-clamp-3 max-w-[240px] md:max-w-md italic">
                       {{ pay.notes && pay.notes !== '-' ? `"${pay.notes}"` : 'Donasi Operasional' }}
                     </p>
                   </div>
@@ -797,7 +800,7 @@ function formatSingkat(teks) {
                     <h4 class="text-xs font-bold text-stone-200 truncate pr-2 uppercase">
                       {{ log.atas_nama }}
                     </h4>
-                    <p class="text-[11px] text-stone-500 line-clamp-1 max-w-[240px] md:max-w-md">
+                    <p class="text-[11px] text-stone-500 line-clamp-3 max-w-60 md:max-w-md">
                       {{ log.notes ? `"${log.notes}"` : '' }}
                     </p>
                   </div>
@@ -902,7 +905,7 @@ function formatSingkat(teks) {
 
     <div class="fixed bottom-30 max-w-xl mx-auto inset-x-0 z-50 pointer-events-none">
       <div class="absolute left-5 pointer-events-auto">
-        <button @click="handleShare" type="button" title="Bagikan link" class="w-10 h-10 bg-amber-600 hover:bg-amber-50 text-white hover:text-stone-950 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.5)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer">
+        <button @click="handleShare" type="button" title="Bagikan link" class="w-10 h-10 bg-amber-500 hover:bg-amber-50 text-white hover:text-stone-950 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.5)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer">
           <Share2 class="w-4 h-4 stroke-[2.5]" />
         </button>
       </div>

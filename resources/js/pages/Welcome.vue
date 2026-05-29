@@ -651,7 +651,7 @@ function getHargaBadgeInfo(acara: typeof props.acaras[0]) {
                      <span class="text-amber-400 font-bold font-mono">{{ formatRupiah(getTotalDonasiMasuk(donasi)) }}</span>
                    </div>
                 </div>
-                <div class="h-1.5 w-full bg-linear-to-r from-amber-700 to-amber-400 rounded-full overflow-hidden">
+                <div class="h-1.5 w-full bg-stone-800 rounded-full overflow-hidden">
                   <div class="h-full bg-linear-to-r from-emerald-600 to-emerald-400 rounded-full transition-all duration-1000" :style="{ width: calculateProgressRutin(donasi) + '%' }"></div>
                 </div>
                 <div class="flex items-center justify-between text-[10px] text-stone-500 pt-1">

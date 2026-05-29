@@ -467,7 +467,7 @@ onMounted(() => {
             </div>
             <div class="space-y-1.5">
               <div class="h-2 w-full bg-stone-800 rounded-full overflow-hidden">
-                <div class="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full transition-all duration-1000" :style="{ width: progressRutin + '%' }"></div>
+                <div class="h-full bg-linear-to-r from-emerald-600 to-emerald-400 rounded-full transition-all duration-1000" :style="{ width: progressRutin + '%' }"></div>
               </div>
               <div class="flex justify-between items-center text-[10px] text-stone-500">
                 <span class="flex items-center gap-1"><RefreshCw class="w-3 h-3 shrink-0" /> Program Rutin</span>
@@ -486,7 +486,7 @@ onMounted(() => {
               </div>
             </div>
             <div class="h-3 w-full bg-stone-800 rounded-full overflow-hidden">
-              <div class="h-full bg-gradient-to-r from-amber-600 to-amber-400 rounded-full transition-all duration-1000" :style="{ width: progressTarget + '%' }"></div>
+              <div class="h-full bg-linear-to-r from-amber-600 to-amber-400 rounded-full transition-all duration-1000" :style="{ width: progressTarget + '%' }"></div>
             </div>
             <div class="flex justify-between items-center text-xs text-stone-500">
               <span class="flex items-center gap-1.5"><Target class="w-3.5 h-3.5" /> Target: {{ formatRupiah(donasi.target_dana) }}</span>
@@ -528,7 +528,7 @@ onMounted(() => {
         <div ref="tabsContainerRef" class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth w-full" style="-webkit-overflow-scrolling: touch; scroll-padding: 0 24px;">
           <div class="flex flex-nowrap min-w-full justify-start items-center px-4">
             <div class="w-[35%] shrink-0 snap-center"></div>
-            <button v-for="tab in orderedTabs" :key="tab.id" @click="setActiveTab(tab.id as TabType)" type="button" :data-active="activeTab === tab.id" :class="['flex items-center justify-center gap-2 py-4 px-6 text-sm font-bold border-b-2 transition-all whitespace-nowrap snap-center mx-1', activeTab === tab.id ? 'border-amber-500 text-amber-400 bg-gradient-to-t from-amber-500/5 to-transparent' : 'border-transparent text-stone-500 hover:text-stone-300']">
+            <button v-for="tab in orderedTabs" :key="tab.id" @click="setActiveTab(tab.id as TabType)" type="button" :data-active="activeTab === tab.id" :class="['flex items-center justify-center gap-2 py-4 px-6 text-sm font-bold border-b-2 transition-all whitespace-nowrap snap-center mx-1', activeTab === tab.id ? 'border-amber-500 text-amber-400 bg-linear-to-t from-amber-500/5 to-transparent' : 'border-transparent text-stone-500 hover:text-stone-300']">
               <component :is="tab.icon" class="w-4 h-4 shrink-0" />
               <span>{{ tab.label }}</span>
               <span v-if="tab.id === 'komentar' && (donasi.komentars?.length || 0) > 0" class="text-xs px-1.5 py-0.5 bg-stone-800 text-stone-400 rounded-md font-mono ml-1">{{ donasi.komentars?.length || 0 }}</span>

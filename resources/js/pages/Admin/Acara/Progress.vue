@@ -90,7 +90,7 @@ function submit() {
                         </Link>
                     </div>
                     <div class="px-2">
-                        <Link :href="`/admin/acara/${acara.slug}/komentar`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl">
+                        <Link :href="`/admin/acara/${acara.slug}/komentar?tab=doa_transaksi`" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl">
                             <MessageSquare class="size-4 text-zinc-400" />Komentar & Doa
                         </Link>
                     </div>

@@ -79,7 +79,7 @@ const percentageInfaqOptions = [
 
 // Opsi Nominal Tetap Tambahan (Added)
 const baseInfaqOptions = [
-    { value: 0, label: 'tanpa infaq' },
+    { value: 5000, label: 'administrasi' },
     { value: 10000, label: 'administrasi' },
     { value: 20000, label: 'administrasi + server' },
     { value: 30000, label: 'administrasi + server' },
@@ -88,11 +88,18 @@ const baseInfaqOptions = [
     { value: 100000, label: '50% muhasabah.id + 50% relawan' },
 ];
 
+/* =======================
+   KONFIGURASI OPSI INFAQ
+======================= */
 const computedInfaqOptions = computed(() => {
     const nominalNum = parseInt(form.nominal.toString().replace(/\D/g, '')) || 0;
-    let options: Array<{id: string | number, value: number, label: string, type: 'added' | 'deducted'}> = [];
+    
+    // 1. Inisialisasi opsi paling pertama dengan "Tanpa Infaq" (Value: 0)
+    let options: Array<{id: string | number, value: number, label: string, type: 'added' | 'deducted'}> = [
+        { id: 0, value: 0, label: 'tanpa infaq', type: 'added' }
+    ];
 
-    // 1. Loop dan tambahkan opsi persentase (deducted)
+    // 2. Loop dan tambahkan opsi persentase (deducted)
     if (nominalNum > 0) {
         percentageInfaqOptions.forEach(opt => {
             const deductionValue = Math.floor(nominalNum * opt.percent);
@@ -107,16 +114,16 @@ const computedInfaqOptions = computed(() => {
         });
     }
 
-    // Helper untuk menambah opsi base tanpa duplikasi nilai
+    // Helper untuk menambah opsi base tanpa duplikasi nilai (sifatnya added)
     const addOption = (val: number, lbl: string) => {
         if (!options.some(opt => opt.value === val && opt.type === 'added')) {
             options.push({ id: val, value: val, label: lbl, type: 'added' });
         }
     };
 
-    // 2. Logika tambahan untuk Nominal Tetap (Added)
+    // 3. Logika tambahan untuk Nominal Tetap (Added)
     if (nominalNum > 45000 || nominalNum === 0) {
-        addOption(5000, 'administrasi');
+        addOption(3000, 'administrasi');
         baseInfaqOptions.forEach(opt => addOption(opt.value, opt.label));
         return options;
     }
@@ -126,7 +133,7 @@ const computedInfaqOptions = computed(() => {
 
     if (tenPercent > 0) addOption(tenPercent, 'administrasi');
     if (twentyPercent > 0 && twentyPercent !== tenPercent) addOption(twentyPercent, 'administrasi');
-    if (!options.some(opt => opt.value === 5000)) addOption(5000, 'administrasi');
+    if (!options.some(opt => opt.value === 3000)) addOption(3000, 'administrasi');
     
     baseInfaqOptions.forEach(opt => {
         if (!options.some(existing => existing.value === opt.value && existing.type === 'added')) {
@@ -137,10 +144,11 @@ const computedInfaqOptions = computed(() => {
     return options;
 });
 
-// Watcher agar reset ke opsi pertama jika pilihan saat ini hilang dari list (misal user hapus input nominal)
+// Watcher HARUS di luar computed agar berfungsi dengan benar
 watch(computedInfaqOptions, (newOptions) => {
     const exists = newOptions.some(opt => opt.id === form.infaq_sistem);
     if (!exists && newOptions.length > 0) {
+        // Otomatis akan terset ke '0' (tanpa infaq) karena berada di index ke-0
         form.infaq_sistem = newOptions[0].id;
     }
 }, { immediate: true });
@@ -324,7 +332,7 @@ function submit() {
                         v-model="form.no_wa" 
                         type="text" 
                         inputmode="numeric" 
-                        placeholder="85950540055 tanpa angka 0" 
+                        placeholder="Contoh: 08123456789" 
                         class="w-full bg-stone-900 border border-stone-800 rounded-2xl p-4 text-sm text-stone-300 outline-none focus:border-amber-500/40"
                         required
                     >
