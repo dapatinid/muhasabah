@@ -720,7 +720,7 @@ onMounted(() => {
                       {{ log.mutation_type === 'tasyaruf' ? 'Penyaluran (Tasyaruf)' : (log.atas_nama) }}
                     </h4>
 
-                    <p class="text-[11px] text-stone-500 line-clamp-1 max-w-[240px] md:max-w-md">{{ log.notes || 'Donasi Masuk' }}</p>
+                    <p class="text-[11px] text-stone-500 max-w-[240px] md:max-w-md" :class="log.mutation_type === 'tasyaruf' ? 'line-clamp-none' : 'line-clamp-1'">{{ log.notes || 'Donasi Masuk' }}</p>
                     <p v-if="log.link" class="text-[11px] text-foreground line-clamp-1 max-w-[240px] md:max-w-md">Link Terkait: <a :href="log.link" target="_blank" class="text-blue-500 hover:underline">klik di sini</a></p>
                   </div>
                 </div>

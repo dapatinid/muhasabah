@@ -92,7 +92,7 @@ const logDaftarPeserta = computed(() => {
 // Menghitung total pendaftar valid yang sukses/terverifikasi
 const totalPesertaTerdaftar = computed(() => {
   return logDaftarPeserta.value
-    .filter(p => p.status === 'success')
+    // .filter(p => p.status === 'success')
     .reduce((sum, item) => sum + (item.jumlah_tiket ?? 1), 0)
 })
 
