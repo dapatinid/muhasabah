@@ -6,19 +6,16 @@
 
         <!-- ==================== OPEN GRAPH META TAGS (WHATSAPP SEO) ==================== -->
         @if(isset($page['props']['meta']))
-            <!-- Jika halaman mengirimkan data meta spesifik (seperti halaman detail donasi) -->
             <meta property="og:type" content="website">
-            <meta property="og:title" content="{{ $page['props']['meta']['title'] }}">
-            <meta property="og:description" content="{{ $page['props']['meta']['description'] }}">
-            <meta property="og:image" content="{{ $page['props']['meta']['image'] }}">
-            <meta property="og:url" content="{{ $page['props']['meta']['url'] }}">
+            <meta property="og:title" content="{{ $page['props']['meta']['title'] ?? 'Muhasabah ID - Platform Kebaikan' }}">
+            <meta property="og:description" content="{{ $page['props']['meta']['description'] ?? 'Salurkan infaq dan donasi terbaik Anda melalui program jaminan amanah Muhasabah ID.' }}">
+            <meta property="og:image" content="{{ $page['props']['meta']['image'] ?? asset('favicon.png') }}">
+            <meta property="og:url" content="{{ $page['props']['meta']['url'] ?? url()->current() }}">
             <meta property="og:site_name" content="Muhasabah ID">
         @else
-            <!-- Fallback Default jika membuka halaman utama atau halaman tanpa meta spesifik -->
             <meta property="og:type" content="website">
             <meta property="og:title" content="Muhasabah ID - Platform Kebaikan">
             <meta property="og:description" content="Salurkan infaq dan donasi terbaik Anda melalui program jaminan amanah Muhasabah ID.">
-            <!-- Ganti dengan path logo/banner utama Anda untuk default share link -->
             <meta property="og:image" content="{{ asset('favicon.png') }}">
             <meta property="og:url" content="{{ url()->current() }}">
             <meta property="og:site_name" content="Muhasabah ID">

@@ -85,14 +85,24 @@ public function logRiyadhoh(Request $request)
                      ->withQueryString();
 
     return Inertia::render('Admin/Riyadhoh/LogRiyadhoh', [
-        'entries' => $entries->items(),
+        'entries' => $entries->items(), // Kembali gunakan items() jika ingin memisahkan meta
         'filters' => $request->only(['search', 'date_from', 'date_to']),
-        'meta'    => [
+        
+        // Ganti nama key untuk paginasi agar tidak tabrakan dengan Meta SEO
+        'pagination' => [
             'total'        => $entries->total(),
             'current_page' => $entries->currentPage(),
             'last_page'    => $entries->lastPage(),
             'per_page'     => $entries->perPage(),
         ],
+        
+        // Kirim meta title asli untuk app.blade.php publik
+        'meta'    => [
+                    'title'       => 'Log Riyadhoh',
+                    'description' => 'Data laporan ibadah harian peserta riyadhoh Muhasabah ID.',
+                    'image'       => asset('favicon.png'),
+                    'url'         => url()->current(),
+                ],
     ]);
 }
 

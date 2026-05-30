@@ -14,14 +14,8 @@ import { Label } from '@/components/ui/label';
 defineOptions({
     layout: {
         breadcrumbs: [
-            {
-                title: 'Dashboard',
-                href: dashboard(),
-            },
-            {
-                title: 'Log Riyadhoh',
-                href: '/log-riyadhoh',
-            },
+            { title: 'Dashboard', href: dashboard() },
+            { title: 'Log Riyadhoh', href: '/log-riyadhoh' },
         ],
     },
 });
@@ -53,6 +47,8 @@ interface LogEntry {
     puasa_sunnah: string | null;
     skor: number;
     skor_gabung: string;
+    created_at?: string | null; // 🌟 PERBAIKAN: Ditambahkan agar tidak error TS
+    updated_at?: string | null; // 🌟 PERBAIKAN: Ditambahkan agar tidak error TS
 }
 
 interface Props {
@@ -62,21 +58,18 @@ interface Props {
         date_from: string;
         date_to: string;
     };
-    meta: {
+    pagination: {
         total: number;
         current_page: number;
         last_page: number;
         per_page: number;
     };
+    meta: {
+        title: string;
+    };
 }
 
 const props = defineProps<Props>();
-
-    console.log('Data dari Laravel:', props.entries);
-if (props.entries.length > 0) {
-    console.log('Contoh data pertama:', props.entries[0]);
-    console.log('Skor ada?', 'skor' in props.entries[0]);
-}
 
 const search = ref(props.filters?.search ?? '');
 const dateFrom = ref(props.filters?.date_from ?? '');
@@ -176,7 +169,6 @@ function nilaiClass(key: string, value: any): string {
 }
 
 function skorClass(skor: number): string {
-    // Contoh: Hijau jika skor murni di atas 8000
     if (skor >= 8000) return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300';
     if (skor >= 4000) return 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300';
     return 'bg-red-100 text-red-500 dark:bg-red-900/40 dark:text-red-300';
@@ -197,7 +189,6 @@ function goToPage(page: number) {
     );
 }
 
-// 1. Definisikan kategori kunci (sama dengan di Laravel)
 const rakaatKeys = ['tahajud', 'witir', 'dhuha'];
 const hitunganKeys = ['istighfar', 'sholawat'];
 const pilihanKeys = [
@@ -206,23 +197,16 @@ const pilihanKeys = [
     'dzikir_pagi', 'dzikir_sore', 'alquran', 'puasa_sunnah',
 ];
 
-// 2. Fungsi Hitung Skor Murni
 function hitungSkor(entry: LogEntry): number {
     let skor = 0;
-
-    // Hitung Rakaat (x100)
     rakaatKeys.forEach(key => {
         const val = Number((entry as any)[key]) || 0;
         skor += val * 100;
     });
-
-    // Hitung Hitungan (x1)
     hitunganKeys.forEach(key => {
         const val = Number((entry as any)[key]) || 0;
         skor += val;
     });
-
-    // Hitung Pilihan String
     pilihanKeys.forEach(key => {
         const val = String((entry as any)[key] || '').toLowerCase();
         if (['sempurna', 'ya', 'jamaah'].includes(val)) {
@@ -231,35 +215,27 @@ function hitungSkor(entry: LogEntry): number {
             skor += 500;
         }
     });
-
     return skor;
 }
 
-// 3. Fungsi Format Skor Gabungan (Skor + Sedekah)
 function formatSkorGabung(entry: LogEntry): string {
     const skorMurni = hitungSkor(entry);
     const sedekah = Number(entry.sedekah_subuh) || 0;
-    
     const formattedSkor = skorMurni.toLocaleString('id-ID');
-    
     if (sedekah > 0) {
         return `${formattedSkor} + Rp ${sedekah.toLocaleString('id-ID')}`;
     }
-    
     return formattedSkor;
 }
 
-// Pagination handler
-
 const displayedPages = computed(() => {
-    const current = props.meta.current_page;
-    const last = props.meta.last_page;
-    const delta = 2; // Jumlah halaman di kiri dan kanan halaman aktif
+    const current = props.pagination?.current_page ?? 1;
+    const last = props.pagination?.last_page ?? 1;
+    const delta = 2;
     
     let start = Math.max(1, current - delta);
     let end = Math.min(last, current + delta);
 
-    // Penyesuaian jika di awal atau di akhir range
     if (current <= delta) {
         end = Math.min(last, start + (delta * 2));
     } else if (current > last - delta) {
@@ -273,7 +249,6 @@ const displayedPages = computed(() => {
     return pages;
 });
 
-// State untuk Modal
 const isEditDialogOpen = ref(false);
 const editingCell = ref<{
     id: number;
@@ -288,7 +263,6 @@ const editForm = useForm({
     value: '' as any,
 });
 
-// Fungsi saat Cell di double click
 function handleDoubleClick(entry: LogEntry, columnKey: string, label: string) {
     editingCell.value = {
         id: entry.id,
@@ -315,11 +289,10 @@ function submitUpdate() {
 </script>
 
 <template>
-    <Head title="Log Riyadhoh" />
+    <Head :title="props.meta?.title ?? 'Log Riyadhoh'" />
 
     <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto p-4">
 
-        <!-- Header -->
         <div class="flex flex-col gap-1">
             <h1 class="text-2xl font-bold text-zinc-800 dark:text-zinc-100">Log Riyadhoh</h1>
             <p class="text-sm text-zinc-500 dark:text-zinc-400">
@@ -327,11 +300,9 @@ function submitUpdate() {
             </p>
         </div>
 
-        <!-- Filter Card -->
         <div class="rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-white dark:bg-sidebar p-4">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:flex-wrap">
 
-                <!-- Search -->
                 <div class="flex flex-col gap-1 flex-1 min-w-[200px]">
                     <label class="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
                         Cari Nama / No. HP
@@ -352,7 +323,6 @@ function submitUpdate() {
                     </div>
                 </div>
 
-                <!-- Date From -->
                 <div class="flex flex-col gap-1">
                     <label class="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
                         Tanggal Awal
@@ -364,7 +334,6 @@ function submitUpdate() {
                     />
                 </div>
 
-                <!-- Date To -->
                 <div class="flex flex-col gap-1">
                     <label class="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
                         Tanggal Akhir
@@ -376,7 +345,6 @@ function submitUpdate() {
                     />
                 </div>
 
-                <!-- Reset -->
                 <button
                     v-if="hasFilters"
                     @click="resetFilters"
@@ -389,13 +357,11 @@ function submitUpdate() {
                 </button>
             </div>
 
-            <!-- Total info -->
             <div class="mt-3 text-xs text-zinc-400 dark:text-zinc-500">
-                Menampilkan <span class="font-semibold text-zinc-600 dark:text-zinc-300">{{ meta?.total ?? 0 }}</span> entri
+                Menampilkan <span class="font-semibold text-zinc-600 dark:text-zinc-300">{{ pagination?.total ?? 0 }}</span> entri
             </div>
         </div>
 
-        <!-- Table -->
         <div class="rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-white dark:bg-sidebar overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
@@ -427,7 +393,7 @@ function submitUpdate() {
                                 class="border-b border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors"
                             >
                                 <td class="px-4 py-3 text-zinc-400 dark:text-zinc-600 text-xs">
-                                    {{ ((meta?.current_page - 1) * meta?.per_page) + index + 1 }}
+                                    {{ (((pagination?.current_page ?? 1) - 1) * (pagination?.per_page ?? 50)) + index + 1 }}
                                 </td>
                                 <td class="px-4 py-3 font-medium text-zinc-800 dark:text-zinc-100 whitespace-nowrap"
                                     @dblclick="handleDoubleClick(entry, 'nama', 'Nama')">
@@ -461,17 +427,15 @@ function submitUpdate() {
                                     {{ formatNilai(key, (entry as any)[key]) }}
                                 </td>
                                 <td class="px-4 py-3 text-center">
-                                    <!-- Kirim hasil hitungSkor ke skorClass untuk warna -->
                                     <span
                                         class="inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap"
                                         :class="skorClass(hitungSkor(entry))"
                                     >
-                                        <!-- Tampilkan skor gabungan hasil hitungan frontend -->
                                         {{ formatSkorGabung(entry) }}
                                     </span>
                                 </td>
-                                <td class="px-4 py-3 text-zinc-600 dark:text-zinc-300 whitespace-nowrap">
-                                    <span class="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-medium">
+                                <td class="px-4 py-3 text-zinc-600 dark:text-zinc-300 whitespace-nowrap text-xs">
+                                    <span class="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 font-medium">
                                         {{ entry.created_at ? new Date(entry.created_at).toLocaleString('id-ID', {
                                             year: 'numeric',
                                             month: 'short',
@@ -481,8 +445,8 @@ function submitUpdate() {
                                         }) : '-' }}
                                     </span>
                                 </td>
-                                <td class="px-4 py-3 text-zinc-600 dark:text-zinc-300 whitespace-nowrap">
-                                    <span class="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-medium">
+                                <td class="px-4 py-3 text-zinc-600 dark:text-zinc-300 whitespace-nowrap text-xs">
+                                    <span class="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 font-medium">
                                         {{ entry.updated_at ? new Date(entry.updated_at).toLocaleString('id-ID', {
                                             year: 'numeric',
                                             month: 'short',
@@ -496,7 +460,7 @@ function submitUpdate() {
                         </template>
                         <template v-else>
                             <tr>
-                                <td :colspan="ibadahKeys.length + 7" class="px-4 py-16 text-center text-zinc-400 dark:text-zinc-600">
+                                <td :colspan="ibadahKeys.length + 9" class="px-4 py-16 text-center text-zinc-400 dark:text-zinc-600">
                                     <div class="flex flex-col items-center gap-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
@@ -511,55 +475,51 @@ function submitUpdate() {
                 </table>
             </div>
 
-            <!-- Pagination -->
             <div
-                v-if="meta && meta.last_page > 1"
+                v-if="pagination && pagination.last_page > 1"
                 class="flex items-center justify-between px-4 py-3 border-t border-zinc-100 dark:border-zinc-800 overflow-x-auto"
             >
                 <p class="text-xs text-zinc-400 dark:text-zinc-500 text-nowrap">
-                    Hal {{ meta.current_page }} dari {{ meta.last_page }}
+                    Hal {{ pagination.current_page }} dari {{ pagination.last_page }}
                 </p>
                 <div class="flex gap-1 ms-3">              
-                    <!-- Tombol First Page << -->
                     <button
-                        :disabled="meta.current_page <= 1"
+                        :disabled="pagination.current_page <= 1"
                         @click="goToPage(1)"
                         class="px-3 py-1.5 rounded-lg text-xs font-medium border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition"
                     >
                         <ChevronsLeft class="h-4 w-4" />
                     </button>
 
-                    <button v-show="meta.current_page > 3"
+                    <button v-show="pagination.current_page > 3"
                         disabled 
                         class="px-1 py-1.5 rounded-lg text-xs font-medium border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-40 transition"
                     >
                         <Ellipsis class="h-4 w-4" />
                     </button>      
 
-                    <!-- Loop Halaman yang sudah difilter -->
                     <button
                         v-for="page in displayedPages"
                         :key="page"
                         @click="goToPage(page)"
                         class="px-3 py-1.5 rounded-lg text-xs font-medium border transition"
-                        :class="page === meta.current_page
+                        :class="page === pagination.current_page
                             ? 'bg-emerald-600 border-emerald-600 text-white'
                             : 'border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800'"
                     >
                         {{ page }}
                     </button>
 
-                    <button v-show="meta.current_page < meta.last_page - 2"
+                    <button v-show="pagination.current_page < pagination.last_page - 2"
                         disabled 
                         class="px-1 py-1.5 rounded-lg text-xs font-medium border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-40 transition"
                     >
                         <Ellipsis class="h-4 w-4" />
                     </button>   
 
-                    <!-- Tombol Last Page >> -->
                     <button
-                        :disabled="meta.current_page >= meta.last_page"
-                        @click="goToPage(meta.last_page)"
+                        :disabled="pagination.current_page >= pagination.last_page"
+                        @click="goToPage(pagination.last_page)"
                         class="px-3 py-1.5 rounded-lg text-xs font-medium border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition"
                     >
                         <ChevronsRight class="h-4 w-4" />
@@ -570,8 +530,6 @@ function submitUpdate() {
 
     </div>
 
-
-    <!-- Modal Edit Dialog -->
     <Dialog :open="isEditDialogOpen" @update:open="isEditDialogOpen = $event">
         <DialogContent class="sm:max-w-[425px]">
             <DialogHeader>
@@ -585,7 +543,6 @@ function submitUpdate() {
                 <div class="grid gap-2">
                     <Label :for="editingCell?.column">{{ editingCell?.label }}</Label>
                     
-                    <!-- Input Angka: Untuk Rakaat, Hitungan, Hari ke, atau Sedekah -->
                     <Input 
                         v-if="
                             rakaatKeys.includes(editingCell?.column || '') || 
@@ -599,7 +556,6 @@ function submitUpdate() {
                         placeholder="Masukkan angka..."
                     />
                     
-                    <!-- Input Teks: Untuk Nama, Grup, dan semua Pilihan Ibadah (sempurna, sebagian, dll) -->
                     <Input 
                         v-else
                         type="text"
@@ -623,7 +579,6 @@ function submitUpdate() {
                     </Button>
                 </DialogFooter>
             </form>            
-          
         </DialogContent>
     </Dialog>    
 </template>

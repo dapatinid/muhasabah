@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::update
-* @see app/Http/Controllers/LaporanRiyadhohController.php:100
+* @see app/Http/Controllers/LaporanRiyadhohController.php:110
 * @route '/log-riyadhoh/{id}'
 */
 export const update = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -16,7 +16,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::update
-* @see app/Http/Controllers/LaporanRiyadhohController.php:100
+* @see app/Http/Controllers/LaporanRiyadhohController.php:110
 * @route '/log-riyadhoh/{id}'
 */
 update.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -43,7 +43,7 @@ update.url = (args: { id: string | number } | [id: string | number ] | string | 
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::update
-* @see app/Http/Controllers/LaporanRiyadhohController.php:100
+* @see app/Http/Controllers/LaporanRiyadhohController.php:110
 * @route '/log-riyadhoh/{id}'
 */
 update.patch = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -53,7 +53,7 @@ update.patch = (args: { id: string | number } | [id: string | number ] | string 
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::update
-* @see app/Http/Controllers/LaporanRiyadhohController.php:100
+* @see app/Http/Controllers/LaporanRiyadhohController.php:110
 * @route '/log-riyadhoh/{id}'
 */
 const updateForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -68,7 +68,7 @@ const updateForm = (args: { id: string | number } | [id: string | number ] | str
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::update
-* @see app/Http/Controllers/LaporanRiyadhohController.php:100
+* @see app/Http/Controllers/LaporanRiyadhohController.php:110
 * @route '/log-riyadhoh/{id}'
 */
 updateForm.patch = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
