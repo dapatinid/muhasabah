@@ -427,7 +427,7 @@ function submit() {
                                 </div>
                                 <span class="text-xs font-bold font-mono">{{ formatCurrency(opt.value) }}</span>
                             </div>
-                            <span class="text-[9px] italic opacity-50 truncate max-w-[100px]">{{ opt.label }}</span>
+                            <span class="text-right text-[9px] italic opacity-50 ps-2">{{ opt.label }}</span>
                         </div>
                     </div>
                 </div>
@@ -614,7 +614,7 @@ function submit() {
                             : 'bg-amber-400 hover:bg-amber-300 text-stone-950 shadow-amber-500/10'
                     ]"
                 >
-                    {{ form.processing ? 'SEDANG MEMPROSES PENDAFTARAN...' : 'SELESAI & DAFTAR' }}
+                    {{ form.processing ? 'SEDANG MEMPROSES PENDAFTARAN...' : 'SELESAI' }}
                 </button>
 
             </form>

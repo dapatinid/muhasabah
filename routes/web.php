@@ -7,6 +7,10 @@ use App\Http\Controllers\AcaraController; // Controller Baru
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\LaporanRiyadhohController;
+use App\Models\Province;
+use App\Models\City;
+use App\Models\District;
+use App\Models\Village;
 
 Route::get('/', function () {
     $kalams = \App\Models\Kalam::with('user:id,name')->latest()->take(3)->get();
@@ -159,5 +163,24 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
 Route::get('/kalam/{kalam:slug}', [KalamController::class, 'show'])->name('kalam.show');
 Route::get('/donasi/{donasi:slug}', [DonasiController::class, 'show'])->name('donasi.show');
 Route::get('/acara/{acara:slug}', [AcaraController::class, 'show'])->name('acara.show'); // Detail Acara Publik
+
+
+
+// Tambahkan rute ini di bawah
+Route::get('/api/wilayah/provinces', function () {
+    return response()->json(Province::orderBy('name')->get());
+});
+
+Route::get('/api/wilayah/cities/{province_code}', function ($province_code) {
+    return response()->json(City::where('province_code', $province_code)->orderBy('name')->get());
+});
+
+Route::get('/api/wilayah/districts/{city_code}', function ($city_code) {
+    return response()->json(District::where('city_code', $city_code)->orderBy('name')->get());
+});
+
+Route::get('/api/wilayah/villages/{district_code}', function ($district_code) {
+    return response()->json(Village::where('district_code', $district_code)->orderBy('name')->get());
+});
 
 require __DIR__.'/settings.php';

@@ -11,8 +11,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use App\Models\Province;
+use App\Models\City;
+use App\Models\District;
+use App\Models\Village;
 
-#[Fillable(['name', 'email', 'password', 'is_active', 'class', 'is_admin', 'level'])]
+#[Fillable(['name', 'email', 'password', 'is_active', 'class', 'is_admin', 'level', 'whatsapp', 'negara', 'province_code', 'city_code', 'district_code', 'village_code', 'kode_pos', 'jalan'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -47,4 +51,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Acara::class);
     }    
+
+    public function province() { return $this->belongsTo(Province::class, 'province_code', 'code'); }
+    public function city() { return $this->belongsTo(City::class, 'city_code', 'code'); }
+    public function district() { return $this->belongsTo(District::class, 'district_code', 'code'); }
+    public function village() { return $this->belongsTo(Village::class, 'village_code', 'code'); }    
 }

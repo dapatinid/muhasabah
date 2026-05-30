@@ -524,7 +524,7 @@ function formatSingkat(teks) {
           <div v-if="Boolean(acara.accept_donasi)" class="space-y-2 pt-1">
             <div class="flex justify-between items-end text-[11px]">
               <span class="text-stone-400 font-medium flex items-center gap-1">
-                <HandHeart class="size-3.5 text-amber-500" /> Patungan Operasional Acara
+                <HandHeart class="size-3.5 text-amber-500" /> Patungan Op. Acara
               </span>
               <span class="font-bold text-amber-400 font-mono text-right">{{ formatRupiah(totalDonasiMasukKepanitiaan) }} / {{ formatRupiah(acara.target_donasi) }}</span>
             </div>
@@ -694,13 +694,13 @@ function formatSingkat(teks) {
                     <h4 class="text-xs font-bold text-stone-200 truncate pr-2 uppercase">
                       {{ pay.atas_nama === 'Hamba Allah' ? '' : pay.sapaan }} {{ pay.atas_nama }}
                     </h4>
-                    <p class="text-[11px] text-stone-500 line-clamp-3 max-w-[240px] md:max-w-md italic">
+                    <p class="text-[11px] text-stone-500 w-full italic" :class="expandedLogs.includes(pay.id) ? 'line-clamp-none' : 'line-clamp-2'">
                       {{ pay.notes && pay.notes !== '-' ? `"${pay.notes}"` : 'Donasi Operasional' }}
                     </p>
                   </div>
                 </div>
 
-                <div class="flex items-center gap-3 shrink-0">
+                <div class="flex items-center gap-1 shrink-0">
                   <div class="text-right space-y-0.5">
                     <span class="text-sm font-bold font-mono block text-emerald-400">
                       + {{ formatRupiah(pay.nominal) }}
@@ -715,7 +715,7 @@ function formatSingkat(teks) {
               <div v-if="expandedLogs.includes(pay.id)" class="mt-4 pt-4 border-t border-stone-800/60 space-y-4 cursor-default" @click.stop>
                 
                 <div class="flex items-center justify-between text-xs bg-stone-950 p-2.5 rounded-xl border border-stone-800/50">
-                  <span class="text-stone-500 font-bold uppercase tracking-widest text-[9px]">Status Validasi</span>
+                  <span class="text-stone-500 font-bold uppercase tracking-widest text-[9px]">Status</span>
                   <span class="font-bold flex items-center gap-1.5" :class="getPaymentStatus(pay).class">
                     <span class="relative flex h-2 w-2" v-if="pay.status !== 'success'">
                       <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-current"></span>
@@ -734,7 +734,7 @@ function formatSingkat(teks) {
                         class="w-full flex items-center justify-center gap-2 bg-stone-900 border border-stone-800 hover:border-amber-500/40 text-amber-400 hover:text-amber-300 text-xs font-bold py-3 px-4 rounded-xl transition-all active:scale-98 shadow-sm"
                       >
                         <QrCode class="w-4 h-4" />
-                        Tampilkan QRIS Infaq
+                        Tampilkan QRIS
                       </button>
                     </div>
                     
@@ -775,15 +775,15 @@ function formatSingkat(teks) {
 
                 <div class="space-y-1.5 px-1">
                   <div class="flex justify-between text-xs text-stone-400">
-                    <span>Nominal Donasi Operasional</span>
+                    <span>Nominal Donasi</span>
                     <span>{{ formatRupiah(pay.nominal) }}</span>
                   </div>
                   <div v-if="getInfaqSistemUntukPeserta(pay)" class="flex justify-between text-xs text-stone-400">
-                    <span>Infaq Sistem (Ditambahkan/Dipotong)</span>
+                    <span>Infaq Sistem</span>
                     <span class="text-amber-400">{{ formatRupiah(getInfaqSistemUntukPeserta(pay)?.nominal || 0) }}</span>
                   </div>
                   <div class="flex justify-between text-xs font-bold text-stone-300 pt-2 mt-1 border-t border-stone-800 border-dashed">
-                    <span>Total Aktual Transfer</span>
+                    <span>Total Nominal</span>
                     <span class="text-amber-400 font-mono">
                       {{ formatRupiah(Number(pay.nominal) + Number(getInfaqSistemUntukPeserta(pay)?.nominal || 0)) }}
                     </span>
@@ -836,13 +836,13 @@ function formatSingkat(teks) {
               <div class="flex gap-4 items-center justify-between">
                 <div class="flex items-center gap-3.5 min-w-0">
                   <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border bg-amber-500/10 border-amber-500/20 text-amber-400">
-                    <ArrowDownCircle class="w-4.5 h-4.5" />
+                    <Ticket class="w-4.5 h-4.5" />
                   </div>
                   <div class="min-w-0">
                     <h4 class="text-xs font-bold text-stone-200 truncate pr-2 uppercase">
                       {{ log.atas_nama }}
                     </h4>
-                    <p class="text-[11px] text-stone-500 line-clamp-3 max-w-60 md:max-w-md">
+                    <p class="text-[11px] text-stone-500 max-w-60 md:max-w-md" :class="expandedLogs.includes(log.id) ? 'line-clamp-none' : 'line-clamp-2'">
                       {{ log.notes ? `"${log.notes}"` : '' }}
                     </p>
                   </div>
@@ -862,7 +862,7 @@ function formatSingkat(teks) {
               <div v-if="expandedLogs.includes(log.id)" class="mt-4 pt-4 border-t border-stone-800/60 space-y-4 cursor-default" @click.stop>
                 
                 <div class="flex items-center justify-between text-xs bg-stone-950 p-2.5 rounded-xl border border-stone-800/50">
-                  <span class="text-stone-500 font-bold uppercase tracking-widest text-[9px]">Status Kehadiran</span>
+                  <span class="text-stone-500 font-bold uppercase tracking-widest text-[9px]">Status</span>
                   <span class="font-bold flex items-center gap-1.5" :class="getPaymentStatus(log).class">
                     <span class="relative flex h-2 w-2" v-if="Number(log.nominal) > 0 && log.status !== 'success'">
                       <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-current"></span>
@@ -881,7 +881,7 @@ function formatSingkat(teks) {
                         class="w-full flex items-center justify-center gap-2 bg-stone-900 border border-stone-800 hover:border-amber-500/40 text-amber-400 hover:text-amber-300 text-xs font-bold py-3 px-4 rounded-xl transition-all active:scale-98 shadow-sm"
                       >
                         <QrCode class="w-4 h-4" />
-                        Tampilkan QRIS Infaq
+                        Tampilkan QRIS
                       </button>
                     </div>
                     
@@ -922,15 +922,15 @@ function formatSingkat(teks) {
 
                 <div class="space-y-1.5 px-1">
                   <div class="flex justify-between text-xs text-stone-400">
-                    <span>Kewajiban Investasi Acara ({{ log.jumlah_tiket ?? 1 }} Tiket)</span>
+                    <span>Investasi Acara ({{ log.jumlah_tiket ?? 1 }} Tiket)</span>
                     <span>{{ Number(log.nominal) > 0 ? formatRupiah(log.nominal) : 'Gratis' }}</span>
                   </div>
                   <div v-if="getInfaqSistemUntukPeserta(log)" class="flex justify-between text-xs text-stone-400">
-                    <span>Infaq Operasional Sistem BaaS</span>
+                    <span>Infaq Sistem</span>
                     <span>{{ formatRupiah(getInfaqSistemUntukPeserta(log)?.nominal || 0) }}</span>
                   </div>
                   <div class="flex justify-between text-xs font-bold text-stone-300 pt-2 mt-1 border-t border-stone-800 border-dashed">
-                    <span>Total Nominal Transfer</span>
+                    <span>Total Nominal</span>
                     <span class="text-amber-400 font-mono">
                       {{ formatRupiah(Number(log.nominal) + Number(getInfaqSistemUntukPeserta(log)?.nominal || 0)) }}
                     </span>
@@ -1002,7 +1002,7 @@ function formatSingkat(teks) {
         
         <div class="p-3 bg-stone-900/50 border-t border-stone-800 text-center shrink-0">
           <p class="text-[10px] text-stone-400 font-medium leading-normal px-2">
-            Silakan screenshot atau scan QRIS di atas melalui aplikasi m-banking atau e-wallet Anda untuk menyelesaikan pendaftaran.
+            Silakan screenshot atau scan QRIS di atas melalui aplikasi m-banking atau e-wallet Anda.
           </p>
         </div>
       </div>

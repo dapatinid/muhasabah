@@ -3,7 +3,7 @@ import { Head, Link } from '@inertiajs/vue3'
 import { 
     ArrowLeft, ChevronDown, Settings, HeartHandshake, MessageSquare, 
     ArrowDownCircle, ArrowUpCircle, Eye, SquarePen, Newspaper, Ticket,
-    Heart, ThumbsUp, Smile, Frown
+    Heart, ThumbsUp, HandHelping, Frown
 } from 'lucide-vue-next'
 import { ref } from 'vue'
 
@@ -36,9 +36,9 @@ const getReactionIcon = (type: string) => {
     switch(type) {
         case 'love': return Heart;
         case 'like': return ThumbsUp;
-        case 'pray': return Smile;
+        case 'pray': return HandHelping;
         case 'sad': return Frown;
-        default: return Smile;
+        default: return HandHelping;
     }
 }
 
@@ -95,7 +95,7 @@ const getReactionColor = (type: string) => {
                 <div><div class="text-2xl font-black">{{ statReaksi.like }}</div><div class="text-xs text-zinc-400 font-medium">Like</div></div>
             </div>
             <div class="p-5 bg-white dark:bg-zinc-900 border rounded-2xl flex items-center gap-4">
-                <div class="p-3 rounded-xl bg-amber-50 text-amber-500"><Smile class="size-5" /></div>
+                <div class="p-3 rounded-xl bg-amber-50 text-amber-500"><HandHelping class="size-5" /></div>
                 <div><div class="text-2xl font-black">{{ statReaksi.pray }}</div><div class="text-xs text-zinc-400 font-medium">Pray</div></div>
             </div>
             <div class="p-5 bg-white dark:bg-zinc-900 border rounded-2xl flex items-center gap-4">

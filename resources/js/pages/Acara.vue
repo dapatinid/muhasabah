@@ -2,7 +2,7 @@
 import { Head, Link, router } from '@inertiajs/vue3'
 import { ref, watch } from 'vue'
 import debounce from 'lodash/debounce'
-import { Search, CalendarDays } from 'lucide-vue-next'
+import { Search, CalendarDays, MapPin } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 
 const props = defineProps<{
@@ -295,7 +295,7 @@ function getProgressDonasi(acara: { donasi_masuk_sum_nominal?: number; target_do
 
               <div class="pt-3 border-t border-stone-800/60 flex items-center justify-between gap-3 text-xs text-stone-500">
                 <div class="flex items-center gap-1.5 min-w-0">
-                  <span class="shrink-0 text-[11px]">📍</span>
+                  <span class="shrink-0 text-[11px]"><MapPin class="size-3.5 text-rose-400" /></span>
                   <span class="truncate text-stone-400 font-medium">{{ acara.lokasi }}</span>
                 </div>
                 <div class="flex items-center gap-1.5 shrink-0">

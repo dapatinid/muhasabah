@@ -655,9 +655,8 @@ onMounted(() => {
                     <span class="block text-[10px] text-stone-500 font-mono">{{ new Date(pay.created_at).toLocaleDateString('id-ID') }}</span>
                   </div>
                 </div>
-                <div class="flex justify-between items-start gap-3">
-                  <p class="text-sm text-stone-400 italic font-medium leading-relaxed">"{{ pay.notes }}"</p>
-                  <span class="block text-xs font-bold text-emerald-400 font-mono shrink-0">{{ formatRupiah(pay.nominal) }}</span>
+                <div class="flex justify-start items-start gap-3">
+                  <p class="text-sm text-stone-400 italic font-medium leading-relaxed">{{ formatRupiah(pay.nominal) }} "{{ pay.notes }}"</p>
                 </div>
               </div>
             </div>
@@ -720,12 +719,13 @@ onMounted(() => {
                     <h4 class="text-xs font-bold text-stone-200 truncate pr-2 uppercase">
                       {{ log.mutation_type === 'tasyaruf' ? 'Penyaluran (Tasyaruf)' : (log.atas_nama) }}
                     </h4>
+
                     <p class="text-[11px] text-stone-500 line-clamp-1 max-w-[240px] md:max-w-md">{{ log.notes || 'Donasi Masuk' }}</p>
                     <p v-if="log.link" class="text-[11px] text-foreground line-clamp-1 max-w-[240px] md:max-w-md">Link Terkait: <a :href="log.link" target="_blank" class="text-blue-500 hover:underline">klik di sini</a></p>
                   </div>
                 </div>
 
-                <div class="flex items-center gap-3 shrink-0">
+                <div class="flex items-center gap-1 shrink-0">
                   <div class="text-right space-y-0.5">
                     <span class="text-sm font-bold font-mono block" :class="log.mutation_type === 'tasyaruf' ? 'text-red-400' : 'text-emerald-400'">
                       {{ log.mutation_type === 'tasyaruf' ? '-' : '+' }} {{ formatRupiah(log.nominal) }}
@@ -794,7 +794,7 @@ onMounted(() => {
 
                 <div class="space-y-1.5 px-1">
                   <div class="flex justify-between text-xs text-stone-400">
-                    <span>Donasi Program</span>
+                    <span>Nominal Donasi</span>
                     <span>{{ formatRupiah(log.nominal) }}</span>
                   </div>
                   <div v-if="getInfaqForDonasi(log)" class="flex justify-between text-xs text-stone-400">
@@ -802,7 +802,7 @@ onMounted(() => {
                     <span>{{ formatRupiah(getInfaqForDonasi(log)?.nominal || 0) }}</span>
                   </div>
                   <div class="flex justify-between text-xs font-bold text-stone-300 pt-2 mt-1 border-t border-stone-800 border-dashed">
-                    <span>Total Pembayaran (Transfer)</span>
+                    <span>Total Nominal</span>
                     <span class="text-amber-400 font-mono">
                       {{ formatRupiah(Number(log.nominal) + Number(getInfaqForDonasi(log)?.nominal || 0)) }}
                     </span>

@@ -17,6 +17,14 @@ trait ProfileValidationRules
         return [
             'name' => $this->nameRules(),
             'email' => $this->emailRules($userId),
+            'whatsapp' => ['required', 'string', 'max:20'],
+            'negara' => ['required', 'string', 'max:100'],
+            'province_code' => ['required', 'string', 'exists:provinces,code'],
+            'city_code' => ['required', 'string', 'exists:cities,code'],
+            'district_code' => ['required', 'string', 'exists:districts,code'],
+            'village_code' => ['required', 'string', 'exists:villages,code'],
+            'kode_pos' => ['required', 'string', 'max:10'],
+            'jalan' => ['required', 'string'],
         ];
     }
 

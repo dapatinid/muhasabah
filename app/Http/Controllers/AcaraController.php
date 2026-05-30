@@ -640,7 +640,7 @@ class AcaraController extends Controller
             // 2. Log Jurnal Arus Utama (Simpan referensi nama varian ke notes & isi kapasitas jumlah_tiket secara akurat)
             $mType = $request->buy_type === 'tiket' ? 'tiket' : 'sponsor';
             $kreditAkun = $request->buy_type === 'tiket' ? 'NR-DB TIKET ACARA' : 'NR-DB SPONSOR ACARA';
-            $prefixNotes = $request->buy_type === 'tiket' ? "[Paket: {$namaVarianTerpilih} - {$kursiYangDibeli} Kursi] " : "[Sponsor/Donasi] ";
+            $prefixNotes = $request->buy_type === 'tiket' ? "[Paket: {$namaVarianTerpilih} - {$kursiYangDibeli} Kursi] " : "";
 
             $lockedAcara->payments()->create([
                 'nominal' => $request->nominal,

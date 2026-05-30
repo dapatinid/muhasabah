@@ -28,6 +28,14 @@ class CreateNewUser implements CreatesNewUsers
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
+            'whatsapp' => $input['whatsapp'],
+            'negara' => $input['negara'] ?? 'Indonesia',
+            'province_code' => $input['province_code'],
+            'city_code' => $input['city_code'],
+            'district_code' => $input['district_code'],
+            'village_code' => $input['village_code'],
+            'kode_pos' => $input['kode_pos'],
+            'jalan' => $input['jalan'],
         ]);
     }
 }

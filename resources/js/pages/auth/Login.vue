@@ -15,7 +15,7 @@ import { request } from '@/routes/password';
 defineOptions({
     layout: {
         title: 'Masuk ke Dashboard',
-        description: 'Masukkan email dan password',
+        description: 'Isikan email dan password dengan benar',
     },
 });
 

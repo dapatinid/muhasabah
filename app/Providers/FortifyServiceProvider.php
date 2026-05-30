@@ -12,6 +12,10 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
+use App\Models\Province;
+use App\Models\City;
+use App\Models\District;
+use App\Models\Village;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -71,6 +75,24 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::twoFactorChallengeView(fn () => Inertia::render('auth/TwoFactorChallenge'));
 
         Fortify::confirmPasswordView(fn () => Inertia::render('auth/ConfirmPassword'));
+
+        Fortify::registerView(fn (Request $request) => Inertia::render('auth/Register', [
+            // Provinsi selalu diload di awal
+            'provinces' => Province::orderBy('name')->get(),
+            
+            // City, District, Village diload secara 'Lazy' (hanya dieksekusi jika ada request Inertia.js untuk mengambilnya)
+            'cities' => fn () => $request->province_code 
+                ? City::where('province_code', $request->province_code)->orderBy('name')->get() 
+                : [],
+                
+            'districts' => fn () => $request->city_code 
+                ? District::where('city_code', $request->city_code)->orderBy('name')->get() 
+                : [],
+                
+            'villages' => fn () => $request->district_code 
+                ? Village::where('district_code', $request->district_code)->orderBy('name')->get() 
+                : [],
+        ]));        
     }
 
     /**

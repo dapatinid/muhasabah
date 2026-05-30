@@ -5,7 +5,7 @@ import { ArrowLeft, Save, Globe, Lock, ChevronDown, Settings, HeartHandshake, Me
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ref } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 const props = defineProps<{
     donasi: {
@@ -46,13 +46,61 @@ const categories = [
   { label: 'Qurban', value: 'qurban' },
 ]
 
-const subcategories = [
-  { label: 'Infaq', value: 'infaq' },
-  { label: 'Program', value: 'program' },
-  { label: 'Zakat', value: 'zakat' },
-  { label: 'Waqaf', value: 'waqaf' },
-  { label: 'Qurban', value: 'qurban' },
-]
+// 1. Buat Mapping Subkategori (Lengkap dengan tambahan data)
+const subcategoryMap: Record<string, {label: string, value: string}[]> = {
+  infaq: [
+    { label: 'Dana Umum', value: 'dana_umum' }
+  ],
+  program: [
+    { label: 'Dhuafa', value: 'dhuafa' },
+    { label: 'Dakwah', value: 'dakwah' },
+    { label: 'Pendidikan', value: 'pendidikan' },
+    { label: 'Kesehatan', value: 'kesehatan' },
+    { label: 'Tanggap Bencana', value: 'tanggap_bencana' },
+    { label: 'Kemanusiaan', value: 'kemanusiaan' },
+    { label: 'Ekonomi & UMKM', value: 'ekonomi' },
+    { label: 'Yatim / Piatu', value: 'yatim' },
+  ],
+  zakat: [
+    { label: 'Mal', value: 'mal' },
+    { label: 'Fitrah', value: 'fitrah' },
+    { label: 'Penghasilan / Profesi', value: 'penghasilan' },
+  ],
+  waqaf: [
+    { label: 'Tanah', value: 'tanah' },
+    { label: 'Bangunan', value: 'bangunan' },
+    { label: 'Uang', value: 'uang' },
+    { label: 'Sumur / Air Bersih', value: 'sumur' },
+    { label: 'Al-Qur\'an', value: 'alquran' },
+  ],
+  qurban: [
+    { label: 'Kambing', value: 'kambing' },
+    { label: 'Sapi', value: 'sapi' },
+    { label: 'Domba', value: 'domba' },
+    { label: 'Kerbau', value: 'kerbau' },
+  ]
+}
+
+// 2. Buat computed property untuk memfilter subkategori sesuai kategori yang dipilih
+const availableSubcategories = computed(() => {
+  return subcategoryMap[form.kategori as keyof typeof subcategoryMap] || []
+})
+
+// 3. Watcher untuk me-reset nilai form.subkategori saat form.kategori berubah
+watch(() => form.kategori, (newKategori) => {
+  const newSubcats = subcategoryMap[newKategori as keyof typeof subcategoryMap]
+  
+  if (newSubcats && newSubcats.length > 0) {
+    // Cek apakah subkategori saat ini masih valid di kategori baru
+    const exists = newSubcats.some(s => s.value === form.subkategori)
+    if (!exists) {
+      // Jika tidak valid (beda kategori), otomatis pilih opsi pertama dari list subkategori baru
+      form.subkategori = newSubcats[0].value
+    }
+  } else {
+    form.subkategori = ''
+  }
+})
 
 function submit() {
     // Jika target dana diubah ke 0 di tengah jalan, bersihkan tanggal selesai otomatis
@@ -166,16 +214,18 @@ function submit() {
                     </select>
                 </div>
 
+                <!-- Subkategori -->
                 <div class="space-y-2">
-                    <Label for="subkategori">Subkategori</Label>
+                    <Label for="subkategori">Subkategori Donasi</Label>
                     <select 
-                        id="subkategori"
-                        v-model="form.subkategori"
-                        class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-amber-500 focus:border-amber-500"
+                    id="subkategori"
+                    v-model="form.subkategori"
+                    class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-amber-500 focus:border-amber-500"
                     >
-                        <option v-for="subcat in subcategories" :key="subcat.value" :value="subcat.value">
-                            {{ subcat.label }}
-                        </option>
+                    <!-- Ubah iterasi di sini -->
+                    <option v-for="subcat in availableSubcategories" :key="subcat.value" :value="subcat.value">
+                        {{ subcat.label }}
+                    </option>
                     </select>
                 </div>
 

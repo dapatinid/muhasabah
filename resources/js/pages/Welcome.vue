@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Head, Link, usePage } from '@inertiajs/vue3'
 import { 
-  BookOpen, CalendarDays, Search, UserRound, Target, Heart, User, Loader2, ArrowRight, X
+  BookOpen, CalendarDays, Search, UserRound, Target, Heart, User, Loader2, ArrowRight, X,
+  MapPin
 } from 'lucide-vue-next'
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import {
@@ -404,16 +405,7 @@ function getHargaBadgeInfo(acara: any) {
             </div>
           </DialogTrigger>
 
-          <DialogContent class="sm:max-w-lg bg-stone-950 border-stone-800 p-0 overflow-visible gap-0 [&>button]:hidden fixed left-[50%] top-8 sm:top-18 -translate-x-[50%] translate-y-0 duration-200 rounded-3xl shadow-2xl">
-            
-            <div class="absolute -top-14 left-1/2 -translate-x-1/2 z-50 hidden sm:flex flex-col items-center gap-1">
-              <button 
-                @click="isSearchOpen = false" 
-                class="p-2.5 rounded-full bg-stone-900/80 hover:bg-stone-800 text-stone-400 hover:text-white border border-stone-800 backdrop-blur-xs transition-all active:scale-95 shadow-lg"
-              >
-                <X class="size-5" />
-              </button>
-            </div>
+          <DialogContent class="sm:max-w-lg bg-stone-950 border-stone-800 p-0 overflow-visible gap-0 [&>button]:hidden fixed left-[50%] top-8 -translate-x-[50%] translate-y-0 duration-200 rounded-3xl shadow-2xl">          
 
             <div class="p-4 rounded-t-3xl bg-stone-950 flex items-center gap-2 border-b border-stone-800">
               <div class="relative flex-1 flex items-center">
@@ -428,7 +420,7 @@ function getHargaBadgeInfo(acara: any) {
                 <Loader2 v-if="isSearching" class="size-4 animate-spin text-stone-500" />
               </div>
               
-              <button @click="isSearchOpen = false" class="sm:hidden text-xs font-bold text-stone-400 hover:text-white px-2 py-1 bg-stone-900 border border-stone-800 rounded-xl transition-all">
+              <button @click="isSearchOpen = false" class="text-xs font-bold text-stone-400 hover:text-white px-2 py-1 bg-stone-900 border border-stone-800 rounded-xl transition-all">
                 Tutup
               </button>
             </div>
@@ -817,7 +809,7 @@ function getHargaBadgeInfo(acara: any) {
 
                 <div class="pt-3 border-t border-stone-800/60 flex items-center justify-between gap-3 text-xs text-stone-500">
                   <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="shrink-0 text-[11px]">📍</span>
+                    <span class="shrink-0 text-[11px]"><MapPin class="size-3.5 text-rose-400" /></span>
                     <span class="truncate text-stone-400 font-medium">{{ acara.lokasi }}</span>
                   </div>
                   <div class="flex items-center gap-1.5 shrink-0">
