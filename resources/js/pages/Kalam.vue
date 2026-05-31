@@ -98,7 +98,7 @@ const handleShare = async (kalam: any) => {
     try {
       await navigator.share({ title: shareTitle, text: shareText, url: shareUrl })
     } catch (err) {
-      // Dibbatalkan oleh user
+      // Dibatalkan oleh user
     }
   } else {
     try {
@@ -168,30 +168,23 @@ function goToPage(url: string | null) {
       </div>
 
       <div class="divide-y divide-stone-800">
-        <div v-for="kalam in kalams.data" :key="kalam.id" class="p-5 flex gap-4 group relative">
+        <div v-for="kalam in kalams.data" :key="kalam.id" class="p-5 flex flex-col gap-4 group relative overflow-hidden">
           
-          <div class="flex flex-col items-center shrink-0">
-            <div class="size-10 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center overflow-hidden">
-              <span v-if="kalam.is_anonymous" class="text-stone-500 text-sm font-bold">HA</span>
-              <span v-else class="text-amber-500 text-sm font-bold">{{ (kalam.user?.name ?? 'A')[0] }}</span>
-            </div>
-            <div class="w-0.5 grow bg-stone-800 my-2 rounded-full"></div>
-            <div class="flex -space-x-2 mt-1">
-              <div class="size-4 rounded-full bg-stone-700 border border-stone-950"></div>
-              <div class="size-4 rounded-full bg-stone-600 border border-stone-950"></div>
-            </div>
-          </div>
-
-          <div class="flex-1 min-w-0 space-y-2">
-            
+          <div class="w-full space-y-3">
             <div class="flex items-center justify-between relative">
-              <div class="flex items-center gap-1.5">
-                <h3 class="font-bold text-[15px] text-stone-100 truncate">
-                  {{ kalam.is_anonymous ? 'hamba.allah' : (kalam.user?.name?.toLowerCase().replace(/\s/g, '.') ?? 'anonim') }}
-                </h3>
-                <CheckCircle2 class="size-3.5 text-blue-500 fill-blue-500/10" v-if="!kalam.is_anonymous" />
-                <span class="text-stone-500 text-sm">·</span>
-                <span class="text-stone-500 text-sm">{{ tanggal(kalam.created_at) }}</span>
+              <div class="flex items-center gap-3">
+                <div class="size-9 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center overflow-hidden shrink-0">
+                  <span v-if="kalam.is_anonymous" class="text-stone-500 text-xs font-bold">HA</span>
+                  <span v-else class="text-amber-500 text-xs font-bold">{{ (kalam.user?.name ?? 'A')[0] }}</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <h3 class="font-bold text-[14px] text-stone-100 truncate max-w-[140px] sm:max-w-xs">
+                    {{ kalam.is_anonymous ? 'hamba.allah' : (kalam.user?.name?.toLowerCase().replace(/\s/g, '.') ?? 'anonim') }}
+                  </h3>
+                  <CheckCircle2 class="size-3.5 text-blue-500 fill-blue-500/10" v-if="!kalam.is_anonymous" />
+                  <span class="text-stone-500 text-sm">·</span>
+                  <span class="text-stone-500 text-xs">{{ tanggal(kalam.created_at) }}</span>
+                </div>
               </div>
               
               <div class="relative">
@@ -214,76 +207,77 @@ function goToPage(url: string | null) {
             </div>
 
             <Link :href="`/kalam/${kalam.slug}`" class="block space-y-1">
-              <h4 class="font-bold text-stone-200 text-sm" style="font-family: 'Amiri', serif;">{{ kalam.judul }}</h4>
-              <p class="text-[15px] text-stone-400 line-clamp-2 leading-relaxed">
+              <h4 class="font-bold text-stone-200 text-[15px]" style="font-family: 'Amiri', serif;">{{ kalam.judul }}</h4>
+              <p class="text-[14px] text-stone-400 line-clamp-2 leading-relaxed">
                 {{ stripHtml(kalam.body) }}
               </p>
             </Link>
+          </div>
 
-            <div 
-              v-if="extractOrderedMedia(kalam.body).length > 0" 
-              :class="[
-                'flex gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory py-2 items-start',
-                // Kondisi: Jika di dalam list media ditemukan tipe video, batasi tinggi maksimal kontainer
-                extractOrderedMedia(kalam.body).some(m => m.type === 'video') ? 'h-44 sm:h-52' : ''
-              ]"
-            >
-              
-              <template v-for="(media, idx) in extractOrderedMedia(kalam.body)" :key="`media-${idx}`">
-                  
-                  <div v-if="media.type === 'video'"
-                    :class="[
-                      'snap-start shrink-0 rounded-xl overflow-hidden border border-stone-800 bg-black shadow-inner',
-                      extractOrderedMedia(kalam.body).some(m => m.type === 'video') ? 'h-full aspect-video' : 'w-[85%] aspect-video'
-                    ]"
-                  >
-                    <iframe 
-                      :src="media.src" 
-                      class="w-full h-full" 
-                      frameborder="0" 
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                      allowfullscreen
-                    ></iframe>
-                  </div>
-
-                  <div v-else-if="media.type === 'image'"
-                    :class="[
-                      'snap-start shrink-0 rounded-xl overflow-hidden border border-stone-800 bg-stone-900 flex items-center justify-center',
-                      // Jika ada video, tingginya h-full dan dipaksa kotak dengan aspect-square
-                      extractOrderedMedia(kalam.body).some(m => m.type === 'video') ? 'h-full aspect-square' : 'w-[85%] sm:w-[70%] aspect-square'
-                    ]"
-                  >
-                    <img :src="media.src" class="w-full h-full object-cover" loading="lazy" />
-                  </div>
-
-                </template>
-            </div>
-
-            <div class="flex items-center gap-4 pt-2">
-              <Link :href="`/kalam/${kalam.slug}#respon`" class="flex items-center gap-1.5 group/btn">
-                <div class="p-2 rounded-full group-hover/btn:bg-red-500/10 transition-colors">
-                  <Heart class="size-5 text-stone-400 group-hover/btn:text-red-500" />
+          <div 
+            v-if="extractOrderedMedia(kalam.body).length > 0" 
+            :class="[
+              'relative z-1 -mx-5 py-2 items-start flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory',
+              extractOrderedMedia(kalam.body).some(m => m.type === 'video') ? 'h-48 sm:h-56' : ''
+            ]"
+          >
+            <div class="shrink-0 w-1"></div>
+            
+            <template v-for="(media, idx) in extractOrderedMedia(kalam.body)" :key="`media-${idx}`">
+                
+                <div v-if="media.type === 'video'"
+                  :class="[
+                    'snap-center shrink-0 rounded-xl overflow-hidden border border-stone-800 bg-black shadow-inner',
+                    extractOrderedMedia(kalam.body).some(m => m.type === 'video') ? 'h-full aspect-video' : 'w-[85%] aspect-video'
+                  ]"
+                >
+                  <iframe 
+                    :src="media.src" 
+                    class="w-full h-full" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen
+                  ></iframe>
                 </div>
-                <span class="text-xs text-stone-500">{{ kalam.reaksis_count }}</span>
-              </Link>
 
-              <Link :href="`/kalam/${kalam.slug}#respon`" class="flex items-center gap-1.5 group/btn">
-                <div class="p-2 rounded-full group-hover/btn:bg-blue-500/10 transition-colors">
-                  <MessageCircle class="size-5 text-stone-400 group-hover/btn:text-blue-500" />
+                <div v-else-if="media.type === 'image'"
+                  :class="[
+                    'snap-center shrink-0 rounded-xl overflow-hidden border border-stone-800 bg-stone-900 flex items-center justify-center',
+                    extractOrderedMedia(kalam.body).some(m => m.type === 'video') ? 'h-full aspect-square' : 'w-[85%] sm:w-[75%] aspect-square'
+                  ]"
+                >
+                  <img :src="media.src" class="w-full h-full object-cover" loading="lazy" />
                 </div>
-                <span class="text-xs text-stone-500">{{ kalam.komentars_count }}</span>
-              </Link>
-              
-              <button @click="handleShare(kalam)" class="p-2 rounded-full hover:bg-emerald-500/10 transition-colors cursor-pointer group/btn">
-                <Share2 class="size-5 text-stone-400 group-hover/btn:text-emerald-500" />
-              </button>
-            </div>
 
-            <div class="pt-1">
-              <span class="text-[10px] bg-stone-900 border border-stone-800 text-stone-500 px-2 py-0.5 rounded-md uppercase font-black tracking-tighter">
-                {{ kategoriEmoji[kalam.kategori] }} {{ kalam.kategori }}
-              </span>
-            </div>
+            </template>
+
+            <div class="shrink-0 w-5"></div>
+          </div>
+
+          <div class="flex items-center gap-5 pt-1">
+            <Link :href="`/kalam/${kalam.slug}#respon`" class="flex items-center gap-1.5 group/btn">
+              <div class="p-1.5 rounded-full hover:bg-red-500/10 transition-colors">
+                <Heart class="size-[19px] text-stone-400 group-hover/btn:text-red-500" />
+              </div>
+              <span class="text-xs text-stone-500 font-medium">{{ kalam.reaksis_count }}</span>
+            </Link>
+
+            <Link :href="`/kalam/${kalam.slug}#respon`" class="flex items-center gap-1.5 group/btn">
+              <div class="p-1.5 rounded-full hover:bg-blue-500/10 transition-colors">
+                <MessageCircle class="size-[19px] text-stone-400 group-hover/btn:text-blue-500" />
+              </div>
+              <span class="text-xs text-stone-500 font-medium">{{ kalam.komentars_count }}</span>
+            </Link>
+            
+            <button @click="handleShare(kalam)" class="p-1.5 rounded-full hover:bg-emerald-500/10 transition-colors cursor-pointer group/btn">
+              <Share2 class="size-[19px] text-stone-400 group-hover/btn:text-emerald-500" />
+            </button>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <span class="text-[10px] bg-stone-900 border border-stone-800 text-stone-400 px-2.5 py-0.5 rounded-md uppercase font-extrabold tracking-wider">
+              {{ kategoriEmoji[kalam.kategori] || '✨' }} {{ kalam.kategori }}
+            </span>
           </div>
 
         </div>
@@ -308,3 +302,7 @@ function goToPage(url: string | null) {
   </AppLayoutPublic>
 </template>
 
+<style scoped>
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
