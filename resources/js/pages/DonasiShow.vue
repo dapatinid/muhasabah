@@ -717,10 +717,10 @@ onMounted(() => {
                   </div>
                   <div class="min-w-0">
                     <h4 class="text-xs font-bold text-stone-200 truncate pr-2 uppercase">
-                      {{ log.mutation_type === 'tasyaruf' ? 'Penyaluran (Tasyaruf)' : (log.atas_nama) }}
+                      {{ log.mutation_type === 'tasyaruf' ? 'Tasyaruf' : (log.atas_nama) }}
                     </h4>
 
-                    <p class="text-[11px] text-stone-500 max-w-[240px] md:max-w-md" :class="log.mutation_type === 'tasyaruf' ? 'line-clamp-none' : 'line-clamp-1'">{{ log.notes || 'Donasi Masuk' }}</p>
+                    <p class="text-[11px] text-stone-500 max-w-[240px] md:max-w-md" :class="log.mutation_type === 'tasyaruf' ? 'line-clamp-none' : expandedLogs.includes(log.id) ? 'line-clamp-none' : 'line-clamp-1'">{{ log.notes || 'Donasi Masuk' }}</p>
                     <p v-if="log.link" class="text-[11px] text-foreground line-clamp-1 max-w-[240px] md:max-w-md">Link Terkait: <a :href="log.link" target="_blank" class="text-blue-500 hover:underline">klik di sini</a></p>
                   </div>
                 </div>

@@ -270,8 +270,8 @@ const handleVillageChange = (val: string | null) => {
         </div>
 
         <div class="text-center text-sm text-muted-foreground">
-            Jika sudah punya akun
-            <TextLink :href="login()" class="underline underline-offset-4 ms-2" :tabindex="14">Masuk di sini</TextLink>
+            Jika sudah punya akun,
+            <TextLink :href="login()" class="underline underline-offset-4 ms-2" :tabindex="14">masuk di sini</TextLink>
         </div>
     </Form>
 </template>
