@@ -218,8 +218,8 @@ function getJumlahDonatur(donasi: any): number {
 
 const categories = [
   { name: 'Tulis Kalam', icon: '📋', link: 'halaman-dibangun', color: 'bg-amber-500/30 text-amber-400' },
-  { name: 'Buat Acara',   icon: '📅', link: 'halaman-dibangun', color: 'bg-rose-500/40 text-rose-400' },
-  { name: 'Galang Dana',  icon: '💰', link: 'halaman-dibangun', color: 'bg-emerald-500/30 text-emerald-400' },
+  { name: 'Galang Dana ',   icon: '💰', link: 'halaman-dibangun', color: 'bg-rose-500/40 text-rose-400' },
+  { name: 'Buat Acara',  icon: '🗓️', link: 'halaman-dibangun', color: 'bg-emerald-500/30 text-emerald-400' },
   { name: 'Riyadhoh', icon: '🎖️', link: '/laporan-riyadhoh', color: 'bg-blue-500/30 text-blue-400' },
 ]
 
@@ -574,30 +574,52 @@ function getHargaBadgeInfo(acara: any) {
         <div v-else class="space-y-3">
           <Link
             v-for="kalam in kalams" :key="kalam.id" :href="`/kalam/${kalam.slug}`"
-            class="block bg-stone-900 border border-stone-800/60 rounded-2xl p-4 hover:border-amber-500/30 transition-all"
+            class="block backdrop-blur-xs bg-stone-900/50 border border-stone-800/60 rounded-2xl p-4 hover:border-amber-500/30 hover:bg-stone-900/80 transition-all group"
           >
-            <div class="flex items-start justify-between gap-3">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-bold uppercase tracking-widest text-amber-500">
+                {{ kategoriEmoji[kalam.kategori] ?? '📝' }} {{ kalam.kategori }}
+              </span>
+              <BookOpen class="size-3.5 text-stone-600 group-hover:text-amber-600 transition-colors" />
+            </div>
+
+            <div class="flex gap-4 items-start">
+              
               <div class="flex-1 min-w-0">
-                <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-amber-500 mb-2">
-                  {{ kategoriEmoji[kalam.kategori] ?? '📝' }} {{ kalam.kategori }}
-                </span>
-                <h4 class="text-sm font-bold text-stone-100 line-clamp-2 leading-snug mb-1" style="font-family: 'Amiri', serif;">
+                <h4 class="text-base font-bold text-stone-100 line-clamp-2 leading-snug mb-1.5"
+                    style="font-family: 'Amiri', serif;">
                   {{ kalam.judul }}
                 </h4>
-                <p class="text-[11px] text-stone-500 line-clamp-2">
-                  {{ stripHtml(kalam.body, 100) }}
+                <p class="text-[12px] text-stone-500 line-clamp-2 leading-relaxed">
+                  {{ stripHtml(kalam.body, 120) }}
                 </p>
               </div>
-              <BookOpen class="size-4 text-amber-600 shrink-0 mt-1" />
+
+              <div v-if="kalam.thumbnail || kalam.image" class="shrink-0">
+                <div class="w-20 h-20 rounded-xl overflow-hidden border border-stone-800 group-hover:border-amber-500/30 transition-colors">
+                  <img 
+                    :src="kalam.thumbnail || kalam.image" 
+                    :alt="kalam.judul" 
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+              </div>
+              
             </div>
+
             <div class="flex items-center justify-between mt-3 pt-3 border-t border-stone-800/50">
-              <span class="text-[10px] font-semibold text-stone-500">
-                {{ kalam.is_anonymous ? 'Hamba Allah' : (kalam.user?.name ?? 'Anonim') }}
-              </span>
+              <div class="flex items-center gap-2">
+                <div class="w-5 h-5 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center text-[9px] font-bold text-amber-500 uppercase">
+                  {{ (kalam.is_anonymous ? 'H' : (kalam.user?.name ?? 'A')).substring(0, 1) }}
+                </div>
+                <span class="text-[11px] text-stone-500">
+                  {{ kalam.is_anonymous ? 'Hamba Allah' : (kalam.user?.name ?? 'Anonim') }}
+                </span>
+              </div>
               <span class="text-[10px] text-amber-700">{{ tanggal(kalam.created_at) }}</span>
             </div>
           </Link>
-        </div>
+        </div>       
       </section>
 
       <section class="px-5">

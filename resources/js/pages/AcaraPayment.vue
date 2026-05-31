@@ -598,7 +598,7 @@ function submit() {
                 </div>
 
                 <div class="flex gap-3 px-2 pt-2 border-t border-stone-900">
-                    <ShieldCheck class="size-5 text-stone-600 shrink-0 mt-0.5" />
+                    <ShieldCheck class="size-5 text-emerald-600 shrink-0 mt-0.5" />
                     <p class="text-xs text-stone-500 leading-relaxed italic">
                         Dengan menekan tombol selesai, data Anda akan diverifikasi oleh panitia pelaksana kegiatan demi ketertiban administrasi.
                     </p>

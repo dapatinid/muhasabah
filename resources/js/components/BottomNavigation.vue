@@ -37,12 +37,12 @@ const donationMenus = [
         <span class="text-[10px]" :class="currentUrl === '/' ? 'font-bold' : 'font-medium'">Beranda</span>
       </Link>
 
-      <!-- Acara -->
-      <Link href="/acara" 
-            :class="currentUrl === '/acara' ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
+      <!-- Kalam -->
+      <Link href="/kalam" 
+            :class="currentUrl === '/kalam' ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
             class="flex flex-col items-center gap-1 w-full transition-colors">
-        <CalendarDays class="size-5" />
-        <span class="text-[10px]" :class="currentUrl === '/acara' ? 'font-bold' : 'font-medium'">Acara</span>
+        <BookOpenText class="size-5" />
+        <span class="text-[10px]" :class="currentUrl === '/kalam' ? 'font-bold' : 'font-medium'">Kalam</span>
       </Link>
 
       <!-- Donasi FAB -->
@@ -71,17 +71,15 @@ const donationMenus = [
         </div>
       </div>
 
-      <!-- Masjid -->
-      <!-- Catatan: Ganti href nya jika nanti sudah ada halaman spesifiknya -->
-      <Link href="/halaman-dibangun" 
-            :class="currentUrl === '/masjid' ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
+      <!-- Acara -->
+      <Link href="/acara" 
+            :class="currentUrl === '/acara' ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
             class="flex flex-col items-center gap-1 w-full transition-colors">
-        <MapPin class="size-5" />
-        <span class="text-[10px]" :class="currentUrl === '/masjid' ? 'font-bold' : 'font-medium'">Masjid</span>
+        <CalendarDays class="size-5" />
+        <span class="text-[10px]" :class="currentUrl === '/acara' ? 'font-bold' : 'font-medium'">Acara</span>
       </Link>
 
       <!-- Ukhuwah -->
-      <!-- Catatan: Ganti href nya jika nanti sudah ada halaman spesifiknya -->
       <Link href="/halaman-dibangun" 
             :class="currentUrl === '/ukhuwah' ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
             class="flex flex-col items-center gap-1 w-full transition-colors">

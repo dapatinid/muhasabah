@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3'
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import debounce from 'lodash/debounce'
-import { Search, BookOpen, ArrowLeft, SlidersHorizontal } from 'lucide-vue-next'
+import { 
+  Search, BookOpen, MessageCircle, Heart, MoreHorizontal, 
+  CheckCircle2, Share2, AlertTriangle 
+} from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
+import { toast } from 'vue-sonner'
 
 const props = defineProps<{
   kalams: {
@@ -16,180 +20,290 @@ const props = defineProps<{
       is_anonymous: boolean
       created_at: string
       user: { id: number; name: string } | null
-      thumbnail?: string | null // Tambahkan ini di interface jika ada thumbnail
+      komentars_count: number
+      reaksis_count: number
     }>
     links: Array<{ url: string | null; label: string; active: boolean }>
-    meta?: any
   }
-  // PERBAIKAN 1: Tambahkan kategori opsional pada definisi filters props
   filters: { search?: string; kategori?: string }
 }>()
 
 const search = ref(props.filters?.search ?? '')
+const aktifKategori = ref(props.filters?.kategori ?? 'Semua')
 const kategoriList = ['Semua', 'berita', 'hikmah', 'doa', 'kisah', 'tips']
 
-// PERBAIKAN 2: Sinkronkan state aktifKategori dengan data dari backend saat refresh
-const aktifKategori = ref(props.filters?.kategori ?? 'Semua')
+// State untuk melacak origin URL aman di client-side
+const baseUrl = ref('')
+const activeDropdownId = ref<number | null>(null)
 
-// PERBAIKAN 3: Sertakan data kategori di dalam watch search agar tidak hilang saat mengetik pencarian
-watch(search, debounce((val) => {
-  router.get('/kalam', { 
-    search: val || undefined,
-    kategori: aktifKategori.value === 'Semua' ? undefined : aktifKategori.value
-  }, {
-    preserveState: true, 
-    preserveScroll: true, 
-    replace: true,
-  })
-}, 600))
+// Ambil lokasi URL origin saat komponen dimuat di browser
+onMounted(() => {
+  baseUrl.value = window.location.origin
+  window.addEventListener('click', closeDropdowns)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('click', closeDropdowns)
+})
+
+// --- Helper: Ekstraksi Media Sesuai Urutan di Dokumen ---
+function extractOrderedMedia(html: string) {
+  const mediaItems: Array<{ type: 'image' | 'video'; src: string; index: number }> = []
+  if (!html) return mediaItems
+  
+  // 1. Cari Semua Gambar
+  const imgRegex = /<img[^>]+src="([^">]+)"/g
+  let imgMatch
+  while ((imgMatch = imgRegex.exec(html)) !== null) {
+    mediaItems.push({ type: 'image', src: imgMatch[1], index: imgMatch.index })
+  }
+
+  // 2. Cari Semua Embed Video Iframe
+  const videoRegex = /<iframe[^>]+src="([^">]+)"/g
+  let videoMatch
+  while ((videoMatch = videoRegex.exec(html)) !== null) {
+    mediaItems.push({ type: 'video', src: videoMatch[1], index: videoMatch.index })
+  }
+
+  // 3. Sortir Berdasarkan Elemen yang Muncul Lebih Dulu
+  return mediaItems.sort((a, b) => a.index - b.index)
+}
 
 function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '').substring(0, 120) + '...'
+  if (!html) return ''
+  return html.replace(/<[^>]*>/g, '').substring(0, 250)
 }
 
 function tanggal(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString('id-ID', {
-    day: 'numeric', month: 'short', year: 'numeric'
-  })
+  const date = new Date(dateStr)
+  const now = new Date()
+  const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60))
+  
+  if (diffInHours < 1) return 'Baru saja'
+  if (diffInHours < 24) return `${diffInHours}j`
+  return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })
 }
 
 const kategoriEmoji: Record<string, string> = {
   hikmah: '💡', doa: '🤲', kisah: '📖', tips: '✨', berita: '📰',
 }
 
+// --- Fungsionalitas Share Sheet ---
+const handleShare = async (kalam: any) => {
+  const shareUrl = `${baseUrl.value || window.location.origin}/kalam/${kalam.slug}`
+  const shareTitle = kalam.judul
+  const shareText = `Baca tulisan menarik: "${kalam.judul}"`
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: shareTitle, text: shareText, url: shareUrl })
+    } catch (err) {
+      // Dibbatalkan oleh user
+    }
+  } else {
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      toast.success('Link berhasil disalin ke clipboard!')
+    } catch (err) {
+      toast.error('Gagal menyalin link.')
+    }
+  }
+}
+
+// --- Helper Link WhatsApp Laporan ---
+function getWhatsAppReportLink(slug: string) {
+  const fullUrl = `${baseUrl.value}/kalam/${slug}`
+  const text = `Izin melaporkan konten ${fullUrl}`
+  return `https://wa.me/6285950540055?text=${encodeURIComponent(text)}`
+}
+
+function toggleDropdown(id: number) {
+  activeDropdownId.value = activeDropdownId.value === id ? null : id
+}
+
+function closeDropdowns() {
+  activeDropdownId.value = null
+}
+
+// Logic Filter & Search
+watch(search, debounce((val) => {
+  router.get('/kalam', { 
+    search: val || undefined, 
+    kategori: aktifKategori.value === 'Semua' ? undefined : aktifKategori.value 
+  }, { preserveState: true, replace: true })
+}, 600))
+
 function filterKategori(kat: string) {
   aktifKategori.value = kat
-  router.get('/kalam', {
-    search: search.value || undefined,
-    kategori: kat === 'Semua' ? undefined : kat,
-  }, { preserveState: true, preserveScroll: true, replace: true })
+  router.get('/kalam', { 
+    search: search.value || undefined, 
+    kategori: kat === 'Semua' ? undefined : kat 
+  }, { preserveState: true, replace: true })
 }
 
 function goToPage(url: string | null) {
-  if (!url) return
-  router.get(url, {}, { preserveState: true, preserveScroll: true })
+  if (url) router.get(url, {}, { preserveState: true })
 }
 </script>
 
 <template>
-  <Head title="Kalam — Berbagi Hikmah" />
-  <AppLayoutPublic subtitle="Kalam Kalam" title="Perpustakaan" :show-back="true">
-
-    <div class="px-5 py-6 space-y-6 pb-50">
-
-        <!-- Search -->
-        <div class="relative group">
-          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-stone-500 group-focus-within:text-amber-400 transition-colors">
-            <Search class="size-4" />
-          </span>
-          <input
-            v-model="search"
-            type="search"
-            placeholder="Cari judul atau kategori..."
-            class="w-full bg-stone-900 border border-stone-800 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-stone-200 placeholder-stone-600 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/40 transition-all outline-none"
-          >
+  <Head title="Kalam — Feed Hikmah" />
+  <AppLayoutPublic subtitle="Terkini" title="Kalam Kalam" :show-back="true">
+    
+    <div class="max-w-2xl mx-auto pb-32">
+      <div class="sticky top-0 z-20 bg-stone-955/80 backdrop-blur-md border-b border-stone-800/50 px-5 py-4 space-y-4">
+        <div class="relative">
+          <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-stone-500" />
+          <input v-model="search" type="search" placeholder="Cari hikmah..." 
+            class="w-full bg-stone-900/50 border border-stone-800 rounded-xl py-2.5 pl-10 pr-4 text-sm outline-none focus:ring-1 focus:ring-amber-500/50" />
         </div>
-
-        <!-- Filter kategori -->
-        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-          <button
-            v-for="kat in kategoriList"
-            :key="kat"
-            @click="filterKategori(kat)"
-            :class="[
-              'shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold border transition-all',
-              aktifKategori === kat
-                ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
-                : 'bg-stone-900 border-stone-800 text-stone-500 hover:border-amber-500/30 hover:text-amber-400'
-            ]"
+        <div class="flex gap-2 overflow-x-auto no-scrollbar">
+          <button v-for="kat in kategoriList" :key="kat" @click="filterKategori(kat)"
+            :class="[ aktifKategori === kat ? 'bg-white text-black' : 'bg-stone-900 text-stone-400 border border-stone-800' ]"
+            class="shrink-0 px-4 py-1.5 rounded-lg text-xs font-bold transition-all"
           >
-            {{ kat === 'Semua' ? 'Semua' : `${kategoriEmoji[kat]} ${kat}` }}
+            {{ kat }}
           </button>
         </div>
+      </div>
 
-        <!-- Kosong -->
-        <div v-if="kalams.data.length === 0"
-             class="text-center py-20 text-stone-600 text-sm border border-dashed border-stone-800 rounded-2xl">
-          <p class="text-2xl mb-3">📭</p>
-          <p>Belum ada kalam ditemukan</p>
-        </div>
+      <div class="divide-y divide-stone-800">
+        <div v-for="kalam in kalams.data" :key="kalam.id" class="p-5 flex gap-4 group relative">
+          
+          <div class="flex flex-col items-center shrink-0">
+            <div class="size-10 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center overflow-hidden">
+              <span v-if="kalam.is_anonymous" class="text-stone-500 text-sm font-bold">HA</span>
+              <span v-else class="text-amber-500 text-sm font-bold">{{ (kalam.user?.name ?? 'A')[0] }}</span>
+            </div>
+            <div class="w-0.5 grow bg-stone-800 my-2 rounded-full"></div>
+            <div class="flex -space-x-2 mt-1">
+              <div class="size-4 rounded-full bg-stone-700 border border-stone-950"></div>
+              <div class="size-4 rounded-full bg-stone-600 border border-stone-950"></div>
+            </div>
+          </div>
 
-        <!-- List Kalam -->
-        <div v-else class="space-y-3">
-          <Link
-            v-for="kalam in kalams.data"
-            :key="kalam.id"
-            :href="`/kalam/${kalam.slug}`"
-            class="block backdrop-blur-xs bg-stone-900/50 border border-stone-800/60 rounded-2xl p-4 hover:border-amber-500/30 hover:bg-stone-900/80 transition-all group"
-          >
-            <!-- Kategori & Icon (Pindah ke atas atau tetap sebagai header card) -->
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-bold uppercase tracking-widest text-amber-500">
-                {{ kategoriEmoji[kalam.kategori] ?? '📝' }} {{ kalam.kategori }}
+          <div class="flex-1 min-w-0 space-y-2">
+            
+            <div class="flex items-center justify-between relative">
+              <div class="flex items-center gap-1.5">
+                <h3 class="font-bold text-[15px] text-stone-100 truncate">
+                  {{ kalam.is_anonymous ? 'hamba.allah' : (kalam.user?.name?.toLowerCase().replace(/\s/g, '.') ?? 'anonim') }}
+                </h3>
+                <CheckCircle2 class="size-3.5 text-blue-500 fill-blue-500/10" v-if="!kalam.is_anonymous" />
+                <span class="text-stone-500 text-sm">·</span>
+                <span class="text-stone-500 text-sm">{{ tanggal(kalam.created_at) }}</span>
+              </div>
+              
+              <div class="relative">
+                <button @click.stop="toggleDropdown(kalam.id)" class="text-stone-600 hover:text-stone-400 p-1 rounded-full transition-colors">
+                  <MoreHorizontal class="size-5" />
+                </button>
+                
+                <div v-if="activeDropdownId === kalam.id" 
+                  class="absolute right-0 mt-1 w-48 bg-stone-900 border border-stone-800 rounded-xl shadow-xl py-1 z-30 animate-in fade-in slide-in-from-top-1 duration-150"
+                >
+                  <a :href="getWhatsAppReportLink(kalam.slug)"
+                     target="_blank"
+                     class="flex items-center gap-2 px-4 py-2.5 text-xs text-red-400 hover:bg-stone-800/60 transition-colors font-medium"
+                  >
+                    <AlertTriangle class="size-3.5 text-red-500" />
+                    Laporkan konten
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <Link :href="`/kalam/${kalam.slug}`" class="block space-y-1">
+              <h4 class="font-bold text-stone-200 text-sm" style="font-family: 'Amiri', serif;">{{ kalam.judul }}</h4>
+              <p class="text-[15px] text-stone-400 line-clamp-2 leading-relaxed">
+                {{ stripHtml(kalam.body) }}
+              </p>
+            </Link>
+
+            <div 
+              v-if="extractOrderedMedia(kalam.body).length > 0" 
+              :class="[
+                'flex gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory py-2 items-start',
+                // Kondisi: Jika di dalam list media ditemukan tipe video, batasi tinggi maksimal kontainer
+                extractOrderedMedia(kalam.body).some(m => m.type === 'video') ? 'h-44 sm:h-52' : ''
+              ]"
+            >
+              
+              <template v-for="(media, idx) in extractOrderedMedia(kalam.body)" :key="`media-${idx}`">
+                  
+                  <div v-if="media.type === 'video'"
+                    :class="[
+                      'snap-start shrink-0 rounded-xl overflow-hidden border border-stone-800 bg-black shadow-inner',
+                      extractOrderedMedia(kalam.body).some(m => m.type === 'video') ? 'h-full aspect-video' : 'w-[85%] aspect-video'
+                    ]"
+                  >
+                    <iframe 
+                      :src="media.src" 
+                      class="w-full h-full" 
+                      frameborder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                      allowfullscreen
+                    ></iframe>
+                  </div>
+
+                  <div v-else-if="media.type === 'image'"
+                    :class="[
+                      'snap-start shrink-0 rounded-xl overflow-hidden border border-stone-800 bg-stone-900 flex items-center justify-center',
+                      // Jika ada video, tingginya h-full dan dipaksa kotak dengan aspect-square
+                      extractOrderedMedia(kalam.body).some(m => m.type === 'video') ? 'h-full aspect-square' : 'w-[85%] sm:w-[70%] aspect-square'
+                    ]"
+                  >
+                    <img :src="media.src" class="w-full h-full object-cover" loading="lazy" />
+                  </div>
+
+                </template>
+            </div>
+
+            <div class="flex items-center gap-4 pt-2">
+              <Link :href="`/kalam/${kalam.slug}#respon`" class="flex items-center gap-1.5 group/btn">
+                <div class="p-2 rounded-full group-hover/btn:bg-red-500/10 transition-colors">
+                  <Heart class="size-5 text-stone-400 group-hover/btn:text-red-500" />
+                </div>
+                <span class="text-xs text-stone-500">{{ kalam.reaksis_count }}</span>
+              </Link>
+
+              <Link :href="`/kalam/${kalam.slug}#respon`" class="flex items-center gap-1.5 group/btn">
+                <div class="p-2 rounded-full group-hover/btn:bg-blue-500/10 transition-colors">
+                  <MessageCircle class="size-5 text-stone-400 group-hover/btn:text-blue-500" />
+                </div>
+                <span class="text-xs text-stone-500">{{ kalam.komentars_count }}</span>
+              </Link>
+              
+              <button @click="handleShare(kalam)" class="p-2 rounded-full hover:bg-emerald-500/10 transition-colors cursor-pointer group/btn">
+                <Share2 class="size-5 text-stone-400 group-hover/btn:text-emerald-500" />
+              </button>
+            </div>
+
+            <div class="pt-1">
+              <span class="text-[10px] bg-stone-900 border border-stone-800 text-stone-500 px-2 py-0.5 rounded-md uppercase font-black tracking-tighter">
+                {{ kategoriEmoji[kalam.kategori] }} {{ kalam.kategori }}
               </span>
-              <BookOpen class="size-3.5 text-stone-600 group-hover:text-amber-600 transition-colors" />
             </div>
+          </div>
 
-            <!-- Container Utama: Teks (Kiri) & Image (Kanan) -->
-            <div class="flex gap-4 items-start">
-              
-              <!-- Sisi Kiri: Judul & Excerpt -->
-              <div class="flex-1 min-w-0">
-                <h2 class="text-base font-bold text-stone-100 line-clamp-2 leading-snug mb-1.5"
-                    style="font-family: 'Amiri', serif;">
-                  {{ kalam.judul }}
-                </h2>
-                <p class="text-[12px] text-stone-500 line-clamp-2 leading-relaxed">
-                  {{ stripHtml(kalam.body) }}
-                </p>
-              </div>
-
-              <!-- Sisi Kanan: Thumbnail (Hanya muncul jika ada) -->
-              <div v-if="kalam.thumbnail" class="shrink-0">
-                <div class="w-20 h-20 rounded-xl overflow-hidden border border-stone-800 group-hover:border-amber-500/30 transition-colors">
-                  <img 
-                    :src="kalam.thumbnail" 
-                    :alt="kalam.judul" 
-                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                </div>
-              </div>
-              
-            </div>
-
-            <!-- Footer -->
-            <div class="flex items-center justify-between mt-3 pt-3 border-t border-stone-800/50">
-              <div class="flex items-center gap-2">
-                <div class="w-5 h-5 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center text-[9px] font-bold text-amber-500 uppercase">
-                  {{ (kalam.is_anonymous ? 'H' : (kalam.user?.name ?? 'A')).substring(0, 1) }}
-                </div>
-                <span class="text-[11px] text-stone-500">
-                  {{ kalam.is_anonymous ? 'Hamba Allah' : (kalam.user?.name ?? 'Anonim') }}
-                </span>
-              </div>
-              <span class="text-[10px] text-amber-800">{{ tanggal(kalam.created_at) }}</span>
-            </div>
-          </Link>
-        </div>        
-
-        <!-- Pagination -->
-        <div v-if="kalams.links.length > 3" class="flex justify-center gap-1.5 pt-2 flex-wrap">
-          <button
-            v-for="(link, i) in kalams.links"
-            :key="i"
-            @click="goToPage(link.url)"
-            v-html="link.label"
-            :disabled="!link.url"
-            :class="[
-              'px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all',
-              link.active
-                ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
-                : 'bg-stone-900 border-stone-800 text-stone-500 hover:border-amber-500/30 hover:text-stone-300',
-              !link.url ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'
-            ]"
-          />
         </div>
+      </div>
 
+      <div v-if="kalams.links.length > 3" class="flex justify-center gap-1.5 pt-10 flex-wrap">
+        <button
+          v-for="(link, i) in kalams.links"
+          :key="i"
+          @click="goToPage(link.url)"
+          v-html="link.label"
+          :disabled="!link.url"
+          :class="[
+            'px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all',
+            link.active
+              ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
+              : 'bg-stone-900 border-stone-800 text-stone-500 hover:border-amber-500/30 hover:text-stone-300',
+          ]"
+        />
+      </div>
     </div>
   </AppLayoutPublic>
 </template>

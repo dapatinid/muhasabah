@@ -17,7 +17,7 @@ class KalamController extends Controller
      */
     public function kalam(Request $request)
     {
-        $query = Kalam::with('user:id,name');
+        $query = Kalam::with('user:id,name')->withCount(['komentars', 'reaksis']);
 
         if ($search = $request->input('search')) {
             $query->where('judul', 'like', "%{$search}%")
