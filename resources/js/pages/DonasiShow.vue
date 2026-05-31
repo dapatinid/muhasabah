@@ -4,7 +4,7 @@ import { computed, ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { 
   CalendarDays, Tag, Target, Wallet, 
   Share2, BookOpen, MessageCircle, 
-  ClipboardList, ArrowDownCircle, ArrowUpCircle, AlertCircle, Send,
+  ClipboardList, ArrowDownCircle, ArrowUpCircle, AlertCircle, SendHorizontal,
   RefreshCw, Newspaper, Heart, ChevronDown, Upload, FileText,
   X,
   QrCode
@@ -613,8 +613,8 @@ onMounted(() => {
               <input v-model="userCaptchaAnswer" type="number" required placeholder="?" class="w-20 bg-transparent text-center font-bold text-xs text-amber-400 focus:outline-none font-mono" />
             </div>
             <button type="submit" :disabled="isSubmittingComment || !commentForm.body" class="ms-auto flex items-center gap-2 bg-amber-500 hover:bg-amber-400 disabled:bg-stone-800 disabled:text-stone-600 text-stone-950 font-bold px-5 py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md">
-              <Send class="w-3.5 h-3.5" />
-              {{ isSubmittingComment ? 'Mengirim...' : 'Komentar' }}
+              <SendHorizontal class="w-3.5 h-3.5" />
+              <!-- {{ isSubmittingComment ? 'Mengirim...' : 'Komentar' }} -->
             </button>
           </div>
         </form>

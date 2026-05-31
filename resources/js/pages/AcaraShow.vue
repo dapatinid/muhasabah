@@ -5,7 +5,7 @@ import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
 import { 
   Tag, MapPin, HandHeart, CalendarDays, Calendar, Ticket, 
-  Newspaper, Send, Heart, Users, AlertCircle, 
+  Newspaper, SendHorizontal, Heart, Users, AlertCircle, MessageCircle,
   ArrowDownCircle, ChevronDown, QrCode, Upload, FileText, X, Share2 
 } from 'lucide-vue-next'
 import QrcodeVue from 'qrcode.vue'
@@ -37,7 +37,7 @@ const activeTab = ref('cerita')
 const tabItems = [
   { id: 'cerita',  label: 'Detail Acara',    icon: Calendar },
   { id: 'berita',  label: 'Maklumat',         icon: Newspaper },
-  { id: 'komentar',label: 'Tanya Jawab',      icon: Send },
+  { id: 'komentar',label: 'Tanya Jawab',      icon: MessageCircle },
   { id: 'doa',     label: 'Donatur/Sponsor',  icon: HandHeart },
   { id: 'peserta', label: 'Peserta',          icon: Users },
 ]
@@ -639,8 +639,8 @@ function formatSingkat(teks) {
               <input v-model="userCaptchaAnswer" type="number" required placeholder="?" class="w-20 bg-transparent text-center font-bold text-xs text-amber-400 focus:outline-none font-mono" />
             </div>
             <button type="submit" :disabled="isSubmittingComment || !commentForm.body" class="ms-auto flex items-center gap-2 bg-amber-600 hover:bg-amber-500 disabled:bg-stone-800 disabled:text-stone-600 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md">
-              <Send class="w-3.5 h-3.5" />
-              {{ isSubmittingComment ? 'Mengirim...' : 'Kirim' }}
+              <SendHorizontal class="w-3.5 h-3.5" />
+              <!-- {{ isSubmittingComment ? 'Mengirim...' : 'Kirim' }} -->
             </button>
           </div>
         </form>

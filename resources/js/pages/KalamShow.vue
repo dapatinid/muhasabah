@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, Link, useForm } from '@inertiajs/vue3'
 import { computed, ref, onMounted } from 'vue'
-import { CalendarDays, Share2, Tag, User, Send, MessageCircle } from 'lucide-vue-next'
+import { CalendarDays, Share2, Tag, User, SendHorizontal, MessageCircle } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
 
@@ -290,8 +290,8 @@ function scrollToRespon() {
               :disabled="isSubmittingComment || !commentForm.body"
               class="ms-auto flex items-center gap-2 bg-amber-500 hover:bg-amber-400 disabled:bg-stone-800 disabled:text-stone-600 text-stone-950 font-bold px-5 py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md"
             >
-              <Send class="w-3.5 h-3.5" />
-              {{ isSubmittingComment ? 'Mengirim...' : 'Komentar' }}
+              <SendHorizontal class="w-3.5 h-3.5" />
+              <!-- {{ isSubmittingComment ? 'Mengirim...' : 'Komentar' }} -->
             </button>
           </div>
         </form>
