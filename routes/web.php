@@ -136,29 +136,28 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
         Route::post('/admin/acara/{acara:slug}/bulk-keuangan', [AcaraController::class, 'bulkKeuangan'])->name('admin.acara.bulk');
         Route::post('/admin/acara/{acara:slug}/tasyaruf', [AcaraController::class, 'storeTasyaruf'])->name('acara.tasyaruf.store');
 
-        // Fitur Kelola Banner (Admin)
-        Route::get('/admin/banner', [BannerController::class, 'index'])->name('banner.index');
+        
+        });
+        
+        // ==========================================
+        // Super Admin, tinggal buat di sini:
+        // ==========================================
+        Route::middleware(['super.admin'])->group(function () {
+                
+            // Banner
+            Route::get('/admin/banner', [BannerController::class, 'index'])->name('banner.index');
+            Route::get('/admin/banner/create', [BannerController::class, 'create'])->name('banner.create');
+            Route::post('/admin/banner', [BannerController::class, 'store'])->name('banner.store');
+            Route::post('/admin/banner/upload', [BannerController::class, 'uploadImage'])->name('banner.upload');    
+            Route::get('/admin/banner/{banner}/edit', [BannerController::class, 'edit'])->name('banner.edit');
+            Route::put('/admin/banner/{banner}', [BannerController::class, 'update'])->name('banner.update');
+            Route::delete('/admin/banner/{banner}', [BannerController::class, 'destroy'])->name('banner.destroy');
 
-    });
-
-    // ==========================================
-    // Super Admin, tinggal buat di sini:
-    // ==========================================
-    Route::middleware(['super.admin'])->group(function () {
-
-        // Banner
-        Route::get('/admin/banner/create', [BannerController::class, 'create'])->name('banner.create');
-        Route::post('/admin/banner', [BannerController::class, 'store'])->name('banner.store');
-        Route::post('/admin/banner/upload', [BannerController::class, 'uploadImage'])->name('banner.upload');    
-        Route::get('/admin/banner/{banner}/edit', [BannerController::class, 'edit'])->name('banner.edit');
-        Route::put('/admin/banner/{banner}', [BannerController::class, 'update'])->name('banner.update');
-        Route::delete('/admin/banner/{banner}', [BannerController::class, 'destroy'])->name('banner.destroy');
-
-        // Riyadhoh
-        Route::get('/log-riyadhoh', [LaporanRiyadhohController::class, 'logRiyadhoh'])->name('log-riyadhoh');
-        Route::patch('/log-riyadhoh/{id}', [LaporanRiyadhohController::class, 'updateLog'])->name('log-riyadhoh.update');
-        Route::get('/rapor-riyadhoh', [LaporanRiyadhohController::class, 'raporRiyadhoh'])->name('rapor-riyadhoh');        
-    });
+            // Riyadhoh
+            Route::get('/log-riyadhoh', [LaporanRiyadhohController::class, 'logRiyadhoh'])->name('log-riyadhoh');
+            Route::patch('/log-riyadhoh/{id}', [LaporanRiyadhohController::class, 'updateLog'])->name('log-riyadhoh.update');
+            Route::get('/rapor-riyadhoh', [LaporanRiyadhohController::class, 'raporRiyadhoh'])->name('rapor-riyadhoh');        
+        });
 
 });
 
