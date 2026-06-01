@@ -268,7 +268,7 @@ const submitBukti = (logId) => {
   isUploading.value[logId] = true
 
   router.post(`/payment/${logId}/upload-bukti`, {
-    bukti_acara: uploadFile.value[logId],
+    bukti_transaksi: uploadFile.value[logId],
   }, {
     preserveScroll: true,
     onSuccess: () => {
@@ -561,7 +561,7 @@ const takePhoto = () => {
             // 3. KOMPRESI: Ubah ke blob dengan kualitas 0.7 (70%) agar sangat ringan
             canvas.toBlob((blob) => {
                 if (blob) {
-                    const file = new File([blob], `bukti_acara_${logId}_${Date.now()}.jpg`, { type: 'image/jpeg' })
+                    const file = new File([blob], `bukti_transaksi_${logId}_${Date.now()}.jpg`, { type: 'image/jpeg' })
                     
                     // 4. Perbaikan Reaktivitas Vue: Gunakan spread operator agar UI langsung merender perubahannya
                     uploadFile.value = { 

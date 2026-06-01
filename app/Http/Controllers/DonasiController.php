@@ -507,14 +507,14 @@ class DonasiController extends Controller
     public function uploadBuktiSusulan(Request $request, Payment $payment)
     {
         $request->validate([
-            'bukti_donasi' => 'required|image|mimes:jpeg,png,jpg,webp|max:4000',
+            'bukti_transaksi' => 'required|image|mimes:jpeg,png,jpg,webp|max:4000',
         ]);
 
         try {
             DB::beginTransaction();
 
             // 1. Simpan file baru
-            $imagePath = $request->file('bukti_donasi')->store('bukti-transfer', 'public');
+            $imagePath = $request->file('bukti_transaksi')->store('bukti-transfer', 'public');
 
             // 2. Update record pembayaran (Donasi Utama)
             $payment->update([
@@ -539,7 +539,7 @@ class DonasiController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['bukti_donasi' => 'Gagal mengunggah bukti: ' . $e->getMessage()]);
+            return back()->withErrors(['bukti_transaksi' => 'Gagal mengunggah bukti: ' . $e->getMessage()]);
         }
     }    
 
@@ -569,7 +569,7 @@ class DonasiController extends Controller
             'notes' => 'nullable|string',
             'payment_method' => 'required|string',
             'rekening' => 'required|string',
-            'bukti_donasi' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4000'
+            'bukti_transaksi' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4000'
         ]);
 
         try {
@@ -582,8 +582,8 @@ class DonasiController extends Controller
 
             // --- PROSES UPLOAD BUKTI DONASI ---
             $imagePath = null;
-            if ($request->hasFile('bukti_donasi')) {
-                $imagePath = $request->file('bukti_donasi')->store('bukti-transfer', 'public');
+            if ($request->hasFile('bukti_transaksi')) {
+                $imagePath = $request->file('bukti_transaksi')->store('bukti-transfer', 'public');
             }
 
             // 1. Catat Infaq Pemeliharaan Sistem

@@ -24,7 +24,7 @@ const form = useForm({
     notes: '',
     payment_method: 'transfer', 
     rekening: 'qris_gopay', 
-    bukti_donasi: null as File | null,
+    bukti_transaksi: null as File | null,
 })
 
 const formatDisplay = (val: any) => {
@@ -56,7 +56,7 @@ const handleNominalInput = (e: Event) => {
 const handleFileChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
-        form.bukti_donasi = target.files[0];
+        form.bukti_transaksi = target.files[0];
     }
 };
 
@@ -301,7 +301,7 @@ const takePhoto = () => {
                     const file = new File([blob], `bukti_transfer_${Date.now()}.jpg`, { type: 'image/jpeg' })
                     
                     // Masukkan ke form Inertia
-                    form.bukti_donasi = file
+                    form.bukti_transaksi = file
                     
                     // Buat preview URL agar user bisa melihat hasilnya
                     imageUrl.value = URL.createObjectURL(file)
@@ -521,7 +521,7 @@ onUnmounted(() => {
                     <div v-if="!isCameraOpen" class="w-full">
                         <div v-if="imageUrl" class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border-2 border-stone-800">
                             <img :src="imageUrl" class="w-full h-full object-cover" />
-                            <button @click.prevent="imageUrl = null; form.bukti_donasi = null" class="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full shadow-lg">
+                            <button @click.prevent="imageUrl = null; form.bukti_transaksi = null" class="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full shadow-lg">
                                 <X class="w-4 h-4" />
                             </button>
                         </div>
@@ -563,8 +563,8 @@ onUnmounted(() => {
                         <canvas ref="canvasElement" class="hidden"></canvas>
                     </div>
 
-                    <div v-if="form.errors.bukti_donasi" class="text-red-500 text-xs mt-1">
-                        {{ form.errors.bukti_donasi }}
+                    <div v-if="form.errors.bukti_transaksi" class="text-red-500 text-xs mt-1">
+                        {{ form.errors.bukti_transaksi }}
                     </div>
                 </div>              
 

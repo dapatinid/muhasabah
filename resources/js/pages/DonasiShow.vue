@@ -220,7 +220,7 @@ const submitBukti = (logId: number) => {
   isUploading.value[logId] = true;
   
   router.post(`/payment/${logId}/upload-bukti`, {
-    bukti_donasi: uploadFile.value[logId],
+    bukti_transaksi: uploadFile.value[logId],
   }, {
     preserveScroll: true,
     onSuccess: () => {

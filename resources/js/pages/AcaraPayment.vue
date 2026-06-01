@@ -46,7 +46,7 @@ const form = useForm({
     notes: '',
     payment_method: 'transfer', 
     rekening: 'qris_gopay', 
-    bukti_acara: null as File | null,
+    bukti_transaksi: null as File | null,
 })
 
 // Melacak detail objek dari varian yang sedang aktif dipilih user
@@ -339,9 +339,9 @@ const takePhoto = () => {
             
             canvas.toBlob((blob) => {
                 if (blob) {
-                    const file = new File([blob], `bukti_acara_${Date.now()}.jpg`, { type: 'image/jpeg' })
+                    const file = new File([blob], `bukti_transaksi_${Date.now()}.jpg`, { type: 'image/jpeg' })
                     
-                    form.bukti_acara = file // Menggunakan form.bukti_acara sesuai dengan nama variabel di AcaraPayment
+                    form.bukti_transaksi = file // Menggunakan form.bukti_transaksi sesuai dengan nama variabel di AcaraPayment
                     imageUrl.value = URL.createObjectURL(file)
                     
                     closeCamera()
@@ -356,7 +356,7 @@ const handleFileChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
         const file = target.files[0];
-        form.bukti_acara = file;
+        form.bukti_transaksi = file;
         imageUrl.value = URL.createObjectURL(file);
     }
 };
@@ -638,7 +638,7 @@ onUnmounted(() => {
                             <!-- Area jika gambar sudah dipilih -->
                             <div v-if="imageUrl" class="relative w-full h-32 rounded-3xl overflow-hidden border-2 border-dashed border-amber-500/50 bg-amber-500/5 flex items-center justify-center">
                                 <img :src="imageUrl" class="h-full object-contain" />
-                                <button @click.prevent="imageUrl = null; form.bukti_acara = null" class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-full shadow-lg transition-colors">
+                                <button @click.prevent="imageUrl = null; form.bukti_transaksi = null" class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-full shadow-lg transition-colors">
                                     <X class="w-4 h-4" />
                                 </button>
                             </div>
@@ -676,7 +676,7 @@ onUnmounted(() => {
                             <canvas ref="canvasElement" class="hidden"></canvas>
                         </div>
 
-                        <div v-if="form.errors.bukti_acara" class="text-red-500 text-xs mt-1">{{ form.errors.bukti_acara }}</div>
+                        <div v-if="form.errors.bukti_transaksi" class="text-red-500 text-xs mt-1">{{ form.errors.bukti_transaksi }}</div>
                     </div>                  
                 </div>
 
