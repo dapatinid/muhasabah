@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, useForm, Link } from '@inertiajs/vue3'
 import { computed, ref, watch, onUnmounted } from 'vue'
-import { Heart, Wallet, ShieldCheck, Check, User, Info, Upload, FileText, Ticket, CheckCircle2, Camera } from 'lucide-vue-next'
+import { Heart, Wallet, ShieldCheck, Check, User, Info, Upload, FileText, Ticket, CheckCircle2, Camera, X } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import QrcodeVue from 'qrcode.vue' // <-- IMPORT LIBRARY QR CODE
 

@@ -799,14 +799,17 @@ const takePhoto = () => {
                   </div>
                 </div>
 
-                <div class="flex items-center gap-1 shrink-0">
-                  <div class="text-right space-y-0.5">
-                    <span class="text-sm font-bold font-mono block text-emerald-400">
-                      + {{ formatRupiah(pay.nominal) }}
+                <div class="flex flex-col items-end space-y-0.5 shrink-0">
+                  <span class="text-sm font-bold font-mono text-emerald-400">
+                    + {{ formatRupiah(pay.nominal) }}
+                  </span>
+                  
+                  <div class="flex items-center gap-1">
+                    <span class="text-[10px] text-stone-600 font-medium font-mono">
+                      {{ new Date(pay.created_at).toLocaleDateString('id-ID') }}
                     </span>
-                    <span class="block text-[10px] text-stone-600 font-medium font-mono">{{ new Date(pay.created_at).toLocaleDateString('id-ID') }}</span>
+                    <ChevronDown class="w-4 h-4 text-stone-600 transition-transform duration-300" :class="expandedLogs.includes(pay.id) ? 'rotate-180' : ''" />
                   </div>
-                  <ChevronDown class="w-4 h-4 text-stone-600 transition-transform duration-300" :class="expandedLogs.includes(pay.id) ? 'rotate-180' : ''" />
                 </div>
               </div>
 
@@ -953,14 +956,17 @@ const takePhoto = () => {
                   </div>
                 </div>
 
-                <div class="flex items-center gap-3 shrink-0">
-                  <div class="text-right space-y-0.5">
-                    <span class="text-sm font-bold font-mono block text-emerald-400">
-                      + {{ Number(log.nominal) > 0 ? formatRupiah(log.nominal) : 'Gratis' }}
+                <div class="flex flex-col items-end space-y-0.5 shrink-0">
+                  <span class="text-sm font-bold font-mono text-emerald-400">
+                    + {{ Number(log.nominal) > 0 ? formatRupiah(log.nominal) : 'Gratis' }}
+                  </span>
+                  
+                  <div class="flex items-center gap-1">
+                    <span class="text-[10px] text-stone-600 font-medium font-mono">
+                      {{ new Date(log.created_at).toLocaleDateString('id-ID') }}
                     </span>
-                    <span class="block text-[10px] text-stone-600 font-medium font-mono">{{ new Date(log.created_at).toLocaleDateString('id-ID') }}</span>
+                    <ChevronDown class="w-4 h-4 text-stone-600 transition-transform duration-300" :class="expandedLogs.includes(log.id) ? 'rotate-180' : ''" />
                   </div>
-                  <ChevronDown class="w-4 h-4 text-stone-600 transition-transform duration-300" :class="expandedLogs.includes(log.id) ? 'rotate-180' : ''" />
                 </div>
               </div>
 

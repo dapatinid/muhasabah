@@ -808,14 +808,21 @@ onUnmounted(() => {
                   </div>
                 </div>
 
-                <div class="flex items-center gap-1 shrink-0">
-                  <div class="text-right space-y-0.5">
-                    <span class="text-sm font-bold font-mono block" :class="log.mutation_type === 'tasyaruf' ? 'text-red-400' : 'text-emerald-400'">
-                      {{ log.mutation_type === 'tasyaruf' ? '-' : '+' }} {{ formatRupiah(log.nominal) }}
+                <div class="flex flex-col items-end space-y-0.5 shrink-0">
+                  <span class="text-sm font-bold font-mono" :class="log.mutation_type === 'tasyaruf' ? 'text-red-400' : 'text-emerald-400'">
+                    {{ log.mutation_type === 'tasyaruf' ? '-' : '+' }} {{ formatRupiah(log.nominal) }}
+                  </span>
+                  
+                  <div class="flex items-center gap-1">
+                    <span class="text-[10px] text-stone-600 font-medium font-mono">
+                      {{ new Date(log.created_at).toLocaleDateString('id-ID') }}
                     </span>
-                    <span class="block text-[10px] text-stone-600 font-medium font-mono">{{ new Date(log.created_at).toLocaleDateString('id-ID') }}</span>
+                    <ChevronDown 
+                      v-if="log.mutation_type !== 'tasyaruf'" 
+                      class="w-4 h-4 text-stone-600 transition-transform duration-300" 
+                      :class="expandedLogs.includes(log.id) ? 'rotate-180' : ''" 
+                    />
                   </div>
-                  <ChevronDown v-if="log.mutation_type !== 'tasyaruf'" class="w-4 h-4 text-stone-600 transition-transform duration-300" :class="expandedLogs.includes(log.id) ? 'rotate-180' : ''" />
                 </div>
               </div>
 

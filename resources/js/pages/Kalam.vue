@@ -179,7 +179,7 @@ function goToPage(url: string | null) {
                 </div>
                 <div class="flex items-center gap-1.5">
                   <h3 class="font-bold text-[14px] text-stone-100 truncate max-w-[140px] sm:max-w-xs">
-                    {{ kalam.is_anonymous ? 'hamba.allah' : (kalam.user?.name?.toLowerCase().replace(/\s/g, '.') ?? 'anonim') }}
+                    {{ kalam.is_anonymous ? 'Hamba.Allah' : (kalam.user?.name || 'anonim') }}
                   </h3>
                   <CheckCircle2 class="size-3.5 text-blue-500 fill-blue-500/10" v-if="!kalam.is_anonymous" />
                   <span class="text-stone-500 text-sm">·</span>
