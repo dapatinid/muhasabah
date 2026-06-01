@@ -533,22 +533,45 @@ const takePhoto = () => {
         const canvas = canvasElement.value
         const logId = cameraForLogId.value
         
-        canvas.width = video.videoWidth
-        canvas.height = video.videoHeight
+        // 1. Cegah error jika video (metadata kamera) belum termuat sempurna
+        if (video.videoWidth === 0 || video.videoHeight === 0) {
+            toast.error("Kamera sedang menyesuaikan, silakan coba jepret lagi.")
+            return
+        }
+
+        // 2. AUTO-RESIZE: Tetapkan lebar maksimal agar ukuran file tidak bengkak
+        const MAX_WIDTH = 800 // Maksimal lebar gambar 800 pixel
+        let width = video.videoWidth
+        let height = video.videoHeight
+
+        // Hitung rasio tinggi yang baru jika lebar melebihi batas
+        if (width > MAX_WIDTH) {
+            height = Math.round((height * MAX_WIDTH) / width)
+            width = MAX_WIDTH
+        }
+        
+        canvas.width = width
+        canvas.height = height
         
         const context = canvas.getContext('2d')
         if (context) {
-            context.drawImage(video, 0, 0, canvas.width, canvas.height)
+            // Gambar video ke canvas dengan ukuran yang sudah di-resize
+            context.drawImage(video, 0, 0, width, height)
             
+            // 3. KOMPRESI: Ubah ke blob dengan kualitas 0.7 (70%) agar sangat ringan
             canvas.toBlob((blob) => {
                 if (blob) {
-                    const file = new File([blob], `bukti_susulan_acara_${logId}_${Date.now()}.jpg`, { type: 'image/jpeg' })
+                    const file = new File([blob], `bukti_acara_${logId}_${Date.now()}.jpg`, { type: 'image/jpeg' })
                     
-                    uploadFile.value[logId] = file
+                    // 4. Perbaikan Reaktivitas Vue: Gunakan spread operator agar UI langsung merender perubahannya
+                    uploadFile.value = { 
+                        ...uploadFile.value, 
+                        [logId]: file 
+                    }
                     
                     closeCamera()
                 }
-            }, 'image/jpeg', 0.8)
+            }, 'image/jpeg', 0.7)
         }
     }
 }
