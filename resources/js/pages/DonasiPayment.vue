@@ -285,31 +285,43 @@ const takePhoto = () => {
         const video = videoElement.value
         const canvas = canvasElement.value
         
-        // Sesuaikan ukuran canvas dengan resolusi video
-        canvas.width = video.videoWidth
-        canvas.height = video.videoHeight
+        // 1. Cegah error jika metadata kamera belum siap
+        if (video.videoWidth === 0 || video.videoHeight === 0) {
+            alert("Kamera sedang menyesuaikan, silakan coba jepret lagi.")
+            return
+        }
+
+        // 2. AUTO-RESIZE: Tetapkan lebar maksimal agar ukuran file ringan
+        const MAX_WIDTH = 800
+        let width = video.videoWidth
+        let height = video.videoHeight
+
+        if (width > MAX_WIDTH) {
+            height = Math.round((height * MAX_WIDTH) / width)
+            width = MAX_WIDTH
+        }
+        
+        canvas.width = width
+        canvas.height = height
         
         const context = canvas.getContext('2d')
         if (context) {
-            // Gambar frame video saat ini ke canvas
-            context.drawImage(video, 0, 0, canvas.width, canvas.height)
+            context.drawImage(video, 0, 0, width, height)
             
-            // Konversi canvas menjadi file Blob gambar (.jpg)
+            // 3. KOMPRESI KE BLOB (Kualitas 70%)
             canvas.toBlob((blob) => {
                 if (blob) {
-                    // Buat file baru dari blob
-                    const file = new File([blob], `bukti_transfer_${Date.now()}.jpg`, { type: 'image/jpeg' })
+                    const file = new File([blob], `bukti_transaksi_${Date.now()}.jpg`, { type: 'image/jpeg' })
                     
-                    // Masukkan ke form Inertia
+                    // Set ke form Inertia
                     form.bukti_transaksi = file
                     
-                    // Buat preview URL agar user bisa melihat hasilnya
+                    // Buat URL untuk preview di form
                     imageUrl.value = URL.createObjectURL(file)
                     
-                    // Matikan kamera setelah jepret
                     closeCamera()
                 }
-            }, 'image/jpeg', 0.8) // Kualitas 80% untuk kompresi ringan
+            }, 'image/jpeg', 0.7) 
         }
     }
 }
@@ -515,58 +527,37 @@ onUnmounted(() => {
                     </div>
                 </div>
 
-                <div class="mt-4">
-                    <label class="block text-sm font-medium text-stone-300 mb-2">Upload Bukti Transfer</label>
+                <div class="mt-4 space-y-3">
+                    <label class="block text-sm font-medium text-stone-300">Upload Bukti Transfer</label>
                     
-                    <div v-if="!isCameraOpen" class="w-full">
-                        <div v-if="imageUrl" class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border-2 border-stone-800">
-                            <img :src="imageUrl" class="w-full h-full object-cover" />
-                            <button @click.prevent="imageUrl = null; form.bukti_transaksi = null" class="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full shadow-lg">
+                    <div class="w-full">
+                        <div v-if="imageUrl" class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border-2 border-dashed border-amber-500/50 bg-amber-500/5 flex items-center justify-center">
+                            <img :src="imageUrl" class="h-full object-contain" />
+                            <button type="button" @click.prevent="imageUrl = null; form.bukti_transaksi = null" class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-full shadow-lg transition-colors">
                                 <X class="w-4 h-4" />
                             </button>
                         </div>
 
                         <div v-else class="flex flex-col gap-3">
-                            <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-stone-700 rounded-2xl cursor-pointer bg-stone-900/50 hover:bg-stone-800/50 transition-colors">
-                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <Upload class="w-8 h-8 text-stone-500 mb-2" />
-                                    <p class="text-sm text-stone-400 font-medium">Pilih dari Galeri / Folder</p>
+                            <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-stone-700 rounded-2xl cursor-pointer bg-stone-900/50 hover:bg-stone-800/50 transition-colors">
+                                <div class="flex flex-col items-center justify-center pt-2">
+                                    <Upload class="w-5 h-5 text-stone-500 mb-2" />
+                                    <p class="text-xs text-stone-400 font-medium">Pilih dari Galeri</p>
                                 </div>
                                 <input type="file" accept="image/*" class="hidden" @change="handleFileChange" />
                             </label>
 
-                            <button type="button" @click="openCamera" class="w-full flex items-center justify-center gap-2 py-3 bg-stone-800 hover:bg-stone-700 text-stone-300 rounded-xl font-medium border border-stone-700 transition-all">
-                                <Camera class="w-5 h-5 text-amber-500" />
-                                <span>Atau Ambil Foto Langsung</span>
+                            <button type="button" @click="openCamera" class="w-full flex items-center justify-center gap-2 py-3 bg-stone-900 hover:bg-stone-800 text-stone-300 rounded-2xl font-medium border border-stone-800 transition-all text-xs">
+                                <Camera class="w-4 h-4 text-amber-500" />
+                                <span>Ambil Foto Langsung</span>
                             </button>
                         </div>
-                    </div>
-
-                    <div v-if="isCameraOpen" class="relative w-full aspect-[3/4] sm:aspect-video rounded-2xl overflow-hidden bg-black border border-stone-800 shadow-xl">
-                        <video 
-                            ref="videoElement" 
-                            autoplay 
-                            playsinline 
-                            class="w-full h-full object-cover"
-                        ></video>
-                        
-                        <div class="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-between">
-                            <button type="button" @click="closeCamera" class="text-stone-300 hover:text-white px-4 py-2 font-medium">
-                                Batal
-                            </button>
-                            <button type="button" @click="takePhoto" class="bg-amber-500 hover:bg-amber-400 text-stone-950 px-6 py-3 rounded-full font-bold shadow-lg shadow-amber-500/20 active:scale-95 transition-all flex items-center gap-2">
-                                <Camera class="w-5 h-5" />
-                                Jepret
-                            </button>
-                        </div>
-
-                        <canvas ref="canvasElement" class="hidden"></canvas>
                     </div>
 
                     <div v-if="form.errors.bukti_transaksi" class="text-red-500 text-xs mt-1">
                         {{ form.errors.bukti_transaksi }}
                     </div>
-                </div>              
+                </div>             
 
                 <div class="flex gap-3 px-2">
                     <ShieldCheck class="size-5 text-emerald-500 shrink-0" />
@@ -586,5 +577,32 @@ onUnmounted(() => {
             </form>
 
         </div>
+
+
+        <div v-if="isCameraOpen" class="fixed inset-0 z-[150] bg-stone-950/90 backdrop-blur-sm flex flex-col items-center justify-center p-4">
+            <div class="relative w-full max-w-sm bg-stone-900 rounded-3xl overflow-hidden shadow-2xl border border-stone-800 animate-in fade-in zoom-in-95 duration-200">
+                <div class="p-4 border-b border-stone-800 flex items-center justify-between bg-stone-900/50">
+                    <div class="flex items-center gap-2 text-stone-200">
+                        <Camera class="size-4 text-amber-500" />
+                        <span class="text-xs font-bold uppercase tracking-wider">Foto Bukti Transfer</span>
+                    </div>
+                    <button type="button" @click="closeCamera" class="p-1.5 rounded-xl bg-stone-800 text-stone-400 hover:text-white hover:bg-stone-700 transition-colors">
+                        <X class="size-4" />
+                    </button>
+                </div>
+                
+                <div class="relative aspect-[3/4] sm:aspect-video bg-black w-full">
+                    <video ref="videoElement" autoplay playsinline class="w-full h-full object-cover"></video>
+                </div>
+                
+                <div class="p-5 bg-stone-950 flex justify-center border-t border-stone-800/80">
+                    <button @click="takePhoto" type="button" class="bg-amber-500 hover:bg-amber-400 text-stone-950 rounded-full h-16 w-16 flex items-center justify-center shadow-[0_0_30px_rgba(245,158,11,0.3)] active:scale-90 transition-all">
+                        <Camera class="size-7" />
+                    </button>
+                </div>
+                
+                <canvas ref="canvasElement" class="hidden"></canvas>
+            </div>
+        </div>        
     </AppLayoutPublic>
 </template>
