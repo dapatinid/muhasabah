@@ -6,7 +6,7 @@ import {
   Share2, BookOpen, MessageCircle, 
   ClipboardList, ArrowDownCircle, ArrowUpCircle, AlertCircle, SendHorizontal,
   RefreshCw, Newspaper, Heart, ChevronDown, Upload, FileText,
-  X,
+  X, Camera,
   QrCode
 } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
@@ -369,14 +369,28 @@ onUnmounted(() => {
   if (observer && tabsTargetRef.value) observer.unobserve(tabsTargetRef.value)
 })
 
-function handleShare() {
-  if (typeof window !== 'undefined') {
-    navigator.clipboard.writeText(window.location.href)
-      .then(() => toast.success('Link berhasil disalin ke clipboard!'))
-      .catch((err) => {
-        toast.error('Gagal menyalin link secara otomatis.')
-        console.error(err)
-      })
+// --- FUNGSI SHARE DONASI ---
+const handleShare = async () => {
+  // Gunakan window.location.href jika ingin menyalin URL yang sedang aktif (termasuk parameter jika ada),
+  // atau konstruksi manual agar lebih bersih (tanpa query string):
+  const shareUrl = `${window.location.origin}/donasi/${props.donasi.slug}`
+  const shareTitle = props.donasi.judul
+  const shareText = `Mari berkontribusi dalam program kebaikan: "${props.donasi.judul}"`
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: shareTitle, text: shareText, url: shareUrl })
+    } catch (err) {
+      // Tangkap error jika user membatalkan dialog share, biarkan kosong agar tidak muncul error di console
+    }
+  } else {
+    // Fallback untuk browser (seperti desktop lama) yang tidak mendukung Web Share API
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      toast.success('Link donasi berhasil disalin ke clipboard!')
+    } catch (err) {
+      toast.error('Gagal menyalin link donasi.')
+    }
   }
 }
 
@@ -467,6 +481,75 @@ onMounted(() => {
             }
         })
     }
+})
+
+// --- STATE & FUNGSI KAMERA UNTUK DONASI SHOW ---
+const isCameraOpen = ref(false)
+const cameraForLogId = ref<number | null>(null) // Menyimpan ID transaksi mana yang sedang mau difoto
+const videoElement = ref<HTMLVideoElement | null>(null)
+const canvasElement = ref<HTMLCanvasElement | null>(null)
+const cameraStream = ref<MediaStream | null>(null)
+
+const openCamera = async (logId: number) => {
+    cameraForLogId.value = logId
+    isCameraOpen.value = true
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'environment' }
+        })
+        cameraStream.value = stream
+        
+        setTimeout(() => {
+            if (videoElement.value) {
+                videoElement.value.srcObject = stream
+            }
+        }, 100)
+    } catch (err) {
+        console.error("Akses kamera ditolak:", err)
+        alert("Gagal mengakses kamera. Pastikan browser memiliki izin.")
+        isCameraOpen.value = false
+        cameraForLogId.value = null
+    }
+}
+
+const closeCamera = () => {
+    if (cameraStream.value) {
+        cameraStream.value.getTracks().forEach(track => track.stop())
+        cameraStream.value = null
+    }
+    isCameraOpen.value = false
+    cameraForLogId.value = null
+}
+
+const takePhoto = () => {
+    if (videoElement.value && canvasElement.value && cameraForLogId.value !== null) {
+        const video = videoElement.value
+        const canvas = canvasElement.value
+        const logId = cameraForLogId.value
+        
+        canvas.width = video.videoWidth
+        canvas.height = video.videoHeight
+        
+        const context = canvas.getContext('2d')
+        if (context) {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height)
+            
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    const file = new File([blob], `bukti_susulan_${logId}_${Date.now()}.jpg`, { type: 'image/jpeg' })
+                    
+                    // Masukkan ke state uploadFile bawaan DonasiShow
+                    uploadFile.value[logId] = file
+                    
+                    closeCamera()
+                }
+            }, 'image/jpeg', 0.8)
+        }
+    }
+}
+
+onUnmounted(() => {
+    closeCamera()
 })
 </script>
 
@@ -766,29 +849,40 @@ onMounted(() => {
                     </p>
                   </div>
                   <div class="pt-4 border-t border-stone-800/60 space-y-3">
-                    <label class="text-[10px] font-bold uppercase tracking-widest text-stone-400 flex items-center gap-2">
-                        <Upload class="size-3.5 text-amber-500" /> Upload Bukti Transfer
-                    </label>
-                    <div class="relative flex items-center justify-center w-full">
-                        <label class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed rounded-2xl cursor-pointer transition-all bg-stone-900 border-stone-800 hover:border-amber-500/40" :class="{'bg-amber-500/5 border-amber-500/30' : uploadFile[log.id]}">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4 text-center">
-                                <template v-if="!uploadFile[log.id]">
-                                    <Upload class="size-5 text-stone-600 mb-2" />
-                                    <p class="text-[11px] text-stone-400 font-medium">Klik untuk upload bukti</p>
-                                </template>
-                                <template v-else>
-                                    <FileText class="size-5 text-amber-500 mb-2" />
-                                    <p class="text-[11px] text-amber-400 font-bold max-w-[200px] truncate">{{ uploadFile[log.id]?.name }}</p>
-                                    <p class="text-[9px] text-stone-500 mt-1">Klik untuk mengganti gambar</p>
-                                </template>
-                            </div>
-                            <input type="file" accept="image/*" class="hidden" @change="(e) => handleBuktiChange(e, log.id)" />
-                        </label>
-                    </div>
-                    <button v-if="uploadFile[log.id]" @click="submitBukti(log.id)" class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md" :disabled="isUploading[log.id]">
-                        {{ isUploading[log.id] ? 'MENGUPLOAD...' : 'KIRIM BUKTI TRANSFER' }}
-                    </button>
-                  </div>
+                      <label class="text-[10px] font-bold uppercase tracking-widest text-stone-400 flex items-center gap-2">
+                          <Upload class="size-3.5 text-amber-500" /> Upload Bukti Transfer
+                      </label>
+                      
+                      <!-- TAMPILAN JIKA BELUM ADA FILE -->
+                      <div v-if="!uploadFile[log.id]" class="grid grid-cols-2 gap-2">
+                          <!-- Tombol Pilih File Galeri -->
+                          <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed rounded-2xl cursor-pointer transition-all bg-stone-900 border-stone-800 hover:border-amber-500/40">
+                              <Upload class="size-5 text-stone-600 mb-2" />
+                              <p class="text-[10px] text-stone-400 font-medium text-center">Pilih Galeri</p>
+                              <input type="file" accept="image/*" class="hidden" @change="(e) => handleBuktiChange(e, log.id)" />
+                          </label>
+                          
+                          <!-- Tombol Kamera -->
+                          <button type="button" @click="openCamera(log.id)" class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed rounded-2xl cursor-pointer transition-all bg-stone-900 border-stone-800 hover:border-amber-500/40 text-stone-400 hover:text-amber-400">
+                              <Camera class="size-5 mb-2" />
+                              <p class="text-[10px] font-medium text-center">Buka Kamera</p>
+                          </button>
+                      </div>
+                      
+                      <!-- TAMPILAN JIKA SUDAH ADA FILE (Dari Galeri atau Kamera) -->
+                      <div v-else class="relative flex flex-col items-center justify-center w-full h-28 border-2 border-dashed rounded-2xl transition-all bg-amber-500/5 border-amber-500/30">
+                          <button type="button" @click="uploadFile[log.id] = null" class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-full shadow-lg z-10 transition-colors">
+                              <X class="size-3" />
+                          </button>
+                          <FileText class="size-5 text-amber-500 mb-2" />
+                          <p class="text-[11px] text-amber-400 font-bold max-w-[200px] truncate">{{ uploadFile[log.id]?.name }}</p>
+                          <p class="text-[9px] text-stone-500 mt-1">Hapus untuk mengganti</p>
+                      </div>
+
+                      <button v-if="uploadFile[log.id]" @click="submitBukti(log.id)" class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md" :disabled="isUploading[log.id]">
+                          {{ isUploading[log.id] ? 'MENGUPLOAD...' : 'KIRIM BUKTI TRANSFER' }}
+                      </button>
+                  </div>                 
                 </div>
                 </template>
 
@@ -880,6 +974,36 @@ onMounted(() => {
             
         </div>
     </div>   
+
+    <!-- MODAL KAMERA GLOBAL -->
+    <div v-if="isCameraOpen" class="fixed inset-0 z-[150] bg-stone-950/90 backdrop-blur-sm flex flex-col items-center justify-center p-4">
+        <div class="relative w-full max-w-sm bg-stone-900 rounded-3xl overflow-hidden shadow-2xl border border-stone-800 animate-in fade-in zoom-in-95 duration-200">
+            <!-- Header Modal -->
+            <div class="p-4 border-b border-stone-800 flex items-center justify-between bg-stone-900/50">
+                <div class="flex items-center gap-2 text-stone-200">
+                    <Camera class="size-4 text-amber-500" />
+                    <span class="text-xs font-bold uppercase tracking-wider">Foto Bukti Transfer</span>
+                </div>
+                <button @click="closeCamera" class="p-1.5 rounded-xl bg-stone-800 text-stone-400 hover:text-white hover:bg-stone-700 transition-colors">
+                    <X class="size-4" />
+                </button>
+            </div>
+            
+            <!-- Video Stream -->
+            <div class="relative aspect-[3/4] sm:aspect-video bg-black w-full">
+                <video ref="videoElement" autoplay playsinline class="w-full h-full object-cover"></video>
+            </div>
+            
+            <!-- Tombol Jepret -->
+            <div class="p-5 bg-stone-950 flex justify-center border-t border-stone-800/80">
+                <button @click="takePhoto" type="button" class="bg-amber-500 hover:bg-amber-400 text-stone-950 rounded-full h-16 w-16 flex items-center justify-center shadow-[0_0_30px_rgba(245,158,11,0.3)] active:scale-90 transition-all">
+                    <Camera class="size-7" />
+                </button>
+            </div>
+            
+            <canvas ref="canvasElement" class="hidden"></canvas>
+        </div>
+    </div>    
 
   </AppLayoutPublic>
 </template>

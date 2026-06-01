@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, useForm, Link } from '@inertiajs/vue3'
-import { computed, ref, watch } from 'vue'
-import { Heart, Wallet, ShieldCheck, Check, User, Info, Upload, FileText } from 'lucide-vue-next'
+import { computed, ref, watch, onUnmounted } from 'vue'
+import { Heart, Wallet, ShieldCheck, Check, User, Info, Upload, FileText, Camera } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import QrcodeVue from 'qrcode.vue' // <-- IMPORT LIBRARY QR CODE
 
@@ -237,6 +237,87 @@ function submit() {
         }
     });
 }
+
+// State untuk Kamera
+const isCameraOpen = ref(false)
+const videoElement = ref<HTMLVideoElement | null>(null)
+const canvasElement = ref<HTMLCanvasElement | null>(null)
+const cameraStream = ref<MediaStream | null>(null)
+
+// State untuk preview gambar (Mungkin Anda sudah punya ini, sesuaikan saja)
+const imageUrl = ref<string | null>(null) 
+
+// Fungsi Membuka Kamera
+const openCamera = async () => {
+    isCameraOpen.value = true
+    try {
+        // Minta akses kamera (facingMode: 'environment' memprioritaskan kamera belakang di HP)
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'environment' }
+        })
+        cameraStream.value = stream
+        
+        // Pasang stream ke elemen video setelah DOM ter-render
+        setTimeout(() => {
+            if (videoElement.value) {
+                videoElement.value.srcObject = stream
+            }
+        }, 100)
+    } catch (err) {
+        console.error("Akses kamera ditolak atau error:", err)
+        alert("Gagal mengakses kamera. Pastikan browser memiliki izin akses kamera.")
+        isCameraOpen.value = false
+    }
+}
+
+// Fungsi Menutup Kamera
+const closeCamera = () => {
+    if (cameraStream.value) {
+        cameraStream.value.getTracks().forEach(track => track.stop())
+        cameraStream.value = null
+    }
+    isCameraOpen.value = false
+}
+
+// Fungsi Mengambil Foto
+const takePhoto = () => {
+    if (videoElement.value && canvasElement.value) {
+        const video = videoElement.value
+        const canvas = canvasElement.value
+        
+        // Sesuaikan ukuran canvas dengan resolusi video
+        canvas.width = video.videoWidth
+        canvas.height = video.videoHeight
+        
+        const context = canvas.getContext('2d')
+        if (context) {
+            // Gambar frame video saat ini ke canvas
+            context.drawImage(video, 0, 0, canvas.width, canvas.height)
+            
+            // Konversi canvas menjadi file Blob gambar (.jpg)
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    // Buat file baru dari blob
+                    const file = new File([blob], `bukti_transfer_${Date.now()}.jpg`, { type: 'image/jpeg' })
+                    
+                    // Masukkan ke form Inertia
+                    form.bukti_donasi = file
+                    
+                    // Buat preview URL agar user bisa melihat hasilnya
+                    imageUrl.value = URL.createObjectURL(file)
+                    
+                    // Matikan kamera setelah jepret
+                    closeCamera()
+                }
+            }, 'image/jpeg', 0.8) // Kualitas 80% untuk kompresi ringan
+        }
+    }
+}
+
+// Pastikan kamera dimatikan jika user berpindah halaman sebelum menutup kamera
+onUnmounted(() => {
+    closeCamera()
+})
 </script>
 
 <template>
@@ -434,34 +515,58 @@ function submit() {
                     </div>
                 </div>
 
-                <div class="space-y-3">
-                    <label class="text-[10px] font-bold uppercase tracking-widest text-stone-500 flex items-center gap-2">
-                        <Upload class="size-3.5 text-amber-500" /> Upload Bukti Transfer (Opsional)
-                    </label>
-                    <div class="relative flex items-center justify-center w-full">
-                        <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-3xl cursor-pointer transition-all bg-stone-900 border-stone-800 hover:border-amber-500/40">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4 text-center">
-                                <template v-if="!form.bukti_donasi">
-                                    <Upload class="size-6 text-stone-500 mb-2" />
-                                    <p class="text-xs text-stone-400 font-medium">Klik untuk upload atau drag bukti transaksi</p>
-                                    <p class="text-[10px] text-stone-500 mt-1">Format gambar (PNG, JPG, JPEG, WEBP)</p>
-                                </template>
-                                <template v-else>
-                                    <FileText class="size-6 text-amber-500 mb-2" />
-                                    <p class="text-xs text-amber-400 font-bold max-w-[250px] truncate">{{ form.bukti_donasi.name }}</p>
-                                    <p class="text-[10px] text-stone-400 mt-1">Klik untuk mengganti gambar</p>
-                                </template>
-                            </div>
-                            <input 
-                                type="file" 
-                                accept="image/*" 
-                                class="hidden" 
-                                @change="handleFileChange"
-                            />
-                        </label>
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-stone-300 mb-2">Upload Bukti Transfer</label>
+                    
+                    <div v-if="!isCameraOpen" class="w-full">
+                        <div v-if="imageUrl" class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border-2 border-stone-800">
+                            <img :src="imageUrl" class="w-full h-full object-cover" />
+                            <button @click.prevent="imageUrl = null; form.bukti_donasi = null" class="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full shadow-lg">
+                                <X class="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        <div v-else class="flex flex-col gap-3">
+                            <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-stone-700 rounded-2xl cursor-pointer bg-stone-900/50 hover:bg-stone-800/50 transition-colors">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <Upload class="w-8 h-8 text-stone-500 mb-2" />
+                                    <p class="text-sm text-stone-400 font-medium">Pilih dari Galeri / Folder</p>
+                                </div>
+                                <input type="file" accept="image/*" class="hidden" @change="handleFileChange" />
+                            </label>
+
+                            <button type="button" @click="openCamera" class="w-full flex items-center justify-center gap-2 py-3 bg-stone-800 hover:bg-stone-700 text-stone-300 rounded-xl font-medium border border-stone-700 transition-all">
+                                <Camera class="w-5 h-5 text-amber-500" />
+                                <span>Atau Ambil Foto Langsung</span>
+                            </button>
+                        </div>
                     </div>
-                    <div v-if="form.errors.bukti_donasi" class="text-red-500 text-xs mt-1">{{ form.errors.bukti_donasi }}</div>
-                </div>
+
+                    <div v-if="isCameraOpen" class="relative w-full aspect-[3/4] sm:aspect-video rounded-2xl overflow-hidden bg-black border border-stone-800 shadow-xl">
+                        <video 
+                            ref="videoElement" 
+                            autoplay 
+                            playsinline 
+                            class="w-full h-full object-cover"
+                        ></video>
+                        
+                        <div class="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-between">
+                            <button type="button" @click="closeCamera" class="text-stone-300 hover:text-white px-4 py-2 font-medium">
+                                Batal
+                            </button>
+                            <button type="button" @click="takePhoto" class="bg-amber-500 hover:bg-amber-400 text-stone-950 px-6 py-3 rounded-full font-bold shadow-lg shadow-amber-500/20 active:scale-95 transition-all flex items-center gap-2">
+                                <Camera class="w-5 h-5" />
+                                Jepret
+                            </button>
+                        </div>
+
+                        <canvas ref="canvasElement" class="hidden"></canvas>
+                    </div>
+
+                    <div v-if="form.errors.bukti_donasi" class="text-red-500 text-xs mt-1">
+                        {{ form.errors.bukti_donasi }}
+                    </div>
+                </div>              
 
                 <div class="flex gap-3 px-2">
                     <ShieldCheck class="size-5 text-emerald-500 shrink-0" />

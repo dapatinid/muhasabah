@@ -140,19 +140,30 @@ const reaksiCount = computed(() => {
   return counts
 })
 
-function handleShare() {
-  if (typeof window !== 'undefined') {
-    navigator.clipboard.writeText(window.location.href)
-      .then(() => {
-        toast.success('Link tulisan berhasil disalin!', {
-          description: 'Silakan bagikan hikmah dan ilmu ini ke kerabat Anda.',
-          duration: 3000,
-        })
+// --- FUNGSI SHARE KALAM ---
+const handleShare = async () => {
+  const shareUrl = `${window.location.origin}/kalam/${props.kalam.slug}`
+  const shareTitle = props.kalam.judul
+  const shareText = `Baca tulisan menarik: "${props.kalam.judul}"`
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: shareTitle, text: shareText, url: shareUrl })
+    } catch (err) {
+      // Tangkap error jika user membatalkan dialog share, biarkan kosong agar tidak muncul error di console
+    }
+  } else {
+    // Fallback untuk browser desktop lama atau in-app browser tertentu
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      toast.success('Link tulisan berhasil disalin!', {
+        description: 'Silakan bagikan hikmah dan ilmu ini ke kerabat Anda.',
+        duration: 3000,
       })
-      .catch((err) => {
-        toast.error('Gagal menyalin tautan.')
-        console.error(err)
-      })
+    } catch (err) {
+      toast.error('Gagal menyalin tautan.')
+      console.error(err)
+    }
   }
 }
 
