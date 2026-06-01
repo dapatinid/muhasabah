@@ -81,6 +81,86 @@ donasiForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 donasi.form = donasiForm
 
 /**
+* @see \App\Http\Controllers\DonasiController::uploadBuktiSusulan
+* @see app/Http/Controllers/DonasiController.php:507
+* @route '/payment/{payment}/upload-bukti'
+*/
+export const uploadBuktiSusulan = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: uploadBuktiSusulan.url(args, options),
+    method: 'post',
+})
+
+uploadBuktiSusulan.definition = {
+    methods: ["post"],
+    url: '/payment/{payment}/upload-bukti',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\DonasiController::uploadBuktiSusulan
+* @see app/Http/Controllers/DonasiController.php:507
+* @route '/payment/{payment}/upload-bukti'
+*/
+uploadBuktiSusulan.url = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { payment: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { payment: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            payment: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        payment: typeof args.payment === 'object'
+        ? args.payment.id
+        : args.payment,
+    }
+
+    return uploadBuktiSusulan.definition.url
+            .replace('{payment}', parsedArgs.payment.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\DonasiController::uploadBuktiSusulan
+* @see app/Http/Controllers/DonasiController.php:507
+* @route '/payment/{payment}/upload-bukti'
+*/
+uploadBuktiSusulan.post = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: uploadBuktiSusulan.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\DonasiController::uploadBuktiSusulan
+* @see app/Http/Controllers/DonasiController.php:507
+* @route '/payment/{payment}/upload-bukti'
+*/
+const uploadBuktiSusulanForm = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: uploadBuktiSusulan.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\DonasiController::uploadBuktiSusulan
+* @see app/Http/Controllers/DonasiController.php:507
+* @route '/payment/{payment}/upload-bukti'
+*/
+uploadBuktiSusulanForm.post = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: uploadBuktiSusulan.url(args, options),
+    method: 'post',
+})
+
+uploadBuktiSusulan.form = uploadBuktiSusulanForm
+
+/**
 * @see \App\Http\Controllers\DonasiController::payment
 * @see app/Http/Controllers/DonasiController.php:546
 * @route '/donasi/{donasi}/payment'
@@ -698,86 +778,6 @@ uploadImageForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'
 })
 
 uploadImage.form = uploadImageForm
-
-/**
-* @see \App\Http\Controllers\DonasiController::uploadBuktiSusulan
-* @see app/Http/Controllers/DonasiController.php:507
-* @route '/payment/{payment}/upload-bukti'
-*/
-export const uploadBuktiSusulan = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: uploadBuktiSusulan.url(args, options),
-    method: 'post',
-})
-
-uploadBuktiSusulan.definition = {
-    methods: ["post"],
-    url: '/payment/{payment}/upload-bukti',
-} satisfies RouteDefinition<["post"]>
-
-/**
-* @see \App\Http\Controllers\DonasiController::uploadBuktiSusulan
-* @see app/Http/Controllers/DonasiController.php:507
-* @route '/payment/{payment}/upload-bukti'
-*/
-uploadBuktiSusulan.url = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { payment: args }
-    }
-
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { payment: args.id }
-    }
-
-    if (Array.isArray(args)) {
-        args = {
-            payment: args[0],
-        }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-        payment: typeof args.payment === 'object'
-        ? args.payment.id
-        : args.payment,
-    }
-
-    return uploadBuktiSusulan.definition.url
-            .replace('{payment}', parsedArgs.payment.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\DonasiController::uploadBuktiSusulan
-* @see app/Http/Controllers/DonasiController.php:507
-* @route '/payment/{payment}/upload-bukti'
-*/
-uploadBuktiSusulan.post = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: uploadBuktiSusulan.url(args, options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\DonasiController::uploadBuktiSusulan
-* @see app/Http/Controllers/DonasiController.php:507
-* @route '/payment/{payment}/upload-bukti'
-*/
-const uploadBuktiSusulanForm = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: uploadBuktiSusulan.url(args, options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\DonasiController::uploadBuktiSusulan
-* @see app/Http/Controllers/DonasiController.php:507
-* @route '/payment/{payment}/upload-bukti'
-*/
-uploadBuktiSusulanForm.post = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: uploadBuktiSusulan.url(args, options),
-    method: 'post',
-})
-
-uploadBuktiSusulan.form = uploadBuktiSusulanForm
 
 /**
 * @see \App\Http\Controllers\DonasiController::edit
@@ -2034,6 +2034,6 @@ showForm.head = (args: { donasi: string | { slug: string } } | [donasi: string |
 
 show.form = showForm
 
-const DonasiController = { donasi, payment, storePayment, storeKomentar, storeReaksi, index, create, store, uploadImage, uploadBuktiSusulan, edit, update, progress, updateProgress, reaksi, komentar, donasiMasuk, tasyaruf, storeTasyaruf, storeBulkDonasi, toggleStatus, destroy, show }
+const DonasiController = { donasi, uploadBuktiSusulan, payment, storePayment, storeKomentar, storeReaksi, index, create, store, uploadImage, edit, update, progress, updateProgress, reaksi, komentar, donasiMasuk, tasyaruf, storeTasyaruf, storeBulkDonasi, toggleStatus, destroy, show }
 
 export default DonasiController
