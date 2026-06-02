@@ -750,31 +750,59 @@ class DonasiController extends Controller
 
     public function generateMayarLink(Payment $payment)
     {
-        // Cegah jika sudah lunas atau ada foto
+        // 1. Cegah jika sudah lunas atau sudah ada bukti transfer manual
         if ($payment->status === 'paid' || $payment->image) {
             return back()->with('error', 'Pembayaran tidak valid untuk otomatisasi.');
         }
 
-        // Tembak API Mayar (Gunakan endpoint sandbox jika sedang testing)
+        // 2. CEK DUPLIKASI PENAGIHAN (PENTING!)
+        // Jika sebelumnya sudah pernah men-generate link Mayar, langsung gunakan link yang lama
+        if (!empty($payment->link)) {
+            return back()->with('info', $payment->link);
+        }
+
+        // 3. CARI INFAQ PASANGAN
+        // Menggunakan logika yang sama persis seperti di fungsi uploadBuktiSusulan()
+        $infaqPasangan = Payment::where('mutation_type', 'infaq_sistem')
+            ->where('created_at', $payment->created_at)
+            ->where('atas_nama', $payment->atas_nama)
+            ->where('paymentable_id', $payment->paymentable_id) // Asumsi menggunakan polymorphic
+            ->first();
+
+        // 4. JUMLAHKAN NOMINAL (Donasi + Infaq)
+        $totalAmount = (int) $payment->nominal;
+        if ($infaqPasangan) {
+            $totalAmount += (int) $infaqPasangan->nominal;
+        }
+
+        // 5. SIAPKAN PAYLOAD MAYAR
+        $payload = [
+            'name' => $payment->atas_nama ?? 'Hamba Allah',
+            'email' => 'donatur@muhasabah.id',
+            'amount' => $totalAmount, // Nominal yang sudah digabung
+            'description' => 'Donasi & Infaq: ' . ($payment->notes ?? 'Tanpa Keterangan'),
+            'reference_id' => (string) $payment->id, 
+        ];
+
+        // 6. TEMBAK API MAYAR
         $response = Http::withToken(env('MAYAR_API_KEY'))
-            ->post('https://api.mayar.id/hl/v1/payment/create', [
-                'name' => $payment->atas_nama ?? 'Hamba Allah',
-                'email' => 'donatur@muhasabah.id', // Mayar butuh email, gunakan dummy jika user tidak login
-                'amount' => (int) $payment->nominal,
-                'description' => 'Donasi: ' . $payment->notes,
-                'reference_id' => (string) $payment->id, // PENTING: Untuk identifikasi webhook
-            ]);
+            ->post('https://api.mayar.id/hl/v1/payment/create', $payload);
 
+        // Debugging jika error (seperti sebelumnya)
         if (!$response->successful() || !isset($response['data']['link'])) {
-                dd([
-                            'PESAN_ERROR_DARI_MAYAR' => $response->json()['data'] ?? $response->json(),
-                            'DATA_YANG_KITA_KIRIM' => $payload
-                        ]);
-            }
+            dd([
+                'PESAN_ERROR_DARI_MAYAR' => $response->json()['data'] ?? $response->json(),
+                'DATA_YANG_KITA_KIRIM' => $payload
+            ]);
+        }
 
+        $mayarLink = $response['data']['link'];
 
-        return back()->with('info', $response['data']['link']);
-        
+        // 7. SIMPAN LINK KE DATABASE (AGAR TIDAK DUPLIKAT SAAT DIKLIK LAGI)
+        $payment->update([
+            'link' => $mayarLink
+        ]);
 
+        return back()->with('info', $mayarLink);
     }    
 }
