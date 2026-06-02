@@ -548,7 +548,9 @@ const takePhoto = () => {
     }
 }
 
+// Pastikan polling berhenti jika komponen di-unmount
 onUnmounted(() => {
+    stopPolling()
     closeCamera()
 })
 
@@ -556,39 +558,69 @@ onUnmounted(() => {
 const isGeneratingMayar = ref<Record<number, boolean>>({})
 const isMayarModalOpen = ref(false)
 const mayarLink = ref('')
+const activeMayarPaymentId = ref<number | null>(null)
+let mayarPollingInterval: ReturnType<typeof setInterval> | null = null
+
+const startPolling = () => {
+    // Cek status setiap 5 detik selama modal terbuka
+    mayarPollingInterval = setInterval(() => {
+        router.reload({ only: ['donasi'], onSuccess: () => {
+            // Jika payment sudah sukses, tutup modal otomatis
+            if (activeMayarPaymentId.value) {
+                const payment = props.donasi.payments.find(
+                    p => p.id === activeMayarPaymentId.value
+                )
+                if (payment?.status === 'success') {
+                    toast.success('Pembayaran berhasil dikonfirmasi! 🎉')
+                    closeMayarModal()
+                }
+            }
+        }})
+    }, 5000)
+}
+
+const stopPolling = () => {
+    if (mayarPollingInterval) {
+        clearInterval(mayarPollingInterval)
+        mayarPollingInterval = null
+    }
+}
 
 const payWithMayar = (logId: number) => {
-    if (isGeneratingMayar.value[logId]) return;
-    isGeneratingMayar.value[logId] = true;
-    
+    if (isGeneratingMayar.value[logId]) return
+    isGeneratingMayar.value[logId] = true
+
     router.post(`/payment/${logId}/mayar`, {}, {
         preserveScroll: true,
         onSuccess: (page: any) => {
-            // Tangkap link dari flash data 'info' yang dikirim Laravel
-            const link = page.props.flash?.info; 
+            const link = page.props.flash?.info
             if (link) {
-                mayarLink.value = link;
-                isMayarModalOpen.value = true;
-            } else if(page.props.flash?.error) {
-                toast.error(page.props.flash.error);
+                mayarLink.value = link
+                activeMayarPaymentId.value = logId
+                isMayarModalOpen.value = true
+                startPolling() // ← mulai polling
+            } else if (page.props.flash?.error) {
+                toast.error(page.props.flash.error)
             }
         },
         onError: () => {
-            toast.error('Terjadi kesalahan jaringan.');
+            toast.error('Terjadi kesalahan jaringan.')
         },
         onFinish: () => {
-            isGeneratingMayar.value[logId] = false;
+            isGeneratingMayar.value[logId] = false
         }
-    });
+    })
 }
 
 const closeMayarModal = () => {
-    isMayarModalOpen.value = false;
-    mayarLink.value = '';
-    
-    // Opsional: Refresh riwayat secara halus setelah ditutup untuk cek apakah lunas
-    router.reload({ only: ['donasi'] });
+    stopPolling() // ← stop polling
+    isMayarModalOpen.value = false
+    mayarLink.value = ''
+    activeMayarPaymentId.value = null
+    router.reload({ only: ['donasi'] })
 }
+
+
 </script>
 
 <template>

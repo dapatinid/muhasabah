@@ -770,28 +770,29 @@ class DonasiController extends Controller
         }
 
         $payload = [
-            'name' => $payment->atas_nama ?? 'Hamba Allah',
-            'email' => 'donatur@muhasabah.id',
-            'amount' => $totalAmount,
-            // Kita tetap pakai trik REF- sebagai lapis keamanan ke-2
-            'description' => 'REF-' . $payment->id . ' | ' . ($payment->notes ?? '-'),
+            'name'         => $payment->atas_nama ?? 'Hamba Allah',
+            'email'        => 'donatur@muhasabah.id',
+            'amount'       => $totalAmount,
+            'description'  => $payment->notes ?? '-',
+            'reference_id' => (string) $payment->id, // ← INI YANG HILANG
         ];
 
         $response = Http::withToken(env('MAYAR_API_KEY'))
             ->post('https://api.mayar.id/hl/v1/payment/create', $payload);
 
         if (!$response->successful() || !isset($response['data']['link'])) {
+            Log::error('Mayar API Error', ['response' => $response->body()]);
             return back()->with('error', 'Gagal menghubungkan ke server Mayar.');
         }
 
         $mayarLink = $response['data']['link'];
-        $mayarId = $response['data']['id'] ?? '';
+        $mayarId   = $response['data']['id'] ?? '';
 
         $payment->update([
-            'link' => $mayarLink,
-            'transaction_id' => $mayarId
+            'link'           => $mayarLink,
+            'transaction_id' => $mayarId,
         ]);
 
         return back()->with('info', $mayarLink);
-    }
+    }   
 }

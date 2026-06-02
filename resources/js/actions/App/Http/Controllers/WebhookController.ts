@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\WebhookController::handleMayar
-* @see app/Http/Controllers/WebhookController.php:11
+* @see app/Http/Controllers/WebhookController.php:12
 * @route '/webhook/mayar'
 */
 export const handleMayar = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ handleMayar.definition = {
 
 /**
 * @see \App\Http\Controllers\WebhookController::handleMayar
-* @see app/Http/Controllers/WebhookController.php:11
+* @see app/Http/Controllers/WebhookController.php:12
 * @route '/webhook/mayar'
 */
 handleMayar.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ handleMayar.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\WebhookController::handleMayar
-* @see app/Http/Controllers/WebhookController.php:11
+* @see app/Http/Controllers/WebhookController.php:12
 * @route '/webhook/mayar'
 */
 handleMayar.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -35,7 +35,7 @@ handleMayar.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\WebhookController::handleMayar
-* @see app/Http/Controllers/WebhookController.php:11
+* @see app/Http/Controllers/WebhookController.php:12
 * @route '/webhook/mayar'
 */
 const handleMayarForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -45,7 +45,7 @@ const handleMayarForm = (options?: RouteQueryOptions): RouteFormDefinition<'post
 
 /**
 * @see \App\Http\Controllers\WebhookController::handleMayar
-* @see app/Http/Controllers/WebhookController.php:11
+* @see app/Http/Controllers/WebhookController.php:12
 * @route '/webhook/mayar'
 */
 handleMayarForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
