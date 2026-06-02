@@ -771,10 +771,10 @@ class DonasiController extends Controller
 
         $payload = [
             'name'         => $payment->atas_nama ?? 'Hamba Allah',
-            'email'        => 'donatur@muhasabah.id',
+            'email'        => 'donatur+' . $payment->id . '@muhasabah.id',  // unik per payment
             'amount'       => $totalAmount,
             'description'  => $payment->notes ?? '-',
-            'reference_id' => (string) $payment->id, // ← INI YANG HILANG
+            'reference_id' => (string) $payment->id,
         ];
 
         $response = Http::withToken(env('MAYAR_API_KEY'))
