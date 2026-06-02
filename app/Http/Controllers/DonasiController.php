@@ -792,6 +792,6 @@ class DonasiController extends Controller
             'transaction_id' => $mayarId
         ]);
 
-        return back()->with('info', $fullLink);
+        return back()->with('info', $mayarLink);
     }
 }
