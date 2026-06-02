@@ -779,8 +779,8 @@ class DonasiController extends Controller
         $payload = [
             'name' => $payment->atas_nama ?? 'Hamba Allah',
             'email' => 'donatur@muhasabah.id',
-            'amount' => $totalAmount, // Nominal yang sudah digabung
-            'description' => 'Donasi & Infaq: ' . ($payment->notes ?? 'Tanpa Keterangan'),
+            'amount' => $totalAmount,
+            'description' => 'REF-' . $payment->id . ' | ' . ($payment->notes ?? 'Tanpa Keterangan'), // <--- PASTIKAN BARIS INI ADA
             'reference_id' => (string) $payment->id, 
         ];
 
