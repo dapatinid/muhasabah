@@ -14,13 +14,11 @@ class WebhookController extends Controller
         $signature = $request->header('X-Mayar-Signature');
         $secret = env('MAYAR_WEBHOOK_SECRET');
 
-        // 1. Validasi Keamanan Dasar
+        // 1. Validasi Keamanan
         if (empty($secret) || empty($signature)) {
-            Log::warning('Mayar Webhook: Secret atau Signature kosong');
             return response()->json(['message' => 'Missing Signature or Secret'], 403);
         }
 
-        // 2. Verifikasi HMAC SHA256
         $expectedSignature = hash_hmac('sha256', $payload, $secret);
         if (!hash_equals($expectedSignature, $signature)) {
             Log::warning('Mayar Webhook Gagal: Invalid Signature');
@@ -29,37 +27,41 @@ class WebhookController extends Controller
 
         $data = json_decode($payload, true);
 
-        // 3. Tangani Test Webhook dari Dashboard Mayar
+        // 2. Tangani Test Webhook
         if (isset($data['event']) && $data['event'] === 'testing') {
             return response()->json(['message' => 'Test Webhook Successful']);
         }
 
-        // 4. Tangani Pembayaran Sukses
-        if (isset($data['event']) && $data['event'] === 'payment.success') {
-            $paymentId = $data['data']['reference_id'] ?? null;
+        // 3. TANGANI PEMBAYARAN MASUK ("payment.received")
+        if (isset($data['event']) && $data['event'] === 'payment.received') {
             
-            if ($paymentId) {
-                // Cari Donasi Utama
-                $payment = Payment::find($paymentId);
+            // Ambil Product ID dari Mayar
+            $productId = $data['data']['productId'] ?? null;
+            
+            if ($productId) {
+                // TRIK CERDAS: Cari transaksi yang kolom 'link'-nya mengandung Product ID ini
+                $payment = Payment::where('link', 'LIKE', '%' . $productId . '%')->first();
 
                 if ($payment && $payment->status !== 'success') {
-                    // A. Update Status Donasi Utama menjadi 'success' (Bukan 'paid')
+                    
+                    // A. Update Status Donasi Utama menjadi Lunas ('success')
                     $payment->update([
                         'status' => 'success',
                     ]);
                     
-                    // B. Cari dan Update Infaq Sistem pasangannya (Jika ada)
+                    // B. Cari dan Update Infaq Sistem pasangannya
                     Payment::where('mutation_type', 'infaq_sistem')
                         ->where('created_at', $payment->created_at)
                         ->where('atas_nama', $payment->atas_nama)
                         ->where('paymentable_id', $payment->paymentable_id)
                         ->update(['status' => 'success']);
 
-                    Log::info("Webhook Mayar: Pembayaran ID {$paymentId} & Infaq berhasil dilunaskan.");
+                    Log::info("Webhook Mayar: Pembayaran untuk Product ID {$productId} BERHASIL dilunaskan.");
                 }
             }
         }
 
+        // Selalu kembalikan 200 OK agar Mayar tahu kita sudah menerimanya
         return response()->json(['message' => 'Webhook Processed']);
     }
 }
