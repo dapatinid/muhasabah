@@ -68,7 +68,6 @@ const placeholder = computed(() => {
     : `Cari ${props.label.toLowerCase()}...`;
 });
 
-
 // ===============================
 // FILTER
 // ===============================
@@ -79,7 +78,6 @@ const filteredItems = computed(() =>
       .includes(search.value.toLowerCase())
   )
 );
-
 
 // ===============================
 // SELECT ITEM
@@ -99,7 +97,6 @@ function selectItem(item: any) {
     open.value = false;
   }
 }
-
 
 // ===============================
 // REMOVE (MULTIPLE)
@@ -133,7 +130,6 @@ watch(
   { immediate: true }
 );
 
-
 // ===============================
 // CLICK OUTSIDE
 // ===============================
@@ -160,74 +156,64 @@ function getItemLabel(item: any): string {
   }
   return String(item[props.labelKey] ?? "");
 }
-
 </script>
-
 
 <template>
   <div class="relative" ref="wrapper">
 
-    <!-- MULTIPLE SELECTED TAGS -->
     <div
       v-if="multiple && selectedItems.length"
-      class="flex flex-wrap gap-1 mb-1"
+      class="flex flex-wrap gap-1 mb-2"
     >
       <span
         v-for="item in selectedItems"
         :key="item[valueKey]"
-        class="bg-gray-200 dark:bg-neutral-700 px-2 py-1 rounded text-sm flex items-center gap-1"
+        class="bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-800 dark:text-stone-200 px-2 py-1 rounded text-sm flex items-center gap-1 transition-colors"
       >
         {{ getItemLabel(item) }}
         <button
-          @click="removeItem(item[valueKey])"
-          class="text-gray-500 hover:text-red-600"
+          @click.prevent="removeItem(item[valueKey])"
+          class="text-stone-400 hover:text-red-500 dark:text-stone-500 dark:hover:text-red-400 focus:outline-none"
         >
           ✕
         </button>
       </span>
     </div>
 
-    <!-- INPUT -->
     <div class="relative">
       <input
         type="text"
         v-model="search"
         :placeholder="placeholder"
         @focus="open = true"
-        class="w-full border px-3 py-2 pr-8 rounded-md
-               bg-background dark:text-white"
+        class="w-full border px-3 py-2 pr-8 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 bg-white dark:bg-stone-950 border-stone-300 dark:border-stone-800 text-stone-900 dark:text-stone-100 placeholder:text-stone-400 dark:placeholder:text-stone-600"
       />
 
-      <!-- CLEAR (SINGLE ONLY) -->
       <button
         v-if="!multiple && modelValue !== null && modelValue !== ''"
-        @click="clearSingle"
-        class="absolute right-3 top-1/2 -translate-y-1/2
-               text-gray-500 hover:text-gray-700"
+        @click.prevent="clearSingle"
+        class="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 dark:text-stone-500 dark:hover:text-stone-300 focus:outline-none transition-colors"
       >
         ✕
       </button>
     </div>
 
-    <!-- DROPDOWN -->
     <div
       v-if="open"
-      class="absolute z-20 bg-white dark:bg-neutral-800
-             border border-gray-300 dark:border-neutral-700
-             w-full mt-1 max-h-48 overflow-auto rounded shadow"
+      class="absolute z-[60] bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 w-full mt-1 max-h-48 overflow-auto rounded-md shadow-lg transition-colors"
     >
       <div
         v-for="item in filteredItems"
         :key="item[valueKey]"
         @click="selectItem(item)"
-        class="px-3 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-700"
+        class="px-3 py-2 cursor-pointer text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-900 dark:hover:text-stone-100 transition-colors"
       >
         {{ getItemLabel(item) }}
       </div>
 
       <div
         v-if="filteredItems.length === 0"
-        class="text-sm p-3 text-gray-500 dark:text-gray-400"
+        class="text-sm p-3 text-stone-500 dark:text-stone-400 text-center"
       >
         Tidak ada hasil
       </div>

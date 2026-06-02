@@ -134,25 +134,25 @@ const handleVillageChange = (val: string | null) => {
     >
         <div class="grid gap-6">
             <div class="grid gap-2">
-                <Label for="name">Nama Lengkap</Label>
+                <Label for="name" class="text-foreground">Nama Lengkap</Label>
                 <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" name="name" placeholder="Nama Lengkap" />
                 <InputError :message="errors.name" />
             </div>
 
             <div class="grid gap-2">
-                <Label for="email">Email</Label>
+                <Label for="email" class="text-foreground">Email</Label>
                 <Input id="email" type="email" required :tabindex="2" autocomplete="email" name="email" placeholder="email@example.com" />
                 <InputError :message="errors.email" />
             </div>
 
             <div class="grid gap-2">
-                <Label for="whatsapp">Nomor Whatsapp</Label>
+                <Label for="whatsapp" class="text-foreground">Nomor Whatsapp</Label>
                 <Input id="whatsapp" type="text" required :tabindex="3" name="whatsapp" placeholder="081234567890" />
                 <InputError :message="errors.whatsapp" />
             </div>
 
             <div class="grid gap-2">
-                <Label for="negara">Negara</Label>
+                <Label for="negara" class="text-foreground">Negara</Label>
                 
                 <Input 
                     id="negara" 
@@ -170,7 +170,7 @@ const handleVillageChange = (val: string | null) => {
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="grid gap-2">
-                    <Label>Provinsi</Label>
+                    <Label class="text-foreground">Provinsi</Label>
                     <SearchableSelect 
                         :modelValue="wilayahState.province_code || null" 
                         :items="provinces"
@@ -185,7 +185,7 @@ const handleVillageChange = (val: string | null) => {
                 </div>
                 
                 <div class="grid gap-2 transition-opacity duration-200" :class="{ 'opacity-50 pointer-events-none': !sortedCities.length }">
-                    <Label>Kabupaten/Kota</Label>
+                    <Label class="text-foreground">Kabupaten/Kota</Label>
                     <SearchableSelect 
                         :modelValue="wilayahState.city_code"
                         :items="sortedCities"
@@ -202,7 +202,7 @@ const handleVillageChange = (val: string | null) => {
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="grid gap-2 transition-opacity duration-200" :class="{ 'opacity-50 pointer-events-none': !districts?.length }">
-                    <Label>Kecamatan</Label>
+                    <Label class="text-foreground">Kecamatan</Label>
                     <SearchableSelect 
                         :modelValue="wilayahState.district_code"
                         :items="districts || []"
@@ -217,7 +217,7 @@ const handleVillageChange = (val: string | null) => {
                 </div>
                 
                 <div class="grid gap-2 transition-opacity duration-200" :class="{ 'opacity-50 pointer-events-none': !villages?.length }">
-                    <Label>Desa/Kelurahan</Label>
+                    <Label class="text-foreground">Desa/Kelurahan</Label>
                     <SearchableSelect 
                         :modelValue="wilayahState.village_code || null" 
                         :items="villages || []"
@@ -233,13 +233,13 @@ const handleVillageChange = (val: string | null) => {
             </div>
 
             <div class="grid gap-2">
-                <Label for="kode_pos">Kode Pos</Label>
+                <Label for="kode_pos" class="text-foreground">Kode Pos</Label>
                 <Input id="kode_pos" type="text" required :tabindex="9" name="kode_pos" placeholder="12345" />
                 <InputError :message="errors.kode_pos" />
             </div>
 
             <div class="grid gap-2">
-                <Label for="jalan">Jalan / Alamat Lengkap</Label>
+                <Label for="jalan" class="text-foreground">Jalan / Alamat Lengkap</Label>
                 <textarea 
                     id="jalan" 
                     required 
@@ -252,13 +252,13 @@ const handleVillageChange = (val: string | null) => {
             </div>
 
             <div class="grid gap-2">
-                <Label for="password">Password</Label>
+                <Label for="password" class="text-foreground">Password</Label>
                 <PasswordInput id="password" required :tabindex="11" autocomplete="new-password" name="password" placeholder="Password" />
                 <InputError :message="errors.password" />
             </div>
 
             <div class="grid gap-2">
-                <Label for="password_confirmation">Konfirmasi Password</Label>
+                <Label for="password_confirmation" class="text-foreground">Konfirmasi Password</Label>
                 <PasswordInput id="password_confirmation" required :tabindex="12" autocomplete="new-password" name="password_confirmation" placeholder="Confirm password" />
                 <InputError :message="errors.password_confirmation" />
             </div>

@@ -168,8 +168,7 @@ function goToPage(url: string | null) {
       </div>
 
       <div class="divide-y divide-stone-800">
-        <div v-for="kalam in kalams.data" :key="kalam.id" class="p-5 flex flex-col gap-4 group relative overflow-hidden">
-          
+        <div v-for="kalam in kalams.data" :key="kalam.id" class="p-5 flex flex-col gap-4 group relative overflow-hidden odd:bg-transparent even:bg-stone-900/70">          
           <div class="w-full space-y-3">
             <div class="flex items-center justify-between relative">
               <div class="flex items-center gap-3">

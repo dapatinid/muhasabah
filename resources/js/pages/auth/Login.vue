@@ -44,7 +44,7 @@ defineProps<{
     >
         <div class="grid gap-6">
             <div class="grid gap-2">
-                <Label for="email">Email</Label>
+                <Label for="email" class="text-foreground">Email</Label>
                 <Input
                     id="email"
                     type="email"
@@ -60,7 +60,7 @@ defineProps<{
 
             <div class="grid gap-2">
                 <div class="flex items-center justify-between">
-                    <Label for="password">Password</Label>
+                    <Label for="password" class="text-foreground">Password</Label>
                     <TextLink
                         v-if="canResetPassword"
                         :href="request()"
@@ -82,7 +82,7 @@ defineProps<{
             </div>
 
             <div class="flex items-center justify-between">
-                <Label for="remember" class="flex items-center space-x-3">
+                <Label for="remember" class="flex items-center space-x-3 text-foreground">
                     <Checkbox id="remember" name="remember" :tabindex="3" />
                     <span>Remember me</span>
                 </Label>
