@@ -551,6 +551,44 @@ const takePhoto = () => {
 onUnmounted(() => {
     closeCamera()
 })
+
+// --- STATE MAYAR ---
+const isGeneratingMayar = ref<Record<number, boolean>>({})
+const isMayarModalOpen = ref(false)
+const mayarLink = ref('')
+
+const payWithMayar = (logId: number) => {
+    if (isGeneratingMayar.value[logId]) return;
+    isGeneratingMayar.value[logId] = true;
+    
+    router.post(`/payment/${logId}/mayar`, {}, {
+        preserveScroll: true,
+        onSuccess: (page: any) => {
+            // Tangkap link dari flash data 'info' yang dikirim Laravel
+            const link = page.props.flash?.info; 
+            if (link) {
+                mayarLink.value = link;
+                isMayarModalOpen.value = true;
+            } else if(page.props.flash?.error) {
+                toast.error(page.props.flash.error);
+            }
+        },
+        onError: () => {
+            toast.error('Terjadi kesalahan jaringan.');
+        },
+        onFinish: () => {
+            isGeneratingMayar.value[logId] = false;
+        }
+    });
+}
+
+const closeMayarModal = () => {
+    isMayarModalOpen.value = false;
+    mayarLink.value = '';
+    
+    // Opsional: Refresh riwayat secara halus setelah ditutup untuk cek apakah lunas
+    router.reload({ only: ['donasi'] });
+}
 </script>
 
 <template>
@@ -889,7 +927,20 @@ onUnmounted(() => {
                       <button v-if="uploadFile[log.id]" @click="submitBukti(log.id)" class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md" :disabled="isUploading[log.id]">
                           {{ isUploading[log.id] ? 'MENGUPLOAD...' : 'KIRIM BUKTI TRANSFER' }}
                       </button>
-                  </div>                 
+                  </div>
+                  
+                  <div v-if="!log.image && log.status !== 'paid'" class="space-y-3">
+                      <div class="relative flex items-center gap-3 my-4 opacity-50">
+                          <div class="border-t border-stone-800 flex-1"></div>
+                          <span class="text-[10px] text-stone-500 font-bold uppercase tracking-wider">ATAU LEBIH MUDAH</span>
+                          <div class="border-t border-stone-800 flex-1"></div>
+                      </div>
+
+                      <button type="button" @click="payWithMayar(log.id)" :disabled="isGeneratingMayar[log.id]" class="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-emerald-500/20 active:scale-95 disabled:opacity-50">
+                          <CreditCard class="w-5 h-5" />
+                          <span>{{ isGeneratingMayar[log.id] ? 'Memuat Sistem...' : 'Transfer & Konfirmasi Otomatis' }}</span>
+                      </button>
+                  </div>                  
                 </div>
                 </template>
 
@@ -1011,6 +1062,30 @@ onUnmounted(() => {
             <canvas ref="canvasElement" class="hidden"></canvas>
         </div>
     </div>    
+
+    <div v-if="isMayarModalOpen" class="fixed inset-0 z-[200] bg-stone-950/90 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-in fade-in zoom-in-95 duration-200">
+        <div class="relative w-full max-w-lg bg-stone-100 rounded-3xl overflow-hidden shadow-2xl flex flex-col h-[85vh] sm:h-[700px]">
+            
+            <div class="flex items-center justify-between p-4 border-b border-stone-200 bg-white">
+                <div class="flex items-center gap-2">
+                    <ShieldCheck class="w-5 h-5 text-emerald-500" />
+                    <span class="font-bold text-stone-800 text-sm">Pembayaran Instan (Mayar)</span>
+                </div>
+                <button @click="closeMayarModal" class="p-2 bg-stone-200 hover:bg-red-500 hover:text-white text-stone-600 rounded-full transition-colors">
+                    <X class="w-4 h-4" />
+                </button>
+            </div>
+            
+            <div class="flex-1 w-full relative bg-stone-100">
+                <div class="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                    <RefreshCw class="w-8 h-8 text-emerald-500 animate-spin" />
+                    <p class="text-xs text-stone-500 font-medium">Memuat halaman pembayaran...</p>
+                </div>
+                <iframe :src="mayarLink" class="relative z-10 w-full h-full border-none rounded-b-3xl" allow="payment"></iframe>
+            </div>
+
+        </div>
+    </div>
 
   </AppLayoutPublic>
 </template>

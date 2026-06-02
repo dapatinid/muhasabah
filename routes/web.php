@@ -185,4 +185,7 @@ Route::get('/api/wilayah/villages/{district_code}', function ($district_code) {
     return response()->json(Village::where('district_code', $district_code)->orderBy('name')->get());
 });
 
+Route::post('/payment/{payment}/mayar', [\App\Http\Controllers\DonasiController::class, 'generateMayarLink'])->name('payment.mayar');
+Route::post('/webhook/mayar', [\App\Http\Controllers\WebhookController::class, 'handleMayar']);
+
 require __DIR__.'/settings.php';

@@ -3,6 +3,7 @@ import KalamController from './KalamController'
 import DonasiController from './DonasiController'
 import AcaraController from './AcaraController'
 import BannerController from './BannerController'
+import WebhookController from './WebhookController'
 import Settings from './Settings'
 
 const Controllers = {
@@ -11,6 +12,7 @@ const Controllers = {
     DonasiController: Object.assign(DonasiController, DonasiController),
     AcaraController: Object.assign(AcaraController, AcaraController),
     BannerController: Object.assign(BannerController, BannerController),
+    WebhookController: Object.assign(WebhookController, WebhookController),
     Settings: Object.assign(Settings, Settings),
 }
 

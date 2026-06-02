@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Http;
 
 class DonasiController extends Controller
 {
@@ -747,4 +748,33 @@ class DonasiController extends Controller
         return back()->with('success', 'Status transaksi berhasil diperbarui.');
     }    
 
+    public function generateMayarLink(Payment $payment)
+    {
+        // Cegah jika sudah lunas atau ada foto
+        if ($payment->status === 'paid' || $payment->image) {
+            return back()->with('error', 'Pembayaran tidak valid untuk otomatisasi.');
+        }
+
+        // Tembak API Mayar (Gunakan endpoint sandbox jika sedang testing)
+        $response = Http::withToken(env('MAYAR_API_KEY'))
+            ->post('https://api.mayar.id/hl/v1/payment/create', [
+                'name' => $payment->atas_nama ?? 'Hamba Allah',
+                'email' => 'donatur@muhasabah.id', // Mayar butuh email, gunakan dummy jika user tidak login
+                'amount' => (int) $payment->nominal,
+                'description' => 'Donasi: ' . $payment->notes,
+                'reference_id' => (string) $payment->id, // PENTING: Untuk identifikasi webhook
+            ]);
+
+        if (!$response->successful() || !isset($response['data']['link'])) {
+                dd([
+                            'PESAN_ERROR_DARI_MAYAR' => $response->json()['data'] ?? $response->json(),
+                            'DATA_YANG_KITA_KIRIM' => $payload
+                        ]);
+            }
+
+
+        return back()->with('info', $response['data']['link']);
+        
+
+    }    
 }

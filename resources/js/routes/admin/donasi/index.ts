@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\DonasiController::bulk
-* @see app/Http/Controllers/DonasiController.php:645
+* @see app/Http/Controllers/DonasiController.php:646
 * @route '/admin/donasi/{donasi}/bulk-donasi'
 */
 export const bulk = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ bulk.definition = {
 
 /**
 * @see \App\Http\Controllers\DonasiController::bulk
-* @see app/Http/Controllers/DonasiController.php:645
+* @see app/Http/Controllers/DonasiController.php:646
 * @route '/admin/donasi/{donasi}/bulk-donasi'
 */
 bulk.url = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ bulk.url = (args: { donasi: string | { slug: string } } | [donasi: string | { sl
 
 /**
 * @see \App\Http\Controllers\DonasiController::bulk
-* @see app/Http/Controllers/DonasiController.php:645
+* @see app/Http/Controllers/DonasiController.php:646
 * @route '/admin/donasi/{donasi}/bulk-donasi'
 */
 bulk.post = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -59,7 +59,7 @@ bulk.post = (args: { donasi: string | { slug: string } } | [donasi: string | { s
 
 /**
 * @see \App\Http\Controllers\DonasiController::bulk
-* @see app/Http/Controllers/DonasiController.php:645
+* @see app/Http/Controllers/DonasiController.php:646
 * @route '/admin/donasi/{donasi}/bulk-donasi'
 */
 const bulkForm = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -69,7 +69,7 @@ const bulkForm = (args: { donasi: string | { slug: string } } | [donasi: string 
 
 /**
 * @see \App\Http\Controllers\DonasiController::bulk
-* @see app/Http/Controllers/DonasiController.php:645
+* @see app/Http/Controllers/DonasiController.php:646
 * @route '/admin/donasi/{donasi}/bulk-donasi'
 */
 bulkForm.post = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
