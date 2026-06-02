@@ -842,7 +842,7 @@ const closeMayarModal = () => {
                     </h4>
 
                     <p class="text-[11px] text-stone-500 max-w-[240px] md:max-w-md" :class="log.mutation_type === 'tasyaruf' ? 'line-clamp-none' : expandedLogs.includes(log.id) ? 'line-clamp-none' : 'line-clamp-1'">{{ log.notes || 'Donasi Masuk' }}</p>
-                    <p v-if="log.link" class="text-[11px] text-foreground line-clamp-1 max-w-[240px] md:max-w-md">Link Terkait: <a :href="log.link" target="_blank" class="text-blue-500 hover:underline">klik di sini</a></p>
+                    <p v-if="log.link && log.mutation_type == 'tasyaruf'" class="text-[11px] text-stone-400 line-clamp-1 max-w-[240px] md:max-w-md">Link Terkait: <a :href="log.link" target="_blank" class="text-blue-500 hover:underline">klik di sini</a></p>
                   </div>
                 </div>
 
