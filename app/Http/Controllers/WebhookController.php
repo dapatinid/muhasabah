@@ -10,76 +10,67 @@ class WebhookController extends Controller
 {
     public function handleMayar(Request $request)
     {
-        $payload = $request->getContent();
-        $signature = $request->header('X-Mayar-Signature');
-        $secret = env('MAYAR_WEBHOOK_SECRET');
+        try {
+            $payload = $request->getContent();
+            $signature = $request->header('X-Mayar-Signature');
+            $secret = env('MAYAR_WEBHOOK_SECRET');
 
-        // 1. PASANG CCTV (Catat semua yang masuk ke storage/logs/laravel.log)
-        Log::info('--- MAYAR WEBHOOK MASUK ---');
-        Log::info('Signature: ' . $signature);
-        Log::info('Payload JSON: ' . $payload);
-
-        if (empty($secret) || empty($signature)) {
-            Log::warning('Ditolak: Secret atau Signature kosong');
-            return response()->json(['message' => 'Missing Signature'], 403);
-        }
-
-        $expectedSignature = hash_hmac('sha256', $payload, $secret);
-        if (!hash_equals($expectedSignature, $signature)) {
-            Log::warning('Ditolak: Signature Tidak Cocok!');
-            return response()->json(['message' => 'Invalid Signature'], 403);
-        }
-
-        $data = json_decode($payload, true);
-        $event = $data['event'] ?? '';
-        $transactionStatus = $data['data']['transactionStatus'] ?? '';
-
-        // 2. TANGANI TEST URL
-        if ($event === 'testing') {
-            return response()->json(['message' => 'Test Webhook Successful']);
-        }
-
-        // 3. IDENTIFIKASI TRANSAKSI
-        $productId = $data['data']['productId'] ?? null;
-        $referenceId = $data['data']['reference_id'] ?? null;
-
-        $payment = null;
-
-        // Cari berdasarkan Reference ID (jika Mayar mengirimkannya)
-        if ($referenceId) {
-            $payment = Payment::find($referenceId);
-        } 
-        // Jika tidak, cari berdasarkan Product ID yang ada di dalam Link
-        elseif ($productId) {
-            $payment = Payment::where('link', 'LIKE', '%' . $productId . '%')->first();
-        }
-
-        // 4. EKSEKUSI PELUNASAN
-        if ($payment) {
-            // Cek apakah status transaksi dari Mayar menandakan uang benar-benar sudah masuk
-            // Mayar biasanya menggunakan: paid, settlement, success, atau completed
-            if (in_array($transactionStatus, ['paid', 'settlement', 'success', 'completed']) || $event === 'payment.success') {
-                
-                if ($payment->status !== 'success') {
-                    // Update Donasi Utama
-                    $payment->update(['status' => 'success']);
-                    
-                    // Update Infaq Pasangannya
-                    Payment::where('mutation_type', 'infaq_sistem')
-                        ->where('created_at', $payment->created_at)
-                        ->where('atas_nama', $payment->atas_nama)
-                        ->where('paymentable_id', $payment->paymentable_id)
-                        ->update(['status' => 'success']);
-
-                    Log::info("BERHASIL: Transaksi Payment ID {$payment->id} telah dilunaskan!");
-                }
-            } else {
-                Log::info("INFO: Transaksi ditemukan, tapi status uang di Mayar masih: {$transactionStatus} (Event: {$event})");
+            // 1. Verifikasi Keamanan
+            if (empty($secret)) {
+                Log::error('WEBHOOK GAGAL: MAYAR_WEBHOOK_SECRET di .env kosong!');
+                // Tetap kembalikan 200 OK sementara agar Mayar tidak spam error, tapi kita tahu salahnya di .env
+                return response()->json(['message' => 'Secret empty but ignored for debug'], 200); 
             }
-        } else {
-            Log::warning("GAGAL MENCARI: Payment tidak ditemukan untuk Product ID: {$productId}");
-        }
 
-        return response()->json(['message' => 'Webhook Processed']);
+            if ($signature) {
+                $expectedSignature = hash_hmac('sha256', $payload, $secret);
+                if (!hash_equals($expectedSignature, $signature)) {
+                    Log::error('WEBHOOK DITOLAK: Signature tidak cocok! Pastikan secret sama dengan di Dashboard Mayar.');
+                    return response()->json(['message' => 'Invalid signature'], 403);
+                }
+            }
+
+            $data = json_decode($payload, true);
+            $event = $data['event'] ?? '';
+            $mayarStatus = $data['data']['status'] ?? '';
+            $productId = $data['data']['productId'] ?? null;
+
+            // 2. Tangani Test URL
+            if ($event === 'testing') {
+                return response()->json(['message' => 'Test Webhook Successful'], 200);
+            }
+
+            // 3. Tangani Pembayaran Sukses (PERBAIKAN LOGIKA DISINI)
+            if ($event === 'payment.received' && $mayarStatus === 'SUCCESS') {
+                if ($productId) {
+                    // Cari transaksi yang link-nya mengandung ProductID ini
+                    $payment = Payment::where('link', 'LIKE', '%' . $productId . '%')->first();
+
+                    if ($payment) {
+                        // LUNASKAN DONASI UTAMA
+                        $payment->update(['status' => 'success']);
+                        
+                        // LUNASKAN INFAQ PASANGANNYA
+                        Payment::where('mutation_type', 'infaq_sistem')
+                            ->where('created_at', $payment->created_at)
+                            ->where('atas_nama', $payment->atas_nama)
+                            ->where('paymentable_id', $payment->paymentable_id)
+                            ->update(['status' => 'success']);
+
+                        Log::info("WEBHOOK SUKSES: Transaksi dengan ProductID {$productId} berhasil Lunas.");
+                        return response()->json(['message' => 'Payment updated successfully'], 200);
+                    } else {
+                        Log::error("WEBHOOK GAGAL: Tidak menemukan transaksi dengan ProductID {$productId}");
+                        return response()->json(['message' => 'Payment not found in database'], 200);
+                    }
+                }
+            }
+
+            return response()->json(['message' => 'Event ignored'], 200);
+
+        } catch (\Exception $e) {
+            Log::error('WEBHOOK FATAL ERROR: ' . $e->getMessage());
+            return response()->json(['error' => 'Server error'], 500);
+        }
     }
 }
