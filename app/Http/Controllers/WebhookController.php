@@ -34,16 +34,22 @@ class WebhookController extends Controller
             // TANGANI PEMBAYARAN MASUK
             if ($event === 'payment.received' && $mayarStatus === 'SUCCESS') {
                 $productId = $data['data']['productId'] ?? null;
-                $description = $data['data']['productDescription'] ?? '';
                 $payment = null;
 
-                // CARA 1: Cari menggunakan Trik Hashtag dari URL Link
                 if ($productId) {
-                    $payment = Payment::where('link', 'LIKE', '%' . $productId . '%')->first();
+                    // PERBAIKAN: Gunakan pencocokan string yang lebih bersih
+                    // Kita cari pembayaran yang link-nya memiliki suffix #productId
+                    $payment = Payment::where('link', 'LIKE', '%' . $productId)->first();
+                    
+                    // Jika masih tidak ketemu, kita coba cari berdasarkan link mengandung string tersebut (tanpa #)
+                    if (!$payment) {
+                        $payment = Payment::where('link', 'LIKE', '%' . $productId . '%')->first();
+                    }
                 }
 
-                // CARA 2: Lapis Keamanan ke-2 (Jika Cara 1 gagal), cari tulisan REF- dari deskripsi
+                // Lapis Keamanan ke-2: Jika Cara 1 tetap gagal, cari lewat Deskripsi (REF-ID)
                 if (!$payment) {
+                    $description = $data['data']['productDescription'] ?? '';
                     preg_match('/REF-(\d+)/', $description, $matches);
                     if (isset($matches[1])) {
                         $payment = Payment::find($matches[1]);
@@ -62,8 +68,8 @@ class WebhookController extends Controller
                         ->where('paymentable_id', $payment->paymentable_id)
                         ->update(['status' => 'success']);
 
-                    Log::info("WEBHOOK BERHASIL: Transaksi ID {$payment->id} otomatis LUNAS.");
-                    return response()->json(['message' => 'Payment updated successfully'], 200);
+                    Log::info("WEBHOOK SUKSES: Transaksi ID {$payment->id} otomatis LUNAS.");
+                    return response()->json(['message' => 'Success'], 200);
                 }
             }
 
