@@ -750,59 +750,50 @@ class DonasiController extends Controller
 
     public function generateMayarLink(Payment $payment)
     {
-        // 1. Cegah jika sudah lunas atau sudah ada bukti transfer manual
-        if ($payment->status === 'paid' || $payment->image) {
+        if ($payment->status === 'success' || $payment->image) {
             return back()->with('error', 'Pembayaran tidak valid untuk otomatisasi.');
         }
 
-        // 2. CEK DUPLIKASI PENAGIHAN (PENTING!)
-        // Jika sebelumnya sudah pernah men-generate link Mayar, langsung gunakan link yang lama
         if (!empty($payment->link)) {
             return back()->with('info', $payment->link);
         }
 
-        // 3. CARI INFAQ PASANGAN
-        // Menggunakan logika yang sama persis seperti di fungsi uploadBuktiSusulan()
         $infaqPasangan = Payment::where('mutation_type', 'infaq_sistem')
             ->where('created_at', $payment->created_at)
             ->where('atas_nama', $payment->atas_nama)
-            ->where('paymentable_id', $payment->paymentable_id) // Asumsi menggunakan polymorphic
+            ->where('paymentable_id', $payment->paymentable_id)
             ->first();
 
-        // 4. JUMLAHKAN NOMINAL (Donasi + Infaq)
         $totalAmount = (int) $payment->nominal;
         if ($infaqPasangan) {
             $totalAmount += (int) $infaqPasangan->nominal;
         }
 
-        // 5. SIAPKAN PAYLOAD MAYAR
         $payload = [
             'name' => $payment->atas_nama ?? 'Hamba Allah',
             'email' => 'donatur@muhasabah.id',
             'amount' => $totalAmount,
-            'description' => 'REF-' . $payment->id . ' | ' . ($payment->notes ?? 'Tanpa Keterangan'), // <--- PASTIKAN BARIS INI ADA
-            'reference_id' => (string) $payment->id, 
+            // Kita tetap pakai trik REF- sebagai lapis keamanan ke-2
+            'description' => 'REF-' . $payment->id . ' | ' . ($payment->notes ?? '-'),
         ];
 
-        // 6. TEMBAK API MAYAR
         $response = Http::withToken(env('MAYAR_API_KEY'))
             ->post('https://api.mayar.id/hl/v1/payment/create', $payload);
 
-        // Debugging jika error (seperti sebelumnya)
         if (!$response->successful() || !isset($response['data']['link'])) {
-            dd([
-                'PESAN_ERROR_DARI_MAYAR' => $response->json()['data'] ?? $response->json(),
-                'DATA_YANG_KITA_KIRIM' => $payload
-            ]);
+            return back()->with('error', 'Gagal menghubungkan ke server Mayar.');
         }
 
         $mayarLink = $response['data']['link'];
+        $mayarId = $response['data']['id'] ?? '';
 
-        // 7. SIMPAN LINK KE DATABASE (AGAR TIDAK DUPLIKAT SAAT DIKLIK LAGI)
+        // 💡 TRIK HASHTAG: Kita tempelkan ID Mayar di akhir URL agar tersimpan di Database
+        $fullLink = $mayarLink . '#' . $mayarId;
+
         $payment->update([
-            'link' => $mayarLink
+            'link' => $fullLink
         ]);
 
-        return back()->with('info', $mayarLink);
-    }    
+        return back()->with('info', $fullLink);
+    }
 }

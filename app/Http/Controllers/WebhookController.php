@@ -15,14 +15,11 @@ class WebhookController extends Controller
             $signature = $request->header('X-Mayar-Signature');
             $secret = env('MAYAR_WEBHOOK_SECRET');
 
-            // 1. Verifikasi Keamanan
             if (empty($secret) || empty($signature)) {
-                return response()->json(['message' => 'Missing Signature or Secret'], 200); 
+                return response()->json(['message' => 'Missing Auth'], 200); 
             }
 
-            $expectedSignature = hash_hmac('sha256', $payload, $secret);
-            if (!hash_equals($expectedSignature, $signature)) {
-                Log::error('WEBHOOK DITOLAK: Signature tidak cocok!');
+            if (!hash_equals(hash_hmac('sha256', $payload, $secret), $signature)) {
                 return response()->json(['message' => 'Invalid signature'], 403);
             }
 
@@ -34,44 +31,46 @@ class WebhookController extends Controller
                 return response()->json(['message' => 'Test Webhook Successful'], 200);
             }
 
-            // 3. TANGANI PEMBAYARAN MASUK
+            // TANGANI PEMBAYARAN MASUK
             if ($event === 'payment.received' && $mayarStatus === 'SUCCESS') {
-                
-                // Ambil deskripsi yang sudah kita selipkan ID
+                $productId = $data['data']['productId'] ?? null;
                 $description = $data['data']['productDescription'] ?? '';
-                
-                // EKSTRAK ID menggunakan Regex (Mencari angka setelah teks "REF-")
-                preg_match('/REF-(\d+)/', $description, $matches);
-                
-                if (isset($matches[1])) {
-                    $paymentId = $matches[1];
-                    $payment = Payment::find($paymentId);
+                $payment = null;
 
-                    if ($payment) {
-                        // LUNASKAN DONASI UTAMA
-                        $payment->update(['status' => 'success']);
-                        
-                        // LUNASKAN INFAQ PASANGANNYA
-                        Payment::where('mutation_type', 'infaq_sistem')
-                            ->where('created_at', $payment->created_at)
-                            ->where('atas_nama', $payment->atas_nama)
-                            ->where('paymentable_id', $payment->paymentable_id)
-                            ->update(['status' => 'success']);
+                // CARA 1: Cari menggunakan Trik Hashtag dari URL Link
+                if ($productId) {
+                    $payment = Payment::where('link', 'LIKE', '%' . $productId . '%')->first();
+                }
 
-                        Log::info("WEBHOOK SUKSES: Transaksi REF-{$paymentId} berhasil Lunas.");
-                        return response()->json(['message' => 'Payment updated successfully'], 200);
-                    } else {
-                        Log::error("WEBHOOK GAGAL: Payment ID {$paymentId} tidak ditemukan di database.");
+                // CARA 2: Lapis Keamanan ke-2 (Jika Cara 1 gagal), cari tulisan REF- dari deskripsi
+                if (!$payment) {
+                    preg_match('/REF-(\d+)/', $description, $matches);
+                    if (isset($matches[1])) {
+                        $payment = Payment::find($matches[1]);
                     }
-                } else {
-                    Log::error("WEBHOOK GAGAL: Tidak menemukan kode REF- pada deskripsi: {$description}");
+                }
+
+                // EKSEKUSI UPDATE DATABASE
+                if ($payment && $payment->status !== 'success') {
+                    // Update Donasi Utama
+                    $payment->update(['status' => 'success']);
+                    
+                    // Update Infaq Pasangannya
+                    Payment::where('mutation_type', 'infaq_sistem')
+                        ->where('created_at', $payment->created_at)
+                        ->where('atas_nama', $payment->atas_nama)
+                        ->where('paymentable_id', $payment->paymentable_id)
+                        ->update(['status' => 'success']);
+
+                    Log::info("WEBHOOK BERHASIL: Transaksi ID {$payment->id} otomatis LUNAS.");
+                    return response()->json(['message' => 'Payment updated successfully'], 200);
                 }
             }
 
             return response()->json(['message' => 'Event ignored'], 200);
 
         } catch (\Exception $e) {
-            Log::error('WEBHOOK FATAL ERROR: ' . $e->getMessage());
+            Log::error('WEBHOOK ERROR: ' . $e->getMessage());
             return response()->json(['error' => 'Server error'], 500);
         }
     }
