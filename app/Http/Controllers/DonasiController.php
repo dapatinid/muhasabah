@@ -787,11 +787,8 @@ class DonasiController extends Controller
         $mayarLink = $response['data']['link'];
         $mayarId = $response['data']['id'] ?? '';
 
-        // 💡 TRIK HASHTAG: Kita tempelkan ID Mayar di akhir URL agar tersimpan di Database
-        $fullLink = $mayarLink . '#' . $mayarId;
-
         $payment->update([
-            'link' => $fullLink,
+            'link' => $mayarLink,
             'transaction_id' => $mayarId
         ]);
 
