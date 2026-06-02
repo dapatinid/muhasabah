@@ -9,22 +9,24 @@ use Illuminate\Support\Facades\Log;
 class WebhookController extends Controller
 {
 
-    public function handleMayar(Request $request)
+   public function handleMayar(Request $request)
     {
         $payload = $request->getContent();
-        $data    = json_decode($payload, true);
+        $data = json_decode($payload, true);
 
-        Log::info('Mayar Webhook Received', ['data' => $data]); // ← Bantu debug
+        Log::info('Mayar Webhook Received', ['data' => $data]);
 
         if (isset($data['event']) && $data['event'] === 'payment.received') {
-            $referenceId = $data['data']['reference_id'] ?? null;
+            
+            $mayarProductId = $data['data']['productId'] ?? null;
 
-            if (!$referenceId) {
-                Log::warning('Mayar webhook: reference_id kosong', ['data' => $data]);
-                return response()->json(['message' => 'reference_id missing'], 400);
+            if (!$mayarProductId) {
+                Log::warning('Mayar webhook: productId kosong', ['data' => $data]);
+                return response()->json(['message' => 'productId missing'], 400);
             }
 
-            $payment = Payment::find($referenceId);
+            // Match via transaction_id yang kita simpan saat generateMayarLink
+            $payment = Payment::where('transaction_id', $mayarProductId)->first();
 
             if ($payment && $payment->status !== 'success') {
                 $payment->update(['status' => 'success']);
@@ -35,7 +37,14 @@ class WebhookController extends Controller
                     ->where('paymentable_id', $payment->paymentable_id)
                     ->update(['status' => 'success']);
 
-                Log::info('Payment sukses via Mayar', ['payment_id' => $payment->id]);
+                Log::info('Payment sukses via Mayar', [
+                    'payment_id'   => $payment->id,
+                    'mayar_product_id' => $mayarProductId,
+                ]);
+            } else {
+                Log::warning('Mayar webhook: payment tidak ditemukan atau sudah success', [
+                    'mayar_product_id' => $mayarProductId,
+                ]);
             }
         }
 
