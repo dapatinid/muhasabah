@@ -771,10 +771,13 @@ class DonasiController extends Controller
 
         $payload = [
             'name'         => $payment->atas_nama ?? 'Hamba Allah',
-            'email'        => 'donatur+' . $payment->id . '@muhasabah.id',  // unik per payment
+            'email'        => 'donatur_' . $payment->id . '@muhasabah.id',
+            'mobile'       => $payment->no_wa ?? '085000000000', // sesuaikan field di model kamu
             'amount'       => $totalAmount,
             'description'  => $payment->notes ?? '-',
             'reference_id' => (string) $payment->id,
+            'redirectUrl'  => url('/donasi/' . $payment->paymentable->slug . '?tab=laporan'),
+            'expiredAt'    => now()->addHours(24)->toIso8601String(),
         ];
 
         $response = Http::withToken(env('MAYAR_API_KEY'))
@@ -785,14 +788,11 @@ class DonasiController extends Controller
             return back()->with('error', 'Gagal menghubungkan ke server Mayar.');
         }
 
-        $mayarLink = $response['data']['link'];
-        $mayarId   = $response['data']['id'] ?? '';
-
         $payment->update([
-            'link'           => $mayarLink,
-            'transaction_id' => $mayarId,
+            'link'           => $response['data']['link'],
+            'transaction_id' => $response['data']['id'] ?? '',
         ]);
 
-        return back()->with('info', $mayarLink);
-    }   
+        return back()->with('info', $response['data']['link']);
+    }    
 }
