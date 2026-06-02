@@ -791,7 +791,8 @@ class DonasiController extends Controller
         $fullLink = $mayarLink . '#' . $mayarId;
 
         $payment->update([
-            'link' => $fullLink
+            'link' => $fullLink,
+            'transaction_id' => $mayarTransactionId
         ]);
 
         return back()->with('info', $fullLink);
