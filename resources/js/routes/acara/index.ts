@@ -996,96 +996,6 @@ komentarForm.head = (args: { acara: string | { slug: string } } | [acara: string
 komentar.form = komentarForm
 
 /**
-* @see \App\Http\Controllers\AcaraController::destroy
-* @see app/Http/Controllers/AcaraController.php:539
-* @route '/admin/acara/{acara}'
-*/
-export const destroy = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
-    url: destroy.url(args, options),
-    method: 'delete',
-})
-
-destroy.definition = {
-    methods: ["delete"],
-    url: '/admin/acara/{acara}',
-} satisfies RouteDefinition<["delete"]>
-
-/**
-* @see \App\Http\Controllers\AcaraController::destroy
-* @see app/Http/Controllers/AcaraController.php:539
-* @route '/admin/acara/{acara}'
-*/
-destroy.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { acara: args }
-    }
-
-    if (typeof args === 'object' && !Array.isArray(args) && 'slug' in args) {
-        args = { acara: args.slug }
-    }
-
-    if (Array.isArray(args)) {
-        args = {
-            acara: args[0],
-        }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-        acara: typeof args.acara === 'object'
-        ? args.acara.slug
-        : args.acara,
-    }
-
-    return destroy.definition.url
-            .replace('{acara}', parsedArgs.acara.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\AcaraController::destroy
-* @see app/Http/Controllers/AcaraController.php:539
-* @route '/admin/acara/{acara}'
-*/
-destroy.delete = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
-    url: destroy.url(args, options),
-    method: 'delete',
-})
-
-/**
-* @see \App\Http\Controllers\AcaraController::destroy
-* @see app/Http/Controllers/AcaraController.php:539
-* @route '/admin/acara/{acara}'
-*/
-const destroyForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\AcaraController::destroy
-* @see app/Http/Controllers/AcaraController.php:539
-* @route '/admin/acara/{acara}'
-*/
-destroyForm.delete = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-destroy.form = destroyForm
-
-/**
 * @see \App\Http\Controllers\AcaraController::keuangan
 * @see app/Http/Controllers/AcaraController.php:274
 * @route '/admin/acara/{acara}/keuangan'
@@ -1189,6 +1099,96 @@ keuanganForm.head = (args: { acara: string | { slug: string } } | [acara: string
 })
 
 keuangan.form = keuanganForm
+
+/**
+* @see \App\Http\Controllers\AcaraController::destroy
+* @see app/Http/Controllers/AcaraController.php:539
+* @route '/admin/acara/{acara}'
+*/
+export const destroy = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: destroy.url(args, options),
+    method: 'delete',
+})
+
+destroy.definition = {
+    methods: ["delete"],
+    url: '/admin/acara/{acara}',
+} satisfies RouteDefinition<["delete"]>
+
+/**
+* @see \App\Http\Controllers\AcaraController::destroy
+* @see app/Http/Controllers/AcaraController.php:539
+* @route '/admin/acara/{acara}'
+*/
+destroy.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { acara: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'slug' in args) {
+        args = { acara: args.slug }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            acara: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        acara: typeof args.acara === 'object'
+        ? args.acara.slug
+        : args.acara,
+    }
+
+    return destroy.definition.url
+            .replace('{acara}', parsedArgs.acara.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\AcaraController::destroy
+* @see app/Http/Controllers/AcaraController.php:539
+* @route '/admin/acara/{acara}'
+*/
+destroy.delete = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: destroy.url(args, options),
+    method: 'delete',
+})
+
+/**
+* @see \App\Http\Controllers\AcaraController::destroy
+* @see app/Http/Controllers/AcaraController.php:539
+* @route '/admin/acara/{acara}'
+*/
+const destroyForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\AcaraController::destroy
+* @see app/Http/Controllers/AcaraController.php:539
+* @route '/admin/acara/{acara}'
+*/
+destroyForm.delete = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy.form = destroyForm
 
 /**
 * @see \App\Http\Controllers\AcaraController::show
@@ -1307,9 +1307,9 @@ const acara = {
     progress: Object.assign(progress, progressFb9fab),
     reaksi: Object.assign(reaksi, reaksi),
     komentar: Object.assign(komentar, komentar),
-    destroy: Object.assign(destroy, destroy),
     keuangan: Object.assign(keuangan, keuangan),
     tasyaruf: Object.assign(tasyaruf, tasyaruf),
+    destroy: Object.assign(destroy, destroy),
     show: Object.assign(show, show),
 }
 

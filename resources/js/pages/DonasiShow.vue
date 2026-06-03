@@ -7,7 +7,8 @@ import {
   ClipboardList, ArrowDownCircle, ArrowUpCircle, AlertCircle, SendHorizontal,
   RefreshCw, Newspaper, Heart, ChevronDown, Upload, FileText,
   X, Camera,
-  QrCode
+  QrCode,
+  CreditCard
 } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
@@ -970,7 +971,7 @@ const closeMayarModal = () => {
 
                       <button type="button" @click="payWithMayar(log.id)" :disabled="isGeneratingMayar[log.id]" class="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-emerald-500/20 active:scale-95 disabled:opacity-50">
                           <CreditCard class="w-5 h-5" />
-                          <span>{{ isGeneratingMayar[log.id] ? 'Memuat Sistem...' : 'Transfer & Konfirmasi Otomatis' }}</span>
+                          <span class="text-sm font-medium shrink">{{ isGeneratingMayar[log.id] ? 'Memuat Sistem...' : 'Transfer & Konfirmasi Otomatis' }}</span>
                       </button>
                   </div>                  
                 </div>

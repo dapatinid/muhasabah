@@ -4,7 +4,7 @@ import progressFb9fab from './progress'
 import tasyaruf004c81 from './tasyaruf'
 /**
 * @see \App\Http\Controllers\DonasiController::payment
-* @see app/Http/Controllers/DonasiController.php:547
+* @see app/Http/Controllers/DonasiController.php:537
 * @route '/donasi/{donasi}/payment'
 */
 export const payment = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -19,7 +19,7 @@ payment.definition = {
 
 /**
 * @see \App\Http\Controllers\DonasiController::payment
-* @see app/Http/Controllers/DonasiController.php:547
+* @see app/Http/Controllers/DonasiController.php:537
 * @route '/donasi/{donasi}/payment'
 */
 payment.url = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -52,7 +52,7 @@ payment.url = (args: { donasi: string | { slug: string } } | [donasi: string | {
 
 /**
 * @see \App\Http\Controllers\DonasiController::payment
-* @see app/Http/Controllers/DonasiController.php:547
+* @see app/Http/Controllers/DonasiController.php:537
 * @route '/donasi/{donasi}/payment'
 */
 payment.get = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -62,7 +62,7 @@ payment.get = (args: { donasi: string | { slug: string } } | [donasi: string | {
 
 /**
 * @see \App\Http\Controllers\DonasiController::payment
-* @see app/Http/Controllers/DonasiController.php:547
+* @see app/Http/Controllers/DonasiController.php:537
 * @route '/donasi/{donasi}/payment'
 */
 payment.head = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -72,7 +72,7 @@ payment.head = (args: { donasi: string | { slug: string } } | [donasi: string | 
 
 /**
 * @see \App\Http\Controllers\DonasiController::payment
-* @see app/Http/Controllers/DonasiController.php:547
+* @see app/Http/Controllers/DonasiController.php:537
 * @route '/donasi/{donasi}/payment'
 */
 const paymentForm = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ const paymentForm = (args: { donasi: string | { slug: string } } | [donasi: stri
 
 /**
 * @see \App\Http\Controllers\DonasiController::payment
-* @see app/Http/Controllers/DonasiController.php:547
+* @see app/Http/Controllers/DonasiController.php:537
 * @route '/donasi/{donasi}/payment'
 */
 paymentForm.get = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -92,7 +92,7 @@ paymentForm.get = (args: { donasi: string | { slug: string } } | [donasi: string
 
 /**
 * @see \App\Http\Controllers\DonasiController::payment
-* @see app/Http/Controllers/DonasiController.php:547
+* @see app/Http/Controllers/DonasiController.php:537
 * @route '/donasi/{donasi}/payment'
 */
 paymentForm.head = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -484,62 +484,6 @@ storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => (
 })
 
 store.form = storeForm
-
-/**
-* @see \App\Http\Controllers\DonasiController::uploadImage
-* @see app/Http/Controllers/DonasiController.php:495
-* @route '/admin/donasi/upload-image'
-*/
-export const uploadImage = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: uploadImage.url(options),
-    method: 'post',
-})
-
-uploadImage.definition = {
-    methods: ["post"],
-    url: '/admin/donasi/upload-image',
-} satisfies RouteDefinition<["post"]>
-
-/**
-* @see \App\Http\Controllers\DonasiController::uploadImage
-* @see app/Http/Controllers/DonasiController.php:495
-* @route '/admin/donasi/upload-image'
-*/
-uploadImage.url = (options?: RouteQueryOptions) => {
-    return uploadImage.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\DonasiController::uploadImage
-* @see app/Http/Controllers/DonasiController.php:495
-* @route '/admin/donasi/upload-image'
-*/
-uploadImage.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: uploadImage.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\DonasiController::uploadImage
-* @see app/Http/Controllers/DonasiController.php:495
-* @route '/admin/donasi/upload-image'
-*/
-const uploadImageForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: uploadImage.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\DonasiController::uploadImage
-* @see app/Http/Controllers/DonasiController.php:495
-* @route '/admin/donasi/upload-image'
-*/
-uploadImageForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: uploadImage.url(options),
-    method: 'post',
-})
-
-uploadImage.form = uploadImageForm
 
 /**
 * @see \App\Http\Controllers\DonasiController::edit
@@ -1463,7 +1407,6 @@ const donasi = {
     index: Object.assign(index, index),
     create: Object.assign(create, create),
     store: Object.assign(store, store),
-    uploadImage: Object.assign(uploadImage, uploadImage),
     edit: Object.assign(edit, edit),
     update: Object.assign(update, update),
     progress: Object.assign(progress, progressFb9fab),

@@ -11,6 +11,8 @@ export type User = {
 
 export type Auth = {
     user: User;
+    can_access_control_panel: boolean; 
+    classes: string[];
 };
 
 export type TwoFactorConfigContent = {

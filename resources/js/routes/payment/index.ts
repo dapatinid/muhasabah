@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\DonasiController::upload_bukti
-* @see app/Http/Controllers/DonasiController.php:508
+* @see app/Http/Controllers/DonasiController.php:498
 * @route '/payment/{payment}/upload-bukti'
 */
 export const upload_bukti = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ upload_bukti.definition = {
 
 /**
 * @see \App\Http\Controllers\DonasiController::upload_bukti
-* @see app/Http/Controllers/DonasiController.php:508
+* @see app/Http/Controllers/DonasiController.php:498
 * @route '/payment/{payment}/upload-bukti'
 */
 upload_bukti.url = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ upload_bukti.url = (args: { payment: number | { id: number } } | [payment: numbe
 
 /**
 * @see \App\Http\Controllers\DonasiController::upload_bukti
-* @see app/Http/Controllers/DonasiController.php:508
+* @see app/Http/Controllers/DonasiController.php:498
 * @route '/payment/{payment}/upload-bukti'
 */
 upload_bukti.post = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -59,7 +59,7 @@ upload_bukti.post = (args: { payment: number | { id: number } } | [payment: numb
 
 /**
 * @see \App\Http\Controllers\DonasiController::upload_bukti
-* @see app/Http/Controllers/DonasiController.php:508
+* @see app/Http/Controllers/DonasiController.php:498
 * @route '/payment/{payment}/upload-bukti'
 */
 const upload_buktiForm = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -69,7 +69,7 @@ const upload_buktiForm = (args: { payment: number | { id: number } } | [payment:
 
 /**
 * @see \App\Http\Controllers\DonasiController::upload_bukti
-* @see app/Http/Controllers/DonasiController.php:508
+* @see app/Http/Controllers/DonasiController.php:498
 * @route '/payment/{payment}/upload-bukti'
 */
 upload_buktiForm.post = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -81,7 +81,7 @@ upload_bukti.form = upload_buktiForm
 
 /**
 * @see \App\Http\Controllers\DonasiController::toggle_status
-* @see app/Http/Controllers/DonasiController.php:739
+* @see app/Http/Controllers/DonasiController.php:729
 * @route '/admin/payment/{payment}/toggle-status'
 */
 export const toggle_status = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -96,7 +96,7 @@ toggle_status.definition = {
 
 /**
 * @see \App\Http\Controllers\DonasiController::toggle_status
-* @see app/Http/Controllers/DonasiController.php:739
+* @see app/Http/Controllers/DonasiController.php:729
 * @route '/admin/payment/{payment}/toggle-status'
 */
 toggle_status.url = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -129,7 +129,7 @@ toggle_status.url = (args: { payment: number | { id: number } } | [payment: numb
 
 /**
 * @see \App\Http\Controllers\DonasiController::toggle_status
-* @see app/Http/Controllers/DonasiController.php:739
+* @see app/Http/Controllers/DonasiController.php:729
 * @route '/admin/payment/{payment}/toggle-status'
 */
 toggle_status.put = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -139,7 +139,7 @@ toggle_status.put = (args: { payment: number | { id: number } } | [payment: numb
 
 /**
 * @see \App\Http\Controllers\DonasiController::toggle_status
-* @see app/Http/Controllers/DonasiController.php:739
+* @see app/Http/Controllers/DonasiController.php:729
 * @route '/admin/payment/{payment}/toggle-status'
 */
 const toggle_statusForm = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -154,7 +154,7 @@ const toggle_statusForm = (args: { payment: number | { id: number } } | [payment
 
 /**
 * @see \App\Http\Controllers\DonasiController::toggle_status
-* @see app/Http/Controllers/DonasiController.php:739
+* @see app/Http/Controllers/DonasiController.php:729
 * @route '/admin/payment/{payment}/toggle-status'
 */
 toggle_statusForm.put = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -171,7 +171,7 @@ toggle_status.form = toggle_statusForm
 
 /**
 * @see \App\Http\Controllers\DonasiController::mayar
-* @see app/Http/Controllers/DonasiController.php:751
+* @see app/Http/Controllers/DonasiController.php:741
 * @route '/payment/{payment}/mayar'
 */
 export const mayar = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -186,7 +186,7 @@ mayar.definition = {
 
 /**
 * @see \App\Http\Controllers\DonasiController::mayar
-* @see app/Http/Controllers/DonasiController.php:751
+* @see app/Http/Controllers/DonasiController.php:741
 * @route '/payment/{payment}/mayar'
 */
 mayar.url = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -219,7 +219,7 @@ mayar.url = (args: { payment: number | { id: number } } | [payment: number | { i
 
 /**
 * @see \App\Http\Controllers\DonasiController::mayar
-* @see app/Http/Controllers/DonasiController.php:751
+* @see app/Http/Controllers/DonasiController.php:741
 * @route '/payment/{payment}/mayar'
 */
 mayar.post = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -229,7 +229,7 @@ mayar.post = (args: { payment: number | { id: number } } | [payment: number | { 
 
 /**
 * @see \App\Http\Controllers\DonasiController::mayar
-* @see app/Http/Controllers/DonasiController.php:751
+* @see app/Http/Controllers/DonasiController.php:741
 * @route '/payment/{payment}/mayar'
 */
 const mayarForm = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -239,7 +239,7 @@ const mayarForm = (args: { payment: number | { id: number } } | [payment: number
 
 /**
 * @see \App\Http\Controllers\DonasiController::mayar
-* @see app/Http/Controllers/DonasiController.php:751
+* @see app/Http/Controllers/DonasiController.php:741
 * @route '/payment/{payment}/mayar'
 */
 mayarForm.post = (args: { payment: number | { id: number } } | [payment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

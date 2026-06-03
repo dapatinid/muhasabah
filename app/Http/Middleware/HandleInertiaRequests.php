@@ -35,18 +35,30 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user,
+                // 🔒 Sinkronisasi Logika dengan Middleware CanAccessControlPanel
+                'can_access_control_panel' => $user 
+                    && $user->is_admin 
+                    && !is_null($user->level) 
+                    && $user->level !== '',
+                
+                // 🏷️ Konversi field class string/comma-separated menjadi array untuk Vue
+                'classes' => $user 
+                    ? (is_array($user->class) ? $user->class : explode(',', $user->class)) 
+                    : [],
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'flash' => [
                 'success'            => fn () => $request->session()->get('success'),
                 'error'              => fn () => $request->session()->get('error'),
                 'info'               => fn () => $request->session()->get('info'),
-                'uploaded_image_url' => fn () => $request->session()->get('uploaded_image_url'), // ← langsung
+                'uploaded_image_url' => fn () => $request->session()->get('uploaded_image_url'),
             ],      
         ];
     }

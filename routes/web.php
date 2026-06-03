@@ -62,13 +62,12 @@ Route::middleware(['throttle:10,1'])->group(function () {
     Route::post('/payment/{payment}/upload-bukti', [DonasiController::class, 'uploadBuktiSusulan'])->name('payment.upload_bukti');
 
     Route::get('/donasi/{donasi:slug}/payment', [DonasiController::class, 'payment'])->name('donasi.payment');
-    Route::get('/acara/{acara:slug}/payment', [AcaraController::class, 'payment'])->name('acara.payment'); // Public Payment Acara
+    Route::get('/acara/{acara:slug}/payment', [AcaraController::class, 'payment'])->name('acara.payment'); 
 
     Route::post('/donasi/{donasi:slug}/payment', [DonasiController::class, 'storePayment'])->name('donasi.payment.store');
     Route::post('/donasi/{donasi:slug}/komentar', [DonasiController::class, 'storeKomentar'])->name('donasi.storeKomentar');
     Route::post('/donasi/{donasi:slug}/reaksi', [DonasiController::class, 'storeReaksi'])->name('donasi.storeReaksi');
     
-    // Antispam Acara
     Route::post('/acara/{acara:slug}/payment', [AcaraController::class, 'storePayment'])->name('acara.payment.store');
     Route::post('/acara/{acara:slug}/komentar', [AcaraController::class, 'storeKomentar'])->name('acara.storeKomentar');
     Route::post('/acara/{acara:slug}/reaksi', [AcaraController::class, 'storeReaksi'])->name('acara.storeReaksi');
@@ -79,84 +78,84 @@ Route::middleware(['throttle:10,1'])->group(function () {
 
 Route::inertia('halaman-dibangun', 'HalamanDibangun')->name('halaman-dibangun');
 
-
-// ==========================================
-// 1. GROUP USER: Harus Login, Verified, & Akun Aktif
-// ==========================================
 Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
     
-    // Halaman yang bisa diakses SEMUA user yang sudah login & aktif
+    
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
     
-    // ==========================================
-    // 2. NESTED GROUP: Khusus Admin (Kunci ditaruh di sini)
-    // ==========================================
     Route::middleware(['admin'])->group(function () {
         
         // Fitur Kelola Kalam (Admin)
-        Route::get('/admin/kalam', [KalamController::class, 'index'])->name('kalam.index');
-        Route::get('/admin/kalam/create', [KalamController::class, 'create'])->name('kalam.create');
-        Route::post('/admin/kalam', [KalamController::class, 'store'])->name('kalam.store');
-        Route::post('/admin/kalam/upload-image', [KalamController::class, 'uploadImage'])->name('kalam.upload-image');
-        Route::get('/admin/kalam/{kalam}/edit', [KalamController::class, 'edit'])->name('kalam.edit');
-        Route::put('/admin/kalam/{kalam}', [KalamController::class, 'update'])->name('kalam.update');
-        Route::patch('/admin/kalam/{kalam}', [KalamController::class, 'update']);
-        Route::delete('/admin/kalam/{kalam}', [KalamController::class, 'destroy'])->name('kalam.destroy');
+        Route::middleware(['auth', 'user_class:penulis'])->group(function () {
+            Route::get('/admin/kalam', [KalamController::class, 'index'])->name('kalam.index');
+            Route::get('/admin/kalam/create', [KalamController::class, 'create'])->name('kalam.create');
+            Route::post('/admin/kalam', [KalamController::class, 'store'])->name('kalam.store');
+            Route::post('/admin/kalam/upload-image', [KalamController::class, 'uploadImage'])->name('kalam.upload-image');
+            Route::get('/admin/kalam/{kalam}/edit', [KalamController::class, 'edit'])->name('kalam.edit');
+            Route::put('/admin/kalam/{kalam}', [KalamController::class, 'update'])->name('kalam.update');
+            Route::patch('/admin/kalam/{kalam}', [KalamController::class, 'update']);
+            Route::delete('/admin/kalam/{kalam}', [KalamController::class, 'destroy'])->name('kalam.destroy');
+        });
 
         // Fitur Kelola Donasi (Admin)
-        Route::get('/admin/donasi', [DonasiController::class, 'index'])->name('donasi.index');
-        Route::get('/admin/donasi/create', [DonasiController::class, 'create'])->name('donasi.create');
-        Route::post('/admin/donasi', [DonasiController::class, 'store'])->name('donasi.store');
-        Route::post('/admin/donasi/upload-image', [DonasiController::class, 'uploadImage'])->name('donasi.upload-image');
-        Route::get('/admin/donasi/{donasi}/edit', [DonasiController::class, 'edit'])->name('donasi.edit');
-        Route::put('/admin/donasi/{donasi}', [DonasiController::class, 'update'])->name('donasi.update');
-        Route::get('/admin/donasi/{donasi}/progress', [DonasiController::class, 'progress'])->name('donasi.progress');
-        Route::put('/admin/donasi/{donasi}/progress', [DonasiController::class, 'updateProgress'])->name('donasi.progress.update');
-        Route::get('/admin/donasi/{donasi}/reaksi', [DonasiController::class, 'reaksi'])->name('donasi.reaksi');
-        Route::get('/admin/donasi/{donasi}/komentar', [DonasiController::class, 'komentar'])->name('donasi.komentar');
-        Route::get('/admin/donasi/{donasi}/donasi-masuk', [DonasiController::class, 'donasiMasuk'])->name('donasi.donasi-masuk');
-        Route::get('/admin/donasi/{donasi}/tasyaruf', [DonasiController::class, 'tasyaruf'])->name('donasi.tasyaruf');
-        Route::post('/admin/donasi/{donasi}/tasyaruf', [DonasiController::class, 'storeTasyaruf'])->name('donasi.tasyaruf.store');
-        Route::post('/admin/donasi/{donasi}/bulk-donasi', [DonasiController::class, 'storeBulkDonasi'])->name('admin.donasi.bulk');
-        Route::put('/admin/payment/{payment}/toggle-status', [DonasiController::class, 'toggleStatus'])->name('payment.toggle_status');
-        Route::delete('/admin/donasi/{donasi}', [DonasiController::class, 'destroy'])->name('donasi.destroy');   
-
+        Route::middleware(['auth', 'user_class:penggalang-dana'])->group(function () {
+            Route::get('/admin/donasi', [DonasiController::class, 'index'])->name('donasi.index');
+            Route::get('/admin/donasi/create', [DonasiController::class, 'create'])->name('donasi.create');
+            Route::post('/admin/donasi', [DonasiController::class, 'store'])->name('donasi.store');
+            Route::get('/admin/donasi/{donasi}/edit', [DonasiController::class, 'edit'])->name('donasi.edit');
+            Route::put('/admin/donasi/{donasi}', [DonasiController::class, 'update'])->name('donasi.update');
+            Route::get('/admin/donasi/{donasi}/progress', [DonasiController::class, 'progress'])->name('donasi.progress');
+            Route::put('/admin/donasi/{donasi}/progress', [DonasiController::class, 'updateProgress'])->name('donasi.progress.update');
+            Route::get('/admin/donasi/{donasi}/reaksi', [DonasiController::class, 'reaksi'])->name('donasi.reaksi');
+            Route::get('/admin/donasi/{donasi}/komentar', [DonasiController::class, 'komentar'])->name('donasi.komentar');
+            Route::get('/admin/donasi/{donasi}/donasi-masuk', [DonasiController::class, 'donasiMasuk'])->name('donasi.donasi-masuk');
+            Route::post('/admin/donasi/{donasi}/bulk-donasi', [DonasiController::class, 'storeBulkDonasi'])->name('admin.donasi.bulk');
+            Route::get('/admin/donasi/{donasi}/tasyaruf', [DonasiController::class, 'tasyaruf'])->name('donasi.tasyaruf');
+            Route::post('/admin/donasi/{donasi}/tasyaruf', [DonasiController::class, 'storeTasyaruf'])->name('donasi.tasyaruf.store');
+            Route::delete('/admin/donasi/{donasi}', [DonasiController::class, 'destroy'])->name('donasi.destroy');   
+        });
+        
         // Fitur Kelola Acara (Admin)
-        Route::get('/admin/acara', [AcaraController::class, 'index'])->name('acara.index');
-        Route::get('/admin/acara/create', [AcaraController::class, 'create'])->name('acara.create');
-        Route::post('/admin/acara', [AcaraController::class, 'store'])->name('acara.store');
-        Route::get('/admin/acara/{acara:slug}/edit', [AcaraController::class, 'edit'])->name('acara.edit');
-        Route::put('/admin/acara/{acara:slug}', [AcaraController::class, 'update'])->name('acara.update');
-        Route::get('/admin/acara/{acara:slug}/progress', [AcaraController::class, 'progress'])->name('acara.progress');
-        Route::put('/admin/acara/{acara:slug}/progress', [AcaraController::class, 'updateProgress'])->name('acara.progress.update');
-        Route::get('/admin/acara/{acara:slug}/reaksi', [AcaraController::class, 'reaksi'])->name('acara.reaksi');
-        Route::get('/admin/acara/{acara:slug}/komentar', [AcaraController::class, 'komentar'])->name('acara.komentar');
-        Route::delete('/admin/acara/{acara:slug}', [AcaraController::class, 'destroy'])->name('acara.destroy');
-        Route::get('/admin/acara/{acara:slug}/keuangan', [AcaraController::class, 'keuangan'])->name('acara.keuangan');
-        Route::post('/admin/acara/{acara:slug}/bulk-keuangan', [AcaraController::class, 'bulkKeuangan'])->name('admin.acara.bulk');
-        Route::post('/admin/acara/{acara:slug}/tasyaruf', [AcaraController::class, 'storeTasyaruf'])->name('acara.tasyaruf.store');
-
+        Route::middleware(['auth', 'user_class:penyelenggara-acara'])->group(function () {
+            Route::get('/admin/acara', [AcaraController::class, 'index'])->name('acara.index');
+            Route::get('/admin/acara/create', [AcaraController::class, 'create'])->name('acara.create');
+            Route::post('/admin/acara', [AcaraController::class, 'store'])->name('acara.store');
+            Route::get('/admin/acara/{acara:slug}/edit', [AcaraController::class, 'edit'])->name('acara.edit');
+            Route::put('/admin/acara/{acara:slug}', [AcaraController::class, 'update'])->name('acara.update');
+            Route::get('/admin/acara/{acara:slug}/progress', [AcaraController::class, 'progress'])->name('acara.progress');
+            Route::put('/admin/acara/{acara:slug}/progress', [AcaraController::class, 'updateProgress'])->name('acara.progress.update');
+            Route::get('/admin/acara/{acara:slug}/reaksi', [AcaraController::class, 'reaksi'])->name('acara.reaksi');
+            Route::get('/admin/acara/{acara:slug}/komentar', [AcaraController::class, 'komentar'])->name('acara.komentar');
+            Route::get('/admin/acara/{acara:slug}/keuangan', [AcaraController::class, 'keuangan'])->name('acara.keuangan');
+            Route::post('/admin/acara/{acara:slug}/bulk-keuangan', [AcaraController::class, 'bulkKeuangan'])->name('admin.acara.bulk');
+            Route::post('/admin/acara/{acara:slug}/tasyaruf', [AcaraController::class, 'storeTasyaruf'])->name('acara.tasyaruf.store');
+            Route::delete('/admin/acara/{acara:slug}', [AcaraController::class, 'destroy'])->name('acara.destroy');
+        });
+        
+        // Umum
+        Route::put('/admin/payment/{payment}/toggle-status', [DonasiController::class, 'toggleStatus'])->name('payment.toggle_status');
         
         });
         
-        // ==========================================
-        // Super Admin, tinggal buat di sini:
-        // ==========================================
-        Route::middleware(['super.admin'])->group(function () {
-                
-            // Banner
-            Route::get('/admin/banner', [BannerController::class, 'index'])->name('banner.index');
-            Route::get('/admin/banner/create', [BannerController::class, 'create'])->name('banner.create');
-            Route::post('/admin/banner', [BannerController::class, 'store'])->name('banner.store');
-            Route::post('/admin/banner/upload', [BannerController::class, 'uploadImage'])->name('banner.upload');    
-            Route::get('/admin/banner/{banner}/edit', [BannerController::class, 'edit'])->name('banner.edit');
-            Route::put('/admin/banner/{banner}', [BannerController::class, 'update'])->name('banner.update');
-            Route::delete('/admin/banner/{banner}', [BannerController::class, 'destroy'])->name('banner.destroy');
+        Route::middleware('control.panel')->group(function () {
 
-            // Riyadhoh
-            Route::get('/log-riyadhoh', [LaporanRiyadhohController::class, 'logRiyadhoh'])->name('log-riyadhoh');
-            Route::patch('/log-riyadhoh/{id}', [LaporanRiyadhohController::class, 'updateLog'])->name('log-riyadhoh.update');
-            Route::get('/rapor-riyadhoh', [LaporanRiyadhohController::class, 'raporRiyadhoh'])->name('rapor-riyadhoh');        
+            Route::get('/admin/banner', [BannerController::class, 'index'])->name('banner.index');
+
+            Route::middleware(['super.admin'])->group(function () {
+                    
+                // Banner
+                Route::get('/admin/banner/create', [BannerController::class, 'create'])->name('banner.create');
+                Route::post('/admin/banner', [BannerController::class, 'store'])->name('banner.store');
+                Route::post('/admin/banner/upload', [BannerController::class, 'uploadImage'])->name('banner.upload');    
+                Route::get('/admin/banner/{banner}/edit', [BannerController::class, 'edit'])->name('banner.edit');
+                Route::put('/admin/banner/{banner}', [BannerController::class, 'update'])->name('banner.update');
+                Route::delete('/admin/banner/{banner}', [BannerController::class, 'destroy'])->name('banner.destroy');
+
+                // Riyadhoh
+                Route::get('/log-riyadhoh', [LaporanRiyadhohController::class, 'logRiyadhoh'])->name('log-riyadhoh');
+                Route::patch('/log-riyadhoh/{id}', [LaporanRiyadhohController::class, 'updateLog'])->name('log-riyadhoh.update');
+                Route::get('/rapor-riyadhoh', [LaporanRiyadhohController::class, 'raporRiyadhoh'])->name('rapor-riyadhoh');        
+            });
         });
 
 });
@@ -165,7 +164,6 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
 Route::get('/kalam/{kalam:slug}', [KalamController::class, 'show'])->name('kalam.show');
 Route::get('/donasi/{donasi:slug}', [DonasiController::class, 'show'])->name('donasi.show');
 Route::get('/acara/{acara:slug}', [AcaraController::class, 'show'])->name('acara.show'); // Detail Acara Publik
-
 
 
 // Tambahkan rute ini di bawah
@@ -185,6 +183,7 @@ Route::get('/api/wilayah/villages/{district_code}', function ($district_code) {
     return response()->json(Village::where('district_code', $district_code)->orderBy('name')->get());
 });
 
+// Mayar Integration
 Route::post('/payment/{payment}/mayar', [\App\Http\Controllers\DonasiController::class, 'generateMayarLink'])->name('payment.mayar');
 Route::post('/webhook/mayar', [\App\Http\Controllers\WebhookController::class, 'handleMayar']);
 
