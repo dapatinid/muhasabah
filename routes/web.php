@@ -82,6 +82,9 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
     
     
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
+    Route::inertia('/pendaftaran/penulis', 'Pendaftaran/Penulis')->name('pendaftaran.penulis');
+    Route::inertia('/pendaftaran/penggalang-dana', 'Pendaftaran/PenggalangDana')->name('pendaftaran.penggalang-dana');
+    Route::inertia('/pendaftaran/penyelenggara-acara', 'Pendaftaran/PenyelenggaraAcara')->name('pendaftaran.penyelenggara-acara');    
     
     Route::middleware(['admin'])->group(function () {
         

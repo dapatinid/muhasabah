@@ -19,54 +19,37 @@ import {
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
-// Mengambil data shared dari Inertia
 const page = usePage();
 const canAccessControlPanel = computed(() => page.props.auth?.can_access_control_panel ?? false);
-const userClasses = computed(() => page.props.auth?.classes ?? []);
 
-// Membuat menu navigasi dinamis berbasis computed
+// Menu utama diatur agar selalu tampil tanpa pengecekan userClasses frontend
 const mainNavItems = computed(() => {
-    // Menu dasar yang bisa dilihat semua user aktif
-    const items: NavItem[] = [
+    return [
         {
             title: 'Dashboard',
             href: dashboard(),
             icon: LayoutGrid,
         },
-    ];
-
-    // Tampilkan menu Kelola Kalam jika user punya class 'penulis'
-    if (userClasses.value.includes('penulis')) {
-        items.push({
+        {
             title: 'Kalam',
             href: '/admin/kalam',
             icon: BookOpen,
-        });
-    }
-
-    // Tampilkan menu Kelola Donasi jika user punya class 'penggalang-dana'
-    if (userClasses.value.includes('penggalang-dana')) {
-        items.push({
+        },
+        {
             title: 'Donasi',
             href: '/admin/donasi',
             icon: HeartHandshake,
-        });
-    }
-
-    // Tampilkan menu Kelola Acara jika user punya class 'penyelenggara-acara'
-    if (userClasses.value.includes('penyelenggara-acara')) {
-        items.push({
+        },
+        {
             title: 'Acara',
             href: '/admin/acara',
             icon: Calendar,
-        });
-    }
-    return items;
+        },
+    ];
 });
 
 const mainNavItemsControlPanel = computed(() => {
     const items: NavItem[] = [];
-    // 🔒 PROTEKSI UTAMA: Hanya muncul jika lolos pengecekan CanAccessControlPanel
     if (canAccessControlPanel.value) {
         items.push(
             {
@@ -87,21 +70,7 @@ const mainNavItemsControlPanel = computed(() => {
         );
     }      
     return items;  
-
 });
-
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
-];
 </script>
 
 <template>
@@ -119,14 +88,11 @@ const footerNavItems: NavItem[] = [
         </SidebarHeader>
 
         <SidebarContent>
-            <!-- Menggunakan mainNavItems yang sudah dinamis -->
             <NavMain :items="mainNavItems" class="z-1"/>
             <NavMainControlPanel :items="mainNavItemsControlPanel" v-if="canAccessControlPanel"/>
         </SidebarContent>
 
         <SidebarFooter>
-            <!-- NavFooter dinonaktifkan sesuai template asli Anda -->
-            <!-- <NavFooter :items="footerNavItems" /> -->
             <NavUser />
         </SidebarFooter>
     </Sidebar>

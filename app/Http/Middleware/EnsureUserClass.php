@@ -11,19 +11,27 @@ class EnsureUserClass
     public function handle(Request $request, Closure $next, ...$classes): Response
     {
         $user = $request->user();
-
-        // Cek apakah user login dan apakah salah satu dari $classes ada di dalam data user->class
-        // Asumsi $user->class adalah string (misal: 'penulis,penggalang-dana') 
-        // atau array. Jika di DB berupa string koma-koma, gunakan explode:
-        
         $userClasses = is_array($user->class) ? $user->class : explode(',', $user->class);
 
-        // Periksa apakah ada irisan (intersect) antara class yang diizinkan dan class user
+        // Jika user memiliki salah satu class yang dibutuhkan, izinkan lewat
         if ($user && !empty(array_intersect($userClasses, $classes))) {
             return $next($request);
         }
 
-        // Jika tidak punya izin, arahkan ke dashboard atau beri error 403
-        return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki akses ke fitur ini.');
+        // 🔀 REDIRECT LOGIC: Jika ditolak, cek class apa yang sedang diminta rute tersebut
+        if (in_array('penulis', $classes)) {
+            return redirect()->route('pendaftaran.penulis');
+        }
+
+        if (in_array('penggalang-dana', $classes)) {
+            return redirect()->route('pendaftaran.penggalang-dana');
+        }
+
+        if (in_array('penyelenggara-acara', $classes)) {
+            return redirect()->route('pendaftaran.penyelenggara-acara');
+        }
+
+        // Fallback jika tidak memenuhi kriteria di atas
+        return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki akses.');
     }
 }

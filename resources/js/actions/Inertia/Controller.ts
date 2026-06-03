@@ -322,6 +322,246 @@ Controller42a740574ecbfbac32f8cc353fc32db9.form = Controller42a740574ecbfbac32f8
 /**
 * @see \Inertia\Controller::__invoke
 * @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penulis'
+*/
+const Controllerc28ff98a1abedae6b846834b62651fdd = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: Controllerc28ff98a1abedae6b846834b62651fdd.url(options),
+    method: 'get',
+})
+
+Controllerc28ff98a1abedae6b846834b62651fdd.definition = {
+    methods: ["get","head"],
+    url: '/pendaftaran/penulis',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penulis'
+*/
+Controllerc28ff98a1abedae6b846834b62651fdd.url = (options?: RouteQueryOptions) => {
+    return Controllerc28ff98a1abedae6b846834b62651fdd.definition.url + queryParams(options)
+}
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penulis'
+*/
+Controllerc28ff98a1abedae6b846834b62651fdd.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: Controllerc28ff98a1abedae6b846834b62651fdd.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penulis'
+*/
+Controllerc28ff98a1abedae6b846834b62651fdd.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: Controllerc28ff98a1abedae6b846834b62651fdd.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penulis'
+*/
+const Controllerc28ff98a1abedae6b846834b62651fddForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllerc28ff98a1abedae6b846834b62651fdd.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penulis'
+*/
+Controllerc28ff98a1abedae6b846834b62651fddForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllerc28ff98a1abedae6b846834b62651fdd.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penulis'
+*/
+Controllerc28ff98a1abedae6b846834b62651fddForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllerc28ff98a1abedae6b846834b62651fdd.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+Controllerc28ff98a1abedae6b846834b62651fdd.form = Controllerc28ff98a1abedae6b846834b62651fddForm
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penggalang-dana'
+*/
+const Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65.url(options),
+    method: 'get',
+})
+
+Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65.definition = {
+    methods: ["get","head"],
+    url: '/pendaftaran/penggalang-dana',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penggalang-dana'
+*/
+Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65.url = (options?: RouteQueryOptions) => {
+    return Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65.definition.url + queryParams(options)
+}
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penggalang-dana'
+*/
+Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penggalang-dana'
+*/
+Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penggalang-dana'
+*/
+const Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penggalang-dana'
+*/
+Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penggalang-dana'
+*/
+Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65.form = Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65Form
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penyelenggara-acara'
+*/
+const Controllerc159247004fc5584428c19c841705317 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: Controllerc159247004fc5584428c19c841705317.url(options),
+    method: 'get',
+})
+
+Controllerc159247004fc5584428c19c841705317.definition = {
+    methods: ["get","head"],
+    url: '/pendaftaran/penyelenggara-acara',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penyelenggara-acara'
+*/
+Controllerc159247004fc5584428c19c841705317.url = (options?: RouteQueryOptions) => {
+    return Controllerc159247004fc5584428c19c841705317.definition.url + queryParams(options)
+}
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penyelenggara-acara'
+*/
+Controllerc159247004fc5584428c19c841705317.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: Controllerc159247004fc5584428c19c841705317.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penyelenggara-acara'
+*/
+Controllerc159247004fc5584428c19c841705317.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: Controllerc159247004fc5584428c19c841705317.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penyelenggara-acara'
+*/
+const Controllerc159247004fc5584428c19c841705317Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllerc159247004fc5584428c19c841705317.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penyelenggara-acara'
+*/
+Controllerc159247004fc5584428c19c841705317Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllerc159247004fc5584428c19c841705317.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/penyelenggara-acara'
+*/
+Controllerc159247004fc5584428c19c841705317Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllerc159247004fc5584428c19c841705317.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+Controllerc159247004fc5584428c19c841705317.form = Controllerc159247004fc5584428c19c841705317Form
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
 * @route '/settings/appearance'
 */
 const Controllere19ee86e9cf603ce1a59a1ec5d21dec5 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -405,6 +645,9 @@ const Controller = {
     '/amal-ibadah': Controller0ae8bd5ae264ec9c75cf771d5afced2f,
     '/halaman-dibangun': Controllera0a232698784441c4a3e6e34ee783364,
     '/dashboard': Controller42a740574ecbfbac32f8cc353fc32db9,
+    '/pendaftaran/penulis': Controllerc28ff98a1abedae6b846834b62651fdd,
+    '/pendaftaran/penggalang-dana': Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65,
+    '/pendaftaran/penyelenggara-acara': Controllerc159247004fc5584428c19c841705317,
     '/settings/appearance': Controllere19ee86e9cf603ce1a59a1ec5d21dec5,
 }
 
