@@ -86,7 +86,7 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
     Route::inertia('/pendaftaran/penggalang-dana', 'Pendaftaran/PenggalangDana')->name('pendaftaran.penggalang-dana');
     Route::inertia('/pendaftaran/penyelenggara-acara', 'Pendaftaran/PenyelenggaraAcara')->name('pendaftaran.penyelenggara-acara');    
     
-    Route::middleware(['admin'])->group(function () {
+    Route::middleware(['admin', 'restrict_owner'])->group(function () {
         
         // Fitur Kelola Kalam (Admin)
         Route::middleware(['auth', 'user_class:penulis'])->group(function () {

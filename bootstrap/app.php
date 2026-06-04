@@ -30,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'is_active'     => \App\Http\Middleware\CheckIsActive::class,
             'user_class' => \App\Http\Middleware\EnsureUserClass::class,
+            'restrict_owner' => \App\Http\Middleware\RestrictDataToOwner::class,
             'admin'         => \App\Http\Middleware\AdminMiddleware::class,
             'control.panel' => \App\Http\Middleware\CanAccessControlPanel::class,
             'super.admin'   => \App\Http\Middleware\SuperAdmin::class,

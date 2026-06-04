@@ -8,6 +8,17 @@ const isSteppingToQuiz = ref(false)
 // State untuk melacak tab/kategori aktif
 const activeTab = ref(1)
 
+defineOptions({
+    layout: {
+        breadcrumbs: [
+            {
+                title: 'Pendaftaran Penyelenggara Acara',
+                href: '/pendaftaran/penyelenggara-acara',
+            },
+        ],
+    },
+});
+
 // Struktur data pertanyaan
 interface Question {
   id: number
@@ -145,7 +156,7 @@ questions.value.forEach(q => {
 })
 
 // Opsi pilihan yang tersedia
-const options = ['Sangat Setuju', 'Setuju', 'Tidak Setuju', 'Sangat Tidak Setuju']
+const options = ['Sangat Tidak Setuju', 'Tidak Setuju', 'Setuju', 'Sangat Setuju']
 
 // 2. Filter pertanyaan per kategori (rentang per 20 soal)
 const filteredQuestions = computed(() => {
@@ -220,7 +231,7 @@ const sendToWhatsApp = () => {
     </button>
   </div>
 
-  <form v-else class="bg-white dark:bg-stone-900 flex flex-col overflow-hidden m-3 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-sm">
+  <form v-else class="flex flex-col overflow-hidden">
     
     <div class="p-6 border-b border-stone-200 dark:border-stone-800 bg-white/95 dark:bg-stone-900/95 sticky top-0 backdrop-blur z-20">
       <h2 class="text-lg font-bold text-amber-600 dark:text-amber-500 mb-4">Standardisasi Manajemen & Akuntabilitas Event</h2>
@@ -260,31 +271,61 @@ const sendToWhatsApp = () => {
           {{ q.text }}
         </div>
 
-        <div class="flex flex-col gap-2">
-          <div class="flex items-center gap-6 px-1">
+        <!-- Opsi Radio Kustom (Inline Toggle Icon) -->
+        <div class="flex flex-col gap-3">
+          <!-- Container Toggle -->
+          <div class="flex items-center p-1 bg-stone-100 dark:bg-stone-800 rounded-xl w-fit gap-1 border border-stone-200 dark:border-stone-700/50 shadow-inner">
             <label 
               v-for="opt in options" 
               :key="opt" 
-              class="cursor-pointer flex items-center justify-center"
+              class="cursor-pointer flex items-center justify-center py-2 px-5 rounded-lg transition-all duration-300"
+              :class="[
+                answers[q.id].choice === opt 
+                  ? (opt === 'Sangat Tidak Setuju' ? 'bg-red-500 text-white shadow-md shadow-red-500/20' :
+                    opt === 'Tidak Setuju' ? 'bg-amber-500 text-white shadow-md shadow-amber-500/20' :
+                    opt === 'Setuju' ? 'bg-indigo-500 text-white shadow-md shadow-indigo-500/20' :
+                    'bg-emerald-500 text-white shadow-md shadow-emerald-500/20')
+                  : 'text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300 hover:bg-white dark:hover:bg-stone-700/50'
+              ]"
               :title="opt"
             >
+              <!-- Hidden Native Radio Input -->
               <input
                 type="radio"
-                :name="'event-q-' + q.id"
+                :name="'q-' + q.id"
                 :value="opt"
                 v-model="answers[q.id].choice"
-                class="w-5 h-5 bg-white border-stone-300 dark:border-stone-700 dark:bg-stone-800 text-amber-500 focus:ring-amber-500/30 cursor-pointer transition-all hover:scale-110"
+                class="hidden"
               />
+              
+              <!-- 1. Ikon Silang (Sangat Tidak Setuju) -->
+              <svg v-if="opt === 'Sangat Tidak Setuju'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 transition-transform" :class="{'scale-110': answers[q.id].choice === opt}"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              
+              <!-- 2. Ikon Unlike (Tidak Setuju) -->
+              <svg v-else-if="opt === 'Tidak Setuju'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" :fill="answers[q.id].choice === opt ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 transition-transform" :class="{'scale-110': answers[q.id].choice === opt}"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22h0a3.13 3.13 0 0 1-3-3.88Z"/></svg>
+              
+              <!-- 3. Ikon Like (Setuju) -->
+              <svg v-else-if="opt === 'Setuju'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" :fill="answers[q.id].choice === opt ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 transition-transform" :class="{'scale-110': answers[q.id].choice === opt}"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+              
+              <!-- 4. Ikon Love (Sangat Setuju) -->
+              <svg v-else-if="opt === 'Sangat Setuju'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" :fill="answers[q.id].choice === opt ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 transition-transform" :class="{'scale-110': answers[q.id].choice === opt}"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
             </label>
           </div>
           
+          <!-- Teks Indikator Pilihan Bawah -->
           <div 
-            class="text-sm font-semibold mt-1" 
-            :class="answers[q.id].choice ? 'text-amber-600 dark:text-amber-500' : 'text-stone-400 dark:text-stone-500'"
+            class="text-sm font-bold ml-1 transition-colors" 
+            :class="[
+              answers[q.id].choice === 'Sangat Tidak Setuju' ? 'text-red-500' :
+              answers[q.id].choice === 'Tidak Setuju' ? 'text-amber-500' :
+              answers[q.id].choice === 'Setuju' ? 'text-indigo-500' :
+              answers[q.id].choice === 'Sangat Setuju' ? 'text-emerald-500' :
+              'text-stone-400 dark:text-stone-500'
+            ]"
           >
-            {{ answers[q.id].choice || 'Pilih jawaban' }}
+            {{ answers[q.id].choice || 'Pilih jawaban Anda' }}
           </div>
-        </div>
+        </div>       
 
         <div class="relative">
           <textarea
