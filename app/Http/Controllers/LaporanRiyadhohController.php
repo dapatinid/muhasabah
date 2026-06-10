@@ -127,6 +127,14 @@ public function updateLog(Request $request, $id)
     return back()->with('success', 'Data berhasil diperbarui');
 }
 
+// Hapus data laporan
+public function deleteLog($id)
+{
+    $entry = LaporanRiyadhoh::findOrFail($id);
+    $entry->delete();   
+    return back()->with('success', 'Data berhasil dihapus');
+}
+
 public function raporRiyadhoh(Request $request)
 {
     $noWa = $request->input('no_wa');

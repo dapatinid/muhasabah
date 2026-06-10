@@ -157,6 +157,7 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
                 // Riyadhoh
                 Route::get('/log-riyadhoh', [LaporanRiyadhohController::class, 'logRiyadhoh'])->name('log-riyadhoh');
                 Route::patch('/log-riyadhoh/{id}', [LaporanRiyadhohController::class, 'updateLog'])->name('log-riyadhoh.update');
+                Route::delete('/log-riyadhoh/{id}', [LaporanRiyadhohController::class, 'deleteLog'])->name('log-riyadhoh.destroy');
                 Route::get('/rapor-riyadhoh', [LaporanRiyadhohController::class, 'raporRiyadhoh'])->name('rapor-riyadhoh');        
             });
         });

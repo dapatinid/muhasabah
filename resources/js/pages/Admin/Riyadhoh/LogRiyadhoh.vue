@@ -263,19 +263,6 @@ const editForm = useForm({
     value: '' as any,
 });
 
-function handleDoubleClick(entry: LogEntry, columnKey: string, label: string) {
-    editingCell.value = {
-        id: entry.id,
-        nama: entry.nama,
-        label: label,
-        column: columnKey,
-        value: (entry as any)[columnKey]
-    };
-    
-    editForm.column = columnKey;
-    editForm.value = (entry as any)[columnKey];
-    isEditDialogOpen.value = true;
-}
 
 function submitUpdate() {
     editForm.patch(`/log-riyadhoh/${editingCell.value?.id}`, {
@@ -285,6 +272,49 @@ function submitUpdate() {
             editingCell.value = null;
         },
     });
+}
+
+// Tambahkan state untuk fitur Hapus
+const isDeleteDialogOpen = ref(false);
+const deletingEntry = ref<LogEntry | null>(null);
+
+function confirmDelete(entry: LogEntry) {
+    deletingEntry.value = entry;
+    isDeleteDialogOpen.value = true;
+}
+
+function submitDelete() {
+    if (!deletingEntry.value) return;
+    
+    router.delete(`/log-riyadhoh/${deletingEntry.value.id}`, {
+        preserveScroll: true,
+        onSuccess: () => {
+            isDeleteDialogOpen.value = false;
+            deletingEntry.value = null;
+        },
+    });
+}
+
+// Perbarui fungsi handleDoubleClick yang sudah ada
+function handleDoubleClick(entry: LogEntry, columnKey: string, label: string) {
+    let val = (entry as any)[columnKey];
+    
+    // Perbaikan: Potong string waktu jika kolom yang diklik adalah 'tanggal'
+    if (columnKey === 'tanggal' && typeof val === 'string') {
+        val = val.split('T')[0]; // Mengubah "2026-06-07T17:00:00..." menjadi "2026-06-07"
+    }
+
+    editingCell.value = {
+        id: entry.id,
+        nama: entry.nama,
+        label: label,
+        column: columnKey,
+        value: val
+    };
+    
+    editForm.column = columnKey;
+    editForm.value = val;
+    isEditDialogOpen.value = true;
 }
 </script>
 
@@ -392,7 +422,9 @@ function submitUpdate() {
                                 :key="entry.id"
                                 class="border-b border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors"
                             >
-                                <td class="px-4 py-3 text-zinc-400 dark:text-zinc-600 text-xs">
+                                <td class="px-4 py-3 text-zinc-400 dark:text-zinc-600 text-xs cursor-pointer hover:text-red-500 transition-colors"
+                                    @dblclick="confirmDelete(entry)"
+                                    title="Klik ganda untuk hapus baris ini">
                                     {{ (((pagination?.current_page ?? 1) - 1) * (pagination?.per_page ?? 50)) + index + 1 }}
                                 </td>
                                 <td class="px-4 py-3 font-medium text-zinc-800 dark:text-zinc-100 whitespace-nowrap"
@@ -555,7 +587,15 @@ function submitUpdate() {
                         autofocus
                         placeholder="Masukkan angka..."
                     />
-                    
+
+                    <Input 
+                        v-else-if="editingCell?.column === 'tanggal'"
+                        type="date"
+                        v-model="editForm.value"
+                        class="w-full"
+                        autofocus
+                    />
+
                     <Input 
                         v-else
                         type="text"
@@ -579,6 +619,26 @@ function submitUpdate() {
                     </Button>
                 </DialogFooter>
             </form>            
+        </DialogContent>
+    </Dialog>    
+
+    <Dialog :open="isDeleteDialogOpen" @update:open="isDeleteDialogOpen = $event">
+        <DialogContent class="sm:max-w-[425px]">
+            <DialogHeader>
+                <DialogTitle>Konfirmasi Hapus Data</DialogTitle>
+                <DialogDescription>
+                    Apakah Anda yakin ingin menghapus data milik <strong>{{ deletingEntry?.nama }}</strong> pada tanggal <strong>{{ deletingEntry ? formatTanggal(deletingEntry.tanggal) : '' }}</strong>? Aksi ini tidak dapat dibatalkan.
+                </DialogDescription>
+            </DialogHeader>
+
+            <DialogFooter class="gap-2 pt-2">
+                <Button type="button" variant="outline" @click="isDeleteDialogOpen = false">
+                    Batal
+                </Button>
+                <Button type="button" variant="destructive" @click="submitDelete">
+                    Ya, Hapus
+                </Button>
+            </DialogFooter>
         </DialogContent>
     </Dialog>    
 </template>

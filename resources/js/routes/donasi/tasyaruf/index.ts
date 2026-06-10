@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/DonasiController.php:308
 * @route '/admin/donasi/{donasi}/tasyaruf'
 */
-export const store = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const store = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
 })
@@ -19,7 +19,7 @@ store.definition = {
 * @see app/Http/Controllers/DonasiController.php:308
 * @route '/admin/donasi/{donasi}/tasyaruf'
 */
-store.url = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
+store.url = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { donasi: args }
     }
@@ -52,7 +52,7 @@ store.url = (args: { donasi: string | { slug: string } } | [donasi: string | { s
 * @see app/Http/Controllers/DonasiController.php:308
 * @route '/admin/donasi/{donasi}/tasyaruf'
 */
-store.post = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+store.post = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
 })
@@ -62,7 +62,7 @@ store.post = (args: { donasi: string | { slug: string } } | [donasi: string | { 
 * @see app/Http/Controllers/DonasiController.php:308
 * @route '/admin/donasi/{donasi}/tasyaruf'
 */
-const storeForm = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const storeForm = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: store.url(args, options),
     method: 'post',
 })
@@ -72,7 +72,7 @@ const storeForm = (args: { donasi: string | { slug: string } } | [donasi: string
 * @see app/Http/Controllers/DonasiController.php:308
 * @route '/admin/donasi/{donasi}/tasyaruf'
 */
-storeForm.post = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+storeForm.post = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: store.url(args, options),
     method: 'post',
 })
