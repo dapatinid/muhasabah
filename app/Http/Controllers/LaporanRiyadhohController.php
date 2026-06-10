@@ -63,7 +63,7 @@ public function logRiyadhoh(Request $request)
 $model = new LaporanRiyadhoh();
     
     dd([
-        'Status Soft Delete' => $model->hasGlobalScope(\Illuminate\Database\Eloquent\SoftDeletingScope::class) ? 'AKTIF' : 'MATI',
+        'Status Soft Delete' => $model->hasGlobalScope(\Illuminate\Database\Eloquent\SoftDeletingScope::class) ? 'AKTIF' : 'TIDAK AKTIF',
         'Lokasi File Asli' => (new \ReflectionClass($model))->getFileName()
     ]);
     
