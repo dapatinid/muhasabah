@@ -299,9 +299,17 @@ function submitDelete() {
 function handleDoubleClick(entry: LogEntry, columnKey: string, label: string) {
     let val = (entry as any)[columnKey];
     
-    // Perbaikan: Potong string waktu jika kolom yang diklik adalah 'tanggal'
-    if (columnKey === 'tanggal' && typeof val === 'string') {
-        val = val.split('T')[0]; // Mengubah "2026-06-07T17:00:00..." menjadi "2026-06-07"
+    // PERBAIKAN: Konversi ke waktu lokal sebelum diformat ke input tanggal
+    if (columnKey === 'tanggal' && val) {
+        const dateObj = new Date(val);
+        // Pastikan konversi tanggal valid
+        if (!isNaN(dateObj.getTime())) {
+            const year = dateObj.getFullYear();
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            
+            val = `${year}-${month}-${day}`; // Hasilnya akan pas sesuai waktu lokal komputer (2026-06-08)
+        }
     }
 
     editingCell.value = {
