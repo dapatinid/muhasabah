@@ -60,6 +60,7 @@ class LaporanRiyadhohController extends Controller
 
 public function logRiyadhoh(Request $request)
 {
+    dd(LaporanRiyadhoh::query()->toSql());
     $query = LaporanRiyadhoh::query();
 
     if ($search = $request->input('search')) {
