@@ -7,7 +7,7 @@ import tasyaruf from './tasyaruf'
 * @see app/Http/Controllers/AcaraController.php:545
 * @route '/acara/{acara}/payment'
 */
-export const payment = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const payment = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: payment.url(args, options),
     method: 'get',
 })
@@ -22,7 +22,7 @@ payment.definition = {
 * @see app/Http/Controllers/AcaraController.php:545
 * @route '/acara/{acara}/payment'
 */
-payment.url = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+payment.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { acara: args }
     }
@@ -55,7 +55,7 @@ payment.url = (args: { acara: string | number | { slug: string | number } } | [a
 * @see app/Http/Controllers/AcaraController.php:545
 * @route '/acara/{acara}/payment'
 */
-payment.get = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+payment.get = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: payment.url(args, options),
     method: 'get',
 })
@@ -65,7 +65,7 @@ payment.get = (args: { acara: string | number | { slug: string | number } } | [a
 * @see app/Http/Controllers/AcaraController.php:545
 * @route '/acara/{acara}/payment'
 */
-payment.head = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+payment.head = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: payment.url(args, options),
     method: 'head',
 })
@@ -75,7 +75,7 @@ payment.head = (args: { acara: string | number | { slug: string | number } } | [
 * @see app/Http/Controllers/AcaraController.php:545
 * @route '/acara/{acara}/payment'
 */
-const paymentForm = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const paymentForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: payment.url(args, options),
     method: 'get',
 })
@@ -85,7 +85,7 @@ const paymentForm = (args: { acara: string | number | { slug: string | number } 
 * @see app/Http/Controllers/AcaraController.php:545
 * @route '/acara/{acara}/payment'
 */
-paymentForm.get = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+paymentForm.get = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: payment.url(args, options),
     method: 'get',
 })
@@ -95,7 +95,7 @@ paymentForm.get = (args: { acara: string | number | { slug: string | number } } 
 * @see app/Http/Controllers/AcaraController.php:545
 * @route '/acara/{acara}/payment'
 */
-paymentForm.head = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+paymentForm.head = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: payment.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -112,7 +112,7 @@ payment.form = paymentForm
 * @see app/Http/Controllers/AcaraController.php:491
 * @route '/acara/{acara}/komentar'
 */
-export const storeKomentar = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const storeKomentar = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: storeKomentar.url(args, options),
     method: 'post',
 })
@@ -127,7 +127,7 @@ storeKomentar.definition = {
 * @see app/Http/Controllers/AcaraController.php:491
 * @route '/acara/{acara}/komentar'
 */
-storeKomentar.url = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+storeKomentar.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { acara: args }
     }
@@ -160,7 +160,7 @@ storeKomentar.url = (args: { acara: string | number | { slug: string | number } 
 * @see app/Http/Controllers/AcaraController.php:491
 * @route '/acara/{acara}/komentar'
 */
-storeKomentar.post = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+storeKomentar.post = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: storeKomentar.url(args, options),
     method: 'post',
 })
@@ -170,7 +170,7 @@ storeKomentar.post = (args: { acara: string | number | { slug: string | number }
 * @see app/Http/Controllers/AcaraController.php:491
 * @route '/acara/{acara}/komentar'
 */
-const storeKomentarForm = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const storeKomentarForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: storeKomentar.url(args, options),
     method: 'post',
 })
@@ -180,7 +180,7 @@ const storeKomentarForm = (args: { acara: string | number | { slug: string | num
 * @see app/Http/Controllers/AcaraController.php:491
 * @route '/acara/{acara}/komentar'
 */
-storeKomentarForm.post = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+storeKomentarForm.post = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: storeKomentar.url(args, options),
     method: 'post',
 })
@@ -192,7 +192,7 @@ storeKomentar.form = storeKomentarForm
 * @see app/Http/Controllers/AcaraController.php:518
 * @route '/acara/{acara}/reaksi'
 */
-export const storeReaksi = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const storeReaksi = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: storeReaksi.url(args, options),
     method: 'post',
 })
@@ -207,7 +207,7 @@ storeReaksi.definition = {
 * @see app/Http/Controllers/AcaraController.php:518
 * @route '/acara/{acara}/reaksi'
 */
-storeReaksi.url = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+storeReaksi.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { acara: args }
     }
@@ -240,7 +240,7 @@ storeReaksi.url = (args: { acara: string | number | { slug: string | number } } 
 * @see app/Http/Controllers/AcaraController.php:518
 * @route '/acara/{acara}/reaksi'
 */
-storeReaksi.post = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+storeReaksi.post = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: storeReaksi.url(args, options),
     method: 'post',
 })
@@ -250,7 +250,7 @@ storeReaksi.post = (args: { acara: string | number | { slug: string | number } }
 * @see app/Http/Controllers/AcaraController.php:518
 * @route '/acara/{acara}/reaksi'
 */
-const storeReaksiForm = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const storeReaksiForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: storeReaksi.url(args, options),
     method: 'post',
 })
@@ -260,7 +260,7 @@ const storeReaksiForm = (args: { acara: string | number | { slug: string | numbe
 * @see app/Http/Controllers/AcaraController.php:518
 * @route '/acara/{acara}/reaksi'
 */
-storeReaksiForm.post = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+storeReaksiForm.post = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: storeReaksi.url(args, options),
     method: 'post',
 })
@@ -490,7 +490,7 @@ store.form = storeForm
 * @see app/Http/Controllers/AcaraController.php:125
 * @route '/admin/acara/{acara}/edit'
 */
-export const edit = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -505,7 +505,7 @@ edit.definition = {
 * @see app/Http/Controllers/AcaraController.php:125
 * @route '/admin/acara/{acara}/edit'
 */
-edit.url = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { acara: args }
     }
@@ -538,7 +538,7 @@ edit.url = (args: { acara: string | number | { slug: string | number } } | [acar
 * @see app/Http/Controllers/AcaraController.php:125
 * @route '/admin/acara/{acara}/edit'
 */
-edit.get = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -548,7 +548,7 @@ edit.get = (args: { acara: string | number | { slug: string | number } } | [acar
 * @see app/Http/Controllers/AcaraController.php:125
 * @route '/admin/acara/{acara}/edit'
 */
-edit.head = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -558,7 +558,7 @@ edit.head = (args: { acara: string | number | { slug: string | number } } | [aca
 * @see app/Http/Controllers/AcaraController.php:125
 * @route '/admin/acara/{acara}/edit'
 */
-const editForm = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const editForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -568,7 +568,7 @@ const editForm = (args: { acara: string | number | { slug: string | number } } |
 * @see app/Http/Controllers/AcaraController.php:125
 * @route '/admin/acara/{acara}/edit'
 */
-editForm.get = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.get = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -578,7 +578,7 @@ editForm.get = (args: { acara: string | number | { slug: string | number } } | [
 * @see app/Http/Controllers/AcaraController.php:125
 * @route '/admin/acara/{acara}/edit'
 */
-editForm.head = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.head = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -595,7 +595,7 @@ edit.form = editForm
 * @see app/Http/Controllers/AcaraController.php:142
 * @route '/admin/acara/{acara}'
 */
-export const update = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -610,7 +610,7 @@ update.definition = {
 * @see app/Http/Controllers/AcaraController.php:142
 * @route '/admin/acara/{acara}'
 */
-update.url = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { acara: args }
     }
@@ -643,7 +643,7 @@ update.url = (args: { acara: string | number | { slug: string | number } } | [ac
 * @see app/Http/Controllers/AcaraController.php:142
 * @route '/admin/acara/{acara}'
 */
-update.put = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -653,7 +653,7 @@ update.put = (args: { acara: string | number | { slug: string | number } } | [ac
 * @see app/Http/Controllers/AcaraController.php:142
 * @route '/admin/acara/{acara}'
 */
-const updateForm = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PUT',
@@ -668,7 +668,7 @@ const updateForm = (args: { acara: string | number | { slug: string | number } }
 * @see app/Http/Controllers/AcaraController.php:142
 * @route '/admin/acara/{acara}'
 */
-updateForm.put = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.put = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PUT',
@@ -685,7 +685,7 @@ update.form = updateForm
 * @see app/Http/Controllers/AcaraController.php:194
 * @route '/admin/acara/{acara}/progress'
 */
-export const progress = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const progress = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: progress.url(args, options),
     method: 'get',
 })
@@ -700,7 +700,7 @@ progress.definition = {
 * @see app/Http/Controllers/AcaraController.php:194
 * @route '/admin/acara/{acara}/progress'
 */
-progress.url = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+progress.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { acara: args }
     }
@@ -733,7 +733,7 @@ progress.url = (args: { acara: string | number | { slug: string | number } } | [
 * @see app/Http/Controllers/AcaraController.php:194
 * @route '/admin/acara/{acara}/progress'
 */
-progress.get = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+progress.get = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: progress.url(args, options),
     method: 'get',
 })
@@ -743,7 +743,7 @@ progress.get = (args: { acara: string | number | { slug: string | number } } | [
 * @see app/Http/Controllers/AcaraController.php:194
 * @route '/admin/acara/{acara}/progress'
 */
-progress.head = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+progress.head = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: progress.url(args, options),
     method: 'head',
 })
@@ -753,7 +753,7 @@ progress.head = (args: { acara: string | number | { slug: string | number } } | 
 * @see app/Http/Controllers/AcaraController.php:194
 * @route '/admin/acara/{acara}/progress'
 */
-const progressForm = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const progressForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: progress.url(args, options),
     method: 'get',
 })
@@ -763,7 +763,7 @@ const progressForm = (args: { acara: string | number | { slug: string | number }
 * @see app/Http/Controllers/AcaraController.php:194
 * @route '/admin/acara/{acara}/progress'
 */
-progressForm.get = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+progressForm.get = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: progress.url(args, options),
     method: 'get',
 })
@@ -773,7 +773,7 @@ progressForm.get = (args: { acara: string | number | { slug: string | number } }
 * @see app/Http/Controllers/AcaraController.php:194
 * @route '/admin/acara/{acara}/progress'
 */
-progressForm.head = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+progressForm.head = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: progress.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -790,7 +790,7 @@ progress.form = progressForm
 * @see app/Http/Controllers/AcaraController.php:219
 * @route '/admin/acara/{acara}/reaksi'
 */
-export const reaksi = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const reaksi = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: reaksi.url(args, options),
     method: 'get',
 })
@@ -805,7 +805,7 @@ reaksi.definition = {
 * @see app/Http/Controllers/AcaraController.php:219
 * @route '/admin/acara/{acara}/reaksi'
 */
-reaksi.url = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+reaksi.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { acara: args }
     }
@@ -838,7 +838,7 @@ reaksi.url = (args: { acara: string | number | { slug: string | number } } | [ac
 * @see app/Http/Controllers/AcaraController.php:219
 * @route '/admin/acara/{acara}/reaksi'
 */
-reaksi.get = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+reaksi.get = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: reaksi.url(args, options),
     method: 'get',
 })
@@ -848,7 +848,7 @@ reaksi.get = (args: { acara: string | number | { slug: string | number } } | [ac
 * @see app/Http/Controllers/AcaraController.php:219
 * @route '/admin/acara/{acara}/reaksi'
 */
-reaksi.head = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+reaksi.head = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: reaksi.url(args, options),
     method: 'head',
 })
@@ -858,7 +858,7 @@ reaksi.head = (args: { acara: string | number | { slug: string | number } } | [a
 * @see app/Http/Controllers/AcaraController.php:219
 * @route '/admin/acara/{acara}/reaksi'
 */
-const reaksiForm = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const reaksiForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: reaksi.url(args, options),
     method: 'get',
 })
@@ -868,7 +868,7 @@ const reaksiForm = (args: { acara: string | number | { slug: string | number } }
 * @see app/Http/Controllers/AcaraController.php:219
 * @route '/admin/acara/{acara}/reaksi'
 */
-reaksiForm.get = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+reaksiForm.get = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: reaksi.url(args, options),
     method: 'get',
 })
@@ -878,7 +878,7 @@ reaksiForm.get = (args: { acara: string | number | { slug: string | number } } |
 * @see app/Http/Controllers/AcaraController.php:219
 * @route '/admin/acara/{acara}/reaksi'
 */
-reaksiForm.head = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+reaksiForm.head = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: reaksi.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -895,7 +895,7 @@ reaksi.form = reaksiForm
 * @see app/Http/Controllers/AcaraController.php:242
 * @route '/admin/acara/{acara}/komentar'
 */
-export const komentar = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const komentar = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: komentar.url(args, options),
     method: 'get',
 })
@@ -910,7 +910,7 @@ komentar.definition = {
 * @see app/Http/Controllers/AcaraController.php:242
 * @route '/admin/acara/{acara}/komentar'
 */
-komentar.url = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+komentar.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { acara: args }
     }
@@ -943,7 +943,7 @@ komentar.url = (args: { acara: string | number | { slug: string | number } } | [
 * @see app/Http/Controllers/AcaraController.php:242
 * @route '/admin/acara/{acara}/komentar'
 */
-komentar.get = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+komentar.get = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: komentar.url(args, options),
     method: 'get',
 })
@@ -953,7 +953,7 @@ komentar.get = (args: { acara: string | number | { slug: string | number } } | [
 * @see app/Http/Controllers/AcaraController.php:242
 * @route '/admin/acara/{acara}/komentar'
 */
-komentar.head = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+komentar.head = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: komentar.url(args, options),
     method: 'head',
 })
@@ -963,7 +963,7 @@ komentar.head = (args: { acara: string | number | { slug: string | number } } | 
 * @see app/Http/Controllers/AcaraController.php:242
 * @route '/admin/acara/{acara}/komentar'
 */
-const komentarForm = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const komentarForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: komentar.url(args, options),
     method: 'get',
 })
@@ -973,7 +973,7 @@ const komentarForm = (args: { acara: string | number | { slug: string | number }
 * @see app/Http/Controllers/AcaraController.php:242
 * @route '/admin/acara/{acara}/komentar'
 */
-komentarForm.get = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+komentarForm.get = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: komentar.url(args, options),
     method: 'get',
 })
@@ -983,7 +983,7 @@ komentarForm.get = (args: { acara: string | number | { slug: string | number } }
 * @see app/Http/Controllers/AcaraController.php:242
 * @route '/admin/acara/{acara}/komentar'
 */
-komentarForm.head = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+komentarForm.head = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: komentar.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -1000,7 +1000,7 @@ komentar.form = komentarForm
 * @see app/Http/Controllers/AcaraController.php:274
 * @route '/admin/acara/{acara}/keuangan'
 */
-export const keuangan = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const keuangan = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: keuangan.url(args, options),
     method: 'get',
 })
@@ -1015,7 +1015,7 @@ keuangan.definition = {
 * @see app/Http/Controllers/AcaraController.php:274
 * @route '/admin/acara/{acara}/keuangan'
 */
-keuangan.url = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+keuangan.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { acara: args }
     }
@@ -1048,7 +1048,7 @@ keuangan.url = (args: { acara: string | number | { slug: string | number } } | [
 * @see app/Http/Controllers/AcaraController.php:274
 * @route '/admin/acara/{acara}/keuangan'
 */
-keuangan.get = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+keuangan.get = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: keuangan.url(args, options),
     method: 'get',
 })
@@ -1058,7 +1058,7 @@ keuangan.get = (args: { acara: string | number | { slug: string | number } } | [
 * @see app/Http/Controllers/AcaraController.php:274
 * @route '/admin/acara/{acara}/keuangan'
 */
-keuangan.head = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+keuangan.head = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: keuangan.url(args, options),
     method: 'head',
 })
@@ -1068,7 +1068,7 @@ keuangan.head = (args: { acara: string | number | { slug: string | number } } | 
 * @see app/Http/Controllers/AcaraController.php:274
 * @route '/admin/acara/{acara}/keuangan'
 */
-const keuanganForm = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const keuanganForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: keuangan.url(args, options),
     method: 'get',
 })
@@ -1078,7 +1078,7 @@ const keuanganForm = (args: { acara: string | number | { slug: string | number }
 * @see app/Http/Controllers/AcaraController.php:274
 * @route '/admin/acara/{acara}/keuangan'
 */
-keuanganForm.get = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+keuanganForm.get = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: keuangan.url(args, options),
     method: 'get',
 })
@@ -1088,7 +1088,7 @@ keuanganForm.get = (args: { acara: string | number | { slug: string | number } }
 * @see app/Http/Controllers/AcaraController.php:274
 * @route '/admin/acara/{acara}/keuangan'
 */
-keuanganForm.head = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+keuanganForm.head = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: keuangan.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -1105,7 +1105,7 @@ keuangan.form = keuanganForm
 * @see app/Http/Controllers/AcaraController.php:539
 * @route '/admin/acara/{acara}'
 */
-export const destroy = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -1120,7 +1120,7 @@ destroy.definition = {
 * @see app/Http/Controllers/AcaraController.php:539
 * @route '/admin/acara/{acara}'
 */
-destroy.url = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { acara: args }
     }
@@ -1153,7 +1153,7 @@ destroy.url = (args: { acara: string | number | { slug: string | number } } | [a
 * @see app/Http/Controllers/AcaraController.php:539
 * @route '/admin/acara/{acara}'
 */
-destroy.delete = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -1163,7 +1163,7 @@ destroy.delete = (args: { acara: string | number | { slug: string | number } } |
 * @see app/Http/Controllers/AcaraController.php:539
 * @route '/admin/acara/{acara}'
 */
-const destroyForm = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -1178,7 +1178,7 @@ const destroyForm = (args: { acara: string | number | { slug: string | number } 
 * @see app/Http/Controllers/AcaraController.php:539
 * @route '/admin/acara/{acara}'
 */
-destroyForm.delete = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -1195,7 +1195,7 @@ destroy.form = destroyForm
 * @see app/Http/Controllers/AcaraController.php:459
 * @route '/acara/{acara}'
 */
-export const show = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -1210,7 +1210,7 @@ show.definition = {
 * @see app/Http/Controllers/AcaraController.php:459
 * @route '/acara/{acara}'
 */
-show.url = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+show.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { acara: args }
     }
@@ -1243,7 +1243,7 @@ show.url = (args: { acara: string | number | { slug: string | number } } | [acar
 * @see app/Http/Controllers/AcaraController.php:459
 * @route '/acara/{acara}'
 */
-show.get = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -1253,7 +1253,7 @@ show.get = (args: { acara: string | number | { slug: string | number } } | [acar
 * @see app/Http/Controllers/AcaraController.php:459
 * @route '/acara/{acara}'
 */
-show.head = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -1263,7 +1263,7 @@ show.head = (args: { acara: string | number | { slug: string | number } } | [aca
 * @see app/Http/Controllers/AcaraController.php:459
 * @route '/acara/{acara}'
 */
-const showForm = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const showForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -1273,7 +1273,7 @@ const showForm = (args: { acara: string | number | { slug: string | number } } |
 * @see app/Http/Controllers/AcaraController.php:459
 * @route '/acara/{acara}'
 */
-showForm.get = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.get = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -1283,7 +1283,7 @@ showForm.get = (args: { acara: string | number | { slug: string | number } } | [
 * @see app/Http/Controllers/AcaraController.php:459
 * @route '/acara/{acara}'
 */
-showForm.head = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.head = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

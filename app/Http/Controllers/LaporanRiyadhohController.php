@@ -60,7 +60,13 @@ class LaporanRiyadhohController extends Controller
 
 public function logRiyadhoh(Request $request)
 {
-    dd(LaporanRiyadhoh::query()->toSql());
+$model = new LaporanRiyadhoh();
+    
+    dd([
+        'Status Soft Delete' => $model->hasGlobalScope(\Illuminate\Database\Eloquent\SoftDeletingScope::class) ? 'AKTIF' : 'MATI',
+        'Lokasi File Asli' => (new \ReflectionClass($model))->getFileName()
+    ]);
+    
     $query = LaporanRiyadhoh::query();
 
     if ($search = $request->input('search')) {
