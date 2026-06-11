@@ -217,9 +217,9 @@ function getJumlahDonatur(donasi: any): number {
 }
 
 const categories = [
-  { name: 'Tulis Kalam', icon: '📋', link: 'halaman-dibangun', color: 'bg-amber-500/30 text-amber-400' },
-  { name: 'Galang Dana ',   icon: '💰', link: 'halaman-dibangun', color: 'bg-rose-500/40 text-rose-400' },
-  { name: 'Buat Acara',  icon: '🗓️', link: 'halaman-dibangun', color: 'bg-emerald-500/30 text-emerald-400' },
+  { name: 'Tulis Kalam', icon: '📋', link: '/admin/kalam/create', color: 'bg-amber-500/30 text-amber-400' },
+  { name: 'Galang Dana ',   icon: '💰', link: '/admin/donasi/create', color: 'bg-rose-500/40 text-rose-400' },
+  { name: 'Buat Acara',  icon: '🗓️', link: '/admin/acara/create', color: 'bg-emerald-500/30 text-emerald-400' },
   { name: 'Riyadhoh', icon: '🎖️', link: '/laporan-riyadhoh', color: 'bg-blue-500/30 text-blue-400' },
 ]
 

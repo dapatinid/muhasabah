@@ -2,6 +2,87 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 /**
 * @see \Inertia\Controller::__invoke
 * @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/relawan-donatur'
+*/
+export const relawanDonatur = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: relawanDonatur.url(options),
+    method: 'get',
+})
+
+relawanDonatur.definition = {
+    methods: ["get","head"],
+    url: '/pendaftaran/relawan-donatur',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/relawan-donatur'
+*/
+relawanDonatur.url = (options?: RouteQueryOptions) => {
+    return relawanDonatur.definition.url + queryParams(options)
+}
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/relawan-donatur'
+*/
+relawanDonatur.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: relawanDonatur.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/relawan-donatur'
+*/
+relawanDonatur.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: relawanDonatur.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/relawan-donatur'
+*/
+const relawanDonaturForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: relawanDonatur.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/relawan-donatur'
+*/
+relawanDonaturForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: relawanDonatur.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/relawan-donatur'
+*/
+relawanDonaturForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: relawanDonatur.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+relawanDonatur.form = relawanDonaturForm
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
 * @route '/pendaftaran/penulis'
 */
 export const penulis = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -243,6 +324,7 @@ penyelenggaraAcaraForm.head = (options?: RouteQueryOptions): RouteFormDefinition
 penyelenggaraAcara.form = penyelenggaraAcaraForm
 
 const pendaftaran = {
+    relawanDonatur: Object.assign(relawanDonatur, relawanDonatur),
     penulis: Object.assign(penulis, penulis),
     penggalangDana: Object.assign(penggalangDana, penggalangDana),
     penyelenggaraAcara: Object.assign(penyelenggaraAcara, penyelenggaraAcara),

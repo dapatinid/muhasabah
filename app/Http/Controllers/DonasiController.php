@@ -748,25 +748,44 @@ class DonasiController extends Controller
             return back()->with('info', $payment->link);
         }
 
-        $infaqPasangan = Payment::where('mutation_type', 'infaq_sistem')
-            ->where('created_at', $payment->created_at)
-            ->where('atas_nama', $payment->atas_nama)
-            ->where('paymentable_id', $payment->paymentable_id)
-            ->first();
+        // 1. Cari infaq pasangan (Hanya berlaku jika berasal dari donasi_utama)
+        $infaqPasangan = null;
+        if ($payment->mutation_type === 'donasi_utama') {
+            $infaqPasangan = Payment::where('mutation_type', 'infaq_sistem')
+                ->where('paymentable_type', $payment->paymentable_type)
+                ->where('paymentable_id', $payment->paymentable_id)
+                ->where('created_at', $payment->created_at)
+                ->where('atas_nama', $payment->atas_nama)
+                ->first();
+        }
 
         $totalAmount = (int) $payment->nominal;
         if ($infaqPasangan) {
             $totalAmount += (int) $infaqPasangan->nominal;
         }
 
+        // 2. Tentukan Redirect URL & Deskripsi secara Dinamis berdasarkan Model Asal
+        $redirectUrl = url('/');
+        $description = $payment->notes ?? '-';
+
+        if ($payment->paymentable_type === 'App\Models\Donasi') {
+            $redirectUrl = url('/donasi/' . $payment->paymentable->slug . '?tab=laporan');
+            $description = 'REF-' . $payment->id . ' | Donasi: ' . ($payment->notes ?? '-');
+        } elseif ($payment->paymentable_type === 'App\Models\Acara') {
+            // Jika tipe mutasi adalah tiket masuk ke tab 'pendaftaran', jika sponsor masuk ke 'donatur'
+            $tabName = ($payment->mutation_type === 'tiket') ? 'pendaftaran' : 'donatur';
+            $redirectUrl = url('/acara/' . $payment->paymentable->slug . '?tab=' . $tabName);
+            $description = 'REF-' . $payment->id . ' | ' . ($payment->mutation_type === 'tiket' ? 'Tiket' : 'Sponsor') . ' Acara: ' . ($payment->notes ?? '-');
+        }
+
         $payload = [
             'name'         => $payment->atas_nama ?? 'Hamba Allah',
             'email'        => 'donatur_' . $payment->id . '@muhasabah.id',
-            'mobile'       => $payment->no_wa ?? '085000000000', // sesuaikan field di model kamu
+            'mobile'       => $payment->no_wa ?? '085000000000', 
             'amount'       => $totalAmount,
-            'description'  => $payment->notes ?? '-',
+            'description'  => $description,
             'reference_id' => (string) $payment->id,
-            'redirectUrl'  => url('/donasi/' . $payment->paymentable->slug . '?tab=laporan'),
+            'redirectUrl'  => $redirectUrl,
             'expiredAt'    => now()->addHours(24)->toIso8601String(),
         ];
 
@@ -774,15 +793,18 @@ class DonasiController extends Controller
             ->post('https://api.mayar.id/hl/v1/payment/create', $payload);
 
         if (!$response->successful() || !isset($response['data']['link'])) {
-            Log::error('Mayar API Error', ['response' => $response->body()]);
+            \Log::error('Mayar API Error', ['response' => $response->body()]);
             return back()->with('error', 'Gagal menghubungkan ke server Mayar.');
         }
 
+        $mayarLink = $response['data']['link'];
+        $mayarId = $response['data']['id'] ?? '';
+
         $payment->update([
-            'link'           => $response['data']['link'],
-            'transaction_id' => $response['data']['id'] ?? '',
+            'link'           => $mayarLink,
+            'transaction_id' => $mayarId
         ]);
 
-        return back()->with('info', $response['data']['link']);
+        return back()->with('info', $mayarLink);
     }    
 }

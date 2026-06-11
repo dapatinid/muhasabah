@@ -227,16 +227,23 @@ const sendToWhatsApp = () => {
       @click="isSteppingToQuiz = true"
       class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white dark:text-stone-950 font-bold py-3 px-6 rounded-xl transition-colors cursor-pointer"
     >
-      Daftar Sekarang & Mulai Uji
+      Daftar Sekarang
     </button>
   </div>
+
+  <div v-if="!isSteppingToQuiz" class="p-6 sm:p-8  m-3">
+    <p class="text-stone-600 dark:text-stone-400 text-sm leading-relaxed mb-6">          
+      Anda juga diwajibkan mengisi questioner menjadi relawan / donatur. Jika belum mengisi <span class="text-indigo-500 font-semibold"><Link href="/pendaftaran/relawan-donatur">klik di sini</Link></span>.
+    </p>
+  </div>
+
 
   <form v-else class="flex flex-col overflow-hidden">
     
     <div class="p-6 border-b border-stone-200 dark:border-stone-800 bg-white/95 dark:bg-stone-900/95 sticky top-0 backdrop-blur z-20">
       <h2 class="text-lg font-bold text-amber-600 dark:text-amber-500 mb-4">Uji Kelayakan Komunitas Kontributor</h2>
       
-      <div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar -mx-2 px-2">
+      <div class="flex gap-2 overflow-x-auto pb-2 -mx-2 px-2">
         <button
           v-for="cat in categories"
           :key="cat.id"
@@ -284,7 +291,7 @@ const sendToWhatsApp = () => {
                   ? (opt === 'Sangat Tidak Setuju' ? 'bg-red-500 text-white shadow-md shadow-red-500/20' :
                     opt === 'Tidak Setuju' ? 'bg-amber-500 text-white shadow-md shadow-amber-500/20' :
                     opt === 'Setuju' ? 'bg-indigo-500 text-white shadow-md shadow-indigo-500/20' :
-                    'bg-emerald-500 text-white shadow-md shadow-emerald-500/20')
+                    'bg-emerald-500 text-rose-400 shadow-md shadow-emerald-500/20')
                   : 'text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300 hover:bg-white dark:hover:bg-stone-700/50'
               ]"
               :title="opt"

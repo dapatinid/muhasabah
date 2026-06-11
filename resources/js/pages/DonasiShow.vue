@@ -8,7 +8,9 @@ import {
   RefreshCw, Newspaper, Heart, ChevronDown, Upload, FileText,
   X, Camera,
   QrCode,
-  CreditCard
+  CreditCard,
+  MoreHorizontal,
+  AlertTriangle
 } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
@@ -621,6 +623,28 @@ const closeMayarModal = () => {
     router.reload({ only: ['donasi'] })
 }
 
+// --- Helper Link WhatsApp Laporan ---
+const baseUrl = ref('')
+const activeDropdownId = ref<number | null>(null)
+
+onMounted(() => {
+  baseUrl.value = window.location.origin
+  window.addEventListener('click', closeDropdowns)
+})
+
+function getWhatsAppReportLink(slug: string) {
+  const fullUrl = `${baseUrl.value}/donasi/${slug}`
+  const text = `Izin melaporkan konten ${fullUrl}`
+  return `https://wa.me/6285950540055?text=${encodeURIComponent(text)}`
+}
+
+function toggleDropdown(id: number) {
+  activeDropdownId.value = activeDropdownId.value === id ? null : id
+}
+
+function closeDropdowns() {
+  activeDropdownId.value = null
+}
 
 </script>
 
@@ -641,12 +665,34 @@ const closeMayarModal = () => {
 
       <div class="space-y-6">
         <div class="space-y-3">
-          <span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">
-            <Tag class="w-3 h-3" />
-            {{ donasi.kategori }} / {{ donasi.subkategori }}
-          </span>
+
+          <div class="flex justify-between items-center"> 
+            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">
+              <Tag class="w-3 h-3" />
+              {{ donasi.kategori }} / {{ donasi.subkategori }}
+            </span>
+            
+            <span class="relative">
+              <button @click.stop="toggleDropdown(donasi.id)" class="text-amber-400 p-1 rounded-full">
+                <MoreHorizontal class="size-5" />
+              </button>
+              
+              <div v-if="activeDropdownId === donasi.id" 
+                class="absolute right-0 mt-1 w-48 bg-stone-900 border border-stone-800 rounded-xl shadow-xl py-1 z-30 animate-in fade-in slide-in-from-top-1 duration-150"
+              >
+                <a :href="getWhatsAppReportLink(donasi.slug)"
+                    target="_blank"
+                    class="flex items-center gap-2 px-4 py-2.5 text-xs text-red-400 hover:bg-stone-800/60 transition-colors font-medium"
+                >
+                  <AlertTriangle class="size-3.5 text-red-500" />
+                  Laporkan konten
+                </a>
+              </div>
+            </span>  
+          </div>
+
           <h1 class="text-2xl md:text-3xl font-bold leading-tight text-amber-100">{{ donasi.judul }}</h1>
-        </div>
+        </div>     
 
         <div class="bg-stone-900 border border-stone-800 rounded-3xl p-6 space-y-4 shadow-xl">
           <template v-if="Number(donasi.target_dana) === 0">

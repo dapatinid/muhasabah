@@ -6,7 +6,8 @@ import { toast } from 'vue-sonner'
 import { 
   Tag, MapPin, HandHeart, CalendarDays, Calendar, Ticket, 
   Newspaper, SendHorizontal, Heart, Users, AlertCircle, MessageCircle,
-  ArrowDownCircle, ChevronDown, QrCode, Upload, FileText, X, Share2 , Camera
+  ArrowDownCircle, ChevronDown, QrCode, Upload, FileText, X, Share2 , Camera,
+  MoreHorizontal, AlertTriangle
 } from 'lucide-vue-next'
 import QrcodeVue from 'qrcode.vue'
 
@@ -575,6 +576,105 @@ const takePhoto = () => {
         }
     }
 }
+
+// --- STATE & POLLING INTEGRASI MAYAR ---
+const isGeneratingMayar = ref({})
+const isMayarModalOpen = ref(false)
+const mayarLink = ref('')
+const activeMayarPaymentId = ref(null)
+let mayarPollingInterval = null
+
+const startPolling = () => {
+    // Cek status real-time pembayaran setiap 5 detik
+    mayarPollingInterval = setInterval(() => {
+        router.reload({ 
+            only: ['acara'], 
+            onSuccess: () => {
+                if (activeMayarPaymentId.value) {
+                    const payment = props.acara.payments?.find(
+                        p => p.id === activeMayarPaymentId.value
+                    )
+                    if (payment?.status === 'success') {
+                        toast.success('Pembayaran instan berhasil dikonfirmasi secara otomatis! 🎉')
+                        closeMayarModal()
+                    }
+                }
+            }
+        })
+    }, 5000)
+}
+
+const stopPolling = () => {
+    if (mayarPollingInterval) {
+        clearInterval(mayarPollingInterval)
+        mayarPollingInterval = null
+    }
+}
+
+const payWithMayar = (logId) => {
+    if (isGeneratingMayar.value[logId]) return
+    isGeneratingMayar.value[logId] = true
+
+    router.post(`/payment/${logId}/mayar`, {}, {
+        preserveScroll: true,
+        onSuccess: (page) => {
+            const link = page.props.flash?.info
+            if (link) {
+                mayarLink.value = link
+                activeMayarPaymentId.value = logId
+                isMayarModalOpen.value = true
+                startPolling()
+            } else if (page.props.flash?.error) {
+                toast.error(page.props.flash.error)
+            }
+        },
+        onError: () => {
+            toast.error('Terjadi kesalahan jaringan sistem.')
+        },
+        onFinish: () => {
+            isGeneratingMayar.value[logId] = false
+        }
+    })
+}
+
+const closeMayarModal = () => {
+    stopPolling()
+    isMayarModalOpen.value = false
+    mayarLink.value = ''
+    activeMayarPaymentId.value = null
+    router.reload({ only: ['acara'] })
+}
+
+// Pastikan polling dibersihkan saat komponen di-unmount agar tidak membocorkan memori
+onUnmounted(() => {
+    stopPolling()
+})
+
+
+// --- Helper Link WhatsApp Laporan ---
+const baseUrl = ref('')
+const activeDropdownId = ref(null)
+
+onMounted(() => {
+  baseUrl.value = window.location.origin
+  window.addEventListener('click', closeDropdowns)
+})
+
+function getWhatsAppReportLink(slug) {
+  const baseUrl = window.location.origin
+  const fullUrl = `${baseUrl}/acara/${slug}`
+  const text = encodeURIComponent(`Izin melaporkan konten: ${fullUrl}`)
+  return `https://wa.me/6285950540055?text=${text}` // Sesuaikan nomor WA tujuan laporan Anda
+}
+
+const toggleDropdown = (id) => {
+  activeDropdownId.value = activeDropdownId.value === id ? null : id
+}
+
+function closeDropdowns() {
+  activeDropdownId.value = null
+}
+
 </script>
 
 <template>
@@ -594,10 +694,30 @@ const takePhoto = () => {
 
       <div class="space-y-6">
         <div class="space-y-3">
-          <span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">
-            <Tag class="w-3 h-3" />
-            {{ acara.kategori }} / {{ acara.subkategori }}
-          </span>
+          <div class="flex justify-between items-center"> 
+            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">
+              <Tag class="w-3 h-3" />
+              {{ acara.kategori }} / {{ acara.subkategori }}
+            </span>
+            
+            <span class="relative">
+              <button @click.stop="toggleDropdown(acara.id)" class="text-amber-400 p-1 rounded-full">
+                <MoreHorizontal class="size-5" />
+              </button>
+              
+              <div v-if="activeDropdownId === acara.id" 
+                class="absolute right-0 mt-1 w-48 bg-stone-900 border border-stone-800 rounded-xl shadow-xl py-1 z-30 animate-in fade-in slide-in-from-top-1 duration-150"
+              >
+                <a :href="getWhatsAppReportLink(acara.slug)"
+                    target="_blank"
+                    class="flex items-center gap-2 px-4 py-2.5 text-xs text-red-400 hover:bg-stone-800/60 transition-colors font-medium"
+                >
+                  <AlertTriangle class="size-3.5 text-red-500" />
+                  Laporkan konten
+                </a>
+              </div>
+            </span>
+          </div>
           <h1 class="text-2xl md:text-3xl font-bold leading-tight text-amber-100">{{ acara.judul }}</h1>
           <p class="text-sm text-stone-400 flex items-center gap-2">
             <MapPin class="size-4 text-red-400 shrink-0" /> {{ acara.lokasi }}
@@ -877,7 +997,18 @@ const takePhoto = () => {
                       > <!-- Ganti pay.id menjadi log.id di tab peserta -->
                         {{ isUploading[pay.id] ? 'MENGUPLOAD...' : 'KIRIM BUKTI VERIFIKASI' }}
                       </button>
-                    </div>                   
+                    </div>   
+                    
+                    <div class="relative flex items-center gap-3 my-4 opacity-50">
+                          <div class="border-t border-stone-800 flex-1"></div>
+                          <span class="text-[10px] text-stone-500 font-bold uppercase tracking-wider">ATAU LEBIH MUDAH</span>
+                          <div class="border-t border-stone-800 flex-1"></div>
+                    </div>
+
+                    <button type="button" @click="payWithMayar(pay.id)" :disabled="isGeneratingMayar[pay.id]" class="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-emerald-500/20 active:scale-95 disabled:opacity-50">
+                      <RefreshCw v-if="isGeneratingMayar[pay.id]" class="w-4 h-4 animate-spin" />
+                      <span class="text-xs font-bold">{{ isGeneratingMayar[pay.id] ? 'Memuat Sistem...' : 'Transfer & Konfirmasi Otomatis' }}</span>
+                    </button>                    
                   </div>
                 </template>
 
@@ -1035,6 +1166,17 @@ const takePhoto = () => {
                       </button>
                     </div>
                   </div>
+
+                  <div class="relative flex items-center gap-3 my-4 opacity-50">
+                    <div class="border-t border-stone-800 flex-1"></div>
+                    <span class="text-[10px] text-stone-500 font-bold uppercase tracking-wider">ATAU LEBIH MUDAH</span>
+                    <div class="border-t border-stone-800 flex-1"></div>
+                  </div>
+
+                  <button type="button" @click="payWithMayar(log.id)" :disabled="isGeneratingMayar[log.id]" class="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-emerald-500/20 active:scale-95 disabled:opacity-50">
+                    <RefreshCw v-if="isGeneratingMayar[log.id]" class="w-4 h-4 animate-spin" />
+                    <span class="text-xs font-bold">{{ isGeneratingMayar[log.id] ? 'Memuat Sistem...' : 'Transfer & Konfirmasi Otomatis' }}</span>
+                  </button>                  
                 </template>
 
                 <div class="space-y-1.5 px-1">
@@ -1150,6 +1292,30 @@ const takePhoto = () => {
             <canvas ref="canvasElement" class="hidden"></canvas>
         </div>
     </div>
+
+    <div v-if="isMayarModalOpen" class="fixed inset-0 z-[200] bg-stone-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="w-full max-w-lg bg-stone-100 rounded-3xl overflow-hidden shadow-2xl flex flex-col h-[85vh] sm:h-[700px] animate-in fade-in zoom-in-95 duration-200">
+            
+            <div class="flex items-center justify-between p-4 border-b border-stone-200 bg-white">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                    <span class="font-bold text-stone-800 text-sm">Pembayaran Instan Otomatis (Mayar)</span>
+                </div>
+                <button @click="closeMayarModal" class="p-1.5 bg-stone-100 hover:bg-red-500 hover:text-white text-stone-500 rounded-full transition-colors focus:outline-none">
+                    <X class="w-4 h-4" />
+                </button>
+            </div>
+            
+            <div class="flex-1 w-full relative bg-stone-100">
+                <div class="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                    <RefreshCw class="w-7 h-7 text-emerald-500 animate-spin" />
+                    <p class="text-[11px] text-stone-500 font-bold uppercase tracking-wider">Menyiapkan invoice pembayaran...</p>
+                </div>
+                <iframe :src="mayarLink" class="relative z-10 w-full h-full border-none rounded-b-3xl" allow="payment"></iframe>
+            </div>
+
+        </div>
+    </div>    
 
   </AppLayoutPublic>
 </template>

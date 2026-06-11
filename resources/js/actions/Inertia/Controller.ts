@@ -322,6 +322,86 @@ Controller42a740574ecbfbac32f8cc353fc32db9.form = Controller42a740574ecbfbac32f8
 /**
 * @see \Inertia\Controller::__invoke
 * @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/relawan-donatur'
+*/
+const Controller89a4b2c3a8c2dc9fdef49e8fa41784f3 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: Controller89a4b2c3a8c2dc9fdef49e8fa41784f3.url(options),
+    method: 'get',
+})
+
+Controller89a4b2c3a8c2dc9fdef49e8fa41784f3.definition = {
+    methods: ["get","head"],
+    url: '/pendaftaran/relawan-donatur',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/relawan-donatur'
+*/
+Controller89a4b2c3a8c2dc9fdef49e8fa41784f3.url = (options?: RouteQueryOptions) => {
+    return Controller89a4b2c3a8c2dc9fdef49e8fa41784f3.definition.url + queryParams(options)
+}
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/relawan-donatur'
+*/
+Controller89a4b2c3a8c2dc9fdef49e8fa41784f3.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: Controller89a4b2c3a8c2dc9fdef49e8fa41784f3.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/relawan-donatur'
+*/
+Controller89a4b2c3a8c2dc9fdef49e8fa41784f3.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: Controller89a4b2c3a8c2dc9fdef49e8fa41784f3.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/relawan-donatur'
+*/
+const Controller89a4b2c3a8c2dc9fdef49e8fa41784f3Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controller89a4b2c3a8c2dc9fdef49e8fa41784f3.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/relawan-donatur'
+*/
+Controller89a4b2c3a8c2dc9fdef49e8fa41784f3Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controller89a4b2c3a8c2dc9fdef49e8fa41784f3.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/pendaftaran/relawan-donatur'
+*/
+Controller89a4b2c3a8c2dc9fdef49e8fa41784f3Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controller89a4b2c3a8c2dc9fdef49e8fa41784f3.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+Controller89a4b2c3a8c2dc9fdef49e8fa41784f3.form = Controller89a4b2c3a8c2dc9fdef49e8fa41784f3Form
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
 * @route '/pendaftaran/penulis'
 */
 const Controllerc28ff98a1abedae6b846834b62651fdd = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -645,6 +725,7 @@ const Controller = {
     '/amal-ibadah': Controller0ae8bd5ae264ec9c75cf771d5afced2f,
     '/halaman-dibangun': Controllera0a232698784441c4a3e6e34ee783364,
     '/dashboard': Controller42a740574ecbfbac32f8cc353fc32db9,
+    '/pendaftaran/relawan-donatur': Controller89a4b2c3a8c2dc9fdef49e8fa41784f3,
     '/pendaftaran/penulis': Controllerc28ff98a1abedae6b846834b62651fdd,
     '/pendaftaran/penggalang-dana': Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65,
     '/pendaftaran/penyelenggara-acara': Controllerc159247004fc5584428c19c841705317,

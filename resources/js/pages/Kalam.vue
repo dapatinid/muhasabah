@@ -213,45 +213,47 @@ function goToPage(url: string | null) {
             </Link>
           </div>
 
-          <div 
-            v-if="extractOrderedMedia(kalam.body).length > 0" 
-            :class="[
-              'relative z-1 -mx-5 py-2 items-start flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory',
-              extractOrderedMedia(kalam.body).some(m => m.type === 'video') ? 'h-48 sm:h-56' : ''
-            ]"
-          >
-            <div class="shrink-0 w-1"></div>
+          <template v-for="mediaList in [extractOrderedMedia(kalam.body)]" :key="`media-wrap-${kalam.id}`">
             
-            <template v-for="(media, idx) in extractOrderedMedia(kalam.body)" :key="`media-${idx}`">
-                
-                <div v-if="media.type === 'video'"
-                  :class="[
-                    'snap-center shrink-0 rounded-xl overflow-hidden border border-stone-800 bg-black shadow-inner',
-                    extractOrderedMedia(kalam.body).some(m => m.type === 'video') ? 'h-full aspect-video' : 'w-[85%] aspect-video'
-                  ]"
-                >
-                  <iframe 
-                    :src="media.src" 
-                    class="w-full h-full" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowfullscreen
-                  ></iframe>
-                </div>
+            <div 
+              v-if="mediaList.length > 0" 
+              :class="[
+                'relative z-1 -mx-5 py-2 items-start flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory',
+                // Kondisi dinamis dari mediaList
+                mediaList.some(m => m.type === 'video') ? 'h-48 sm:h-56' : 'h-72 sm:h-96'
+              ]"
+            >
+              <div class="shrink-0 w-1"></div>
+              
+              <template v-for="(media, idx) in mediaList" :key="`media-${idx}`">
+                  
+                  <div v-if="media.type === 'video'"
+                    class="snap-center shrink-0 h-full aspect-video rounded-xl overflow-hidden border border-stone-800 bg-black shadow-inner"
+                  >
+                    <iframe 
+                      :src="media.src" 
+                      class="w-full h-full" 
+                      frameborder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                      allowfullscreen
+                    ></iframe>
+                  </div>
 
-                <div v-else-if="media.type === 'image'"
-                  :class="[
-                    'snap-center shrink-0 rounded-xl overflow-hidden border border-stone-800 bg-stone-900 flex items-center justify-center',
-                    extractOrderedMedia(kalam.body).some(m => m.type === 'video') ? 'h-full aspect-square' : 'w-[85%] sm:w-[75%] aspect-square'
-                  ]"
-                >
-                  <img :src="media.src" class="w-full h-full object-cover" loading="lazy" />
-                </div>
+                  <div v-else-if="media.type === 'image'"
+                    class="snap-center shrink-0 h-full rounded-xl overflow-hidden border border-stone-800 bg-stone-900/50 flex items-center justify-center max-w-[85%] sm:max-w-[75%]"
+                  >
+                    <img 
+                      :src="media.src" 
+                      class="h-full w-auto object-cover max-w-full" 
+                      loading="lazy" 
+                    />
+                  </div>
 
-            </template>
+              </template>
 
-            <div class="shrink-0 w-5"></div>
-          </div>
+              <div class="shrink-0 w-5"></div>
+            </div>
+          </template>               
 
           <div class="flex items-center gap-5 pt-1">
             <Link :href="`/kalam/${kalam.slug}#respon`" class="flex items-center gap-1.5 group/btn">
