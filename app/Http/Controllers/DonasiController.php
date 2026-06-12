@@ -738,7 +738,7 @@ class DonasiController extends Controller
         return back()->with('success', 'Status transaksi berhasil diperbarui.');
     }    
 
-    public function generateMayarLink(Payment $payment)
+   public function generateMayarLink(Payment $payment)
     {
         if ($payment->status === 'success' || $payment->image) {
             return back()->with('error', 'Pembayaran tidak valid untuk otomatisasi.');
@@ -748,41 +748,41 @@ class DonasiController extends Controller
             return back()->with('info', $payment->link);
         }
 
-        // 1. Cari infaq pasangan (Hanya berlaku jika berasal dari donasi_utama)
-        $infaqPasangan = null;
-        if ($payment->mutation_type === 'donasi_utama') {
-            $infaqPasangan = Payment::where('mutation_type', 'infaq_sistem')
-                ->where('paymentable_type', $payment->paymentable_type)
-                ->where('paymentable_id', $payment->paymentable_id)
-                ->where('created_at', $payment->created_at)
-                ->where('atas_nama', $payment->atas_nama)
-                ->first();
-        }
+        // 🌟 PERBAIKAN: Cari infaq pasangan secara adaptif (Berlaku untuk Donasi_Utama, Sponsor, & Tiket)
+        // Kita mencari baris 'infaq_sistem' yang di-insert bersamaan pada detik & nama yang sama
+        $infaqPasangan = Payment::where('mutation_type', 'infaq_sistem')
+            ->where('paymentable_type', $payment->paymentable_type)
+            ->where('paymentable_id', $payment->paymentable_id)
+            ->where('created_at', $payment->created_at)
+            ->where('atas_nama', $payment->atas_nama)
+            ->first();
 
+        // Jumlahkan nominal murni beserta infaq sistem pendukungnya
         $totalAmount = (int) $payment->nominal;
         if ($infaqPasangan) {
             $totalAmount += (int) $infaqPasangan->nominal;
         }
 
-        // 2. Tentukan Redirect URL & Deskripsi secara Dinamis berdasarkan Model Asal
+        // Tentukan Redirect URL & Deskripsi secara Dinamis berdasarkan Model Asal
         $redirectUrl = url('/');
         $description = $payment->notes ?? '-';
 
         if ($payment->paymentable_type === 'App\Models\Donasi') {
             $redirectUrl = url('/donasi/' . $payment->paymentable->slug . '?tab=laporan');
-            $description = 'REF-' . $payment->id . ' | Donasi: ' . ($payment->notes ?? '-');
+            $description = 'REF-' . $payment->id . ' | Donasi & Infaq: ' . ($payment->notes ?? '-');
         } elseif ($payment->paymentable_type === 'App\Models\Acara') {
-            // Jika tipe mutasi adalah tiket masuk ke tab 'pendaftaran', jika sponsor masuk ke 'donatur'
-            $tabName = ($payment->mutation_type === 'tiket') ? 'pendaftaran' : 'donatur';
+            $tabName = ($payment->mutation_type === 'tiket') ? 'peserta' : 'doa';
             $redirectUrl = url('/acara/' . $payment->paymentable->slug . '?tab=' . $tabName);
-            $description = 'REF-' . $payment->id . ' | ' . ($payment->mutation_type === 'tiket' ? 'Tiket' : 'Sponsor') . ' Acara: ' . ($payment->notes ?? '-');
+            
+            $jenisTransaksi = ($payment->mutation_type === 'tiket') ? 'Tiket' : 'Sponsor';
+            $description = 'REF-' . $payment->id . ' | ' . $jenisTransaksi . ' Acara & Infaq: ' . ($payment->notes ?? '-');
         }
 
         $payload = [
             'name'         => $payment->atas_nama ?? 'Hamba Allah',
             'email'        => 'donatur_' . $payment->id . '@muhasabah.id',
             'mobile'       => $payment->no_wa ?? '085000000000', 
-            'amount'       => $totalAmount,
+            'amount'       => $totalAmount, // 🔥 Sekarang nominal sudah terakumulasi akurat!
             'description'  => $description,
             'reference_id' => (string) $payment->id,
             'redirectUrl'  => $redirectUrl,
@@ -806,5 +806,5 @@ class DonasiController extends Controller
         ]);
 
         return back()->with('info', $mayarLink);
-    }    
+    }
 }
