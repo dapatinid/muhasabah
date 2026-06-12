@@ -80,7 +80,7 @@ const donationMenus = [
       </Link>
 
       <!-- Ukhuwah -->
-      <Link href="/halaman-dibangun" 
+      <Link href="/ukhuwah" 
             :class="currentUrl === '/ukhuwah' ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
             class="flex flex-col items-center gap-1 w-full transition-colors">
         <CircleStar class="size-5" />

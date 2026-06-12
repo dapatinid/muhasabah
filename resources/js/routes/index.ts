@@ -218,7 +218,7 @@ registerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 register.form = registerForm
 
 /**
-* @see routes/web.php:15
+* @see routes/web.php:18
 * @route '/'
 */
 export const home = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -232,7 +232,7 @@ home.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:15
+* @see routes/web.php:18
 * @route '/'
 */
 home.url = (options?: RouteQueryOptions) => {
@@ -240,7 +240,7 @@ home.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:15
+* @see routes/web.php:18
 * @route '/'
 */
 home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -249,7 +249,7 @@ home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:15
+* @see routes/web.php:18
 * @route '/'
 */
 home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -258,7 +258,7 @@ home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:15
+* @see routes/web.php:18
 * @route '/'
 */
 const homeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -267,7 +267,7 @@ const homeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:15
+* @see routes/web.php:18
 * @route '/'
 */
 homeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -276,7 +276,7 @@ homeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:15
+* @see routes/web.php:18
 * @route '/'
 */
 homeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -695,6 +695,87 @@ acaraForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 acara.form = acaraForm
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::ukhuwah
+* @see app/Http/Controllers/UkhuwahController.php:13
+* @route '/ukhuwah'
+*/
+export const ukhuwah = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: ukhuwah.url(options),
+    method: 'get',
+})
+
+ukhuwah.definition = {
+    methods: ["get","head"],
+    url: '/ukhuwah',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::ukhuwah
+* @see app/Http/Controllers/UkhuwahController.php:13
+* @route '/ukhuwah'
+*/
+ukhuwah.url = (options?: RouteQueryOptions) => {
+    return ukhuwah.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::ukhuwah
+* @see app/Http/Controllers/UkhuwahController.php:13
+* @route '/ukhuwah'
+*/
+ukhuwah.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: ukhuwah.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::ukhuwah
+* @see app/Http/Controllers/UkhuwahController.php:13
+* @route '/ukhuwah'
+*/
+ukhuwah.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: ukhuwah.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::ukhuwah
+* @see app/Http/Controllers/UkhuwahController.php:13
+* @route '/ukhuwah'
+*/
+const ukhuwahForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: ukhuwah.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::ukhuwah
+* @see app/Http/Controllers/UkhuwahController.php:13
+* @route '/ukhuwah'
+*/
+ukhuwahForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: ukhuwah.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::ukhuwah
+* @see app/Http/Controllers/UkhuwahController.php:13
+* @route '/ukhuwah'
+*/
+ukhuwahForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: ukhuwah.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+ukhuwah.form = ukhuwahForm
 
 /**
 * @see \Inertia\Controller::__invoke

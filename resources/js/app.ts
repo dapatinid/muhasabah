@@ -25,6 +25,7 @@ createInertiaApp({
                  name === 'Donasi' ||
                  name === 'DonasiShow' ||
                  name === 'DonasiPayment' ||
+                 name === 'Ukhuwah' ||
                  name === 'Welcome' : 
                 return null; 
             

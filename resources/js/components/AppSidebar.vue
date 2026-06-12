@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { Award, BookOpen, Calendar, FolderGit2, GalleryThumbnails, HeartHandshake, LayoutGrid, Logs } from 'lucide-vue-next';
+import { Award, BookOpen, Calendar, CircleStar, FolderGit2, GalleryThumbnails, HeartHandshake, HouseHeart, LayoutGrid, Logs } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
+import NavMainUkhuwah from '@/components/NavMainUkhuwah.vue';
 import NavMainControlPanel from '@/components/NavMainControlPanel.vue';
 import NavUser from '@/components/NavUser.vue';
 import {
@@ -48,6 +49,23 @@ const mainNavItems = computed(() => {
     ];
 });
 
+const mainNavItemsUkhuwah = computed(() => {
+    const items: NavItem[] = [];
+        items.push(
+            {
+                title: 'Lingkaran',
+                href: '/admin/lingkaran',
+                icon: CircleStar,
+            },
+            {
+                title: 'Masjid',
+                href: '/admin/masjid',
+                icon: HouseHeart,
+            },
+        );
+    return items;  
+});
+
 const mainNavItemsControlPanel = computed(() => {
     const items: NavItem[] = [];
     if (canAccessControlPanel.value) {
@@ -88,7 +106,8 @@ const mainNavItemsControlPanel = computed(() => {
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain :items="mainNavItems" class="z-1"/>
+            <NavMain :items="mainNavItems" class="z-2"/>
+            <NavMainUkhuwah :items="mainNavItemsUkhuwah" class="z-1"/>
             <NavMainControlPanel :items="mainNavItemsControlPanel" v-if="canAccessControlPanel"/>
         </SidebarContent>
 

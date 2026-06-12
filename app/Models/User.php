@@ -16,7 +16,7 @@ use App\Models\City;
 use App\Models\District;
 use App\Models\Village;
 
-#[Fillable(['name', 'email', 'password', 'is_active', 'class', 'is_admin', 'level', 'whatsapp', 'negara', 'province_code', 'city_code', 'district_code', 'village_code', 'kode_pos', 'jalan'])]
+#[Fillable(['name', 'email', 'password', 'is_active', 'class', 'is_admin', 'level', 'whatsapp', 'negara', 'province_code', 'city_code', 'district_code', 'village_code', 'kode_pos', 'jalan', 'avatar', 'sampul'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -56,4 +56,18 @@ class User extends Authenticatable
     public function city() { return $this->belongsTo(City::class, 'city_code', 'code'); }
     public function district() { return $this->belongsTo(District::class, 'district_code', 'code'); }
     public function village() { return $this->belongsTo(Village::class, 'village_code', 'code'); }    
+
+
+    public function lingkarans()
+    {
+        return $this->belongsToMany(Lingkaran::class)->withTimestamps();
+    }
+    public function masjids()
+    {
+        return $this->belongsToMany(Masjid::class)->withTimestamps();
+    }
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
+    }    
 }
