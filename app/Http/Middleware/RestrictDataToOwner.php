@@ -90,7 +90,7 @@ class RestrictDataToOwner
                 }
 
                 if ($model instanceof \Illuminate\Database\Eloquent\Model) {
-                    $isOwner = $model->created_by === $user->id;
+                    $isOwner = $model->created_by == $user->id;
 
                     // Query users() tanpa terkena global scope apapun
                     $isAttached = $model->users()
