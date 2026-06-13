@@ -95,4 +95,11 @@ class Kalam extends Model
     {
         return 'slug';
     }    
+
+public function resolveRouteBinding($value, $field = null)
+{
+    return $this->withoutGlobalScope('owner')
+        ->where($field ?? $this->getRouteKeyName(), $value)
+        ->firstOrFail();
+}    
 }

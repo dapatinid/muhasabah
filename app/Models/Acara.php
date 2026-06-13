@@ -105,4 +105,11 @@ class Acara extends Model
     {
         return $this->hasMany(AcaraVariant::class);
     }
+
+public function resolveRouteBinding($value, $field = null)
+{
+    return $this->withoutGlobalScope('owner')
+        ->where($field ?? $this->getRouteKeyName(), $value)
+        ->firstOrFail();
+}    
 }

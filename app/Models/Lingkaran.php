@@ -89,4 +89,11 @@ class Lingkaran extends Model
     {
         return $this->belongsTo(User::class, 'deleted_by');
     }
+
+public function resolveRouteBinding($value, $field = null)
+{
+    return $this->withoutGlobalScope('owner')
+        ->where($field ?? $this->getRouteKeyName(), $value)
+        ->firstOrFail();
+}    
 }
