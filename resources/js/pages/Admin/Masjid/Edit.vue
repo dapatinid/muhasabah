@@ -19,6 +19,7 @@ const props = defineProps<{
     masjid: {
         id: number;
         nama: string;
+        slug: string;
         jenis: string;
         kontak: string | null;
         alamat: string | null;
@@ -42,6 +43,7 @@ defineOptions({
 const form = useForm({
   _method: 'put',
   nama: props.masjid.nama,
+  slug: props.masjid.slug,
   jenis: props.masjid.jenis,
   kontak: props.masjid.kontak ?? '',
   alamat: props.masjid.alamat ?? '',
@@ -174,10 +176,18 @@ function deleteMasjid() {
                     </div>
                 </div>
 
-                <div class="space-y-2">
-                    <Label for="kontak">Kontak / No. WA PJ</Label>
-                    <Input id="kontak" v-model="form.kontak" placeholder="Contoh: 085950540055" />
-                    <div v-if="form.errors.kontak" class="text-red-500 text-xs mt-1">{{ form.errors.kontak }}</div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <Label for="slug">Slug</Label>
+                        <Input id="slug" v-model="form.slug" placeholder="Masukkan slug..." required />
+                        <div v-if="form.errors.slug" class="text-red-500 text-xs mt-1">{{ form.errors.slug }}</div>
+                    </div>                
+
+                    <div class="space-y-2">
+                        <Label for="kontak">Kontak / No. WA PJ</Label>
+                        <Input id="kontak" v-model="form.kontak" placeholder="Contoh: 085950540055" />
+                        <div v-if="form.errors.kontak" class="text-red-500 text-xs mt-1">{{ form.errors.kontak }}</div>
+                    </div>
                 </div>
 
                 <div class="space-y-2">

@@ -265,7 +265,7 @@ const sendToWhatsApp = () => {
             : 'bg-white border-stone-200 hover:border-stone-300 dark:bg-stone-950 dark:border-stone-800/60 dark:hover:border-stone-800'
         ]"
       >
-        <div class="text-sm text-stone-800 dark:text-stone-200 leading-relaxed font-semibold">
+        <div class="text-sm text-stone-800 dark:text-stone-200 leading-relaxed font-semibold select-none">
           <span class="font-mono text-xs text-amber-600 dark:text-amber-500 mr-1">[{{ q.id }}]</span>
           {{ q.text }}
         </div>
@@ -305,7 +305,7 @@ const sendToWhatsApp = () => {
           </div>
           
           <div 
-            class="text-sm font-bold ml-1 transition-colors" 
+            class="text-sm font-bold ml-1 transition-colors select-none" 
             :class="[
               answers[q.id].choice === 'Sangat Tidak Setuju' ? 'text-red-500' :
               answers[q.id].choice === 'Tidak Setuju' ? 'text-amber-500' :

@@ -15,13 +15,26 @@ use App\Models\Province;
 use App\Models\City;
 use App\Models\District;
 use App\Models\Village;
+use Illuminate\Support\Str;
 
-#[Fillable(['name', 'email', 'password', 'is_active', 'class', 'is_admin', 'level', 'whatsapp', 'negara', 'province_code', 'city_code', 'district_code', 'village_code', 'kode_pos', 'jalan', 'avatar', 'sampul'])]
+#[Fillable(['name', 'slug', 'email', 'password', 'is_active', 'class', 'is_admin', 'level', 'whatsapp', 'negara', 'province_code', 'city_code', 'district_code', 'village_code', 'kode_pos', 'jalan', 'avatar', 'sampul'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->slug)) {
+                $model->slug = Str::slug($model->name) . '-' . uniqid(); 
+                // uniqid() ditambahkan agar jika ada nama user yang sama (misal "Budi"), slug-nya tidak bentrok
+            }
+        });
+    }    
 
     /**
      * Get the attributes that should be cast.

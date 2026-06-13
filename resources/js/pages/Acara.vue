@@ -321,11 +321,11 @@ function closeModal() {
           <div class="space-y-2 pt-2 border-t border-stone-800 text-xs text-stone-400">
             <div class="flex items-center gap-2">
               <MapPin class="size-4 text-rose-400 shrink-0" />
-              <span class="truncate">{{ selectedAcara.lokasi }}</span>
+              <span class="truncate">Lokasi : {{ selectedAcara.lokasi }}</span>
             </div>
             <div class="flex items-center gap-2">
               <CalendarDays class="size-4 text-indigo-400 shrink-0" />
-              <span>{{ getTglMulai(selectedAcara.tgl_mulai) }}</span>
+              <span>Tanggal : {{ getTglMulai(selectedAcara.tgl_mulai) }}</span>
             </div>
           </div>
 
@@ -334,7 +334,7 @@ function closeModal() {
               class="px-3 py-1 rounded text-xs font-mono font-bold border tracking-wide"
               :class="getHargaBadgeInfo(selectedAcara).isGratis ? 'text-emerald-400 border-emerald-900/50 bg-emerald-950/20' : 'text-amber-400 border-amber-900/50 bg-amber-950/20'"
             >
-              Biaya: {{ getHargaBadgeInfo(selectedAcara).teks }}
+              Biaya : {{ getHargaBadgeInfo(selectedAcara).teks }}
             </span>
           </div>
         </div>

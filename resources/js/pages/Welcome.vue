@@ -721,7 +721,7 @@ function getHargaBadgeInfo(acara: any) {
                       {{ Number(donasi.target_dana) === 0 ? 'Donatur Berkelanjutan' : `${getJumlahDonatur(donasi)} Donatur` }}
                     </span>
                  </div>
-                 <div class="px-4 py-1.5 rounded-xl bg-amber-600 text-white text-[10px] font-bold group-hover:bg-amber-400 group-hover:text-stone-950 transition-colors">
+                 <div class="px-4 py-1.5 rounded-xl bg-amber-500 text-white text-[10px] font-bold group-hover:bg-amber-400 group-hover:text-stone-950 transition-colors">
                     Donasi
                  </div>
               </div>
@@ -793,7 +793,7 @@ function getHargaBadgeInfo(acara: any) {
                 <div v-if="Number(acara.accept_tiket) > 0" class="bg-stone-950/30 border border-stone-800/60 p-3 rounded-xl">
                   <div class="grid grid-cols-3 gap-2 text-center text-xs">
                     <div class="flex flex-col">
-                      <span class="text-[9px] text-stone-500 uppercase font-bold tracking-tight mb-0.5">Total Kuota</span>
+                      <span class="text-[9px] text-stone-500 uppercase font-bold tracking-tight mb-0.5">Kuota</span>
                       <span class="font-bold text-stone-300 font-sans text-xs">{{ acara.kuota_tiket }} <span class="text-[10px] text-stone-500 font-normal">Kursi</span></span>
                     </div>
                     <div class="flex flex-col border-x border-stone-800">

@@ -39,9 +39,7 @@ const tabs = [
   <AppLayoutPublic subtitle="Persatuan" title="Ukhuwah" :show-back="true">
     <div class="bg-linear-to-b from-black via-black to-black/0">
 
-      <!-- Hero Header -->
       <div class="relative overflow-hidden bg-linear-to-br from-emerald-950 via-emerald-900 to-teal-900">
-        <!-- Geometric ornament (SVG, top-right) -->
         <svg class="absolute -top-8 -right-8 opacity-10 w-64 h-64 text-white" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <polygon points="100,10 190,55 190,145 100,190 10,145 10,55" stroke="currentColor" stroke-width="1.5" fill="none"/>
           <polygon points="100,30 172,67.5 172,132.5 100,170 28,132.5 28,67.5" stroke="currentColor" stroke-width="1" fill="none"/>
@@ -50,7 +48,6 @@ const tabs = [
           <line x1="10" y1="55" x2="190" y2="145" stroke="currentColor" stroke-width="0.5"/>
           <line x1="190" y1="55" x2="10" y2="145" stroke="currentColor" stroke-width="0.5"/>
         </svg>
-        <!-- Bottom-left smaller ornament -->
         <svg class="absolute -bottom-4 -left-4 opacity-10 w-32 h-32 text-white" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <circle cx="50" cy="50" r="40" stroke="currentColor" stroke-width="1"/>
           <circle cx="50" cy="50" r="28" stroke="currentColor" stroke-width="0.75"/>
@@ -72,7 +69,6 @@ const tabs = [
 
       <div class="max-w-3xl mx-auto px-4 -mt-5 pb-16">
 
-        <!-- Search Bar -->
         <div class="relative mb-6">
           <Search class="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-stone-400 pointer-events-none" />
           <input
@@ -83,7 +79,6 @@ const tabs = [
           />
         </div>
 
-        <!-- Tab Switcher -->
         <div class="flex gap-2 mb-8 bg-stone-900 p-1.5 rounded-2xl border border-stone-800">
           <button
             v-for="t in tabs"
@@ -101,7 +96,6 @@ const tabs = [
           </button>
         </div>
 
-        <!-- Empty State -->
         <div
           v-if="items.data.length === 0"
           class="py-20 text-center"
@@ -113,14 +107,13 @@ const tabs = [
           <p class="text-stone-400 text-xs mt-1">Coba kata kunci yang berbeda.</p>
         </div>
 
-        <!-- Grid: Tokoh -->
         <div v-else-if="activeTab === 'tokoh'" class="grid grid-cols-1 gap-4">
-          <div
+          <Link
             v-for="user in items.data"
             :key="user.id"
-            class="group bg-stone-900 rounded-2xl border border-stone-800 p-5 flex items-center gap-4 hover:-translate-y-0.5 transition-all duration-200"
+            :href="`/tokoh/${user.slug}`"
+            class="group bg-stone-900 rounded-2xl border border-stone-800 p-5 flex items-center gap-4 hover:-translate-y-0.5 hover:border-emerald-500/30 transition-all duration-200"
           >
-            <!-- Avatar -->
             <div class="relative shrink-0">
               <img
                 v-if="user.avatar"
@@ -133,51 +126,45 @@ const tabs = [
               >
                 <UserCircle2 class="size-7 text-emerald-500" />
               </div>
-              <!-- Online dot placeholder -->
               <span class="absolute -bottom-0.5 -right-0.5 size-3 bg-emerald-400 rounded-full border-2 border-stone-900"></span>
             </div>
 
-            <!-- Info -->
             <div class="min-w-0">
-              <h3 class="font-bold text-white text-sm truncate">{{ user.name }}</h3>
+              <h3 class="font-bold text-white text-sm truncate group-hover:text-emerald-400 transition-colors">{{ user.name }}</h3>
               <p class="text-xs text-stone-400 mt-0.5 truncate">{{ user.level || 'Anggota' }}</p>
               <span class="inline-block mt-2 px-2 py-0.5 rounded-md bg-emerald-900/30 text-emerald-400 text-[10px] font-bold uppercase tracking-wide">
                 {{ user.class || 'Umum' }}
               </span>
             </div>
-          </div>
+          </Link>
         </div>
 
-        <!-- Grid: Lingkaran / Masjid -->
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div
+          <Link
             v-for="item in items.data"
             :key="item.id"
-            class="group bg-stone-900 rounded-2xl border border-stone-800 overflow-hidden hover:-translate-y-0.5 transition-all duration-200 flex flex-col"
+            :href="`/${activeTab}/${item.slug}`"
+            class="group bg-stone-900 rounded-2xl border border-stone-800 overflow-hidden hover:-translate-y-0.5 hover:border-emerald-500/30 transition-all duration-200 flex flex-col"
           >
-            <!-- Cover Image -->
             <div class="h-28 bg-linear-to-br from-stone-800 to-stone-700 relative overflow-hidden">
               <img
                 v-if="item.sampul"
                 :src="`/storage/${item.sampul}`"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              <!-- Tint overlay -->
               <div class="absolute inset-0 bg-linear-to-t from-black/30 to-transparent"></div>
             </div>
 
-            <!-- Body -->
             <div class="px-5 pt-4 pb-3 flex-1 relative">
-              <!-- Logo -->
               <div class="absolute -top-7 left-5">
                 <img
                   v-if="item.logo"
                   :src="`/storage/${item.logo}`"
-                  class="size-14 rounded-xl object-cover border-[3px] border-stone-900 shadow-md"
+                  class="size-14 rounded-xl object-cover border-[3px] border-stone-900 shadow-md group-hover:border-emerald-900/50 transition-colors"
                 />
                 <div
                   v-else
-                  class="size-14 rounded-xl bg-linear-to-br border-[3px] border-stone-900 shadow-md flex items-center justify-center text-white text-lg font-extrabold"
+                  class="size-14 rounded-xl bg-linear-to-br border-[3px] border-stone-900 shadow-md flex items-center justify-center text-white text-lg font-extrabold group-hover:border-emerald-900/50 transition-colors"
                 >
                   {{ item.nama?.charAt(0) ?? '?' }}
                 </div>
@@ -187,7 +174,7 @@ const tabs = [
                 <span class="absolute -top-9 inline-block mt-0.5 text-[10px] uppercase font-semibold tracking-wider text-emerald-400">
                   {{ item.jenis }}
                 </span>
-                <h3 class="absolute -top-3 font-bold text-white text-sm leading-tight line-clamp-1">{{ item.nama }}</h3>
+                <h3 class="absolute -top-3 font-bold text-white text-sm leading-tight line-clamp-1 group-hover:text-emerald-400 transition-colors">{{ item.nama }}</h3>
               </div>
 
               <div class="flex items-start gap-1.5 text-stone-400 text-xs mt-3">
@@ -196,7 +183,6 @@ const tabs = [
               </div>
             </div>
 
-            <!-- Footer -->
             <div class="px-5 py-3 border-t border-stone-800 flex items-center justify-between bg-stone-800/30">
               <div class="flex items-center gap-1.5">
                 <Star class="size-3.5 fill-amber-400 text-amber-400" />
@@ -204,10 +190,9 @@ const tabs = [
               </div>
               <span class="text-[10px] text-stone-400">{{ item.ratings_count || 0 }} ulasan</span>
             </div>
-          </div>
+          </Link>
         </div>
 
-        <!-- Pagination -->
         <div v-if="items.links?.length > 3" class="flex justify-center items-center gap-1 pt-10">
           <button
             v-for="(link, i) in items.links"

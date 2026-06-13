@@ -2,7 +2,7 @@
 import { Head, router, usePage, Link } from '@inertiajs/vue3'
 import { ref, computed, watch } from 'vue'
 import debounce from 'lodash/debounce'
-import { Search, Plus, Pencil, Star } from 'lucide-vue-next'
+import { Search, Plus, Pencil, Star, Eye } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 
 defineOptions({
@@ -42,15 +42,15 @@ function formatJenis(jenis: string) {
 <template>
     <Head title="Manajemen Lingkaran" />
 
-    <div class="space-y-6 p-6 max-w-7xl mx-auto">
+    <div class="space-y-6 p-6">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-100 dark:border-zinc-800 shadow-sm">
             <div>
                 <h1 class="text-xl font-bold text-zinc-900 dark:text-white">Manajemen Lingkaran</h1>
                 <p class="text-xs text-zinc-500 mt-1">Kelola data komunitas, yayasan, lembaga, dan kelompok jamaah.</p>
             </div>
-            <Link href="/admin/lingkaran/create">
-                <Button class="bg-rose-600 hover:bg-rose-700 text-white rounded-xl gap-2 font-bold h-11 shadow-lg shadow-rose-500/10">
-                    <Plus class="size-4" />
+            <Link href="/admin/lingkaran/create" class="w-full sm:w-auto">
+                <Button class="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white rounded-xl gap-2 font-bold h-11 shadow-lg shadow-rose-500/10">
+                    <Plus class="size-4" /> Tambah
                 </Button>
             </Link>
         </div>
@@ -128,10 +128,15 @@ function formatJenis(jenis: string) {
                                 </div>
                             </td>
 
-                            <td class="px-6 py-4 text-right">
+                            <td class="px-6 py-4 text-end flex justify-end">
                                 <Link :href="`/admin/lingkaran/${lingkaran.id}/edit`">
-                                    <Button variant="ghost" size="icon" class="hover:bg-rose-50 text-rose-600 dark:hover:bg-rose-950/30 rounded-xl size-9">
+                                    <Button variant="ghost" size="icon" class="hover:bg-blue-50 text-rose-600 dark:hover:bg-blue-950/30 rounded-xl size-9">
                                         <Pencil class="size-4" />
+                                    </Button>
+                                </Link>
+                                <Link :href="`/lingkaran/${lingkaran.id}`">
+                                    <Button variant="ghost" size="icon" class="hover:bg-blue-50 text-rose-600 dark:hover:bg-blue-950/30 rounded-xl size-9">
+                                        <Eye class="size-4" />
                                     </Button>
                                 </Link>
                             </td>

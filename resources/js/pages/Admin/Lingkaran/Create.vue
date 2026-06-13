@@ -28,13 +28,11 @@ const form = useForm({
 
 const categories = [
   { label: 'Komunitas', value: 'komunitas' },
-  { label: 'Tim', value: 'tim' },
-  { label: 'Grup', value: 'grup' },
   { label: 'Yayasan', value: 'yayasan' },
   { label: 'Instansi', value: 'instansi' },
   { label: 'Lembaga', value: 'lembaga' },
   { label: 'CSR', value: 'csr' },
-  { label: 'Jamaah', value: 'jamaah' },
+  { label: 'Laziz', value: 'laziz' },
 ]
 
 // State untuk menampilkan gambar (Preview)

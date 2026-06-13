@@ -192,6 +192,10 @@ Route::get('/kalam/{kalam:slug}', [KalamController::class, 'show'])->name('kalam
 Route::get('/donasi/{donasi:slug}', [DonasiController::class, 'show'])->name('donasi.show');
 Route::get('/acara/{acara:slug}', [AcaraController::class, 'show'])->name('acara.show'); // Detail Acara Publik
 
+Route::get('/tokoh/{user:slug}', [UkhuwahController::class, 'tokoh'])->name('tokoh.show');
+Route::get('/lingkaran/{lingkaran:slug}', [UkhuwahController::class, 'lingkaran'])->name('lingkaran.show');
+Route::get('/masjid/{masjid:slug}', [UkhuwahController::class, 'masjid'])->name('masjid.show');
+
 
 // Tambahkan rute ini di bawah
 Route::get('/api/wilayah/provinces', function () {

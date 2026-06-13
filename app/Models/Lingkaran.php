@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes; // Import trait SoftDeletes
+use Illuminate\Support\Str;
 
 class Lingkaran extends Model
 {
@@ -39,6 +40,12 @@ class Lingkaran extends Model
                 // 🌟 PAKSA SIMPAN KE DATABASE SEBELUM SOFT DELETE BERJALAN
                 // saveQuietly() digunakan agar tidak memicu event 'updating' secara tidak sengaja
                 $lingkaran->saveQuietly(); 
+            }
+        });     
+        
+        static::creating(function ($model) {
+            if (empty($model->slug)) {
+                $model->slug = Str::slug($model->nama);
             }
         });        
     }    

@@ -219,7 +219,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\MasjidController::uploadImage
-* @see app/Http/Controllers/MasjidController.php:154
+* @see app/Http/Controllers/MasjidController.php:155
 * @route '/admin/masjid/upload-image'
 */
 export const uploadImage = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -234,7 +234,7 @@ uploadImage.definition = {
 
 /**
 * @see \App\Http\Controllers\MasjidController::uploadImage
-* @see app/Http/Controllers/MasjidController.php:154
+* @see app/Http/Controllers/MasjidController.php:155
 * @route '/admin/masjid/upload-image'
 */
 uploadImage.url = (options?: RouteQueryOptions) => {
@@ -243,7 +243,7 @@ uploadImage.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\MasjidController::uploadImage
-* @see app/Http/Controllers/MasjidController.php:154
+* @see app/Http/Controllers/MasjidController.php:155
 * @route '/admin/masjid/upload-image'
 */
 uploadImage.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -253,7 +253,7 @@ uploadImage.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\MasjidController::uploadImage
-* @see app/Http/Controllers/MasjidController.php:154
+* @see app/Http/Controllers/MasjidController.php:155
 * @route '/admin/masjid/upload-image'
 */
 const uploadImageForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -263,7 +263,7 @@ const uploadImageForm = (options?: RouteQueryOptions): RouteFormDefinition<'post
 
 /**
 * @see \App\Http\Controllers\MasjidController::uploadImage
-* @see app/Http/Controllers/MasjidController.php:154
+* @see app/Http/Controllers/MasjidController.php:155
 * @route '/admin/masjid/upload-image'
 */
 uploadImageForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -470,7 +470,7 @@ update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\MasjidController::destroy
-* @see app/Http/Controllers/MasjidController.php:137
+* @see app/Http/Controllers/MasjidController.php:138
 * @route '/admin/masjid/{masjid}'
 */
 export const destroy = (args: { masjid: number | { id: number } } | [masjid: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -485,7 +485,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\MasjidController::destroy
-* @see app/Http/Controllers/MasjidController.php:137
+* @see app/Http/Controllers/MasjidController.php:138
 * @route '/admin/masjid/{masjid}'
 */
 destroy.url = (args: { masjid: number | { id: number } } | [masjid: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -518,7 +518,7 @@ destroy.url = (args: { masjid: number | { id: number } } | [masjid: number | { i
 
 /**
 * @see \App\Http\Controllers\MasjidController::destroy
-* @see app/Http/Controllers/MasjidController.php:137
+* @see app/Http/Controllers/MasjidController.php:138
 * @route '/admin/masjid/{masjid}'
 */
 destroy.delete = (args: { masjid: number | { id: number } } | [masjid: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -528,7 +528,7 @@ destroy.delete = (args: { masjid: number | { id: number } } | [masjid: number | 
 
 /**
 * @see \App\Http\Controllers\MasjidController::destroy
-* @see app/Http/Controllers/MasjidController.php:137
+* @see app/Http/Controllers/MasjidController.php:138
 * @route '/admin/masjid/{masjid}'
 */
 const destroyForm = (args: { masjid: number | { id: number } } | [masjid: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -543,7 +543,7 @@ const destroyForm = (args: { masjid: number | { id: number } } | [masjid: number
 
 /**
 * @see \App\Http\Controllers\MasjidController::destroy
-* @see app/Http/Controllers/MasjidController.php:137
+* @see app/Http/Controllers/MasjidController.php:138
 * @route '/admin/masjid/{masjid}'
 */
 destroyForm.delete = (args: { masjid: number | { id: number } } | [masjid: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -558,6 +558,111 @@ destroyForm.delete = (args: { masjid: number | { id: number } } | [masjid: numbe
 
 destroy.form = destroyForm
 
+/**
+* @see \App\Http\Controllers\UkhuwahController::show
+* @see app/Http/Controllers/UkhuwahController.php:90
+* @route '/masjid/{masjid}'
+*/
+export const show = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: show.url(args, options),
+    method: 'get',
+})
+
+show.definition = {
+    methods: ["get","head"],
+    url: '/masjid/{masjid}',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::show
+* @see app/Http/Controllers/UkhuwahController.php:90
+* @route '/masjid/{masjid}'
+*/
+show.url = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { masjid: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'slug' in args) {
+        args = { masjid: args.slug }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            masjid: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        masjid: typeof args.masjid === 'object'
+        ? args.masjid.slug
+        : args.masjid,
+    }
+
+    return show.definition.url
+            .replace('{masjid}', parsedArgs.masjid.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::show
+* @see app/Http/Controllers/UkhuwahController.php:90
+* @route '/masjid/{masjid}'
+*/
+show.get = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: show.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::show
+* @see app/Http/Controllers/UkhuwahController.php:90
+* @route '/masjid/{masjid}'
+*/
+show.head = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: show.url(args, options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::show
+* @see app/Http/Controllers/UkhuwahController.php:90
+* @route '/masjid/{masjid}'
+*/
+const showForm = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::show
+* @see app/Http/Controllers/UkhuwahController.php:90
+* @route '/masjid/{masjid}'
+*/
+showForm.get = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::show
+* @see app/Http/Controllers/UkhuwahController.php:90
+* @route '/masjid/{masjid}'
+*/
+showForm.head = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+show.form = showForm
+
 const masjid = {
     index: Object.assign(index, index),
     create: Object.assign(create, create),
@@ -566,6 +671,7 @@ const masjid = {
     edit: Object.assign(edit, edit),
     update: Object.assign(update, update),
     destroy: Object.assign(destroy, destroy),
+    show: Object.assign(show, show),
 }
 
 export default masjid

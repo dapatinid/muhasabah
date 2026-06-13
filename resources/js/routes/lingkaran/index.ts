@@ -219,7 +219,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\LingkaranController::uploadImage
-* @see app/Http/Controllers/LingkaranController.php:154
+* @see app/Http/Controllers/LingkaranController.php:155
 * @route '/admin/lingkaran/upload-image'
 */
 export const uploadImage = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -234,7 +234,7 @@ uploadImage.definition = {
 
 /**
 * @see \App\Http\Controllers\LingkaranController::uploadImage
-* @see app/Http/Controllers/LingkaranController.php:154
+* @see app/Http/Controllers/LingkaranController.php:155
 * @route '/admin/lingkaran/upload-image'
 */
 uploadImage.url = (options?: RouteQueryOptions) => {
@@ -243,7 +243,7 @@ uploadImage.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\LingkaranController::uploadImage
-* @see app/Http/Controllers/LingkaranController.php:154
+* @see app/Http/Controllers/LingkaranController.php:155
 * @route '/admin/lingkaran/upload-image'
 */
 uploadImage.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -253,7 +253,7 @@ uploadImage.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\LingkaranController::uploadImage
-* @see app/Http/Controllers/LingkaranController.php:154
+* @see app/Http/Controllers/LingkaranController.php:155
 * @route '/admin/lingkaran/upload-image'
 */
 const uploadImageForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -263,7 +263,7 @@ const uploadImageForm = (options?: RouteQueryOptions): RouteFormDefinition<'post
 
 /**
 * @see \App\Http\Controllers\LingkaranController::uploadImage
-* @see app/Http/Controllers/LingkaranController.php:154
+* @see app/Http/Controllers/LingkaranController.php:155
 * @route '/admin/lingkaran/upload-image'
 */
 uploadImageForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -470,7 +470,7 @@ update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\LingkaranController::destroy
-* @see app/Http/Controllers/LingkaranController.php:137
+* @see app/Http/Controllers/LingkaranController.php:138
 * @route '/admin/lingkaran/{lingkaran}'
 */
 export const destroy = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -485,7 +485,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\LingkaranController::destroy
-* @see app/Http/Controllers/LingkaranController.php:137
+* @see app/Http/Controllers/LingkaranController.php:138
 * @route '/admin/lingkaran/{lingkaran}'
 */
 destroy.url = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -518,7 +518,7 @@ destroy.url = (args: { lingkaran: number | { id: number } } | [lingkaran: number
 
 /**
 * @see \App\Http\Controllers\LingkaranController::destroy
-* @see app/Http/Controllers/LingkaranController.php:137
+* @see app/Http/Controllers/LingkaranController.php:138
 * @route '/admin/lingkaran/{lingkaran}'
 */
 destroy.delete = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -528,7 +528,7 @@ destroy.delete = (args: { lingkaran: number | { id: number } } | [lingkaran: num
 
 /**
 * @see \App\Http\Controllers\LingkaranController::destroy
-* @see app/Http/Controllers/LingkaranController.php:137
+* @see app/Http/Controllers/LingkaranController.php:138
 * @route '/admin/lingkaran/{lingkaran}'
 */
 const destroyForm = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -543,7 +543,7 @@ const destroyForm = (args: { lingkaran: number | { id: number } } | [lingkaran: 
 
 /**
 * @see \App\Http\Controllers\LingkaranController::destroy
-* @see app/Http/Controllers/LingkaranController.php:137
+* @see app/Http/Controllers/LingkaranController.php:138
 * @route '/admin/lingkaran/{lingkaran}'
 */
 destroyForm.delete = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -558,6 +558,111 @@ destroyForm.delete = (args: { lingkaran: number | { id: number } } | [lingkaran:
 
 destroy.form = destroyForm
 
+/**
+* @see \App\Http\Controllers\UkhuwahController::show
+* @see app/Http/Controllers/UkhuwahController.php:77
+* @route '/lingkaran/{lingkaran}'
+*/
+export const show = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: show.url(args, options),
+    method: 'get',
+})
+
+show.definition = {
+    methods: ["get","head"],
+    url: '/lingkaran/{lingkaran}',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::show
+* @see app/Http/Controllers/UkhuwahController.php:77
+* @route '/lingkaran/{lingkaran}'
+*/
+show.url = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { lingkaran: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'slug' in args) {
+        args = { lingkaran: args.slug }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            lingkaran: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        lingkaran: typeof args.lingkaran === 'object'
+        ? args.lingkaran.slug
+        : args.lingkaran,
+    }
+
+    return show.definition.url
+            .replace('{lingkaran}', parsedArgs.lingkaran.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::show
+* @see app/Http/Controllers/UkhuwahController.php:77
+* @route '/lingkaran/{lingkaran}'
+*/
+show.get = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: show.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::show
+* @see app/Http/Controllers/UkhuwahController.php:77
+* @route '/lingkaran/{lingkaran}'
+*/
+show.head = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: show.url(args, options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::show
+* @see app/Http/Controllers/UkhuwahController.php:77
+* @route '/lingkaran/{lingkaran}'
+*/
+const showForm = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::show
+* @see app/Http/Controllers/UkhuwahController.php:77
+* @route '/lingkaran/{lingkaran}'
+*/
+showForm.get = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\UkhuwahController::show
+* @see app/Http/Controllers/UkhuwahController.php:77
+* @route '/lingkaran/{lingkaran}'
+*/
+showForm.head = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+show.form = showForm
+
 const lingkaran = {
     index: Object.assign(index, index),
     create: Object.assign(create, create),
@@ -566,6 +671,7 @@ const lingkaran = {
     edit: Object.assign(edit, edit),
     update: Object.assign(update, update),
     destroy: Object.assign(destroy, destroy),
+    show: Object.assign(show, show),
 }
 
 export default lingkaran

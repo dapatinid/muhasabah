@@ -155,7 +155,7 @@ function goToPage(url: string | null) {
         <div class="relative">
           <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-stone-500" />
           <input v-model="search" type="search" placeholder="Cari kalam..." 
-            class="w-full bg-stone-900/50 border border-stone-800 rounded-xl py-2.5 pl-10 pr-4 text-sm outline-none focus:ring-1 focus:ring-amber-500/50" />
+            class="w-full bg-stone-900/50 border border-stone-800 rounded-xl py-2.5 pl-10 pr-4 text-sm text-stone-200 placeholder:text-stone-500 outline-none focus:ring-1 focus:ring-amber-500/50" />
         </div>
         <div class="flex gap-2 overflow-x-auto no-scrollbar">
           <button v-for="kat in kategoriList" :key="kat" @click="filterKategori(kat)"

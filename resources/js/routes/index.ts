@@ -698,7 +698,7 @@ acara.form = acaraForm
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::ukhuwah
-* @see app/Http/Controllers/UkhuwahController.php:13
+* @see app/Http/Controllers/UkhuwahController.php:16
 * @route '/ukhuwah'
 */
 export const ukhuwah = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -713,7 +713,7 @@ ukhuwah.definition = {
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::ukhuwah
-* @see app/Http/Controllers/UkhuwahController.php:13
+* @see app/Http/Controllers/UkhuwahController.php:16
 * @route '/ukhuwah'
 */
 ukhuwah.url = (options?: RouteQueryOptions) => {
@@ -722,7 +722,7 @@ ukhuwah.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::ukhuwah
-* @see app/Http/Controllers/UkhuwahController.php:13
+* @see app/Http/Controllers/UkhuwahController.php:16
 * @route '/ukhuwah'
 */
 ukhuwah.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -732,7 +732,7 @@ ukhuwah.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::ukhuwah
-* @see app/Http/Controllers/UkhuwahController.php:13
+* @see app/Http/Controllers/UkhuwahController.php:16
 * @route '/ukhuwah'
 */
 ukhuwah.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -742,7 +742,7 @@ ukhuwah.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::ukhuwah
-* @see app/Http/Controllers/UkhuwahController.php:13
+* @see app/Http/Controllers/UkhuwahController.php:16
 * @route '/ukhuwah'
 */
 const ukhuwahForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -752,7 +752,7 @@ const ukhuwahForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::ukhuwah
-* @see app/Http/Controllers/UkhuwahController.php:13
+* @see app/Http/Controllers/UkhuwahController.php:16
 * @route '/ukhuwah'
 */
 ukhuwahForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -762,7 +762,7 @@ ukhuwahForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::ukhuwah
-* @see app/Http/Controllers/UkhuwahController.php:13
+* @see app/Http/Controllers/UkhuwahController.php:16
 * @route '/ukhuwah'
 */
 ukhuwahForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

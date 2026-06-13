@@ -96,6 +96,7 @@ public function update(Request $request, Lingkaran $lingkaran)
 {
     $validated = $request->validate([
         'nama' => 'required|string|max:255',
+        'slug' => 'required|string|max:255|unique:lingkarans,slug,' . $lingkaran->id,
         'jenis' => 'required|string',
         'kontak' => 'nullable|string|max:255',
         'alamat' => 'nullable|string',
