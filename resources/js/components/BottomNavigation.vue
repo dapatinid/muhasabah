@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { Link, usePage } from '@inertiajs/vue3' // Tambahkan usePage di sini
+import { Link, usePage } from '@inertiajs/vue3'
 import { 
   House, CalendarDays, MapPin, BookOpenText, 
   HeartHandshake, LayoutGrid, Coins, 
@@ -11,6 +11,12 @@ import {
 // Ambil data page untuk mendeteksi URL aktif
 const page = usePage()
 const currentUrl = computed(() => page.url)
+
+// Helper function untuk mendeteksi path aktif beserta turunannya secara akurat
+const isPathActive = (path: string) => {
+  const url = currentUrl.value
+  return url === path || url.startsWith(`${path}/`) || url.startsWith(`${path}?`)
+}
 
 // Logic FAB Donasi
 const isDonationOpen = ref(false)
@@ -29,7 +35,6 @@ const donationMenus = [
   <footer class="fixed bottom-0 inset-x-0 bg-stone-900/90 backdrop-blur-lg border-t border-stone-800 pb-3 pt-3 z-50 max-w-xl mx-auto">
     <div class="grid grid-cols-5 items-center justify-items-center">
       
-      <!-- Beranda -->
       <Link href="/" 
             :class="[currentUrl === '/' ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400']"
             class="flex flex-col items-center gap-1 w-full transition-colors">
@@ -37,15 +42,13 @@ const donationMenus = [
         <span class="text-[10px]" :class="currentUrl === '/' ? 'font-bold' : 'font-medium'">Beranda</span>
       </Link>
 
-      <!-- Kalam -->
       <Link href="/kalam" 
-            :class="currentUrl === '/kalam' ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
+            :class="isPathActive('/kalam') ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
             class="flex flex-col items-center gap-1 w-full transition-colors">
         <BookOpenText class="size-5" />
-        <span class="text-[10px]" :class="currentUrl === '/kalam' ? 'font-bold' : 'font-medium'">Kalam</span>
+        <span class="text-[10px]" :class="isPathActive('/kalam') ? 'font-bold' : 'font-medium'">Kalam</span>
       </Link>
 
-      <!-- Donasi FAB -->
       <div class="relative w-full flex justify-center">
         <transition name="fade-up">
           <div v-if="isDonationOpen"
@@ -67,24 +70,22 @@ const donationMenus = [
                   class="bg-linear-to-b from-amber-400 to-amber-600 w-14 h-14 rounded-full shadow-[0_8px_20px_rgba(217,119,6,0.4)] flex items-center justify-center border-4 border-stone-950 transition-all duration-300">
             <HeartHandshake :class="[isDonationOpen ? 'scale-110 rotate-360' : '']" class="text-white size-6 transition-all duration-300" />
           </button>
-          <span class="text-[10px] font-medium text-stone-500">Donasi</span>
+          <span class="text-[10px] font-medium animate-colors" :class="isPathActive('/donasi') ? 'text-amber-500 font-bold' : 'text-stone-500'">Donasi</span>
         </div>
       </div>
 
-      <!-- Acara -->
       <Link href="/acara" 
-            :class="currentUrl === '/acara' ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
+            :class="isPathActive('/acara') ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
             class="flex flex-col items-center gap-1 w-full transition-colors">
         <CalendarDays class="size-5" />
-        <span class="text-[10px]" :class="currentUrl === '/acara' ? 'font-bold' : 'font-medium'">Acara</span>
+        <span class="text-[10px]" :class="isPathActive('/acara') ? 'font-bold' : 'font-medium'">Acara</span>
       </Link>
 
-      <!-- Ukhuwah -->
       <Link href="/ukhuwah" 
-            :class="currentUrl === '/ukhuwah' ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
+            :class="isPathActive('/ukhuwah') ? 'text-amber-500' : 'text-stone-500 hover:text-amber-400'"
             class="flex flex-col items-center gap-1 w-full transition-colors">
         <CircleStar class="size-5" />
-        <span class="text-[10px]" :class="currentUrl === '/ukhuwah' ? 'font-bold' : 'font-medium'">Ukhuwah</span>
+        <span class="text-[10px]" :class="isPathActive('/ukhuwah') ? 'font-bold' : 'font-medium'">Ukhuwah</span>
       </Link>
 
     </div>

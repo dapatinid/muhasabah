@@ -136,7 +136,7 @@ const tabs: { key: TabKey; label: string; icon: any; color: string; activeColor:
 
           <!-- Kalam Tab -->
           <div v-if="activeTab === 'kalam'">
-            <div v-if="user.kalams && user.kalams.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-4 px-3">
+            <div v-if="user.kalams && user.kalams.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-4 px-3 mt-2">
               <Link
                 v-for="kalam in user.kalams"
                 :key="kalam.id"
