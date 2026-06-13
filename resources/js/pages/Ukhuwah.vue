@@ -2,7 +2,7 @@
 import { Head, Link, router } from '@inertiajs/vue3'
 import { ref, watch } from 'vue'
 import debounce from 'lodash/debounce'
-import { Search, MapPin, Star, UserCircle2 } from 'lucide-vue-next'
+import { Search, MapPin, Star, UserCircle2, CircleStar, MoonStar, Target } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 
 const props = defineProps<{
@@ -27,9 +27,9 @@ function goToPage(url: string | null) { if (url) router.get(url) }
 function formatRating(num: any) { return num ? Number(num).toFixed(1) : '0.0' }
 
 const tabs = [
-  { key: 'tokoh',    label: 'Tokoh',    emoji: '👤' },
-  { key: 'lingkaran', label: 'Lingkaran', emoji: '🤝' },
-  { key: 'masjid',   label: 'Masjid',   emoji: '🕌' },
+  { key: 'tokoh',    label: 'Tokoh',    icon: UserCircle2 },
+  { key: 'lingkaran', label: 'Lingkaran', icon: Target },
+  { key: 'masjid',   label: 'Masjid',   icon: MoonStar },
 ]
 </script>
 
@@ -65,7 +65,7 @@ const tabs = [
             Jejaring <span class="text-emerald-300">Ukhuwah</span>
           </h1>
           <p class="text-emerald-100/70 text-sm max-w-sm mx-auto leading-relaxed">
-            Temukan tokoh, komunitas, dan masjid — bangun silaturahmi yang bermakna.
+            Temukan tokoh, lingkaran, dan masjid — bangun silaturahmi yang bermakna.
           </p>
         </div>
       </div>
@@ -78,7 +78,7 @@ const tabs = [
           <input
             v-model="search"
             type="text"
-            placeholder="Cari nama tokoh, komunitas, atau masjid…"
+            placeholder="Cari nama tokoh, lingkaran, atau masjid…"
             class="w-full pl-11 pr-5 py-3.5 bg-stone-900 border border-stone-800 rounded-2xl text-sm text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 shadow-none transition"
           />
         </div>
@@ -96,7 +96,7 @@ const tabs = [
                 : 'text-stone-500 hover:text-stone-300 hover:bg-stone-800'
             ]"
           >
-            <span>{{ t.emoji }}</span>
+            <span><component :is="t.icon" class="size-4" /></span>
             <span>{{ t.label }}</span>
           </button>
         </div>

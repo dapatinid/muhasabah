@@ -150,9 +150,15 @@ function stripHtml(html: string | null, length = 100): string {
 
 function tanggal(dateStr: string | null): string {
   if (!dateStr) return '-' // 🛠️ PERBAIKAN: Hindari Invalid Date jika null
-  return new Date(dateStr).toLocaleDateString('id-ID', {
-    day: 'numeric', month: 'short', year: 'numeric'
+  const hasil = new Date(dateStr).toLocaleDateString('id-ID', {
+    weekday: 'long',
+    day: 'numeric', 
+    month: 'long',   
+    year: 'numeric',
   })
+
+  // Mengganti teks "Minggu" menjadi "Ahad" jika ada
+  return hasil.replace(/^Minggu/, 'Ahad')
 }
 
 function formatRupiah(nominal: number | null): string {
@@ -386,7 +392,7 @@ function getHargaBadgeInfo(acara: any) {
         :href="user ? '/dashboard' : '/login'"
         class="my-3.5 w-10 h-10 rounded-full bg-stone-800 border border-amber-500/30 flex items-center justify-center text-stone-400 hover:text-amber-400 transition-colors"
       >
-        <img v-if="user?.avatar" :src="user.avatar" class="w-full h-full rounded-full object-cover" />
+        <img v-if="user?.avatar" :src="`/storage/${user.avatar}`" class="w-full h-full rounded-full object-cover" />
         <UserRound v-else class="size-5" />
       </Link>
     </template>

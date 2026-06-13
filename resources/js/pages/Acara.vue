@@ -116,9 +116,15 @@ function getStatusRegistrasi(batas_registrasi: string | null): { teks: string; t
 }
 
 function getTglMulai(tgl: string): string {
-  return new Date(tgl).toLocaleDateString('id-ID', {
-    day: 'numeric', month: 'short', year: 'numeric',
+  const hasil = new Date(tgl).toLocaleDateString('id-ID', {
+    weekday: 'long',
+    day: 'numeric', 
+    month: 'long',   
+    year: 'numeric',
   })
+
+  // Mengganti teks "Minggu" menjadi "Ahad" jika ada
+  return hasil.replace(/^Minggu/, 'Ahad')
 }
 
 function getSisaTiket(acara: typeof props.acaras.data[0]): number {
@@ -319,7 +325,7 @@ function closeModal() {
             </div>
             <div class="flex items-center gap-2">
               <CalendarDays class="size-4 text-indigo-400 shrink-0" />
-              <span>Pelaksanaan: {{ getTglMulai(selectedAcara.tgl_mulai) }}</span>
+              <span>{{ getTglMulai(selectedAcara.tgl_mulai) }}</span>
             </div>
           </div>
 

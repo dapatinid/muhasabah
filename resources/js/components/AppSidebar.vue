@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { Award, BookOpen, Calendar, CircleStar, FolderGit2, GalleryThumbnails, HeartHandshake, HouseHeart, LayoutGrid, Logs } from 'lucide-vue-next';
+import { Award, BookOpen, Calendar, CircleStar, FolderGit2, GalleryThumbnails, HeartHandshake, LayoutGrid, Logs, MoonStar, Target } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -55,12 +55,12 @@ const mainNavItemsUkhuwah = computed(() => {
             {
                 title: 'Lingkaran',
                 href: '/admin/lingkaran',
-                icon: CircleStar,
+                icon: Target,
             },
             {
                 title: 'Masjid',
                 href: '/admin/masjid',
-                icon: HouseHeart,
+                icon: MoonStar,
             },
         );
     return items;  
