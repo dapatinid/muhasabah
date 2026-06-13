@@ -20,84 +20,86 @@ class RestrictDataToOwner
         $user = $request->user();
 
         if ($user) {
-            // (Opsional) Jika super admin boleh lihat semua
             if ($user->level === 'Super Admin') return $next($request);
 
             // ==========================================
-            // 1. KACAMATA KUDA (Untuk list/index & query)
+            // 1. KACAMATA KUDA
             // ==========================================
-            
-            // Scope A: Ketat (Hanya Pembuat)
+
             $strictScope = function (Builder $builder) use ($user) {
-                $builder->where('created_by', $user->id); 
+                $builder->where('created_by', $user->id);
             };
 
-            // Scope B: Fleksibel (Pembuat ATAU Anggota/Pengelola di tabel pivot)
             $flexibleScope = function (Builder $builder) use ($user) {
                 $builder->where(function ($query) use ($user) {
                     $query->where('created_by', $user->id)
                           ->orWhereHas('users', function ($q) use ($user) {
-                              // Memeriksa apakah user ini ada di tabel pivot (lingkaran_user / masjid_user)
-                              $q->where('users.id', $user->id); 
+                              $q->where('users.id', $user->id);
                           });
                 });
             };
 
-            // Terapkan Scope Ketat
             Kalam::addGlobalScope('owner', $strictScope);
             Donasi::addGlobalScope('owner', $strictScope);
             Acara::addGlobalScope('owner', $strictScope);
-
-            // Terapkan Scope Fleksibel
             Lingkaran::addGlobalScope('owner', $flexibleScope);
             Masjid::addGlobalScope('owner', $flexibleScope);
 
+            // ==========================================
+            // 2. PENJAGA PINTU
+            // ==========================================
 
-            // ==========================================
-            // 2. PENJAGA PINTU (Mencegah Akses URL Langsung)
-            // ==========================================
-            
             // Pengecekan A: Ketat (Kalam, Donasi, Acara)
             $strictModels = [
-                'kalam'  => \App\Models\Kalam::class,
-                'donasi' => \App\Models\Donasi::class,
-                'acara'  => \App\Models\Acara::class,
+                'kalam'  => Kalam::class,
+                'donasi' => Donasi::class,
+                'acara'  => Acara::class,
             ];
 
             foreach ($strictModels as $paramName => $modelClass) {
                 $model = $request->route($paramName);
 
+                // Resolve manual jika masih string (slug), bypass global scope
                 if ($model && is_string($model)) {
-                    $model = $modelClass::where('slug', $model)->first();
+                    $model = $modelClass::withoutGlobalScope('owner')
+                        ->where('slug', $model)
+                        ->first();
                 }
 
-                if ($model && $model instanceof \Illuminate\Database\Eloquent\Model) {
+                if ($model instanceof \Illuminate\Database\Eloquent\Model) {
                     if ($model->created_by !== $user->id) {
-                        abort(404);
+                        abort(403);
                     }
                 }
             }
 
-            // Pengecekan B: Fleksibel (Lingkaran, Masjid)
-            $flexibleParamsToCheck = [
+            // Pengecekan B: Fleksibel (Lingkaran, Masjid — tidak ada created_by wajib)
+            $flexibleModels = [
                 'lingkaran' => Lingkaran::class,
                 'masjid'    => Masjid::class,
             ];
 
-            foreach ($flexibleParamsToCheck as $paramName => $modelClass) {
+            foreach ($flexibleModels as $paramName => $modelClass) {
                 $model = $request->route($paramName);
 
-                // Jika belum di-resolve (masih string), ambil manual pakai slug
+                // Resolve manual jika masih string (slug), bypass global scope
                 if ($model && is_string($model)) {
-                    $model = $modelClass::where('slug', $model)->first();
+                    $model = $modelClass::withoutGlobalScope('owner')
+                        ->where('slug', $model)
+                        ->first();
                 }
 
-                if ($model && $model instanceof \Illuminate\Database\Eloquent\Model) {
-                    $isOwner    = $model->created_by === $user->id;
-                    $isAttached = $model->users()->where('users.id', $user->id)->exists();
+                if ($model instanceof \Illuminate\Database\Eloquent\Model) {
+                    $isOwner = $model->created_by === $user->id;
+
+                    // Query users() tanpa terkena global scope apapun
+                    $isAttached = $model->users()
+                        ->withoutGlobalScopes()
+                        ->where('users.id', $user->id)
+                        ->exists();
 
                     if (!$isOwner && !$isAttached) {
-                        abort(404);
+                        abort(403);
                     }
                 }
             }
