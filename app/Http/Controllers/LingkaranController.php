@@ -103,6 +103,7 @@ public function update(Request $request, Lingkaran $lingkaran)
         'deskripsi' => 'nullable|string',
         'logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         'sampul' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'is_published' => 'boolean',
         'users' => 'nullable|array', // Validasi input users sebagai array
         'users.*' => 'exists:users,id', // Pastikan ID valid
     ]);

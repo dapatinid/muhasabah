@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\AcaraController::bulk
-* @see app/Http/Controllers/AcaraController.php:317
+* @see app/Http/Controllers/AcaraController.php:318
 * @route '/admin/acara/{acara}/bulk-keuangan'
 */
 export const bulk = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ bulk.definition = {
 
 /**
 * @see \App\Http\Controllers\AcaraController::bulk
-* @see app/Http/Controllers/AcaraController.php:317
+* @see app/Http/Controllers/AcaraController.php:318
 * @route '/admin/acara/{acara}/bulk-keuangan'
 */
 bulk.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ bulk.url = (args: { acara: string | { slug: string } } | [acara: string | { slug
 
 /**
 * @see \App\Http\Controllers\AcaraController::bulk
-* @see app/Http/Controllers/AcaraController.php:317
+* @see app/Http/Controllers/AcaraController.php:318
 * @route '/admin/acara/{acara}/bulk-keuangan'
 */
 bulk.post = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -59,7 +59,7 @@ bulk.post = (args: { acara: string | { slug: string } } | [acara: string | { slu
 
 /**
 * @see \App\Http\Controllers\AcaraController::bulk
-* @see app/Http/Controllers/AcaraController.php:317
+* @see app/Http/Controllers/AcaraController.php:318
 * @route '/admin/acara/{acara}/bulk-keuangan'
 */
 const bulkForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -69,7 +69,7 @@ const bulkForm = (args: { acara: string | { slug: string } } | [acara: string | 
 
 /**
 * @see \App\Http\Controllers\AcaraController::bulk
-* @see app/Http/Controllers/AcaraController.php:317
+* @see app/Http/Controllers/AcaraController.php:318
 * @route '/admin/acara/{acara}/bulk-keuangan'
 */
 bulkForm.post = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

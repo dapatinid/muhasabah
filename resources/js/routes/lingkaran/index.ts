@@ -219,7 +219,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\LingkaranController::uploadImage
-* @see app/Http/Controllers/LingkaranController.php:155
+* @see app/Http/Controllers/LingkaranController.php:156
 * @route '/admin/lingkaran/upload-image'
 */
 export const uploadImage = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -234,7 +234,7 @@ uploadImage.definition = {
 
 /**
 * @see \App\Http\Controllers\LingkaranController::uploadImage
-* @see app/Http/Controllers/LingkaranController.php:155
+* @see app/Http/Controllers/LingkaranController.php:156
 * @route '/admin/lingkaran/upload-image'
 */
 uploadImage.url = (options?: RouteQueryOptions) => {
@@ -243,7 +243,7 @@ uploadImage.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\LingkaranController::uploadImage
-* @see app/Http/Controllers/LingkaranController.php:155
+* @see app/Http/Controllers/LingkaranController.php:156
 * @route '/admin/lingkaran/upload-image'
 */
 uploadImage.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -253,7 +253,7 @@ uploadImage.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\LingkaranController::uploadImage
-* @see app/Http/Controllers/LingkaranController.php:155
+* @see app/Http/Controllers/LingkaranController.php:156
 * @route '/admin/lingkaran/upload-image'
 */
 const uploadImageForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -263,7 +263,7 @@ const uploadImageForm = (options?: RouteQueryOptions): RouteFormDefinition<'post
 
 /**
 * @see \App\Http\Controllers\LingkaranController::uploadImage
-* @see app/Http/Controllers/LingkaranController.php:155
+* @see app/Http/Controllers/LingkaranController.php:156
 * @route '/admin/lingkaran/upload-image'
 */
 uploadImageForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -470,7 +470,7 @@ update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\LingkaranController::destroy
-* @see app/Http/Controllers/LingkaranController.php:138
+* @see app/Http/Controllers/LingkaranController.php:139
 * @route '/admin/lingkaran/{lingkaran}'
 */
 export const destroy = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -485,7 +485,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\LingkaranController::destroy
-* @see app/Http/Controllers/LingkaranController.php:138
+* @see app/Http/Controllers/LingkaranController.php:139
 * @route '/admin/lingkaran/{lingkaran}'
 */
 destroy.url = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -518,7 +518,7 @@ destroy.url = (args: { lingkaran: string | { slug: string } } | [lingkaran: stri
 
 /**
 * @see \App\Http\Controllers\LingkaranController::destroy
-* @see app/Http/Controllers/LingkaranController.php:138
+* @see app/Http/Controllers/LingkaranController.php:139
 * @route '/admin/lingkaran/{lingkaran}'
 */
 destroy.delete = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -528,7 +528,7 @@ destroy.delete = (args: { lingkaran: string | { slug: string } } | [lingkaran: s
 
 /**
 * @see \App\Http\Controllers\LingkaranController::destroy
-* @see app/Http/Controllers/LingkaranController.php:138
+* @see app/Http/Controllers/LingkaranController.php:139
 * @route '/admin/lingkaran/{lingkaran}'
 */
 const destroyForm = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -543,7 +543,7 @@ const destroyForm = (args: { lingkaran: string | { slug: string } } | [lingkaran
 
 /**
 * @see \App\Http\Controllers\LingkaranController::destroy
-* @see app/Http/Controllers/LingkaranController.php:138
+* @see app/Http/Controllers/LingkaranController.php:139
 * @route '/admin/lingkaran/{lingkaran}'
 */
 destroyForm.delete = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\AcaraController::store
-* @see app/Http/Controllers/AcaraController.php:558
+* @see app/Http/Controllers/AcaraController.php:559
 * @route '/acara/{acara}/payment'
 */
 export const store = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\AcaraController::store
-* @see app/Http/Controllers/AcaraController.php:558
+* @see app/Http/Controllers/AcaraController.php:559
 * @route '/acara/{acara}/payment'
 */
 store.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ store.url = (args: { acara: string | { slug: string } } | [acara: string | { slu
 
 /**
 * @see \App\Http\Controllers\AcaraController::store
-* @see app/Http/Controllers/AcaraController.php:558
+* @see app/Http/Controllers/AcaraController.php:559
 * @route '/acara/{acara}/payment'
 */
 store.post = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -59,7 +59,7 @@ store.post = (args: { acara: string | { slug: string } } | [acara: string | { sl
 
 /**
 * @see \App\Http\Controllers\AcaraController::store
-* @see app/Http/Controllers/AcaraController.php:558
+* @see app/Http/Controllers/AcaraController.php:559
 * @route '/acara/{acara}/payment'
 */
 const storeForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -69,7 +69,7 @@ const storeForm = (args: { acara: string | { slug: string } } | [acara: string |
 
 /**
 * @see \App\Http\Controllers\AcaraController::store
-* @see app/Http/Controllers/AcaraController.php:558
+* @see app/Http/Controllers/AcaraController.php:559
 * @route '/acara/{acara}/payment'
 */
 storeForm.post = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

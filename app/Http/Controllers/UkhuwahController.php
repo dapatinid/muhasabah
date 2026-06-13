@@ -27,12 +27,12 @@ class UkhuwahController extends Controller
             $items = $query->latest()->paginate(12)->withQueryString();
         } 
         elseif ($tab === 'lingkaran') {
-            $query = Lingkaran::withAvg('ratings', 'score')->withCount('ratings');
+            $query = Lingkaran::withAvg('ratings', 'score')->withCount('ratings')->where('is_published', true);
             if ($search) $query->where('nama', 'like', "%{$search}%")->orWhere('jenis', 'like', "%{$search}%");
             $items = $query->latest()->paginate(12)->withQueryString();
         } 
         elseif ($tab === 'masjid') {
-            $query = Masjid::withAvg('ratings', 'score')->withCount('ratings');
+            $query = Masjid::withAvg('ratings', 'score')->withCount('ratings')->where('is_published', true);
             if ($search) $query->where('nama', 'like', "%{$search}%")->orWhere('jenis', 'like', "%{$search}%");
             $items = $query->latest()->paginate(12)->withQueryString();
         }
@@ -56,7 +56,7 @@ class UkhuwahController extends Controller
         $user->load([
             'city',
             'kalams' => function($query) {
-                $query->latest()->take(4);
+                $query->where('is_published', true)->latest()->take(4);
             },
             'donasis' => function($query) {
                 $query->where('is_published', true)->latest()->take(4);
@@ -75,7 +75,10 @@ class UkhuwahController extends Controller
      * Halaman Profil Publik Komunitas / Lingkaran
      */
     public function lingkaran(Lingkaran $lingkaran)
-    {
+    {// 🛠️ PERBAIKAN: Gagalkan akses jika statusnya belum di-publish (Error 404)
+        if (!$lingkaran->is_published) {
+            abort(404);
+        }
         // Muat jumlah ulasan dan rata-rata rating
         $lingkaran->loadAvg('ratings', 'score')->loadCount('ratings');
 
@@ -88,7 +91,10 @@ class UkhuwahController extends Controller
      * Halaman Profil Publik Masjid
      */
     public function masjid(Masjid $masjid)
-    {
+    {// 🛠️ PERBAIKAN: Gagalkan akses jika statusnya belum di-publish (Error 404)
+        if (!$masjid->is_published) {
+            abort(404);
+        }
         // Muat jumlah ulasan dan rata-rata rating
         $masjid->loadAvg('ratings', 'score')->loadCount('ratings');
 

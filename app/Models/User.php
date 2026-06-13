@@ -83,4 +83,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Rating::class);
     }    
+
+/**
+     * Relasi ke tabel Uji Kelayakan (Satu user bisa mengisi banyak kategori/kuesioner)
+     */
+    public function ujiKelayakans(): HasMany
+    {
+        return $this->hasMany(UjiKelayakan::class);
+    }    
 }

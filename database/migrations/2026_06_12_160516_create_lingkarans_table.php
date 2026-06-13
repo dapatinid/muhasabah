@@ -20,6 +20,7 @@ return new class extends Migration
             $table->longText('deskripsi')->nullable();
             $table->string('logo')->nullable();
             $table->string('sampul')->nullable();
+            $table->boolean('is_published')->default(true);
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->unsignedBigInteger('deleted_by')->nullable();

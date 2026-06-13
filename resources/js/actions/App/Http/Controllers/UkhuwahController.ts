@@ -292,7 +292,7 @@ lingkaran.form = lingkaranForm
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::masjid
-* @see app/Http/Controllers/UkhuwahController.php:90
+* @see app/Http/Controllers/UkhuwahController.php:93
 * @route '/masjid/{masjid}'
 */
 export const masjid = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -307,7 +307,7 @@ masjid.definition = {
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::masjid
-* @see app/Http/Controllers/UkhuwahController.php:90
+* @see app/Http/Controllers/UkhuwahController.php:93
 * @route '/masjid/{masjid}'
 */
 masjid.url = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -340,7 +340,7 @@ masjid.url = (args: { masjid: string | { slug: string } } | [masjid: string | { 
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::masjid
-* @see app/Http/Controllers/UkhuwahController.php:90
+* @see app/Http/Controllers/UkhuwahController.php:93
 * @route '/masjid/{masjid}'
 */
 masjid.get = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -350,7 +350,7 @@ masjid.get = (args: { masjid: string | { slug: string } } | [masjid: string | { 
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::masjid
-* @see app/Http/Controllers/UkhuwahController.php:90
+* @see app/Http/Controllers/UkhuwahController.php:93
 * @route '/masjid/{masjid}'
 */
 masjid.head = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -360,7 +360,7 @@ masjid.head = (args: { masjid: string | { slug: string } } | [masjid: string | {
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::masjid
-* @see app/Http/Controllers/UkhuwahController.php:90
+* @see app/Http/Controllers/UkhuwahController.php:93
 * @route '/masjid/{masjid}'
 */
 const masjidForm = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -370,7 +370,7 @@ const masjidForm = (args: { masjid: string | { slug: string } } | [masjid: strin
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::masjid
-* @see app/Http/Controllers/UkhuwahController.php:90
+* @see app/Http/Controllers/UkhuwahController.php:93
 * @route '/masjid/{masjid}'
 */
 masjidForm.get = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -380,7 +380,7 @@ masjidForm.get = (args: { masjid: string | { slug: string } } | [masjid: string 
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::masjid
-* @see app/Http/Controllers/UkhuwahController.php:90
+* @see app/Http/Controllers/UkhuwahController.php:93
 * @route '/masjid/{masjid}'
 */
 masjidForm.head = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

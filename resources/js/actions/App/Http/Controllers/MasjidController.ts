@@ -219,7 +219,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\MasjidController::uploadImage
-* @see app/Http/Controllers/MasjidController.php:155
+* @see app/Http/Controllers/MasjidController.php:156
 * @route '/admin/masjid/upload-image'
 */
 export const uploadImage = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -234,7 +234,7 @@ uploadImage.definition = {
 
 /**
 * @see \App\Http\Controllers\MasjidController::uploadImage
-* @see app/Http/Controllers/MasjidController.php:155
+* @see app/Http/Controllers/MasjidController.php:156
 * @route '/admin/masjid/upload-image'
 */
 uploadImage.url = (options?: RouteQueryOptions) => {
@@ -243,7 +243,7 @@ uploadImage.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\MasjidController::uploadImage
-* @see app/Http/Controllers/MasjidController.php:155
+* @see app/Http/Controllers/MasjidController.php:156
 * @route '/admin/masjid/upload-image'
 */
 uploadImage.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -253,7 +253,7 @@ uploadImage.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\MasjidController::uploadImage
-* @see app/Http/Controllers/MasjidController.php:155
+* @see app/Http/Controllers/MasjidController.php:156
 * @route '/admin/masjid/upload-image'
 */
 const uploadImageForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -263,7 +263,7 @@ const uploadImageForm = (options?: RouteQueryOptions): RouteFormDefinition<'post
 
 /**
 * @see \App\Http\Controllers\MasjidController::uploadImage
-* @see app/Http/Controllers/MasjidController.php:155
+* @see app/Http/Controllers/MasjidController.php:156
 * @route '/admin/masjid/upload-image'
 */
 uploadImageForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -564,7 +564,7 @@ export const update = {
 
 /**
 * @see \App\Http\Controllers\MasjidController::destroy
-* @see app/Http/Controllers/MasjidController.php:138
+* @see app/Http/Controllers/MasjidController.php:139
 * @route '/admin/masjid/{masjid}'
 */
 export const destroy = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -579,7 +579,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\MasjidController::destroy
-* @see app/Http/Controllers/MasjidController.php:138
+* @see app/Http/Controllers/MasjidController.php:139
 * @route '/admin/masjid/{masjid}'
 */
 destroy.url = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -612,7 +612,7 @@ destroy.url = (args: { masjid: string | { slug: string } } | [masjid: string | {
 
 /**
 * @see \App\Http\Controllers\MasjidController::destroy
-* @see app/Http/Controllers/MasjidController.php:138
+* @see app/Http/Controllers/MasjidController.php:139
 * @route '/admin/masjid/{masjid}'
 */
 destroy.delete = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -622,7 +622,7 @@ destroy.delete = (args: { masjid: string | { slug: string } } | [masjid: string 
 
 /**
 * @see \App\Http\Controllers\MasjidController::destroy
-* @see app/Http/Controllers/MasjidController.php:138
+* @see app/Http/Controllers/MasjidController.php:139
 * @route '/admin/masjid/{masjid}'
 */
 const destroyForm = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -637,7 +637,7 @@ const destroyForm = (args: { masjid: string | { slug: string } } | [masjid: stri
 
 /**
 * @see \App\Http\Controllers\MasjidController::destroy
-* @see app/Http/Controllers/MasjidController.php:138
+* @see app/Http/Controllers/MasjidController.php:139
 * @route '/admin/masjid/{masjid}'
 */
 destroyForm.delete = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

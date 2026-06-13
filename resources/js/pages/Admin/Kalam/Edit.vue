@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import AppLayout from '@/layouts/AppLayout.vue'
-import { Head, useForm, Link } from '@inertiajs/vue3'
-import TiptapEditor from '@/Components/TiptapEditor.vue'
-import { ArrowLeft, Save } from 'lucide-vue-next'
+import { Head, useForm, Link, usePage } from '@inertiajs/vue3'
+import TiptapEditor from '@/components/TiptapEditor.vue'
+import { ArrowLeft, Globe, Lock, Save } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+
+const page = usePage();
+const user = page.props.auth.user;
 
 const props = defineProps<{
     kalam: {
@@ -15,6 +17,7 @@ const props = defineProps<{
         body: string;
         kategori: string;
         is_anonymous: boolean | number;
+        is_published: boolean | number;
     },
     breadcrumbs: any,
 }>();
@@ -27,6 +30,7 @@ const form = useForm({
     kategori: props.kalam.kategori,
     // Kita pastikan menjadi boolean karena checkbox butuh boolean
     is_anonymous: Boolean(props.kalam.is_anonymous),
+    is_published: Boolean(props.kalam.is_published),
 })
 
 const categories = [
@@ -60,6 +64,30 @@ function submit() {
             </div>
 
             <form @submit.prevent="submit" class="space-y-8 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 rounded-3xl shadow-sm">
+
+                <!-- Status Publikasi -->
+                <div v-if="user.level === 'Super Admin'" class="p-4 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/50">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div :class="form.is_published ? 'bg-blue-100 text-blue-600' : 'bg-zinc-200 text-zinc-500'" class="p-2 rounded-lg">
+                                <Globe v-if="form.is_published" class="size-5" />
+                                <Lock v-else class="size-5" />
+                            </div>
+                            <div>
+                                <label for="is_published" class="text-sm font-bold cursor-pointer block">
+                                    {{ form.is_published ? 'Terbit (Publik)' : 'Draft (Privat)' }}
+                                </label>
+                                <p class="text-[11px] text-zinc-500">Tentukan visibilitas program ini bagi pembaca.</p>
+                            </div>
+                        </div>
+                        <input 
+                            type="checkbox" 
+                            id="is_published" 
+                            v-model="form.is_published"
+                            class="size-6 rounded-lg border-zinc-300 text-amber-600 focus:ring-amber-500 cursor-pointer"
+                        />
+                    </div>
+                </div>
                 
                 <div class="space-y-2">
                     <Label for="judul">Judul Kalam</Label>

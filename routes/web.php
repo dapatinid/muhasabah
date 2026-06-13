@@ -9,6 +9,7 @@ use Laravel\Fortify\Features;
 use App\Http\Controllers\LaporanRiyadhohController;
 use App\Http\Controllers\LingkaranController;
 use App\Http\Controllers\MasjidController;
+use App\Http\Controllers\UjiKelayakanController;
 use App\Http\Controllers\UkhuwahController;
 use App\Models\Province;
 use App\Models\City;
@@ -84,32 +85,33 @@ Route::inertia('halaman-dibangun', 'HalamanDibangun')->name('halaman-dibangun');
 
 Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
     
-    
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
     Route::inertia('/pendaftaran/relawan-donatur', 'Pendaftaran/RelawanDonatur')->name('pendaftaran.relawan-donatur');
     Route::inertia('/pendaftaran/penulis', 'Pendaftaran/Penulis')->name('pendaftaran.penulis');
     Route::inertia('/pendaftaran/penggalang-dana', 'Pendaftaran/PenggalangDana')->name('pendaftaran.penggalang-dana');
-    Route::inertia('/pendaftaran/penyelenggara-acara', 'Pendaftaran/PenyelenggaraAcara')->name('pendaftaran.penyelenggara-acara');    
+    Route::inertia('/pendaftaran/penyelenggara-acara', 'Pendaftaran/PenyelenggaraAcara')->name('pendaftaran.penyelenggara-acara'); 
+    
+    Route::post('/pendaftaran/uji-kelayakan', [UjiKelayakanController::class, 'store'])->name('pendaftaran.store');
     
     Route::middleware(['admin', 'restrict_owner'])->group(function () {
 
-        Route::get('/admin/lingkaran', [LingkaranController::class, 'index'])->name('lingkaran.index');
-        Route::get('/admin/lingkaran/create', [LingkaranController::class, 'create'])->name('lingkaran.create');
-        Route::post('/admin/lingkaran', [LingkaranController::class, 'store'])->name('lingkaran.store');
-        Route::post('/admin/lingkaran/upload-image', [LingkaranController::class, 'uploadImage'])->name('lingkaran.upload-image');
-        Route::get('/admin/lingkaran/{lingkaran:slug}/edit', [LingkaranController::class, 'edit'])->name('lingkaran.edit');
-        Route::put('/admin/lingkaran/{lingkaran:slug}', [LingkaranController::class, 'update'])->name('lingkaran.update');
-        Route::patch('/admin/lingkaran/{lingkaran:slug}', [LingkaranController::class, 'update']);
-        Route::delete('/admin/lingkaran/{lingkaran:slug}', [LingkaranController::class, 'destroy'])->name('lingkaran.destroy'); 
+        Route::middleware(['auth', 'user_class:relawan-donatur'])->group(function () {
+            Route::get('/admin/lingkaran', [LingkaranController::class, 'index'])->name('lingkaran.index');
+            Route::get('/admin/lingkaran/create', [LingkaranController::class, 'create'])->name('lingkaran.create');
+            Route::post('/admin/lingkaran', [LingkaranController::class, 'store'])->name('lingkaran.store');
+            Route::post('/admin/lingkaran/upload-image', [LingkaranController::class, 'uploadImage'])->name('lingkaran.upload-image');
+            Route::get('/admin/lingkaran/{lingkaran:slug}/edit', [LingkaranController::class, 'edit'])->name('lingkaran.edit');
+            Route::put('/admin/lingkaran/{lingkaran:slug}', [LingkaranController::class, 'update'])->name('lingkaran.update');
+            Route::patch('/admin/lingkaran/{lingkaran:slug}', [LingkaranController::class, 'update']);
 
-        Route::get('/admin/masjid', [MasjidController::class, 'index'])->name('masjid.index');
-        Route::get('/admin/masjid/create', [MasjidController::class, 'create'])->name('masjid.create');
-        Route::post('/admin/masjid', [MasjidController::class, 'store'])->name('masjid.store');
-        Route::post('/admin/masjid/upload-image', [MasjidController::class, 'uploadImage'])->name('masjid.upload-image');
-        Route::get('/admin/masjid/{masjid:slug}/edit', [MasjidController::class, 'edit'])->name('masjid.edit');
-        Route::put('/admin/masjid/{masjid:slug}', [MasjidController::class, 'update'])->name('masjid.update');
-        Route::patch('/admin/masjid/{masjid:slug}', [MasjidController::class, 'update']);
-        Route::delete('/admin/masjid/{masjid:slug}', [MasjidController::class, 'destroy'])->name('masjid.destroy'); 
+            Route::get('/admin/masjid', [MasjidController::class, 'index'])->name('masjid.index');
+            Route::get('/admin/masjid/create', [MasjidController::class, 'create'])->name('masjid.create');
+            Route::post('/admin/masjid', [MasjidController::class, 'store'])->name('masjid.store');
+            Route::post('/admin/masjid/upload-image', [MasjidController::class, 'uploadImage'])->name('masjid.upload-image');
+            Route::get('/admin/masjid/{masjid:slug}/edit', [MasjidController::class, 'edit'])->name('masjid.edit');
+            Route::put('/admin/masjid/{masjid:slug}', [MasjidController::class, 'update'])->name('masjid.update');
+            Route::patch('/admin/masjid/{masjid:slug}', [MasjidController::class, 'update']);
+        });
         
         // Fitur Kelola Kalam (Admin)
         Route::middleware(['auth', 'user_class:penulis'])->group(function () {
@@ -168,6 +170,8 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
             Route::get('/admin/banner', [BannerController::class, 'index'])->name('banner.index');
 
             Route::middleware(['super.admin'])->group(function () {
+                Route::delete('/admin/lingkaran/{lingkaran:slug}', [LingkaranController::class, 'destroy'])->name('lingkaran.destroy'); 
+                Route::delete('/admin/masjid/{masjid:slug}', [MasjidController::class, 'destroy'])->name('masjid.destroy'); 
                     
                 // Banner
                 Route::get('/admin/banner/create', [BannerController::class, 'create'])->name('banner.create');

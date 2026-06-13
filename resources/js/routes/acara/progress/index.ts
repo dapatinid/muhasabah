@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\AcaraController::update
-* @see app/Http/Controllers/AcaraController.php:206
+* @see app/Http/Controllers/AcaraController.php:207
 * @route '/admin/acara/{acara}/progress'
 */
 export const update = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -16,7 +16,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\AcaraController::update
-* @see app/Http/Controllers/AcaraController.php:206
+* @see app/Http/Controllers/AcaraController.php:207
 * @route '/admin/acara/{acara}/progress'
 */
 update.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ update.url = (args: { acara: string | { slug: string } } | [acara: string | { sl
 
 /**
 * @see \App\Http\Controllers\AcaraController::update
-* @see app/Http/Controllers/AcaraController.php:206
+* @see app/Http/Controllers/AcaraController.php:207
 * @route '/admin/acara/{acara}/progress'
 */
 update.put = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -59,7 +59,7 @@ update.put = (args: { acara: string | { slug: string } } | [acara: string | { sl
 
 /**
 * @see \App\Http\Controllers\AcaraController::update
-* @see app/Http/Controllers/AcaraController.php:206
+* @see app/Http/Controllers/AcaraController.php:207
 * @route '/admin/acara/{acara}/progress'
 */
 const updateForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -74,7 +74,7 @@ const updateForm = (args: { acara: string | { slug: string } } | [acara: string 
 
 /**
 * @see \App\Http\Controllers\AcaraController::update
-* @see app/Http/Controllers/AcaraController.php:206
+* @see app/Http/Controllers/AcaraController.php:207
 * @route '/admin/acara/{acara}/progress'
 */
 updateForm.put = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

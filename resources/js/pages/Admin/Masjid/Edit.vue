@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, useForm, Link } from '@inertiajs/vue3'
 import { ref, computed } from 'vue'
-import { ArrowLeft, Save, Trash2, Search } from 'lucide-vue-next'
+import { ArrowLeft, Save, Globe, Lock, Trash2, Search } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -26,6 +26,7 @@ const props = defineProps<{
         deskripsi: string | null;
         logo: string | null;
         sampul: string | null;
+        is_published: boolean;
     };
     users: Array<{ id: number, name: string }>; // Props daftar semua user
     attachedUsers: Array<number>; // Props ID user yang sudah tergabung
@@ -50,6 +51,7 @@ const form = useForm({
   deskripsi: props.masjid.deskripsi ?? '',
   logo: null,
   sampul: null,
+  is_published: Boolean(props.masjid.is_published),
   users: props.attachedUsers ?? [], // Isi default array users dari database pivot
 })
 
@@ -123,6 +125,31 @@ function deleteMasjid() {
 
         <div class="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-100 dark:border-zinc-800 shadow-sm">
             <form @submit.prevent="submit" class="space-y-6">
+
+            <!-- Status Publikasi -->
+            <div v-if="user.level === 'Super Admin'" class="p-4 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/50">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div :class="form.is_published ? 'bg-blue-100 text-blue-600' : 'bg-zinc-200 text-zinc-500'" class="p-2 rounded-lg">
+                            <Globe v-if="form.is_published" class="size-5" />
+                            <Lock v-else class="size-5" />
+                        </div>
+                        <div>
+                            <label for="is_published" class="text-sm font-bold cursor-pointer block">
+                                {{ form.is_published ? 'Terbit (Publik)' : 'Draft (Privat)' }}
+                            </label>
+                            <p class="text-[11px] text-zinc-500">Tentukan visibilitas program ini bagi pengunjung.</p>
+                        </div>
+                    </div>
+                    <input 
+                        type="checkbox" 
+                        id="is_published" 
+                        v-model="form.is_published"
+                        class="size-6 rounded-lg border-zinc-300 text-amber-600 focus:ring-amber-500 cursor-pointer"
+                    />
+                </div>
+            </div>     
+            
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div class="space-y-2">
                         <Label>Logo (Opsional)</Label>

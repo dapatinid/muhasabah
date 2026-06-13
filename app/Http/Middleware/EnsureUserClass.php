@@ -31,6 +31,10 @@ class EnsureUserClass
             return redirect()->route('pendaftaran.penyelenggara-acara');
         }
 
+        if (in_array('relawan-donatur', $classes)) {
+            return redirect()->route('pendaftaran.relawan-donatur');
+        }
+
         // Fallback jika tidak memenuhi kriteria di atas
         return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki akses.');
     }

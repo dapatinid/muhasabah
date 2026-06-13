@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { Head, Link } from '@inertiajs/vue3'
+import { ref, computed, onMounted, watch } from 'vue'
+import { Head, useForm, Link } from '@inertiajs/vue3'
 
-// State untuk melacak perpindahan halaman awal ke kuesioner
+// State untuk melacak apakah user sudah menekan tombol "Mulai Uji Kelayakan"
 const isSteppingToQuiz = ref(false)
 
 // State untuk melacak tab/kategori aktif
 const activeTab = ref(1)
+
+// State untuk menyimpan daftar kategori yang sudah sukses disubmit ke database
+const submittedCategories = ref<number[]>([])
 
 defineOptions({
     layout: {
@@ -33,6 +36,11 @@ const categories = [
   { id: 4, name: 'Alur Logistik & Pihak Ketiga', range: '121-160' },
   { id: 5, name: 'Sanksi & Komitmen Legal', range: '161-200' }
 ]
+
+// Filter kategori yang belum disubmit untuk ditampilkan di tabs luar
+const availableCategories = computed(() => {
+  return categories.filter(cat => !submittedCategories.value.includes(cat.id))
+})
 
 // 200 Pertanyaan Verifikasi Ketat Penggalang Dana (Anti-Penggelapan & Transparansi)
 const questions = ref<Question[]>([
@@ -247,18 +255,24 @@ const questions = ref<Question[]>([
   { id: 200, text: 'Saya menyatakan dengan sadar dan tanpa paksaan bahwa saya siap menjadi penggalang dana yang jujur, transparan, dan akuntabel.' }
 ])
 
-// 1. Ubah struktur state answers untuk menyimpan pilihan dan alasan
+// 1. Inisialisasi state jawaban dasar
 const answers = ref<Record<number, { choice: string, reason: string }>>({})
 
-// Inisialisasi state jawaban agar reaktif untuk semua pertanyaan
 questions.value.forEach(q => {
   answers.value[q.id] = { choice: '', reason: '' }
+})
+
+// Menggunakan Inertia useForm untuk handle submission ke Laravel
+const form = useForm({
+  class: 'penggalang-dana',
+  kategori: '',
+  jawaban: [] as any[]
 })
 
 // Opsi pilihan yang tersedia
 const options = ['Sangat Tidak Setuju', 'Tidak Setuju', 'Setuju', 'Sangat Setuju']
 
-// 2. Filter pertanyaan tetap sama
+// 2. Filter pertanyaan per kategori (rentang per 40 soal)
 const filteredQuestions = computed(() => {
   return questions.value.filter(q => {
     if (activeTab.value === 1) return q.id >= 1 && q.id <= 40
@@ -269,7 +283,7 @@ const filteredQuestions = computed(() => {
   })
 })
 
-// 3. Validasi sekarang mengecek kategori yang sedang aktif (bukan seluruh form sekaligus)
+// 3. Validasi mengecek kategori yang sedang aktif
 const isCategoryValid = computed(() => {
   return filteredQuestions.value.every(q => 
     answers.value[q.id].choice !== '' && 
@@ -277,7 +291,7 @@ const isCategoryValid = computed(() => {
   )
 })
 
-// 4. Update fungsi kalkulasi progress agar membaca struktur objek jawaban baru
+// 4. Kalkulasi progress berdasarkan rentang
 const getCategoryProgress = (catId: number) => {
   let min = 1, max = 40
   if (catId === 2) { min = 41; max = 80 }
@@ -292,191 +306,241 @@ const getCategoryProgress = (catId: number) => {
   return `${answered}/${catQuestions.length}`
 }
 
-// 5. Ganti fungsi handleSubmit dengan fungsi pengiriman ke WA
-const sendToWhatsApp = () => {
+// --- LOGIKA LOCALSTORAGE ---
+const LOCAL_STORAGE_KEY = 'muhasabah_quiz_penggalang_dana'
+const SUBMITTED_KEY = 'muhasabah_submitted_penggalang_dana'
+
+// Load data saat komponen dimuat pertama kali
+onMounted(() => {
+  const savedAnswers = localStorage.getItem(LOCAL_STORAGE_KEY)
+  if (savedAnswers) {
+    try {
+      const parsed = JSON.parse(savedAnswers)
+      Object.assign(answers.value, parsed)
+    } catch (e) {
+      console.error('Gagal me-load data localStorage', e)
+    }
+  }
+
+  const savedSubmitted = localStorage.getItem(SUBMITTED_KEY)
+  if (savedSubmitted) {
+    try {
+      submittedCategories.value = JSON.parse(savedSubmitted)
+      // Geser otomatis activeTab ke kategori pertama yang belum disubmit
+      const nextTab = categories.find(c => !submittedCategories.value.includes(c.id))
+      if (nextTab) {
+        activeTab.value = nextTab.id
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+})
+
+// Watcher untuk otomatis simpan jawaban ke localStorage setiap kali ada perubahan
+watch(answers, (newVal) => {
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newVal))
+}, { deep: true })
+
+
+// 5. Fungsi Pengiriman ke Laravel Database via Inertia
+const submitJawaban = () => {
   if (!isCategoryValid.value) return
 
   const activeCategory = categories.find(c => c.id === activeTab.value)
-  let waText = `*Laporan Pakta Integritas - Kategori: ${activeCategory?.name}*\n\n`
+  if (!activeCategory) return
 
-  filteredQuestions.value.forEach(q => {
-    const ans = answers.value[q.id]
-    waText += `*[${q.id}] ${q.text}*\n`
-    waText += `Jawaban: ${ans.choice}\n`
-    waText += `Alasan: ${ans.reason}\n\n`
+  // Format payload jawaban yang disubmit untuk kategori aktif ini
+  const jawabanPayload = filteredQuestions.value.map(q => ({
+    question_id: q.id,
+    question_text: q.text,
+    choice: answers.value[q.id].choice,
+    reason: answers.value[q.id].reason
+  }))
+
+  // Set data form Inertia
+  form.kategori = activeCategory.name
+  form.jawaban = jawabanPayload
+
+  // Jalankan post request ke backend Laravel
+  form.post('/pendaftaran/uji-kelayakan', {
+    onSuccess: () => {
+      // 1. Masukkan kategori ini ke list submitted agar tab-nya hilang
+      submittedCategories.value.push(activeTab.value)
+      localStorage.setItem(SUBMITTED_KEY, JSON.stringify(submittedCategories.value))
+
+      // 2. Bersihkan isi localStorage untuk pertanyaan pada kategori yang baru disubmit
+      filteredQuestions.value.forEach(q => {
+        answers.value[q.id] = { choice: '', reason: '' }
+      })
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(answers.value))
+
+      // 3. Pindahkan otomatis activeTab ke kategori lain yang belum disubmit
+      const nextTab = categories.find(c => !submittedCategories.value.includes(c.id))
+      if (nextTab) {
+        activeTab.value = nextTab.id
+      }
+    }
   })
-
-  // Format nomor HP (085... menjadi 6285...)
-  const waNumber = '6285950540055' 
-  const encodedText = encodeURIComponent(waText)
-  
-  // Buka tab baru ke WhatsApp
-  window.open(`https://wa.me/${waNumber}?text=${encodedText}`, '_blank')
 }
 </script>
 
 <template>
-    <Head title="Verifikasi Penggalang Dana" />
+  <Head title="Pendaftaran Penggalang Dana" />
 
-      <div v-if="!isSteppingToQuiz" class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 sm:p-8 shadow-xl m-3">
-        <h1 class="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-500 mb-4">Verifikasi Ketat Penggalang Dana</h1>
-        <p class="text-stone-600 dark:text-stone-400 text-sm leading-relaxed mb-6">          
-          Untuk menjaga transparansi, akuntabilitas, dan mencegah penyalahgunaan dana umat, Anda diwajibkan menyetujui <span class="text-stone-800 dark:text-stone-200 font-semibold">200 poin Pakta Integritas</span> secara mutlak.
-        </p>
-        <button 
-          @click="isSteppingToQuiz = true"
-          class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white dark:text-stone-950 font-bold py-3 px-6 rounded-xl transition-colors cursor-pointer"
+  <div v-if="!isSteppingToQuiz || availableCategories.length === 0" class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 sm:p-8 shadow-xl m-3">
+    <h1 class="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-500 mb-4">
+      {{ availableCategories.length === 0 ? 'Kuesioner Selesai!' : 'Uji Kelayakan Penggalang Dana' }}
+    </h1>
+    <p class="text-stone-600 dark:text-stone-400 text-sm leading-relaxed mb-6">
+      <template v-if="availableCategories.length === 0">
+        Terima kasih! Seluruh kriteria kuesioner kelayakan telah berhasil disimpan ke database kami. Tim kami akan segera meninjau jawaban Anda.
+      </template>
+      <template v-else>
+        Untuk menjaga transparansi, akuntabilitas, dan mencegah penyalahgunaan dana umat, Anda diwajibkan menyetujui <span class="text-stone-800 dark:text-stone-200 font-semibold">200 poin Pakta Integritas</span> secara mutlak.
+      </template>
+    </p>
+    <button 
+      v-if="availableCategories.length > 0"
+      @click="isSteppingToQuiz = true"
+      class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white dark:text-stone-950 font-bold py-3 px-6 rounded-xl transition-colors cursor-pointer"
+    >
+      Mulai Uji Kelayakan
+    </button>
+  </div>
+
+  <div v-if="!isSteppingToQuiz || availableCategories.length === 0" class="p-3 sm:p-8  m-3">
+    <p class="text-stone-600 dark:text-stone-400 text-sm leading-relaxed mb-6">          
+      Anda juga diwajibkan mengisi questioner menjadi relawan / donatur. Jika belum mengisi <span class="text-indigo-500 font-semibold"><Link href="/pendaftaran/relawan-donatur">klik di sini</Link></span>.
+    </p>
+  </div>  
+
+  <form v-else @submit.prevent="submitJawaban" class="flex flex-col overflow-hidden">
+    
+    <div class="p-6 border-b border-stone-200 dark:border-stone-800 bg-white/95 dark:bg-stone-900/95 sticky top-0 backdrop-blur z-20">
+      <h2 class="text-lg font-bold text-amber-600 dark:text-amber-500 mb-4">Formulir Kelayakan Penggalang Dana</h2>
+      
+      <div class="flex gap-2 overflow-x-auto pb-2 -mx-2 px-2">
+        <button
+          v-for="cat in availableCategories"
+          :key="cat.id"
+          type="button"
+          @click="activeTab = cat.id"
+          class="flex-shrink-0 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 border"
+          :class="activeTab === cat.id 
+            ? 'bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/40 text-amber-600 dark:text-amber-500 shadow-sm' 
+            : 'bg-stone-50 dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800'"
         >
-          Mulai Verifikasi
+          <span>{{ cat.name }}</span>
+          <span class="px-1.5 py-0.5 rounded-md bg-stone-200 dark:bg-stone-800 text-[10px] font-mono text-stone-600 dark:text-stone-300">
+            {{ getCategoryProgress(cat.id) }}
+          </span>
         </button>
       </div>
+    </div>
 
-      <div v-if="!isSteppingToQuiz" class="p-6 sm:p-8  m-3">
-        <p class="text-stone-600 dark:text-stone-400 text-sm leading-relaxed mb-6">          
-          Anda juga diwajibkan mengisi questioner menjadi relawan / donatur. Jika belum mengisi <span class="text-indigo-500 font-semibold"><Link href="/pendaftaran/relawan-donatur">klik di sini</Link></span>.
-        </p>
-      </div>
-
-      <form v-else class="flex flex-col overflow-hidden">
-        
-        <div class="p-6 border-b sticky top-0 backdrop-blur z-20">
-          <h2 class="text-lg font-bold text-amber-500 mb-4">Pakta Integritas Verifikasi Akun</h2>
-          
-          <div class="flex gap-2 overflow-x-auto pb-2 -mx-2 px-2">
-            <button
-              v-for="cat in categories"
-              :key="cat.id"
-              type="button"
-              @click="activeTab = cat.id"
-              class="flex-shrink-0 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 border"
-              :class="activeTab === cat.id 
-                ? 'bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/40 text-amber-600 dark:text-amber-500 shadow-sm' 
-                : 'bg-stone-50 dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800'"
-            >
-              <span>{{ cat.name }}</span>
-              <span class="px-1.5 py-0.5 rounded-md bg-stone-200 dark:bg-stone-800 text-[10px] font-mono text-stone-600 dark:text-stone-300">
-                {{ getCategoryProgress(cat.id) }}
-              </span>
-            </button>
-          </div>
+    <div class="p-3 space-y-2">
+      <div 
+        v-for="q in filteredQuestions" 
+        :key="q.id" 
+        :class="[
+          'p-5 rounded-xl border transition-colors flex flex-col gap-4',
+          answers[q.id].choice !== '' && answers[q.id].reason.trim() !== '' 
+            ? 'bg-emerald-100 border-emerald-200 dark:bg-emerald-500/20 dark:border-emerald-700/50' 
+            : 'bg-white border-stone-200 hover:border-stone-300 dark:bg-stone-950 dark:border-stone-800/60 dark:hover:border-stone-800'
+        ]"
+      >
+        <div class="text-sm text-stone-800 dark:text-stone-200 leading-relaxed font-semibold select-none">
+          <span class="font-mono text-xs text-amber-600 dark:text-amber-500 mr-1">[{{ q.id }}]</span>
+          {{ q.text }}
         </div>
 
-        <div class="p-3 space-y-2">
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center p-1 bg-stone-100 dark:bg-stone-800 rounded-xl w-fit gap-1 border border-stone-200 dark:border-stone-700/50 shadow-inner">
+            <label 
+              v-for="opt in options" 
+              :key="opt" 
+              class="cursor-pointer flex items-center justify-center py-2 px-5 rounded-lg transition-all duration-300"
+              :class="[
+                answers[q.id].choice === opt 
+                  ? (opt === 'Sangat Tidak Setuju' ? 'bg-red-500 text-white shadow-md shadow-red-500/20' :
+                    opt === 'Tidak Setuju' ? 'bg-amber-500 text-white shadow-md shadow-amber-500/20' :
+                    opt === 'Setuju' ? 'bg-indigo-500 text-white shadow-md shadow-indigo-500/20' :
+                    'bg-emerald-500 text-red-500 shadow-md shadow-emerald-500/20')
+                  : 'text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300 hover:bg-white dark:hover:bg-stone-700/50'
+              ]"
+              :title="opt"
+            >
+              <input
+                type="radio"
+                :name="'q-' + q.id"
+                :value="opt"
+                v-model="answers[q.id].choice"
+                class="hidden"
+              />
+              
+              <svg v-if="opt === 'Sangat Tidak Setuju'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 transition-transform" :class="{'scale-110': answers[q.id].choice === opt}"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              
+              <svg v-else-if="opt === 'Tidak Setuju'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" :fill="answers[q.id].choice === opt ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 transition-transform" :class="{'scale-110': answers[q.id].choice === opt}"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22h0a3.13 3.13 0 0 1-3-3.88Z"/></svg>
+              
+              <svg v-else-if="opt === 'Setuju'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" :fill="answers[q.id].choice === opt ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 transition-transform" :class="{'scale-110': answers[q.id].choice === opt}"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+              
+              <svg v-else-if="opt === 'Sangat Setuju'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" :fill="answers[q.id].choice === opt ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 transition-transform" :class="{'scale-110': answers[q.id].choice === opt}"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            </label>
+          </div>
+          
           <div 
-            v-for="q in filteredQuestions" 
-            :key="q.id" 
+            class="text-sm font-bold ml-1 transition-colors select-none" 
             :class="[
-              'p-5 rounded-xl border transition-colors flex flex-col gap-4',
-              answers[q.id].choice !== '' && answers[q.id].reason.trim() !== '' 
-                ? 'bg-emerald-100 border-emerald-200 dark:bg-emerald-500/20 dark:border-emerald-700/50' 
-                : 'bg-white border-stone-200 hover:border-stone-300 dark:bg-stone-950 dark:border-stone-800/60 dark:hover:border-stone-800'
+              answers[q.id].choice === 'Sangat Tidak Setuju' ? 'text-red-500' :
+              answers[q.id].choice === 'Tidak Setuju' ? 'text-amber-500' :
+              answers[q.id].choice === 'Setuju' ? 'text-indigo-500' :
+              answers[q.id].choice === 'Sangat Setuju' ? 'text-emerald-500' :
+              'text-stone-400 dark:text-stone-500'
             ]"
           >
-            <div class="text-sm text-stone-800 dark:text-stone-200 leading-relaxed font-semibold select-none">
-              <span class="font-mono text-xs text-amber-600 dark:text-amber-500 mr-1">[{{ q.id }}]</span>
-              {{ q.text }}
-            </div>
-
-            <!-- Opsi Radio Kustom (Inline Toggle Icon) -->
-            <div class="flex flex-col gap-3">
-              <!-- Container Toggle -->
-              <div class="flex items-center p-1 bg-stone-100 dark:bg-stone-800 rounded-xl w-fit gap-1 border border-stone-200 dark:border-stone-700/50 shadow-inner">
-                <label 
-                  v-for="opt in options" 
-                  :key="opt" 
-                  class="cursor-pointer flex items-center justify-center py-2 px-5 rounded-lg transition-all duration-300"
-                  :class="[
-                    answers[q.id].choice === opt 
-                      ? (opt === 'Sangat Tidak Setuju' ? 'bg-red-500 text-white shadow-md shadow-red-500/20' :
-                        opt === 'Tidak Setuju' ? 'bg-amber-500 text-white shadow-md shadow-amber-500/20' :
-                        opt === 'Setuju' ? 'bg-indigo-500 text-white shadow-md shadow-indigo-500/20' :
-                        'bg-emerald-500 text-rose-400 shadow-md shadow-emerald-500/20')
-                      : 'text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300 hover:bg-white dark:hover:bg-stone-700/50'
-                  ]"
-                  :title="opt"
-                >
-                  <!-- Hidden Native Radio Input -->
-                  <input
-                    type="radio"
-                    :name="'q-' + q.id"
-                    :value="opt"
-                    v-model="answers[q.id].choice"
-                    class="hidden"
-                  />
-                  
-                  <!-- 1. Ikon Silang (Sangat Tidak Setuju) -->
-                  <svg v-if="opt === 'Sangat Tidak Setuju'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 transition-transform" :class="{'scale-110': answers[q.id].choice === opt}"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                  
-                  <!-- 2. Ikon Unlike (Tidak Setuju) -->
-                  <svg v-else-if="opt === 'Tidak Setuju'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" :fill="answers[q.id].choice === opt ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 transition-transform" :class="{'scale-110': answers[q.id].choice === opt}"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22h0a3.13 3.13 0 0 1-3-3.88Z"/></svg>
-                  
-                  <!-- 3. Ikon Like (Setuju) -->
-                  <svg v-else-if="opt === 'Setuju'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" :fill="answers[q.id].choice === opt ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 transition-transform" :class="{'scale-110': answers[q.id].choice === opt}"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z"/></svg>
-                  
-                  <!-- 4. Ikon Love (Sangat Setuju) -->
-                  <svg v-else-if="opt === 'Sangat Setuju'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" :fill="answers[q.id].choice === opt ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 transition-transform" :class="{'scale-110': answers[q.id].choice === opt}"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                </label>
-              </div>
-              
-              <!-- Teks Indikator Pilihan Bawah -->
-              <div 
-                class="text-sm font-bold ml-1 transition-colors select-none" 
-                :class="[
-                  answers[q.id].choice === 'Sangat Tidak Setuju' ? 'text-red-500' :
-                  answers[q.id].choice === 'Tidak Setuju' ? 'text-amber-500' :
-                  answers[q.id].choice === 'Setuju' ? 'text-indigo-500' :
-                  answers[q.id].choice === 'Sangat Setuju' ? 'text-emerald-500' :
-                  'text-stone-400 dark:text-stone-500'
-                ]"
-              >
-                {{ answers[q.id].choice || 'Pilih jawaban Anda' }}
-              </div>
-            </div>            
-
-            <div class="relative">
-              <textarea
-                v-model="answers[q.id].reason"
-                maxlength="100"
-                placeholder="Tulis alasan jawaban Anda di sini (maks. 100 karakter)..."
-                class="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg p-3 pb-7 text-sm text-stone-800 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors resize-none"
-                rows="2"
-              ></textarea>
-              
-              <!-- Character Counter -->
-              <div 
-                class="absolute bottom-2 right-3 text-[10px] font-mono" 
-                :class="answers[q.id].reason.length >= 100 ? 'text-red-500 dark:text-red-400 font-bold' : 'text-stone-400 dark:text-stone-500'"
-              >
-                {{ answers[q.id].reason.length }}/100
-              </div>
-            </div>
+            {{ answers[q.id].choice || 'Pilih jawaban Anda' }}
           </div>
-        </div>       
+        </div>        
 
-        <div class="p-4 border-t border-stone-200 dark:border-stone-800 bg-white/95 dark:bg-stone-900/95 backdrop-blur flex sm:flex-nowrap flex-wrap-reverse gap-3 sticky bottom-0 z-10">
-          <button
-            type="button"
-            @click="isSteppingToQuiz = false"
-            class="w-full sm:w-1/3 bg-stone-200 hover:bg-stone-300 text-stone-700 dark:bg-stone-800 dark:hover:bg-stone-700 dark:text-stone-300 font-semibold py-3 px-4 rounded-xl text-sm transition-colors cursor-pointer"
-          >
-            Kembali
-          </button>
+        <div class="relative">
+          <textarea
+            v-model="answers[q.id].reason"
+            maxlength="200"
+            placeholder="Tulis alasan jawaban Anda di sini (maks. 200 karakter)..."
+            class="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg p-3 pb-7 text-sm text-stone-800 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors resize-none"
+            rows="2"
+          ></textarea>
           
-          <button
-            type="button"
-            @click="sendToWhatsApp"
-            :disabled="!isCategoryValid"
-            class="w-full sm:w-2/3 text-center font-bold py-3 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 cursor-pointer"
-            :class="isCategoryValid 
-              ? 'bg-green-600 hover:bg-green-500 text-white shadow-md shadow-green-600/20' 
-              : 'bg-stone-100 text-stone-400 dark:bg-stone-800 dark:text-stone-600 cursor-not-allowed'"
+          <div 
+            class="absolute bottom-2 right-3 text-[10px] font-mono" 
+            :class="answers[q.id].reason.length >= 200 ? 'text-red-500 dark:text-red-400 font-bold' : 'text-stone-400 dark:text-stone-500'"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-            <span>Kirim ke Whatsapp</span>
-          </button>
-        </div>       
+            {{ answers[q.id].reason.length }}/200
+          </div>
+        </div>
+      </div>
+    </div>
 
-      </form>
+    <div class="p-4 border-t border-stone-200 dark:border-stone-800 bg-white/95 dark:bg-stone-900/95 backdrop-blur flex sm:flex-nowrap flex-wrap-reverse gap-3 sticky bottom-0 z-10">
+      <button
+        type="button"
+        @click="isSteppingToQuiz = false"
+        class="w-full sm:w-1/3 bg-stone-200 hover:bg-stone-300 text-stone-700 dark:bg-stone-800 dark:hover:bg-stone-700 dark:text-stone-300 font-semibold py-3 px-4 rounded-xl text-sm transition-colors cursor-pointer"
+      >
+        Kembali
+      </button>
+      
+      <button
+        type="submit"
+        :disabled="!isCategoryValid || form.processing"
+        class="w-full sm:w-2/3 text-center font-bold py-3 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 cursor-pointer"
+        :class="isCategoryValid && !form.processing
+          ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-md shadow-amber-600/20' 
+          : 'bg-stone-100 text-stone-400 dark:bg-stone-800 dark:text-stone-600 cursor-not-allowed'"
+      >
+        <span>{{ form.processing ? 'Menyimpan...' : 'Kirim Jawaban Kategori Ini' }}</span>
+      </button>
+    </div>
+  </form>
 </template>

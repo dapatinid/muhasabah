@@ -17,7 +17,7 @@ class KalamController extends Controller
      */
     public function kalam(Request $request)
     {
-        $query = Kalam::with('user:id,name')->withCount(['komentars', 'reaksis']);
+        $query = Kalam::where('is_published', true)->with('user:id,name')->withCount(['komentars', 'reaksis']);
 
         if ($search = $request->input('search')) {
             $query->where('judul', 'like', "%{$search}%")
@@ -96,6 +96,7 @@ class KalamController extends Controller
             'body' => 'required|string',
             'kategori' => 'required|string',
             'is_anonymous' => 'boolean',
+            'is_published' => 'boolean',
         ]);
 
         $kalam->update($validated);

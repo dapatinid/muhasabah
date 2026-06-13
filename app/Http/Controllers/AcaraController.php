@@ -157,6 +157,7 @@ class AcaraController extends Controller
             'tgl_mulai'         => 'nullable|date',
             'tgl_selesai'       => 'nullable|date',
             'batas_registrasi'  => 'nullable|date',
+            'is_published'     => 'boolean',
             
             // Aturan Validasi Varian Baru pada Update
             'variants' => 'required_if:accept_tiket,true|array',

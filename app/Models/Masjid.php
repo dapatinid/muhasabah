@@ -49,6 +49,10 @@ class Masjid extends Model
         });        
     }       
 
+    protected $casts = [
+        'is_published' => 'boolean',
+    ];
+
     /**
      * Relasi Many-to-Many ke User (Jamaah/Pengurus Masjid)
      */

@@ -19,7 +19,7 @@ class Lingkaran extends Model
      */
     protected static function boot()
     {
-        parent::boot();
+        parent::boot();  
 
         static::creating(function ($lingkaran) {
             if (auth()->check()) {
@@ -49,6 +49,10 @@ class Lingkaran extends Model
             }
         });        
     }    
+
+    protected $casts = [
+        'is_published' => 'boolean',
+    ];
 
     /**
      * Relasi Many-to-Many ke User (Anggota Lingkaran)
