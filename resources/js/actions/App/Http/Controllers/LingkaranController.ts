@@ -278,7 +278,7 @@ uploadImage.form = uploadImageForm
 * @see app/Http/Controllers/LingkaranController.php:77
 * @route '/admin/lingkaran/{lingkaran}/edit'
 */
-export const edit = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -293,13 +293,13 @@ edit.definition = {
 * @see app/Http/Controllers/LingkaranController.php:77
 * @route '/admin/lingkaran/{lingkaran}/edit'
 */
-edit.url = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+edit.url = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { lingkaran: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { lingkaran: args.id }
+    if (typeof args === 'object' && !Array.isArray(args) && 'slug' in args) {
+        args = { lingkaran: args.slug }
     }
 
     if (Array.isArray(args)) {
@@ -312,7 +312,7 @@ edit.url = (args: { lingkaran: number | { id: number } } | [lingkaran: number | 
 
     const parsedArgs = {
         lingkaran: typeof args.lingkaran === 'object'
-        ? args.lingkaran.id
+        ? args.lingkaran.slug
         : args.lingkaran,
     }
 
@@ -326,7 +326,7 @@ edit.url = (args: { lingkaran: number | { id: number } } | [lingkaran: number | 
 * @see app/Http/Controllers/LingkaranController.php:77
 * @route '/admin/lingkaran/{lingkaran}/edit'
 */
-edit.get = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -336,7 +336,7 @@ edit.get = (args: { lingkaran: number | { id: number } } | [lingkaran: number | 
 * @see app/Http/Controllers/LingkaranController.php:77
 * @route '/admin/lingkaran/{lingkaran}/edit'
 */
-edit.head = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -346,7 +346,7 @@ edit.head = (args: { lingkaran: number | { id: number } } | [lingkaran: number |
 * @see app/Http/Controllers/LingkaranController.php:77
 * @route '/admin/lingkaran/{lingkaran}/edit'
 */
-const editForm = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const editForm = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -356,7 +356,7 @@ const editForm = (args: { lingkaran: number | { id: number } } | [lingkaran: num
 * @see app/Http/Controllers/LingkaranController.php:77
 * @route '/admin/lingkaran/{lingkaran}/edit'
 */
-editForm.get = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.get = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -366,7 +366,7 @@ editForm.get = (args: { lingkaran: number | { id: number } } | [lingkaran: numbe
 * @see app/Http/Controllers/LingkaranController.php:77
 * @route '/admin/lingkaran/{lingkaran}/edit'
 */
-editForm.head = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.head = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -383,7 +383,7 @@ edit.form = editForm
 * @see app/Http/Controllers/LingkaranController.php:95
 * @route '/admin/lingkaran/{lingkaran}'
 */
-const update75df068099ea43eaccb18e7a7a046fa0 = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+const update75df068099ea43eaccb18e7a7a046fa0 = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update75df068099ea43eaccb18e7a7a046fa0.url(args, options),
     method: 'put',
 })
@@ -398,13 +398,13 @@ update75df068099ea43eaccb18e7a7a046fa0.definition = {
 * @see app/Http/Controllers/LingkaranController.php:95
 * @route '/admin/lingkaran/{lingkaran}'
 */
-update75df068099ea43eaccb18e7a7a046fa0.url = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+update75df068099ea43eaccb18e7a7a046fa0.url = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { lingkaran: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { lingkaran: args.id }
+    if (typeof args === 'object' && !Array.isArray(args) && 'slug' in args) {
+        args = { lingkaran: args.slug }
     }
 
     if (Array.isArray(args)) {
@@ -417,7 +417,7 @@ update75df068099ea43eaccb18e7a7a046fa0.url = (args: { lingkaran: number | { id: 
 
     const parsedArgs = {
         lingkaran: typeof args.lingkaran === 'object'
-        ? args.lingkaran.id
+        ? args.lingkaran.slug
         : args.lingkaran,
     }
 
@@ -431,7 +431,7 @@ update75df068099ea43eaccb18e7a7a046fa0.url = (args: { lingkaran: number | { id: 
 * @see app/Http/Controllers/LingkaranController.php:95
 * @route '/admin/lingkaran/{lingkaran}'
 */
-update75df068099ea43eaccb18e7a7a046fa0.put = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update75df068099ea43eaccb18e7a7a046fa0.put = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update75df068099ea43eaccb18e7a7a046fa0.url(args, options),
     method: 'put',
 })
@@ -441,7 +441,7 @@ update75df068099ea43eaccb18e7a7a046fa0.put = (args: { lingkaran: number | { id: 
 * @see app/Http/Controllers/LingkaranController.php:95
 * @route '/admin/lingkaran/{lingkaran}'
 */
-const update75df068099ea43eaccb18e7a7a046fa0Form = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const update75df068099ea43eaccb18e7a7a046fa0Form = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update75df068099ea43eaccb18e7a7a046fa0.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PUT',
@@ -456,7 +456,7 @@ const update75df068099ea43eaccb18e7a7a046fa0Form = (args: { lingkaran: number | 
 * @see app/Http/Controllers/LingkaranController.php:95
 * @route '/admin/lingkaran/{lingkaran}'
 */
-update75df068099ea43eaccb18e7a7a046fa0Form.put = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+update75df068099ea43eaccb18e7a7a046fa0Form.put = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update75df068099ea43eaccb18e7a7a046fa0.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PUT',
@@ -472,7 +472,7 @@ update75df068099ea43eaccb18e7a7a046fa0.form = update75df068099ea43eaccb18e7a7a04
 * @see app/Http/Controllers/LingkaranController.php:95
 * @route '/admin/lingkaran/{lingkaran}'
 */
-const update75df068099ea43eaccb18e7a7a046fa0 = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+const update75df068099ea43eaccb18e7a7a046fa0 = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update75df068099ea43eaccb18e7a7a046fa0.url(args, options),
     method: 'patch',
 })
@@ -487,13 +487,13 @@ update75df068099ea43eaccb18e7a7a046fa0.definition = {
 * @see app/Http/Controllers/LingkaranController.php:95
 * @route '/admin/lingkaran/{lingkaran}'
 */
-update75df068099ea43eaccb18e7a7a046fa0.url = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+update75df068099ea43eaccb18e7a7a046fa0.url = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { lingkaran: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { lingkaran: args.id }
+    if (typeof args === 'object' && !Array.isArray(args) && 'slug' in args) {
+        args = { lingkaran: args.slug }
     }
 
     if (Array.isArray(args)) {
@@ -506,7 +506,7 @@ update75df068099ea43eaccb18e7a7a046fa0.url = (args: { lingkaran: number | { id: 
 
     const parsedArgs = {
         lingkaran: typeof args.lingkaran === 'object'
-        ? args.lingkaran.id
+        ? args.lingkaran.slug
         : args.lingkaran,
     }
 
@@ -520,7 +520,7 @@ update75df068099ea43eaccb18e7a7a046fa0.url = (args: { lingkaran: number | { id: 
 * @see app/Http/Controllers/LingkaranController.php:95
 * @route '/admin/lingkaran/{lingkaran}'
 */
-update75df068099ea43eaccb18e7a7a046fa0.patch = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update75df068099ea43eaccb18e7a7a046fa0.patch = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update75df068099ea43eaccb18e7a7a046fa0.url(args, options),
     method: 'patch',
 })
@@ -530,7 +530,7 @@ update75df068099ea43eaccb18e7a7a046fa0.patch = (args: { lingkaran: number | { id
 * @see app/Http/Controllers/LingkaranController.php:95
 * @route '/admin/lingkaran/{lingkaran}'
 */
-const update75df068099ea43eaccb18e7a7a046fa0Form = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const update75df068099ea43eaccb18e7a7a046fa0Form = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update75df068099ea43eaccb18e7a7a046fa0.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -545,7 +545,7 @@ const update75df068099ea43eaccb18e7a7a046fa0Form = (args: { lingkaran: number | 
 * @see app/Http/Controllers/LingkaranController.php:95
 * @route '/admin/lingkaran/{lingkaran}'
 */
-update75df068099ea43eaccb18e7a7a046fa0Form.patch = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+update75df068099ea43eaccb18e7a7a046fa0Form.patch = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update75df068099ea43eaccb18e7a7a046fa0.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -567,7 +567,7 @@ export const update = {
 * @see app/Http/Controllers/LingkaranController.php:138
 * @route '/admin/lingkaran/{lingkaran}'
 */
-export const destroy = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -582,13 +582,13 @@ destroy.definition = {
 * @see app/Http/Controllers/LingkaranController.php:138
 * @route '/admin/lingkaran/{lingkaran}'
 */
-destroy.url = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { lingkaran: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { lingkaran: args.id }
+    if (typeof args === 'object' && !Array.isArray(args) && 'slug' in args) {
+        args = { lingkaran: args.slug }
     }
 
     if (Array.isArray(args)) {
@@ -601,7 +601,7 @@ destroy.url = (args: { lingkaran: number | { id: number } } | [lingkaran: number
 
     const parsedArgs = {
         lingkaran: typeof args.lingkaran === 'object'
-        ? args.lingkaran.id
+        ? args.lingkaran.slug
         : args.lingkaran,
     }
 
@@ -615,7 +615,7 @@ destroy.url = (args: { lingkaran: number | { id: number } } | [lingkaran: number
 * @see app/Http/Controllers/LingkaranController.php:138
 * @route '/admin/lingkaran/{lingkaran}'
 */
-destroy.delete = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -625,7 +625,7 @@ destroy.delete = (args: { lingkaran: number | { id: number } } | [lingkaran: num
 * @see app/Http/Controllers/LingkaranController.php:138
 * @route '/admin/lingkaran/{lingkaran}'
 */
-const destroyForm = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -640,7 +640,7 @@ const destroyForm = (args: { lingkaran: number | { id: number } } | [lingkaran: 
 * @see app/Http/Controllers/LingkaranController.php:138
 * @route '/admin/lingkaran/{lingkaran}'
 */
-destroyForm.delete = (args: { lingkaran: number | { id: number } } | [lingkaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

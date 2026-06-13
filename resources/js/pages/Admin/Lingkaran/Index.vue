@@ -129,12 +129,12 @@ function formatJenis(jenis: string) {
                             </td>
 
                             <td class="px-6 py-4 text-end flex justify-end">
-                                <Link :href="`/admin/lingkaran/${lingkaran.id}/edit`">
+                                <Link :href="`/admin/lingkaran/${lingkaran.slug}/edit`">
                                     <Button variant="ghost" size="icon" class="hover:bg-blue-50 text-rose-600 dark:hover:bg-blue-950/30 rounded-xl size-9">
                                         <Pencil class="size-4" />
                                     </Button>
                                 </Link>
-                                <Link :href="`/lingkaran/${lingkaran.id}`">
+                                <Link :href="`/lingkaran/${lingkaran.slug}`">
                                     <Button variant="ghost" size="icon" class="hover:bg-blue-50 text-rose-600 dark:hover:bg-blue-950/30 rounded-xl size-9">
                                         <Eye class="size-4" />
                                     </Button>
