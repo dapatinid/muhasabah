@@ -14,7 +14,7 @@ function formatRating(num: any) { return num ? Number(num).toFixed(1) : '0.0' }
   <Head :title="lingkaran.nama" />
 
   <AppLayoutPublic subtitle="Lingkaran" :title="lingkaran.nama" :show-back="true" back-href="/ukhuwah">
-    <div class="bg-stone-950 min-h-screen pb-20">
+    <div class="bg-linear-to-b from-black via-black to-black/0 pb-20">
       
       <div class="relative h-56 sm:h-72 bg-stone-900 overflow-hidden">
         <img v-if="lingkaran.sampul" :src="`/storage/${lingkaran.sampul}`" class="w-full h-full object-cover opacity-70" />

@@ -63,7 +63,7 @@ const tabs: { key: TabKey; label: string; icon: any; color: string; activeColor:
   <Head :title="user.name" />
 
   <AppLayoutPublic subtitle="Profil Tokoh" :title="user.name" :show-back="true" back-href="/ukhuwah">
-    <div class="bg-stone-950 min-h-screen pb-20">
+    <div class="bg-linear-to-b from-black via-black to-black/0 pb-20">
 
       <!-- Cover -->
       <div class="relative h-48 sm:h-64 bg-stone-900 overflow-hidden">
@@ -73,8 +73,8 @@ const tabs: { key: TabKey; label: string; icon: any; color: string; activeColor:
       </div>
 
       <!-- Profile Header -->
-      <div class="max-w-3xl mx-auto px-5 relative -mt-16 sm:-mt-20">
-        <div class="flex flex-col sm:flex-row items-center sm:items-end gap-5 mb-4">
+      <div class="max-w-3xl mx-auto relative -mt-16 sm:-mt-20">
+        <div class="flex flex-col sm:flex-row items-center sm:items-end gap-5 mb-4 px-5">
 
           <!-- Avatar -->
           <div class="relative shrink-0">
@@ -132,11 +132,11 @@ const tabs: { key: TabKey; label: string; icon: any; color: string; activeColor:
         </div>
 
         <!-- Tab Content -->
-        <div class="pt-6">
+        <div class="pt-3">
 
           <!-- Kalam Tab -->
           <div v-if="activeTab === 'kalam'">
-            <div v-if="user.kalams && user.kalams.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div v-if="user.kalams && user.kalams.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-4 px-3">
               <Link
                 v-for="kalam in user.kalams"
                 :key="kalam.id"
@@ -155,7 +155,7 @@ const tabs: { key: TabKey; label: string; icon: any; color: string; activeColor:
 
           <!-- Donasi Tab -->
           <div v-if="activeTab === 'donasi'">
-            <div v-if="user.donasis && user.donasis.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div v-if="user.donasis && user.donasis.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-4 px-3">
               <Link
                 v-for="donasi in user.donasis"
                 :key="donasi.id"
@@ -179,7 +179,7 @@ const tabs: { key: TabKey; label: string; icon: any; color: string; activeColor:
 
           <!-- Acara Tab — Grid 3 kolom -->
           <div v-if="activeTab === 'acara'">
-            <div v-if="user.acaras && user.acaras.length > 0" class="grid grid-cols-3 gap-1">
+            <div v-if="user.acaras && user.acaras.length > 0" class="grid grid-cols-3 gap-1 px-2">
               <Link
                 v-for="acara in user.acaras"
                 :key="acara.id"
