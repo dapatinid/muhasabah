@@ -83,11 +83,11 @@ function handleSampulUpload(e: any) {
 }
 
 function submit() {
-  form.post(`/admin/masjid/${props.masjid.id}`)
+  form.post(`/admin/masjid/${props.masjid.slug}`)
 }
 
 function deleteMasjid() {
-    form.delete(`/admin/masjid/${props.masjid.id}`, {
+    form.delete(`/admin/masjid/${props.masjid.slug}`, {
         onSuccess: () => {
             showDeleteDialog.value = false
         }

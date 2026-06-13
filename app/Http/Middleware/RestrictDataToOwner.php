@@ -12,11 +12,20 @@ use App\Models\Donasi;
 use App\Models\Acara;
 use App\Models\Lingkaran;
 use App\Models\Masjid;
+use Illuminate\Support\Facades\Log;
 
 class RestrictDataToOwner
 {
     public function handle(Request $request, Closure $next): Response
     {
+
+    Log::info('RestrictDataToOwner fired', [
+    'url'    => $request->url(),
+    'method' => $request->method(),
+    'user'   => $request->user()?->id,
+    'route_params' => $request->route()->parameters(),
+]);
+
         $user = $request->user();
 
         if ($user) {

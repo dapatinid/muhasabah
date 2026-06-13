@@ -87,11 +87,11 @@ function handleSampulUpload(e: any) {
 }
 
 function submit() {
-  form.post(`/admin/lingkaran/${props.lingkaran.id}`)
+  form.post(`/admin/lingkaran/${props.lingkaran.slug}`)
 }
 
 function deleteLingkaran() {
-    form.delete(`/admin/lingkaran/${props.lingkaran.id}`, {
+    form.delete(`/admin/lingkaran/${props.lingkaran.slug}`, {
         onSuccess: () => {
             showDeleteDialog.value = false
         }
