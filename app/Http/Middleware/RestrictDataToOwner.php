@@ -58,26 +58,44 @@ class RestrictDataToOwner
             // ==========================================
             
             // Pengecekan A: Ketat (Kalam, Donasi, Acara)
-            $strictParamsToCheck = ['kalam', 'donasi', 'acara'];
-            foreach ($strictParamsToCheck as $paramName) {
-                $model = $request->route($paramName); 
-                
-                if ($model && $model->created_by !== $user->id) {
-                    abort(404); 
+            $strictModels = [
+                'kalam'  => \App\Models\Kalam::class,
+                'donasi' => \App\Models\Donasi::class,
+                'acara'  => \App\Models\Acara::class,
+            ];
+
+            foreach ($strictModels as $paramName => $modelClass) {
+                $model = $request->route($paramName);
+
+                if ($model && is_string($model)) {
+                    $model = $modelClass::where('slug', $model)->first();
+                }
+
+                if ($model && $model instanceof \Illuminate\Database\Eloquent\Model) {
+                    if ($model->created_by !== $user->id) {
+                        abort(404);
+                    }
                 }
             }
 
             // Pengecekan B: Fleksibel (Lingkaran, Masjid)
-            $flexibleParamsToCheck = ['lingkaran', 'masjid'];
-            foreach ($flexibleParamsToCheck as $paramName) {
+            $flexibleParamsToCheck = [
+                'lingkaran' => Lingkaran::class,
+                'masjid'    => Masjid::class,
+            ];
+
+            foreach ($flexibleParamsToCheck as $paramName => $modelClass) {
                 $model = $request->route($paramName);
-                
-                if ($model) {
-                    $isOwner = $model->created_by === $user->id;
-                    // Cek apakah user id ada di dalam relasi users() pada model tersebut
+
+                // Jika belum di-resolve (masih string), ambil manual pakai slug
+                if ($model && is_string($model)) {
+                    $model = $modelClass::where('slug', $model)->first();
+                }
+
+                if ($model && $model instanceof \Illuminate\Database\Eloquent\Model) {
+                    $isOwner    = $model->created_by === $user->id;
                     $isAttached = $model->users()->where('users.id', $user->id)->exists();
 
-                    // Jika bukan pembuat DAN juga bukan anggota yang ter-attach, tolak akses
                     if (!$isOwner && !$isAttached) {
                         abort(404);
                     }
