@@ -31,6 +31,12 @@ const tabs = [
   { key: 'lingkaran', label: 'Lingkaran', icon: Target },
   { key: 'masjid',   label: 'Masjid',   icon: MoonStar },
 ]
+
+const pisahkanClass = (cls: string | null | undefined): string => {
+  if (!cls) return '';
+  return cls.replace(/,/g, ' | ');
+};
+
 </script>
 
 <template>
@@ -126,14 +132,14 @@ const tabs = [
               >
                 <UserCircle2 class="size-7 text-emerald-500" />
               </div>
-              <span class="absolute -bottom-0.5 -right-0.5 size-3 bg-emerald-400 rounded-full border-2 border-stone-900"></span>
+              <span v-if="user.is_online" class="absolute -bottom-0.5 -right-0.5 size-3 bg-emerald-400 rounded-full border-2 border-stone-900"></span>
             </div>
 
             <div class="min-w-0">
               <h3 class="font-bold text-white text-sm truncate group-hover:text-emerald-400 transition-colors">{{ user.name }}</h3>
               <p class="text-xs text-stone-400 mt-0.5 truncate">{{ user.level || 'Anggota' }}</p>
               <span class="inline-block mt-2 px-2 py-0.5 rounded-md bg-emerald-900/30 text-emerald-400 text-[10px] font-bold uppercase tracking-wide">
-                {{ user.class || 'Umum' }}
+                {{ pisahkanClass(user.class) || 'Umum' }}
               </span>
             </div>
           </Link>
@@ -160,11 +166,13 @@ const tabs = [
                 <img
                   v-if="item.logo"
                   :src="`/storage/${item.logo}`"
-                  class="size-14 rounded-xl object-cover border-[3px] border-stone-900 shadow-md group-hover:border-emerald-900/50 transition-colors"
+                  class="size-14 object-cover border-[3px] border-stone-900 shadow-md group-hover:border-emerald-900/50 transition-colors"
+                  :class="activeTab === 'lingkaran' ? 'rounded-full' : 'rounded-xl'"
                 />
                 <div
                   v-else
-                  class="size-14 rounded-xl bg-linear-to-br border-[3px] border-stone-900 shadow-md flex items-center justify-center text-white text-lg font-extrabold group-hover:border-emerald-900/50 transition-colors"
+                  class="size-14 bg-linear-to-br border-[3px] border-stone-900 shadow-md flex items-center justify-center text-white text-lg font-extrabold group-hover:border-emerald-900/50 transition-colors"
+                  :class="activeTab === 'lingkaran' ? 'rounded-full' : 'rounded-xl'"
                 >
                   {{ item.nama?.charAt(0) ?? '?' }}
                 </div>

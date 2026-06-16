@@ -17,7 +17,7 @@ use App\Models\District;
 use App\Models\Village;
 use Illuminate\Support\Str;
 
-#[Fillable(['name', 'slug', 'email', 'password', 'is_active', 'class', 'is_admin', 'level', 'whatsapp', 'negara', 'province_code', 'city_code', 'district_code', 'village_code', 'kode_pos', 'jalan', 'avatar', 'sampul'])]
+#[Fillable(['name', 'slug', 'email', 'password', 'is_active', 'class', 'is_admin', 'level', 'last_seen_at', 'whatsapp', 'negara', 'province_code', 'city_code', 'district_code', 'village_code', 'kode_pos', 'jalan', 'avatar', 'sampul'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -47,29 +47,24 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
+            'last_seen_at' => 'datetime',
         ];
     }
 
-    public function kalams(): HasMany
+    public function kalams()
     {
-        return $this->hasMany(Kalam::class);
+        return $this->belongsToMany(Kalam::class)->withTimestamps();
     }    
 
-    public function donasis(): HasMany 
+    public function donasis() 
     {
-        return $this->hasMany(Donasi::class);
+        return $this->belongsToMany(Donasi::class)->withTimestamps();
     }
     
-    public function acaras(): HasMany
+    public function acaras()
     {
-        return $this->hasMany(Acara::class);
+        return $this->belongsToMany(Acara::class)->withTimestamps();
     }    
-
-    public function province() { return $this->belongsTo(Province::class, 'province_code', 'code'); }
-    public function city() { return $this->belongsTo(City::class, 'city_code', 'code'); }
-    public function district() { return $this->belongsTo(District::class, 'district_code', 'code'); }
-    public function village() { return $this->belongsTo(Village::class, 'village_code', 'code'); }    
-
 
     public function lingkarans()
     {
@@ -82,7 +77,12 @@ class User extends Authenticatable
     public function ratings()
     {
         return $this->hasMany(Rating::class);
-    }    
+    }  
+
+    public function province() { return $this->belongsTo(Province::class, 'province_code', 'code'); }
+    public function city() { return $this->belongsTo(City::class, 'city_code', 'code'); }
+    public function district() { return $this->belongsTo(District::class, 'district_code', 'code'); }
+    public function village() { return $this->belongsTo(Village::class, 'village_code', 'code'); }    
 
 /**
      * Relasi ke tabel Uji Kelayakan (Satu user bisa mengisi banyak kategori/kuesioner)
@@ -90,5 +90,10 @@ class User extends Authenticatable
     public function ujiKelayakans(): HasMany
     {
         return $this->hasMany(UjiKelayakan::class);
+    }    
+
+    public function getIsOnlineAttribute(): bool
+    {
+        return $this->last_seen_at && $this->last_seen_at->gt(now()->subMinutes(5));
     }    
 }

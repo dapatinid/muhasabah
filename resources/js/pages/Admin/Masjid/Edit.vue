@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, useForm, Link } from '@inertiajs/vue3'
+import { Head, useForm, Link, usePage } from '@inertiajs/vue3'
 import { ref, computed } from 'vue'
 import { ArrowLeft, Save, Globe, Lock, Trash2, Search } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
@@ -14,6 +14,9 @@ import {
   DialogFooter
 } from "@/components/ui/dialog"
 import TiptapEditor from '@/components/TiptapEditor.vue' 
+
+const page = usePage();
+const user = page.props.auth.user;
 
 const props = defineProps<{
     masjid: {
@@ -60,13 +63,32 @@ const categories = [
   { label: 'Mushola', value: 'mushola' },
 ]
 
-// Fitur Filter User
-const searchUser = ref('')
+// Fitur Filter dan Auto-Sort User (Tercentang di Atas)
+const searchUser = ref('');
 const filteredUsers = computed(() => {
-    if (!searchUser.value) return props.users;
-    const lower = searchUser.value.toLowerCase()
-    return props.users.filter(u => u.name.toLowerCase().includes(lower))
-})
+    // 1. Filter berdasarkan pencarian nama terlebih dahulu
+    let result = props.users;
+    if (searchUser.value) {
+        const lower = searchUser.value.toLowerCase();
+        result = result.filter(u => u.name.toLowerCase().includes(lower));
+    }
+
+    // 2. Urutkan hasilnya (Reaktif terhadap form.users)
+    return [...result].sort((a, b) => {
+        // Cek apakah ID user ada di dalam array checkbox yang terpilih
+        const isCheckedA = form.users.includes(a.id);
+        const isCheckedB = form.users.includes(b.id);
+
+        // Jika A tercentang dan B tidak, A naik ke atas (-1)
+        if (isCheckedA && !isCheckedB) return -1;
+        // Jika B tercentang dan A tidak, B naik ke atas (1)
+        if (!isCheckedA && isCheckedB) return 1;
+
+        // Jika status centangnya sama (sama-sama tercentang atau tidak tercentang), 
+        // urutkan rapi berdasarkan abjad nama
+        return a.name.localeCompare(b.name);
+    });
+});
 
 const logoPreview = ref(props.masjid.logo ? `/storage/${props.masjid.logo}` : null)
 const sampulPreview = ref(props.masjid.sampul ? `/storage/${props.masjid.sampul}` : null)

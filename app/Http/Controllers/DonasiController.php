@@ -6,6 +6,7 @@ use App\Models\Donasi;
 use App\Models\Komentar;
 use App\Models\Payment;
 use App\Models\Reaksi;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -108,41 +109,51 @@ class DonasiController extends Controller
         return redirect()->route('donasi.index')->with('success', 'Program donasi berhasil diterbitkan.');
     }
 
+    /**
+     * Tampilkan form edit Donasi
+     */
     public function edit(Donasi $donasi)
     {
-        // Pastikan format tanggal berupa Y-m-d agar bisa dibaca oleh input type="date" di Vue
-        $donasi->tgl_mulai = $donasi->tgl_mulai ? \Carbon\Carbon::parse($donasi->tgl_mulai)->format('Y-m-d') : '';
-        $donasi->tgl_selesai = $donasi->tgl_selesai ? \Carbon\Carbon::parse($donasi->tgl_selesai)->format('Y-m-d') : '';
+        $users = User::select('id', 'name')->orderBy('name')->get();
+        $attachedUsers = $donasi->users()->pluck('users.id')->toArray();
 
         return Inertia::render('Admin/Donasi/Edit', [
             'donasi' => $donasi,
-            'breadcrumbs' => [
-                ['title' => 'Donasi', 'href' => '/admin/donasi'],
-                ['title' => 'Edit Donasi', 'href' => "/admin/donasi/{$donasi->slug}/edit"],
-            ],
+            'users' => $users,
+            'attachedUsers' => $attachedUsers
         ]);
     }
 
+    /**
+     * Proses update Donasi
+     */
     public function update(Request $request, Donasi $donasi)
     {
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:donasis,slug,' . $donasi->id,
-            'panduan_donasi' => 'required|string|max:1000',
-            'body' => 'required|string',
+            'body' => 'required',
             'kategori' => 'required|string',
             'subkategori' => 'required|string',
-            'target_dana' => 'required|numeric|min:0',
+            'target_dana' => 'nullable|numeric',
             'tgl_mulai' => 'nullable|date',
             'tgl_selesai' => 'nullable|date|after_or_equal:tgl_mulai',
-            'is_published' => 'boolean'
+            'is_published' => 'boolean',
+            'users' => 'nullable|array', // Validasi array user
+            'users.*' => 'exists:users,id',
         ]);
 
         $donasi->update($validated);
 
-        return redirect()->route('donasi.index')->with('success', 'Data donasi berhasil diperbarui.');
-    }    
+        // 🌟 SINKRONISASI RELASI MANY-TO-MANY 🌟
+        if ($request->has('users')) {
+            $donasi->users()->sync($request->users);
+        } else {
+            $donasi->users()->sync([]); // Kosongkan jika tidak ada user yang dicentang
+        }
 
+        return redirect('/admin/donasi')->with('success', 'Program Donasi berhasil diperbarui.');
+    }
     /**
      * Menampilkan halaman form update progress berita donasi (Admin)
      */

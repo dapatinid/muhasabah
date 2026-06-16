@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kalam;
 use App\Models\Komentar;
 use App\Models\Reaksi;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -79,12 +80,17 @@ class KalamController extends Controller
 
     public function edit(Kalam $kalam)
     {
+        $users = User::select('id', 'name')->orderBy('name')->get();
+        $attachedUsers = $kalam->users()->pluck('users.id')->toArray();
+
         return Inertia::render('Admin/Kalam/Edit', [
             'kalam' => $kalam,
             'breadcrumbs' => [
                 ['title' => 'Kalam', 'href' => '/admin/kalam'],
                 ['title' => 'Edit Kalam', 'href' => "/admin/kalam/{$kalam->slug}/edit"],
             ],
+            'users' => $users,
+            'attachedUsers' => $attachedUsers            
         ]);
     }
 
@@ -97,9 +103,18 @@ class KalamController extends Controller
             'kategori' => 'required|string',
             'is_anonymous' => 'boolean',
             'is_published' => 'boolean',
+            'users' => 'nullable|array', // Validasi array user
+            'users.*' => 'exists:users,id',
         ]);
 
         $kalam->update($validated);
+
+        // 🌟 SINKRONISASI RELASI MANY-TO-MANY 🌟
+        if ($request->has('users')) {
+            $kalam->users()->sync($request->users);
+        } else {
+            $kalam->users()->sync([]); // Kosongkan jika tidak ada user yang dicentang
+        }        
 
         return redirect()->route('kalam.index')->with('success', 'Kalam berhasil diperbarui.');
     }

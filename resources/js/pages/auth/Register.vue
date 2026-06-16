@@ -135,19 +135,19 @@ const handleVillageChange = (val: string | null) => {
         <div class="grid gap-6">
             <div class="grid gap-2">
                 <Label for="name" class="text-foreground">Nama Lengkap</Label>
-                <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" name="name" placeholder="Nama Lengkap" />
+                <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" name="name" placeholder="Nama Lengkap" class="text-foreground"/>
                 <InputError :message="errors.name" />
             </div>
 
             <div class="grid gap-2">
                 <Label for="email" class="text-foreground">Email</Label>
-                <Input id="email" type="email" required :tabindex="2" autocomplete="email" name="email" placeholder="email@example.com" />
+                <Input id="email" type="email" required :tabindex="2" autocomplete="email" name="email" placeholder="email@example.com" class="text-foreground"/>
                 <InputError :message="errors.email" />
             </div>
 
             <div class="grid gap-2">
                 <Label for="whatsapp" class="text-foreground">Nomor Whatsapp</Label>
-                <Input id="whatsapp" type="text" required :tabindex="3" name="whatsapp" placeholder="081234567890" />
+                <Input id="whatsapp" type="text" required :tabindex="3" name="whatsapp" placeholder="081234567890" class="text-foreground"/>
                 <InputError :message="errors.whatsapp" />
             </div>
 
@@ -234,7 +234,7 @@ const handleVillageChange = (val: string | null) => {
 
             <div class="grid gap-2">
                 <Label for="kode_pos" class="text-foreground">Kode Pos</Label>
-                <Input id="kode_pos" type="text" required :tabindex="9" name="kode_pos" placeholder="12345" />
+                <Input id="kode_pos" type="text" required :tabindex="9" name="kode_pos" placeholder="12345" class="text-foreground"/>
                 <InputError :message="errors.kode_pos" />
             </div>
 
@@ -245,7 +245,7 @@ const handleVillageChange = (val: string | null) => {
                     required 
                     :tabindex="10" 
                     name="jalan" 
-                    class="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    class="flex min-h-[80px] w-full text-foreground rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     placeholder="Jl. Merdeka No. 1, RT 01 / RW 02"
                 ></textarea>
                 <InputError :message="errors.jalan" />
@@ -253,13 +253,13 @@ const handleVillageChange = (val: string | null) => {
 
             <div class="grid gap-2">
                 <Label for="password" class="text-foreground">Password</Label>
-                <PasswordInput id="password" required :tabindex="11" autocomplete="new-password" name="password" placeholder="Password" />
+                <PasswordInput id="password" required :tabindex="11" autocomplete="new-password" name="password" placeholder="Password" class="text-foreground"/>
                 <InputError :message="errors.password" />
             </div>
 
             <div class="grid gap-2">
                 <Label for="password_confirmation" class="text-foreground">Konfirmasi Password</Label>
-                <PasswordInput id="password_confirmation" required :tabindex="12" autocomplete="new-password" name="password_confirmation" placeholder="Confirm password" />
+                <PasswordInput id="password_confirmation" required :tabindex="12" autocomplete="new-password" name="password_confirmation" placeholder="Confirm password" class="text-foreground"/>
                 <InputError :message="errors.password_confirmation" />
             </div>
 

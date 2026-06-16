@@ -218,7 +218,7 @@ registerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 register.form = registerForm
 
 /**
-* @see routes/web.php:19
+* @see routes/web.php:20
 * @route '/'
 */
 export const home = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -232,7 +232,7 @@ home.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:19
+* @see routes/web.php:20
 * @route '/'
 */
 home.url = (options?: RouteQueryOptions) => {
@@ -240,7 +240,7 @@ home.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:19
+* @see routes/web.php:20
 * @route '/'
 */
 home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -249,7 +249,7 @@ home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:19
+* @see routes/web.php:20
 * @route '/'
 */
 home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -258,7 +258,7 @@ home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:19
+* @see routes/web.php:20
 * @route '/'
 */
 const homeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -267,7 +267,7 @@ const homeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:19
+* @see routes/web.php:20
 * @route '/'
 */
 homeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -276,7 +276,7 @@ homeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:19
+* @see routes/web.php:20
 * @route '/'
 */
 homeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -455,7 +455,7 @@ amalIbadah.form = amalIbadahForm
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:18
+* @see app/Http/Controllers/KalamController.php:19
 * @route '/kalam'
 */
 export const kalam = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -470,7 +470,7 @@ kalam.definition = {
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:18
+* @see app/Http/Controllers/KalamController.php:19
 * @route '/kalam'
 */
 kalam.url = (options?: RouteQueryOptions) => {
@@ -479,7 +479,7 @@ kalam.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:18
+* @see app/Http/Controllers/KalamController.php:19
 * @route '/kalam'
 */
 kalam.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -489,7 +489,7 @@ kalam.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:18
+* @see app/Http/Controllers/KalamController.php:19
 * @route '/kalam'
 */
 kalam.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -499,7 +499,7 @@ kalam.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:18
+* @see app/Http/Controllers/KalamController.php:19
 * @route '/kalam'
 */
 const kalamForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -509,7 +509,7 @@ const kalamForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:18
+* @see app/Http/Controllers/KalamController.php:19
 * @route '/kalam'
 */
 kalamForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -519,7 +519,7 @@ kalamForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:18
+* @see app/Http/Controllers/KalamController.php:19
 * @route '/kalam'
 */
 kalamForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -536,7 +536,7 @@ kalam.form = kalamForm
 
 /**
 * @see \App\Http\Controllers\DonasiController::donasi
-* @see app/Http/Controllers/DonasiController.php:20
+* @see app/Http/Controllers/DonasiController.php:21
 * @route '/donasi'
 */
 export const donasi = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -551,7 +551,7 @@ donasi.definition = {
 
 /**
 * @see \App\Http\Controllers\DonasiController::donasi
-* @see app/Http/Controllers/DonasiController.php:20
+* @see app/Http/Controllers/DonasiController.php:21
 * @route '/donasi'
 */
 donasi.url = (options?: RouteQueryOptions) => {
@@ -560,7 +560,7 @@ donasi.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\DonasiController::donasi
-* @see app/Http/Controllers/DonasiController.php:20
+* @see app/Http/Controllers/DonasiController.php:21
 * @route '/donasi'
 */
 donasi.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -570,7 +570,7 @@ donasi.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\DonasiController::donasi
-* @see app/Http/Controllers/DonasiController.php:20
+* @see app/Http/Controllers/DonasiController.php:21
 * @route '/donasi'
 */
 donasi.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -580,7 +580,7 @@ donasi.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\DonasiController::donasi
-* @see app/Http/Controllers/DonasiController.php:20
+* @see app/Http/Controllers/DonasiController.php:21
 * @route '/donasi'
 */
 const donasiForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -590,7 +590,7 @@ const donasiForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 
 /**
 * @see \App\Http\Controllers\DonasiController::donasi
-* @see app/Http/Controllers/DonasiController.php:20
+* @see app/Http/Controllers/DonasiController.php:21
 * @route '/donasi'
 */
 donasiForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -600,7 +600,7 @@ donasiForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\DonasiController::donasi
-* @see app/Http/Controllers/DonasiController.php:20
+* @see app/Http/Controllers/DonasiController.php:21
 * @route '/donasi'
 */
 donasiForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -617,7 +617,7 @@ donasi.form = donasiForm
 
 /**
 * @see \App\Http\Controllers\AcaraController::acara
-* @see app/Http/Controllers/AcaraController.php:20
+* @see app/Http/Controllers/AcaraController.php:21
 * @route '/acara'
 */
 export const acara = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -632,7 +632,7 @@ acara.definition = {
 
 /**
 * @see \App\Http\Controllers\AcaraController::acara
-* @see app/Http/Controllers/AcaraController.php:20
+* @see app/Http/Controllers/AcaraController.php:21
 * @route '/acara'
 */
 acara.url = (options?: RouteQueryOptions) => {
@@ -641,7 +641,7 @@ acara.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\AcaraController::acara
-* @see app/Http/Controllers/AcaraController.php:20
+* @see app/Http/Controllers/AcaraController.php:21
 * @route '/acara'
 */
 acara.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -651,7 +651,7 @@ acara.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\AcaraController::acara
-* @see app/Http/Controllers/AcaraController.php:20
+* @see app/Http/Controllers/AcaraController.php:21
 * @route '/acara'
 */
 acara.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -661,7 +661,7 @@ acara.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\AcaraController::acara
-* @see app/Http/Controllers/AcaraController.php:20
+* @see app/Http/Controllers/AcaraController.php:21
 * @route '/acara'
 */
 const acaraForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -671,7 +671,7 @@ const acaraForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\AcaraController::acara
-* @see app/Http/Controllers/AcaraController.php:20
+* @see app/Http/Controllers/AcaraController.php:21
 * @route '/acara'
 */
 acaraForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -681,7 +681,7 @@ acaraForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\AcaraController::acara
-* @see app/Http/Controllers/AcaraController.php:20
+* @see app/Http/Controllers/AcaraController.php:21
 * @route '/acara'
 */
 acaraForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

@@ -67,13 +67,32 @@ const categories = [
   { label: 'Laziz', value: 'laziz' },
 ]
 
-// Fitur Filter User
-const searchUser = ref('')
+// Fitur Filter dan Auto-Sort User (Tercentang di Atas)
+const searchUser = ref('');
 const filteredUsers = computed(() => {
-    if (!searchUser.value) return props.users;
-    const lower = searchUser.value.toLowerCase()
-    return props.users.filter(u => u.name.toLowerCase().includes(lower))
-})
+    // 1. Filter berdasarkan pencarian nama terlebih dahulu
+    let result = props.users;
+    if (searchUser.value) {
+        const lower = searchUser.value.toLowerCase();
+        result = result.filter(u => u.name.toLowerCase().includes(lower));
+    }
+
+    // 2. Urutkan hasilnya (Reaktif terhadap form.users)
+    return [...result].sort((a, b) => {
+        // Cek apakah ID user ada di dalam array checkbox yang terpilih
+        const isCheckedA = form.users.includes(a.id);
+        const isCheckedB = form.users.includes(b.id);
+
+        // Jika A tercentang dan B tidak, A naik ke atas (-1)
+        if (isCheckedA && !isCheckedB) return -1;
+        // Jika B tercentang dan A tidak, B naik ke atas (1)
+        if (!isCheckedA && isCheckedB) return 1;
+
+        // Jika status centangnya sama (sama-sama tercentang atau tidak tercentang), 
+        // urutkan rapi berdasarkan abjad nama
+        return a.name.localeCompare(b.name);
+    });
+});
 
 const logoPreview = ref(props.lingkaran.logo ? `/storage/${props.lingkaran.logo}` : null)
 const sampulPreview = ref(props.lingkaran.sampul ? `/storage/${props.lingkaran.sampul}` : null)

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3'
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
 import debounce from 'lodash/debounce'
 import { 
   Search, BookOpen, MessageCircle, Heart, MoreHorizontal, 
-  CheckCircle2, Share2, AlertTriangle 
+  CheckCircle2, Share2, AlertTriangle, ChevronsLeft, ChevronsRight, Ellipsis 
 } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
@@ -24,6 +24,9 @@ const props = defineProps<{
       reaksis_count: number
     }>
     links: Array<{ url: string | null; label: string; active: boolean }>
+    // Menambahkan ketegasan typing pagination pendukung logika matematika halaman
+    current_page: number
+    last_page: number
   }
   filters: { search?: string; kategori?: string }
 }>()
@@ -144,6 +147,36 @@ function filterKategori(kat: string) {
 function goToPage(url: string | null) {
   if (url) router.get(url, {}, { preserveState: true })
 }
+
+function goToPageNumber(page: number) {
+  router.get('/kalam', {
+    search: search.value || undefined,
+    kategori: aktifKategori.value === 'Semua' ? undefined : aktifKategori.value,
+    page,
+  }, { preserveState: true });
+}
+
+// Menghitung halaman yang akan ditampilkan (Maksimal 3 angka di tengah)
+const displayedPages = computed(() => {
+  const current = props.kalams?.current_page ?? 1;
+  const last = props.kalams?.last_page ?? 1;
+  const delta = 1; // Diubah ke 1 agar total angka yang aktif di tengah berjumlah maksimal 3 angka
+  
+  let start = Math.max(1, current - delta);
+  let end = Math.min(last, current + delta);
+
+  if (current <= delta) {
+      end = Math.min(last, start + (delta * 2));
+  } else if (current > last - delta) {
+      start = Math.max(1, last - (delta * 2));
+  }
+
+  const pages = [];
+  for (let i = start; i <= end; i++) {
+      pages.push(i);
+  }
+  return pages;
+});
 </script>
 
 <template>
@@ -180,7 +213,7 @@ function goToPage(url: string | null) {
                   <h3 class="font-bold text-[14px] text-stone-100 truncate max-w-[140px] sm:max-w-xs">
                     {{ kalam.is_anonymous ? 'Hamba.Allah' : (kalam.user?.name || 'anonim') }}
                   </h3>
-                  <CheckCircle2 class="size-3.5 text-blue-500 fill-blue-500/10" v-if="!kalam.is_anonymous" />
+                  <!-- <CheckCircle2 class="size-3.5 text-blue-500 fill-blue-500/10" v-if="!kalam.is_anonymous" /> -->
                   <span class="text-stone-500 text-sm">·</span>
                   <span class="text-stone-500 text-xs">{{ tanggal(kalam.created_at) }}</span>
                 </div>
@@ -239,7 +272,7 @@ function goToPage(url: string | null) {
                     ></iframe>
                   </div>
 
-                  <div v-else-if="media.type === 'image'"
+                  <div v-if="media.type === 'image'"
                     class="snap-center shrink-0 h-full rounded-xl overflow-hidden border border-stone-800 bg-stone-900/50 flex items-center justify-center max-w-[85%] sm:max-w-[75%]"
                   >
                     <img 
@@ -284,21 +317,51 @@ function goToPage(url: string | null) {
         </div>
       </div>
 
-      <div v-if="kalams.links.length > 3" class="flex justify-center gap-1.5 pt-10 flex-wrap">
+      <div v-if="kalams && kalams.last_page > 1" class="flex justify-center gap-1.5 pt-10 flex-wrap items-center">
+        
         <button
-          v-for="(link, i) in kalams.links"
-          :key="i"
-          @click="goToPage(link.url)"
-          v-html="link.label"
-          :disabled="!link.url"
-          :class="[
-            'px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all',
-            link.active
-              ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
-              : 'bg-stone-900 border-stone-800 text-stone-500 hover:border-amber-500/30 hover:text-stone-300',
-          ]"
-        />
+          :disabled="kalams.current_page <= 1"
+          @click="goToPageNumber(1)"
+          class="px-3 py-1.5 rounded-xl text-xs font-semibold border bg-stone-900 border-stone-800 text-stone-500 hover:border-amber-500/30 hover:text-stone-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+        >
+          <ChevronsLeft class="h-4 w-4" />
+        </button>
+
+        <button v-show="kalams.current_page > 2"
+          disabled 
+          class="px-1 py-1.5 rounded-xl text-xs font-semibold border bg-stone-900 border-stone-800 text-stone-500 opacity-40 transition-all"
+        >
+          <Ellipsis class="h-4 w-4" />
+        </button>      
+
+        <button
+          v-for="page in displayedPages"
+          :key="page"
+          @click="goToPageNumber(page)"
+          class="px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all"
+          :class="page === kalams.current_page
+            ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
+            : 'bg-stone-900 border-stone-800 text-stone-500 hover:border-amber-500/30 hover:text-stone-300'"
+        >
+          {{ page }}
+        </button>
+
+        <button v-show="kalams.current_page < kalams.last_page - 1"
+          disabled 
+          class="px-1 py-1.5 rounded-xl text-xs font-semibold border bg-stone-900 border-stone-800 text-stone-500 opacity-40 transition-all"
+        >
+          <Ellipsis class="h-4 w-4" />
+        </button>   
+
+        <button
+          :disabled="kalams.current_page >= kalams.last_page"
+          @click="goToPageNumber(kalams.last_page)"
+          class="px-3 py-1.5 rounded-xl text-xs font-semibold border bg-stone-900 border-stone-800 text-stone-500 hover:border-amber-500/30 hover:text-stone-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+        >
+          <ChevronsRight class="h-4 w-4" />
+        </button>
       </div>
+
     </div>
   </AppLayoutPublic>
 </template>

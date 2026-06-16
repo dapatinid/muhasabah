@@ -828,7 +828,7 @@ function closeDropdowns() {
             <div v-for="komentar in donasi.komentars" :key="komentar.id" class="bg-stone-900/20 border border-stone-800 rounded-2xl p-4">
               <div class="flex items-center gap-2 mb-1">
                 <span class="text-xs font-bold text-amber-200">{{ komentar.user ? komentar.user.name : (komentar.nama_publik || 'Hamba Allah (Anonim)') }}</span>
-                <span class="text-[9px] text-stone-600 font-mono">• {{ new Date(komentar.created_at).toLocaleDateString('id-ID') }}</span>
+                <span class="text-[9px] text-stone-600 font-mono">• {{ new Date(komentar.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'})}}</span>
               </div>
               <p class="text-sm text-stone-400 leading-relaxed">{{ komentar.body }}</p>
             </div>
@@ -1017,7 +1017,7 @@ function closeDropdowns() {
 
                       <button type="button" @click="payWithMayar(log.id)" :disabled="isGeneratingMayar[log.id]" class="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-emerald-500/20 active:scale-95 disabled:opacity-50">
                           <CreditCard class="w-5 h-5" />
-                          <span class="text-sm font-medium shrink">{{ isGeneratingMayar[log.id] ? 'Memuat Sistem...' : 'Transfer & Konfirmasi Otomatis' }}</span>
+                          <span class="text-xs font-bold shrink">{{ isGeneratingMayar[log.id] ? 'Memuat Sistem...' : 'TF & Konfirmasi Otomatis' }}</span>
                       </button>
                   </div>                  
                 </div>

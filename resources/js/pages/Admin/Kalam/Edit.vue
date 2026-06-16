@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { Head, useForm, Link, usePage } from '@inertiajs/vue3'
 import TiptapEditor from '@/components/TiptapEditor.vue'
-import { ArrowLeft, Globe, Lock, Save } from 'lucide-vue-next'
+import { ArrowLeft, Globe, Lock, Save, Search } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { computed, ref } from 'vue'
 
 const page = usePage();
 const user = page.props.auth.user;
@@ -18,8 +19,10 @@ const props = defineProps<{
         kategori: string;
         is_anonymous: boolean | number;
         is_published: boolean | number;
-    },
-    breadcrumbs: any,
+    };
+    users: Array<{ id: number, name: string }>; // (TAMBAHAN) Daftar semua user
+    attachedUsers: Array<number>;
+    breadcrumbs: any;
 }>();
 
 // Inisialisasi form dengan data yang ada dari props
@@ -31,7 +34,35 @@ const form = useForm({
     // Kita pastikan menjadi boolean karena checkbox butuh boolean
     is_anonymous: Boolean(props.kalam.is_anonymous),
     is_published: Boolean(props.kalam.is_published),
+    users: props.attachedUsers ?? [],
 })
+
+// Fitur Filter dan Auto-Sort User (Tercentang di Atas)
+const searchUser = ref('');
+const filteredUsers = computed(() => {
+    // 1. Filter berdasarkan pencarian nama terlebih dahulu
+    let result = props.users;
+    if (searchUser.value) {
+        const lower = searchUser.value.toLowerCase();
+        result = result.filter(u => u.name.toLowerCase().includes(lower));
+    }
+
+    // 2. Urutkan hasilnya (Reaktif terhadap form.users)
+    return [...result].sort((a, b) => {
+        // Cek apakah ID user ada di dalam array checkbox yang terpilih
+        const isCheckedA = form.users.includes(a.id);
+        const isCheckedB = form.users.includes(b.id);
+
+        // Jika A tercentang dan B tidak, A naik ke atas (-1)
+        if (isCheckedA && !isCheckedB) return -1;
+        // Jika B tercentang dan A tidak, B naik ke atas (1)
+        if (!isCheckedA && isCheckedB) return 1;
+
+        // Jika status centangnya sama (sama-sama tercentang atau tidak tercentang), 
+        // urutkan rapi berdasarkan abjad nama
+        return a.name.localeCompare(b.name);
+    });
+});
 
 const categories = [
     { label: 'Hikmah', value: 'hikmah' },
@@ -142,6 +173,44 @@ function submit() {
                         </div>
                     </div>
                 </div>
+
+            <div class="space-y-2">
+                <Label>Pilih Kontributor Penulis</Label>
+                <p class="text-[10px] text-zinc-500 mb-2">Pilih pengguna yang terkait kalam (artikel) ini.</p>
+                
+                <div class="border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden bg-white dark:bg-zinc-950">
+                    <div class="p-2 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 relative">
+                        <Search class="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-zinc-400" />
+                        <input 
+                            type="text"
+                            v-model="searchUser"
+                            placeholder="Cari nama pengguna..."
+                            class="w-full pl-8 pr-3 py-1.5 text-sm bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-zinc-900 dark:text-zinc-100"
+                        />
+                    </div>
+                    
+                    <div class="max-h-52 overflow-y-auto p-2 space-y-1">
+                        <label 
+                            v-for="user in filteredUsers" 
+                            :key="user.id" 
+                            class="flex items-center gap-3 p-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-900 rounded-lg cursor-pointer transition-colors border border-transparent hover:border-zinc-100 dark:hover:border-zinc-800"
+                        >
+                            <input 
+                                type="checkbox" 
+                                :value="user.id" 
+                                v-model="form.users"
+                                class="size-4 rounded border-zinc-300 text-amber-600 focus:ring-amber-500 cursor-pointer"
+                            />
+                            <span class="text-sm font-medium text-zinc-700 dark:text-zinc-200">{{ user.name }}</span>
+                        </label>
+                        
+                        <div v-if="filteredUsers.length === 0" class="p-6 text-center text-sm text-zinc-500 italic">
+                            Pengguna tidak ditemukan.
+                        </div>
+                    </div>
+                </div>
+                <div v-if="form.errors.users" class="text-red-500 text-xs mt-1">{{ form.errors.users }}</div>
+            </div>       
 
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">

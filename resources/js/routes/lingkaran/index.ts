@@ -560,7 +560,7 @@ destroy.form = destroyForm
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:77
+* @see app/Http/Controllers/UkhuwahController.php:100
 * @route '/lingkaran/{lingkaran}'
 */
 export const show = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -575,7 +575,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:77
+* @see app/Http/Controllers/UkhuwahController.php:100
 * @route '/lingkaran/{lingkaran}'
 */
 show.url = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -608,7 +608,7 @@ show.url = (args: { lingkaran: string | { slug: string } } | [lingkaran: string 
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:77
+* @see app/Http/Controllers/UkhuwahController.php:100
 * @route '/lingkaran/{lingkaran}'
 */
 show.get = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -618,7 +618,7 @@ show.get = (args: { lingkaran: string | { slug: string } } | [lingkaran: string 
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:77
+* @see app/Http/Controllers/UkhuwahController.php:100
 * @route '/lingkaran/{lingkaran}'
 */
 show.head = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -628,7 +628,7 @@ show.head = (args: { lingkaran: string | { slug: string } } | [lingkaran: string
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:77
+* @see app/Http/Controllers/UkhuwahController.php:100
 * @route '/lingkaran/{lingkaran}'
 */
 const showForm = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -638,7 +638,7 @@ const showForm = (args: { lingkaran: string | { slug: string } } | [lingkaran: s
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:77
+* @see app/Http/Controllers/UkhuwahController.php:100
 * @route '/lingkaran/{lingkaran}'
 */
 showForm.get = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -648,7 +648,7 @@ showForm.get = (args: { lingkaran: string | { slug: string } } | [lingkaran: str
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:77
+* @see app/Http/Controllers/UkhuwahController.php:100
 * @route '/lingkaran/{lingkaran}'
 */
 showForm.head = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

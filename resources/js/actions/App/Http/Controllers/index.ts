@@ -4,6 +4,7 @@ import DonasiController from './DonasiController'
 import AcaraController from './AcaraController'
 import UkhuwahController from './UkhuwahController'
 import UjiKelayakanController from './UjiKelayakanController'
+import RatingController from './RatingController'
 import LingkaranController from './LingkaranController'
 import MasjidController from './MasjidController'
 import BannerController from './BannerController'
@@ -17,6 +18,7 @@ const Controllers = {
     AcaraController: Object.assign(AcaraController, AcaraController),
     UkhuwahController: Object.assign(UkhuwahController, UkhuwahController),
     UjiKelayakanController: Object.assign(UjiKelayakanController, UjiKelayakanController),
+    RatingController: Object.assign(RatingController, RatingController),
     LingkaranController: Object.assign(LingkaranController, LingkaranController),
     MasjidController: Object.assign(MasjidController, MasjidController),
     BannerController: Object.assign(BannerController, BannerController),

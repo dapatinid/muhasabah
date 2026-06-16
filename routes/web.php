@@ -9,6 +9,7 @@ use Laravel\Fortify\Features;
 use App\Http\Controllers\LaporanRiyadhohController;
 use App\Http\Controllers\LingkaranController;
 use App\Http\Controllers\MasjidController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\UjiKelayakanController;
 use App\Http\Controllers\UkhuwahController;
 use App\Models\Province;
@@ -17,7 +18,7 @@ use App\Models\District;
 use App\Models\Village;
 
 Route::get('/', function () {
-    $kalams = \App\Models\Kalam::with('user:id,name')->latest()->take(3)->get();
+    $kalams = \App\Models\Kalam::with('users:id,name')->latest()->take(3)->get();
     
     $donasis = \App\Models\Donasi::with('payments')
         ->where('is_published', true)
@@ -92,6 +93,9 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
     Route::inertia('/pendaftaran/penyelenggara-acara', 'Pendaftaran/PenyelenggaraAcara')->name('pendaftaran.penyelenggara-acara'); 
     
     Route::post('/pendaftaran/uji-kelayakan', [UjiKelayakanController::class, 'store'])->name('pendaftaran.store');
+
+    Route::post('/lingkaran/{lingkaran:slug}/rate', [RatingController::class, 'storeLingkaran']);
+    Route::post('/masjid/{masjid:slug}/rate', [RatingController::class, 'storeMasjid']);
     
     Route::middleware(['admin', 'restrict_owner'])->group(function () {
 

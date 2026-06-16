@@ -82,7 +82,7 @@ ukhuwah.form = ukhuwahForm
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::tokoh
-* @see app/Http/Controllers/UkhuwahController.php:52
+* @see app/Http/Controllers/UkhuwahController.php:64
 * @route '/tokoh/{user}'
 */
 export const tokoh = (args: { user: string | { slug: string } } | [user: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -97,7 +97,7 @@ tokoh.definition = {
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::tokoh
-* @see app/Http/Controllers/UkhuwahController.php:52
+* @see app/Http/Controllers/UkhuwahController.php:64
 * @route '/tokoh/{user}'
 */
 tokoh.url = (args: { user: string | { slug: string } } | [user: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -130,7 +130,7 @@ tokoh.url = (args: { user: string | { slug: string } } | [user: string | { slug:
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::tokoh
-* @see app/Http/Controllers/UkhuwahController.php:52
+* @see app/Http/Controllers/UkhuwahController.php:64
 * @route '/tokoh/{user}'
 */
 tokoh.get = (args: { user: string | { slug: string } } | [user: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -140,7 +140,7 @@ tokoh.get = (args: { user: string | { slug: string } } | [user: string | { slug:
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::tokoh
-* @see app/Http/Controllers/UkhuwahController.php:52
+* @see app/Http/Controllers/UkhuwahController.php:64
 * @route '/tokoh/{user}'
 */
 tokoh.head = (args: { user: string | { slug: string } } | [user: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -150,7 +150,7 @@ tokoh.head = (args: { user: string | { slug: string } } | [user: string | { slug
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::tokoh
-* @see app/Http/Controllers/UkhuwahController.php:52
+* @see app/Http/Controllers/UkhuwahController.php:64
 * @route '/tokoh/{user}'
 */
 const tokohForm = (args: { user: string | { slug: string } } | [user: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -160,7 +160,7 @@ const tokohForm = (args: { user: string | { slug: string } } | [user: string | {
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::tokoh
-* @see app/Http/Controllers/UkhuwahController.php:52
+* @see app/Http/Controllers/UkhuwahController.php:64
 * @route '/tokoh/{user}'
 */
 tokohForm.get = (args: { user: string | { slug: string } } | [user: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -170,7 +170,7 @@ tokohForm.get = (args: { user: string | { slug: string } } | [user: string | { s
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::tokoh
-* @see app/Http/Controllers/UkhuwahController.php:52
+* @see app/Http/Controllers/UkhuwahController.php:64
 * @route '/tokoh/{user}'
 */
 tokohForm.head = (args: { user: string | { slug: string } } | [user: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -187,7 +187,7 @@ tokoh.form = tokohForm
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::lingkaran
-* @see app/Http/Controllers/UkhuwahController.php:77
+* @see app/Http/Controllers/UkhuwahController.php:100
 * @route '/lingkaran/{lingkaran}'
 */
 export const lingkaran = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -202,7 +202,7 @@ lingkaran.definition = {
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::lingkaran
-* @see app/Http/Controllers/UkhuwahController.php:77
+* @see app/Http/Controllers/UkhuwahController.php:100
 * @route '/lingkaran/{lingkaran}'
 */
 lingkaran.url = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -235,7 +235,7 @@ lingkaran.url = (args: { lingkaran: string | { slug: string } } | [lingkaran: st
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::lingkaran
-* @see app/Http/Controllers/UkhuwahController.php:77
+* @see app/Http/Controllers/UkhuwahController.php:100
 * @route '/lingkaran/{lingkaran}'
 */
 lingkaran.get = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -245,7 +245,7 @@ lingkaran.get = (args: { lingkaran: string | { slug: string } } | [lingkaran: st
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::lingkaran
-* @see app/Http/Controllers/UkhuwahController.php:77
+* @see app/Http/Controllers/UkhuwahController.php:100
 * @route '/lingkaran/{lingkaran}'
 */
 lingkaran.head = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -255,7 +255,7 @@ lingkaran.head = (args: { lingkaran: string | { slug: string } } | [lingkaran: s
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::lingkaran
-* @see app/Http/Controllers/UkhuwahController.php:77
+* @see app/Http/Controllers/UkhuwahController.php:100
 * @route '/lingkaran/{lingkaran}'
 */
 const lingkaranForm = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -265,7 +265,7 @@ const lingkaranForm = (args: { lingkaran: string | { slug: string } } | [lingkar
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::lingkaran
-* @see app/Http/Controllers/UkhuwahController.php:77
+* @see app/Http/Controllers/UkhuwahController.php:100
 * @route '/lingkaran/{lingkaran}'
 */
 lingkaranForm.get = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -275,7 +275,7 @@ lingkaranForm.get = (args: { lingkaran: string | { slug: string } } | [lingkaran
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::lingkaran
-* @see app/Http/Controllers/UkhuwahController.php:77
+* @see app/Http/Controllers/UkhuwahController.php:100
 * @route '/lingkaran/{lingkaran}'
 */
 lingkaranForm.head = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -292,7 +292,7 @@ lingkaran.form = lingkaranForm
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::masjid
-* @see app/Http/Controllers/UkhuwahController.php:93
+* @see app/Http/Controllers/UkhuwahController.php:125
 * @route '/masjid/{masjid}'
 */
 export const masjid = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -307,7 +307,7 @@ masjid.definition = {
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::masjid
-* @see app/Http/Controllers/UkhuwahController.php:93
+* @see app/Http/Controllers/UkhuwahController.php:125
 * @route '/masjid/{masjid}'
 */
 masjid.url = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -340,7 +340,7 @@ masjid.url = (args: { masjid: string | { slug: string } } | [masjid: string | { 
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::masjid
-* @see app/Http/Controllers/UkhuwahController.php:93
+* @see app/Http/Controllers/UkhuwahController.php:125
 * @route '/masjid/{masjid}'
 */
 masjid.get = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -350,7 +350,7 @@ masjid.get = (args: { masjid: string | { slug: string } } | [masjid: string | { 
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::masjid
-* @see app/Http/Controllers/UkhuwahController.php:93
+* @see app/Http/Controllers/UkhuwahController.php:125
 * @route '/masjid/{masjid}'
 */
 masjid.head = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -360,7 +360,7 @@ masjid.head = (args: { masjid: string | { slug: string } } | [masjid: string | {
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::masjid
-* @see app/Http/Controllers/UkhuwahController.php:93
+* @see app/Http/Controllers/UkhuwahController.php:125
 * @route '/masjid/{masjid}'
 */
 const masjidForm = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -370,7 +370,7 @@ const masjidForm = (args: { masjid: string | { slug: string } } | [masjid: strin
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::masjid
-* @see app/Http/Controllers/UkhuwahController.php:93
+* @see app/Http/Controllers/UkhuwahController.php:125
 * @route '/masjid/{masjid}'
 */
 masjidForm.get = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -380,7 +380,7 @@ masjidForm.get = (args: { masjid: string | { slug: string } } | [masjid: string 
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::masjid
-* @see app/Http/Controllers/UkhuwahController.php:93
+* @see app/Http/Controllers/UkhuwahController.php:125
 * @route '/masjid/{masjid}'
 */
 masjidForm.head = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

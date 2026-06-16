@@ -117,7 +117,7 @@ const penulis = computed(() =>
 
 const tanggal = computed(() =>
   new Date(props.kalam.created_at).toLocaleDateString('id-ID', {
-    day: 'numeric', month: 'long', year: 'numeric'
+    day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
   })
 )
 
@@ -373,7 +373,7 @@ function closeDropdowns() {
                 <span class="text-xs font-bold text-amber-200">
                   {{ komentar.user ? komentar.user.name : (komentar.nama_publik || 'Hamba Allah (Anonim)') }}
                 </span>
-                <span class="text-[9px] text-stone-600 font-mono">• {{ new Date(komentar.created_at).toLocaleDateString('id-ID') }}</span>
+                <span class="text-[9px] text-stone-600 font-mono">• {{ new Date(komentar.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'})}}</span>
               </div>
               <p class="text-sm text-stone-400 leading-relaxed">{{ komentar.body }}</p>
             </div>

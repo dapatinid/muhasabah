@@ -6,6 +6,7 @@ use App\Models\Acara;
 use App\Models\Komentar;
 use App\Models\Payment;
 use App\Models\Reaksi;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -124,6 +125,9 @@ class AcaraController extends Controller
 
     public function edit(Acara $acara)
     {
+        $users = User::select('id', 'name')->orderBy('name')->get();
+        $attachedUsers = $acara->users()->pluck('users.id')->toArray();
+
         $acara->tgl_mulai = $acara->tgl_mulai ? Carbon::parse($acara->tgl_mulai)->format('Y-m-d\TH:i') : '';
         $acara->tgl_selesai = $acara->tgl_selesai ? Carbon::parse($acara->tgl_selesai)->format('Y-m-d\TH:i') : '';
         $acara->batas_registrasi = $acara->batas_registrasi ? Carbon::parse($acara->batas_registrasi)->format('Y-m-d\TH:i') : '';
@@ -136,6 +140,8 @@ class AcaraController extends Controller
                 ['title' => 'Acara', 'href' => '/admin/acara'],
                 ['title' => 'Edit Acara', 'href' => "/admin/acara/{$acara->slug}/edit"],
             ],
+            'users' => $users,
+            'attachedUsers' => $attachedUsers            
         ]);
     }
 
@@ -164,6 +170,9 @@ class AcaraController extends Controller
             'variants.*.nama_varian' => 'required|string|max:100',
             'variants.*.harga' => 'required|numeric|min:0',
             'variants.*.jumlah_kursi' => 'required|integer|min:1',
+
+            'users' => 'nullable|array', // Validasi array user
+            'users.*' => 'exists:users,id',
         ]);
 
         if ($request->tgl_mulai) {
@@ -188,6 +197,13 @@ class AcaraController extends Controller
                 $acara->variants()->delete();
             }
         });
+
+        // 🌟 SINKRONISASI RELASI MANY-TO-MANY 🌟
+        if ($request->has('users')) {
+            $acara->users()->sync($request->users);
+        } else {
+            $acara->users()->sync([]); // Kosongkan jika tidak ada user yang dicentang
+        }        
 
         return redirect()->route('acara.index')->with('success', 'Acara berhasil diperbarui.');
     }    
