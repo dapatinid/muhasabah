@@ -278,7 +278,7 @@ uploadImage.form = uploadImageForm
 * @see app/Http/Controllers/MasjidController.php:77
 * @route '/admin/masjid/{masjid}/edit'
 */
-export const edit = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -293,7 +293,7 @@ edit.definition = {
 * @see app/Http/Controllers/MasjidController.php:77
 * @route '/admin/masjid/{masjid}/edit'
 */
-edit.url = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
+edit.url = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { masjid: args }
     }
@@ -326,7 +326,7 @@ edit.url = (args: { masjid: string | { slug: string } } | [masjid: string | { sl
 * @see app/Http/Controllers/MasjidController.php:77
 * @route '/admin/masjid/{masjid}/edit'
 */
-edit.get = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -336,7 +336,7 @@ edit.get = (args: { masjid: string | { slug: string } } | [masjid: string | { sl
 * @see app/Http/Controllers/MasjidController.php:77
 * @route '/admin/masjid/{masjid}/edit'
 */
-edit.head = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -346,7 +346,7 @@ edit.head = (args: { masjid: string | { slug: string } } | [masjid: string | { s
 * @see app/Http/Controllers/MasjidController.php:77
 * @route '/admin/masjid/{masjid}/edit'
 */
-const editForm = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const editForm = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -356,7 +356,7 @@ const editForm = (args: { masjid: string | { slug: string } } | [masjid: string 
 * @see app/Http/Controllers/MasjidController.php:77
 * @route '/admin/masjid/{masjid}/edit'
 */
-editForm.get = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.get = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -366,7 +366,7 @@ editForm.get = (args: { masjid: string | { slug: string } } | [masjid: string | 
 * @see app/Http/Controllers/MasjidController.php:77
 * @route '/admin/masjid/{masjid}/edit'
 */
-editForm.head = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.head = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -383,7 +383,7 @@ edit.form = editForm
 * @see app/Http/Controllers/MasjidController.php:95
 * @route '/admin/masjid/{masjid}'
 */
-export const update = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -398,7 +398,7 @@ update.definition = {
 * @see app/Http/Controllers/MasjidController.php:95
 * @route '/admin/masjid/{masjid}'
 */
-update.url = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
+update.url = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { masjid: args }
     }
@@ -431,7 +431,7 @@ update.url = (args: { masjid: string | { slug: string } } | [masjid: string | { 
 * @see app/Http/Controllers/MasjidController.php:95
 * @route '/admin/masjid/{masjid}'
 */
-update.put = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -441,7 +441,7 @@ update.put = (args: { masjid: string | { slug: string } } | [masjid: string | { 
 * @see app/Http/Controllers/MasjidController.php:95
 * @route '/admin/masjid/{masjid}'
 */
-const updateForm = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PUT',
@@ -456,7 +456,7 @@ const updateForm = (args: { masjid: string | { slug: string } } | [masjid: strin
 * @see app/Http/Controllers/MasjidController.php:95
 * @route '/admin/masjid/{masjid}'
 */
-updateForm.put = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.put = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PUT',
@@ -473,7 +473,7 @@ update.form = updateForm
 * @see app/Http/Controllers/MasjidController.php:139
 * @route '/admin/masjid/{masjid}'
 */
-export const destroy = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -488,7 +488,7 @@ destroy.definition = {
 * @see app/Http/Controllers/MasjidController.php:139
 * @route '/admin/masjid/{masjid}'
 */
-destroy.url = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
+destroy.url = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { masjid: args }
     }
@@ -521,7 +521,7 @@ destroy.url = (args: { masjid: string | { slug: string } } | [masjid: string | {
 * @see app/Http/Controllers/MasjidController.php:139
 * @route '/admin/masjid/{masjid}'
 */
-destroy.delete = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -531,7 +531,7 @@ destroy.delete = (args: { masjid: string | { slug: string } } | [masjid: string 
 * @see app/Http/Controllers/MasjidController.php:139
 * @route '/admin/masjid/{masjid}'
 */
-const destroyForm = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -546,7 +546,7 @@ const destroyForm = (args: { masjid: string | { slug: string } } | [masjid: stri
 * @see app/Http/Controllers/MasjidController.php:139
 * @route '/admin/masjid/{masjid}'
 */
-destroyForm.delete = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -563,7 +563,7 @@ destroy.form = destroyForm
 * @see app/Http/Controllers/UkhuwahController.php:125
 * @route '/masjid/{masjid}'
 */
-export const show = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -578,7 +578,7 @@ show.definition = {
 * @see app/Http/Controllers/UkhuwahController.php:125
 * @route '/masjid/{masjid}'
 */
-show.url = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
+show.url = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { masjid: args }
     }
@@ -611,7 +611,7 @@ show.url = (args: { masjid: string | { slug: string } } | [masjid: string | { sl
 * @see app/Http/Controllers/UkhuwahController.php:125
 * @route '/masjid/{masjid}'
 */
-show.get = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -621,7 +621,7 @@ show.get = (args: { masjid: string | { slug: string } } | [masjid: string | { sl
 * @see app/Http/Controllers/UkhuwahController.php:125
 * @route '/masjid/{masjid}'
 */
-show.head = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -631,7 +631,7 @@ show.head = (args: { masjid: string | { slug: string } } | [masjid: string | { s
 * @see app/Http/Controllers/UkhuwahController.php:125
 * @route '/masjid/{masjid}'
 */
-const showForm = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const showForm = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -641,7 +641,7 @@ const showForm = (args: { masjid: string | { slug: string } } | [masjid: string 
 * @see app/Http/Controllers/UkhuwahController.php:125
 * @route '/masjid/{masjid}'
 */
-showForm.get = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.get = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -651,7 +651,7 @@ showForm.get = (args: { masjid: string | { slug: string } } | [masjid: string | 
 * @see app/Http/Controllers/UkhuwahController.php:125
 * @route '/masjid/{masjid}'
 */
-showForm.head = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.head = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
