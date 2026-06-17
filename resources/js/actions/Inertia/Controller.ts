@@ -242,86 +242,6 @@ Controllera0a232698784441c4a3e6e34ee783364.form = Controllera0a232698784441c4a3e
 /**
 * @see \Inertia\Controller::__invoke
 * @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
-* @route '/dashboard'
-*/
-const Controller42a740574ecbfbac32f8cc353fc32db9 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: Controller42a740574ecbfbac32f8cc353fc32db9.url(options),
-    method: 'get',
-})
-
-Controller42a740574ecbfbac32f8cc353fc32db9.definition = {
-    methods: ["get","head"],
-    url: '/dashboard',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \Inertia\Controller::__invoke
-* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
-* @route '/dashboard'
-*/
-Controller42a740574ecbfbac32f8cc353fc32db9.url = (options?: RouteQueryOptions) => {
-    return Controller42a740574ecbfbac32f8cc353fc32db9.definition.url + queryParams(options)
-}
-
-/**
-* @see \Inertia\Controller::__invoke
-* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
-* @route '/dashboard'
-*/
-Controller42a740574ecbfbac32f8cc353fc32db9.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: Controller42a740574ecbfbac32f8cc353fc32db9.url(options),
-    method: 'get',
-})
-
-/**
-* @see \Inertia\Controller::__invoke
-* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
-* @route '/dashboard'
-*/
-Controller42a740574ecbfbac32f8cc353fc32db9.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: Controller42a740574ecbfbac32f8cc353fc32db9.url(options),
-    method: 'head',
-})
-
-/**
-* @see \Inertia\Controller::__invoke
-* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
-* @route '/dashboard'
-*/
-const Controller42a740574ecbfbac32f8cc353fc32db9Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: Controller42a740574ecbfbac32f8cc353fc32db9.url(options),
-    method: 'get',
-})
-
-/**
-* @see \Inertia\Controller::__invoke
-* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
-* @route '/dashboard'
-*/
-Controller42a740574ecbfbac32f8cc353fc32db9Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: Controller42a740574ecbfbac32f8cc353fc32db9.url(options),
-    method: 'get',
-})
-
-/**
-* @see \Inertia\Controller::__invoke
-* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
-* @route '/dashboard'
-*/
-Controller42a740574ecbfbac32f8cc353fc32db9Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: Controller42a740574ecbfbac32f8cc353fc32db9.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-Controller42a740574ecbfbac32f8cc353fc32db9.form = Controller42a740574ecbfbac32f8cc353fc32db9Form
-/**
-* @see \Inertia\Controller::__invoke
-* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
 * @route '/pendaftaran/relawan-donatur'
 */
 const Controller89a4b2c3a8c2dc9fdef49e8fa41784f3 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -724,7 +644,6 @@ const Controller = {
     '/laporan-riyadhoh': Controllerd695224dce3196d1787d0802ce2060c0,
     '/amal-ibadah': Controller0ae8bd5ae264ec9c75cf771d5afced2f,
     '/halaman-dibangun': Controllera0a232698784441c4a3e6e34ee783364,
-    '/dashboard': Controller42a740574ecbfbac32f8cc353fc32db9,
     '/pendaftaran/relawan-donatur': Controller89a4b2c3a8c2dc9fdef49e8fa41784f3,
     '/pendaftaran/penulis': Controllerc28ff98a1abedae6b846834b62651fdd,
     '/pendaftaran/penggalang-dana': Controller4a5f04b4aa2d7cd4b7f1c6e4e8dbcf65,

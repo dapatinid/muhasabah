@@ -25,6 +25,7 @@ class Donasi extends Model
 
         static::creating(function ($donasi) {
             if (auth()->check()) {
+                $donasi->user_id = auth()->id();
                 $donasi->created_by = auth()->id();
                 $donasi->updated_by = auth()->id();
             }

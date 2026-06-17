@@ -23,6 +23,7 @@ class Lingkaran extends Model
 
         static::creating(function ($lingkaran) {
             if (auth()->check()) {
+                $lingkaran->user_id = auth()->id();
                 $lingkaran->created_by = auth()->id();
                 $lingkaran->updated_by = auth()->id();
             }
@@ -54,6 +55,12 @@ class Lingkaran extends Model
         'is_published' => 'boolean',
     ];
 
+    // penangggungjawab
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }    
+
     /**
      * Relasi Many-to-Many ke User (Anggota Lingkaran)
      */
@@ -68,7 +75,7 @@ class Lingkaran extends Model
     public function ratings()
     {
         return $this->morphMany(Rating::class, 'rateable');
-    }
+    }   
 
     /**
      * Relasi ke pembuat record (Audit)

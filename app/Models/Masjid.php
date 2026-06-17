@@ -20,25 +20,26 @@ class Masjid extends Model
     {
         parent::boot();
 
-        static::creating(function ($lingkaran) {
+        static::creating(function ($masjid) {
             if (auth()->check()) {
-                $lingkaran->created_by = auth()->id();
-                $lingkaran->updated_by = auth()->id();
+                $masjid->user_id = auth()->id();
+                $masjid->created_by = auth()->id();
+                $masjid->updated_by = auth()->id();
             }
         });
 
-        static::updating(function ($lingkaran) {
+        static::updating(function ($masjid) {
             if (auth()->check()) {
-                $lingkaran->updated_by = auth()->id();
+                $masjid->updated_by = auth()->id();
             }
         });
 
-        static::deleting(function ($lingkaran) {
+        static::deleting(function ($masjid) {
             if (auth()->check()) {
-                $lingkaran->deleted_by = auth()->id();
+                $masjid->deleted_by = auth()->id();
                 // 🌟 PAKSA SIMPAN KE DATABASE SEBELUM SOFT DELETE BERJALAN
                 // saveQuietly() digunakan agar tidak memicu event 'updating' secara tidak sengaja
-                $lingkaran->saveQuietly(); 
+                $masjid->saveQuietly(); 
             }
         });    
         
@@ -52,6 +53,12 @@ class Masjid extends Model
     protected $casts = [
         'is_published' => 'boolean',
     ];
+
+    // penangggungjawab
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }    
 
     /**
      * Relasi Many-to-Many ke User (Jamaah/Pengurus Masjid)

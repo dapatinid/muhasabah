@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/RatingController.php:14
 * @route '/lingkaran/{lingkaran}/rate'
 */
-export const storeLingkaran = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const storeLingkaran = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: storeLingkaran.url(args, options),
     method: 'post',
 })
@@ -19,7 +19,7 @@ storeLingkaran.definition = {
 * @see app/Http/Controllers/RatingController.php:14
 * @route '/lingkaran/{lingkaran}/rate'
 */
-storeLingkaran.url = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+storeLingkaran.url = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { lingkaran: args }
     }
@@ -52,7 +52,7 @@ storeLingkaran.url = (args: { lingkaran: string | number | { slug: string | numb
 * @see app/Http/Controllers/RatingController.php:14
 * @route '/lingkaran/{lingkaran}/rate'
 */
-storeLingkaran.post = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+storeLingkaran.post = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: storeLingkaran.url(args, options),
     method: 'post',
 })
@@ -62,7 +62,7 @@ storeLingkaran.post = (args: { lingkaran: string | number | { slug: string | num
 * @see app/Http/Controllers/RatingController.php:14
 * @route '/lingkaran/{lingkaran}/rate'
 */
-const storeLingkaranForm = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const storeLingkaranForm = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: storeLingkaran.url(args, options),
     method: 'post',
 })
@@ -72,7 +72,7 @@ const storeLingkaranForm = (args: { lingkaran: string | number | { slug: string 
 * @see app/Http/Controllers/RatingController.php:14
 * @route '/lingkaran/{lingkaran}/rate'
 */
-storeLingkaranForm.post = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+storeLingkaranForm.post = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: storeLingkaran.url(args, options),
     method: 'post',
 })
@@ -84,7 +84,7 @@ storeLingkaran.form = storeLingkaranForm
 * @see app/Http/Controllers/RatingController.php:39
 * @route '/masjid/{masjid}/rate'
 */
-export const storeMasjid = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const storeMasjid = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: storeMasjid.url(args, options),
     method: 'post',
 })
@@ -99,7 +99,7 @@ storeMasjid.definition = {
 * @see app/Http/Controllers/RatingController.php:39
 * @route '/masjid/{masjid}/rate'
 */
-storeMasjid.url = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+storeMasjid.url = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { masjid: args }
     }
@@ -132,7 +132,7 @@ storeMasjid.url = (args: { masjid: string | number | { slug: string | number } }
 * @see app/Http/Controllers/RatingController.php:39
 * @route '/masjid/{masjid}/rate'
 */
-storeMasjid.post = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+storeMasjid.post = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: storeMasjid.url(args, options),
     method: 'post',
 })
@@ -142,7 +142,7 @@ storeMasjid.post = (args: { masjid: string | number | { slug: string | number } 
 * @see app/Http/Controllers/RatingController.php:39
 * @route '/masjid/{masjid}/rate'
 */
-const storeMasjidForm = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const storeMasjidForm = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: storeMasjid.url(args, options),
     method: 'post',
 })
@@ -152,7 +152,7 @@ const storeMasjidForm = (args: { masjid: string | number | { slug: string | numb
 * @see app/Http/Controllers/RatingController.php:39
 * @route '/masjid/{masjid}/rate'
 */
-storeMasjidForm.post = (args: { masjid: string | number | { slug: string | number } } | [masjid: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+storeMasjidForm.post = (args: { masjid: string | { slug: string } } | [masjid: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: storeMasjid.url(args, options),
     method: 'post',
 })

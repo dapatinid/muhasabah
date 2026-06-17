@@ -34,6 +34,7 @@ class Acara extends Model
 
         static::creating(function ($acara) {
             if (auth()->check()) {
+                $acara->user_id = auth()->id();
                 $acara->created_by = auth()->id();
                 $acara->updated_by = auth()->id();
             }

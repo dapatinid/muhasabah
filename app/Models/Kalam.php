@@ -34,6 +34,7 @@ class Kalam extends Model
 
         static::creating(function ($kalam) {
             if (auth()->check()) {
+                $kalam->user_id = auth()->id();
                 $kalam->created_by = auth()->id();
                 $kalam->updated_by = auth()->id();
             }

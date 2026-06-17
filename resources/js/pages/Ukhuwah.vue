@@ -32,9 +32,9 @@ const tabs = [
   { key: 'masjid',   label: 'Masjid',   icon: MoonStar },
 ]
 
-const pisahkanClass = (cls: string | null | undefined): string => {
-  if (!cls) return '';
-  return cls.replace(/,/g, ' | ');
+const pisahkanClass = (cls: string | null | undefined): string[] => {
+  if (!cls) return [];
+  return cls.split(',').map((item: string) => item.trim()).filter(Boolean);
 };
 
 </script>
@@ -137,10 +137,24 @@ const pisahkanClass = (cls: string | null | undefined): string => {
 
             <div class="min-w-0">
               <h3 class="font-bold text-white text-sm truncate group-hover:text-emerald-400 transition-colors">{{ user.name }}</h3>
-              <p class="text-xs text-stone-400 mt-0.5 truncate">{{ user.level || 'Anggota' }}</p>
-              <span class="inline-block mt-2 px-2 py-0.5 rounded-md bg-emerald-900/30 text-emerald-400 text-[10px] font-bold uppercase tracking-wide">
-                {{ pisahkanClass(user.class) || 'Umum' }}
-              </span>
+              <p class="text-xs text-stone-400 mt-0.5 truncate">{{ user.level || 'Anggota' }} |  {{user.province?.name}}, {{ user.city?.name }}</p>
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                <template v-if="pisahkanClass(user.class).length > 0">
+                  <span
+                    v-for="(clsItem, index) in pisahkanClass(user.class)"
+                    :key="index"
+                    class="inline-block px-2 py-0.5 rounded-md bg-emerald-900/30 text-emerald-400 text-[10px] font-bold uppercase tracking-wide border border-emerald-500/10"
+                  >
+                    {{ clsItem }}
+                  </span>
+                </template>
+                <span
+                  v-else
+                  class="inline-block px-2 py-0.5 rounded-md bg-stone-900 text-stone-500 text-[10px] font-bold uppercase tracking-wide border border-stone-800"
+                >
+                  Umum
+                </span>
+              </div>
             </div>
           </Link>
         </div>

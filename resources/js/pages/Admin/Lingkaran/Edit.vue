@@ -126,7 +126,7 @@ function deleteLingkaran() {
 <template>
     <Head :title="`Edit Lingkaran - ${props.lingkaran.nama}`" />
 
-    <div class="max-w-3xl mx-auto p-6">
+    <div class="p-6">
         <div class="mb-6 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <Link href="/admin/lingkaran" class="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl text-zinc-500 transition-colors">

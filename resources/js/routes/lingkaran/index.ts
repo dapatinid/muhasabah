@@ -278,7 +278,7 @@ uploadImage.form = uploadImageForm
 * @see app/Http/Controllers/LingkaranController.php:77
 * @route '/admin/lingkaran/{lingkaran}/edit'
 */
-export const edit = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -293,7 +293,7 @@ edit.definition = {
 * @see app/Http/Controllers/LingkaranController.php:77
 * @route '/admin/lingkaran/{lingkaran}/edit'
 */
-edit.url = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { lingkaran: args }
     }
@@ -326,7 +326,7 @@ edit.url = (args: { lingkaran: string | number | { slug: string | number } } | [
 * @see app/Http/Controllers/LingkaranController.php:77
 * @route '/admin/lingkaran/{lingkaran}/edit'
 */
-edit.get = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -336,7 +336,7 @@ edit.get = (args: { lingkaran: string | number | { slug: string | number } } | [
 * @see app/Http/Controllers/LingkaranController.php:77
 * @route '/admin/lingkaran/{lingkaran}/edit'
 */
-edit.head = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -346,7 +346,7 @@ edit.head = (args: { lingkaran: string | number | { slug: string | number } } | 
 * @see app/Http/Controllers/LingkaranController.php:77
 * @route '/admin/lingkaran/{lingkaran}/edit'
 */
-const editForm = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const editForm = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -356,7 +356,7 @@ const editForm = (args: { lingkaran: string | number | { slug: string | number }
 * @see app/Http/Controllers/LingkaranController.php:77
 * @route '/admin/lingkaran/{lingkaran}/edit'
 */
-editForm.get = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.get = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -366,7 +366,7 @@ editForm.get = (args: { lingkaran: string | number | { slug: string | number } }
 * @see app/Http/Controllers/LingkaranController.php:77
 * @route '/admin/lingkaran/{lingkaran}/edit'
 */
-editForm.head = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.head = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -383,7 +383,7 @@ edit.form = editForm
 * @see app/Http/Controllers/LingkaranController.php:95
 * @route '/admin/lingkaran/{lingkaran}'
 */
-export const update = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -398,7 +398,7 @@ update.definition = {
 * @see app/Http/Controllers/LingkaranController.php:95
 * @route '/admin/lingkaran/{lingkaran}'
 */
-update.url = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { lingkaran: args }
     }
@@ -431,7 +431,7 @@ update.url = (args: { lingkaran: string | number | { slug: string | number } } |
 * @see app/Http/Controllers/LingkaranController.php:95
 * @route '/admin/lingkaran/{lingkaran}'
 */
-update.put = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -441,7 +441,7 @@ update.put = (args: { lingkaran: string | number | { slug: string | number } } |
 * @see app/Http/Controllers/LingkaranController.php:95
 * @route '/admin/lingkaran/{lingkaran}'
 */
-const updateForm = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PUT',
@@ -456,7 +456,7 @@ const updateForm = (args: { lingkaran: string | number | { slug: string | number
 * @see app/Http/Controllers/LingkaranController.php:95
 * @route '/admin/lingkaran/{lingkaran}'
 */
-updateForm.put = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.put = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PUT',
@@ -473,7 +473,7 @@ update.form = updateForm
 * @see app/Http/Controllers/LingkaranController.php:139
 * @route '/admin/lingkaran/{lingkaran}'
 */
-export const destroy = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -488,7 +488,7 @@ destroy.definition = {
 * @see app/Http/Controllers/LingkaranController.php:139
 * @route '/admin/lingkaran/{lingkaran}'
 */
-destroy.url = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { lingkaran: args }
     }
@@ -521,7 +521,7 @@ destroy.url = (args: { lingkaran: string | number | { slug: string | number } } 
 * @see app/Http/Controllers/LingkaranController.php:139
 * @route '/admin/lingkaran/{lingkaran}'
 */
-destroy.delete = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -531,7 +531,7 @@ destroy.delete = (args: { lingkaran: string | number | { slug: string | number }
 * @see app/Http/Controllers/LingkaranController.php:139
 * @route '/admin/lingkaran/{lingkaran}'
 */
-const destroyForm = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -546,7 +546,7 @@ const destroyForm = (args: { lingkaran: string | number | { slug: string | numbe
 * @see app/Http/Controllers/LingkaranController.php:139
 * @route '/admin/lingkaran/{lingkaran}'
 */
-destroyForm.delete = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -560,10 +560,10 @@ destroy.form = destroyForm
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:100
+* @see app/Http/Controllers/UkhuwahController.php:101
 * @route '/lingkaran/{lingkaran}'
 */
-export const show = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -575,10 +575,10 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:100
+* @see app/Http/Controllers/UkhuwahController.php:101
 * @route '/lingkaran/{lingkaran}'
 */
-show.url = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+show.url = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { lingkaran: args }
     }
@@ -608,50 +608,50 @@ show.url = (args: { lingkaran: string | number | { slug: string | number } } | [
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:100
+* @see app/Http/Controllers/UkhuwahController.php:101
 * @route '/lingkaran/{lingkaran}'
 */
-show.get = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:100
+* @see app/Http/Controllers/UkhuwahController.php:101
 * @route '/lingkaran/{lingkaran}'
 */
-show.head = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:100
+* @see app/Http/Controllers/UkhuwahController.php:101
 * @route '/lingkaran/{lingkaran}'
 */
-const showForm = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const showForm = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:100
+* @see app/Http/Controllers/UkhuwahController.php:101
 * @route '/lingkaran/{lingkaran}'
 */
-showForm.get = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.get = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:100
+* @see app/Http/Controllers/UkhuwahController.php:101
 * @route '/lingkaran/{lingkaran}'
 */
-showForm.head = (args: { lingkaran: string | number | { slug: string | number } } | [lingkaran: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.head = (args: { lingkaran: string | { slug: string } } | [lingkaran: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

@@ -4,8 +4,7 @@ import { computed, ref } from 'vue'
 import { 
   MapPin, UserCircle2, CheckCircle2, ShieldCheck, 
   BookOpen, Heart, CalendarDays, Target, MoonStar, MessageCircle, Share2, Info,
-  Check,
-  Activity
+  Check, Activity, Send
 } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 
@@ -80,6 +79,8 @@ const formatRupiahDisingkat = (angka: number): string => {
 // Modal State
 const showLingkaranDialog = ref(false)
 const showMasjidDialog = ref(false)
+const showTentangDialog = ref(false)
+const showPesanDialog = ref(false)
 
 // Tabs
 type TabKey = 'kalam' | 'donasi' | 'acara'
@@ -115,10 +116,41 @@ const tabs: { key: TabKey; label: string; icon: any; color: string; activeColor:
   },
 ]
 
-const pisahkanClass = (cls: string | null | undefined): string => {
-  if (!cls) return '';
-  return cls.replace(/,/g, ' | ');
-};
+const daftarClass = computed((): string[] => {
+  if (!props.user?.class) return [];
+  // Memisahkan string berdasarkan koma dan membersihkan spasi di ujungnya
+  return props.user.class.split(',').map((cls: string) => cls.trim()).filter(Boolean);
+});
+
+// Fungsi pembantu jika ingin mengarahkan langsung ke WA dengan template teks
+const hubungiWhatsapp = () => {
+  let nomor = props.user.whatsapp;
+
+  if (!nomor) {
+    alert("Nomor WhatsApp tokoh belum tersedia.");
+    return;
+  }
+
+  // 1. Bersihkan nomor: Hapus semua karakter non-angka
+  nomor = nomor.replace(/\D/g, '');
+
+  // 2. Jika diawali angka '0', ganti menjadi '62' (kode Indonesia)
+  if (nomor.startsWith('0')) {
+    nomor = '62' + nomor.substring(1);
+  }
+  
+  // 3. Jika nomor tidak diawali 62, tambahkan 62 (opsional, untuk keamanan)
+  if (!nomor.startsWith('62')) {
+    nomor = '62' + nomor;
+  }
+
+  // 4. Encode pesan
+  const teks = encodeURIComponent(`_Assalamu'alaikum wr wb._ \nSaudara/i ${props.user.name}. \nSaya ingin mengobrol, nomor ini saya dapat lewat halaman Tokoh di muhasabah.id.`);
+  
+  // 5. Buka link
+  const url = `https://wa.me/${nomor}?text=${teks}`;
+  window.open(url, '_blank');
+}
 </script>
 
 <template>
@@ -160,21 +192,45 @@ const pisahkanClass = (cls: string | null | undefined): string => {
                 <MapPin class="size-4 text-rose-500" /> {{ user.city?.name || 'Indonesia' }}
               </span>
             </div>
-            <span
-              class="inline-block px-3 py-1 rounded-lg bg-emerald-900/30 text-emerald-400 text-xs font-bold uppercase tracking-widest border border-emerald-500/20">
-              {{ pisahkanClass(user.class) || 'Umum' }}
-            </span>
+            <div class="flex flex-wrap gap-2 justify-center sm:justify-start">
+              <template v-if="daftarClass.length > 0">
+                <span
+                  v-for="(item, index) in daftarClass"
+                  :key="index"
+                  class="inline-block px-3 py-1 rounded-lg bg-emerald-900/30 text-emerald-400 text-xs font-bold uppercase tracking-widest border border-emerald-500/20"
+                >
+                  {{ item }}
+                </span>
+              </template>
+              <span
+                v-else
+                class="inline-block px-3 py-1 rounded-lg bg-stone-900 text-stone-400 text-xs font-bold uppercase tracking-widest border border-stone-800"
+              >
+                Umum
+              </span>
+            </div>
           </div>
         </div>
 
-        <div class="flex gap-3 px-5 mb-6">
-            <button @click="showLingkaranDialog = true" class="flex-1 flex items-center justify-center gap-2 py-2 bg-stone-900 hover:bg-stone-800 border border-stone-800 rounded-xl text-stone-300 text-xs font-bold transition-colors">
-                <Target class="size-4 text-emerald-500" />
-                <span class="truncate">Relasi Lingkaran</span>
+        <div class="grid grid-cols-4 gap-3 px-5 mb-6">
+            <button @click="showTentangDialog = true" class="flex items-center justify-center gap-2 py-2.5 bg-stone-900 hover:bg-stone-800 border border-stone-800 rounded-xl text-stone-300 text-xs font-bold transition-colors">
+                <Info class="size-4 text-amber-500" />
+                <!-- <span class="truncate">Tentang</span> -->
             </button>
-            <button @click="showMasjidDialog = true" class="flex-1 flex items-center justify-center gap-2 py-2 bg-stone-900 hover:bg-stone-800 border border-stone-800 rounded-xl text-stone-300 text-xs font-bold transition-colors">
+
+            <button @click="showLingkaranDialog = true" class="flex items-center justify-center gap-2 py-2.5 bg-stone-900 hover:bg-stone-800 border border-stone-800 rounded-xl text-stone-300 text-xs font-bold transition-colors">
+                <Target class="size-4 text-emerald-500" />
+                <!-- <span class="truncate">Lingkaran</span> -->
+            </button>
+
+            <button @click="showMasjidDialog = true" class="flex items-center justify-center gap-2 py-2.5 bg-stone-900 hover:bg-stone-800 border border-stone-800 rounded-xl text-stone-300 text-xs font-bold transition-colors">
                 <MoonStar class="size-4 text-emerald-500" />
-                <span class="truncate">Relasi Masjid</span>
+                <!-- <span class="truncate">Masjid</span> -->
+            </button>
+
+            <button @click="showPesanDialog = true" class="flex items-center justify-center gap-2 py-2.5 bg-stone-900 hover:bg-stone-800 border border-stone-800 rounded-xl text-stone-300 text-xs font-bold transition-colors">
+                <MessageCircle class="size-4 text-sky-500" />
+                <!-- <span class="truncate">Pesan</span> -->
             </button>
         </div>
 
@@ -354,6 +410,73 @@ const pisahkanClass = (cls: string | null | undefined): string => {
             </div>
         </DialogContent>
     </Dialog>
+
+    <Dialog :open="showTentangDialog" @update:open="showTentangDialog = $event">
+        <DialogContent class="bg-stone-950 border-stone-800 text-stone-100 max-w-lg rounded-2xl">
+            <DialogHeader>
+                <DialogTitle class="flex items-center gap-2 text-stone-100 font-bold">
+                    <Info class="size-5 text-amber-500" />
+                    Autobiografi / Riwayat Hidup
+                </DialogTitle>
+                <DialogDescription class="text-stone-400 text-xs">
+                    Mengenal lebih dekat profil ringkas dari <strong>{{ user.name }}</strong>.
+                </DialogDescription>
+            </DialogHeader>
+            
+            <div class="py-4 max-h-[60vh] overflow-y-auto pr-1">
+                <div 
+                    v-if="user.tentang_saya && user.tentang_saya.autobiografi" 
+                    class="prose prose-sm prose-invert text-stone-300 leading-relaxed text-sm break-words"
+                    v-html="user.tentang_saya.autobiografi"
+                ></div>
+                
+                <div v-else class="text-center py-8 text-sm text-stone-500 italic border border-dashed border-stone-800 rounded-xl">
+                    Tokoh ini belum menuliskan riwayat hidup atau autobiografinya.
+                </div>
+            </div>
+        </DialogContent>
+    </Dialog>
+
+    <Dialog :open="showPesanDialog" @update:open="showPesanDialog = $event">
+        <DialogContent class="bg-stone-950 border-stone-800 text-stone-100 max-w-sm rounded-2xl text-center">
+            <DialogHeader class="items-center text-center">
+                <div class="p-3 bg-sky-500/10 text-sky-500 rounded-full w-fit mb-2">
+                    <MessageCircle class="size-6" />
+                </div>
+                <DialogTitle class="text-stone-100 font-bold text-lg">
+                    Hubungi Tokoh
+                </DialogTitle>
+                <DialogDescription class="text-stone-400 text-sm mt-2 leading-relaxed text-center">                    Pesan atau obrolan ini akan dialihkan langsung menuju aplikasi <strong>WhatsApp</strong>.
+                        
+                        <span class="text-stone-400 text-xs block leading-relaxed text-left bg-stone-900/50 p-3 rounded-xl border border-stone-800/60 mt-4">
+                            <strong class="text-stone-300">💡 Etika Menghubungi Tokoh/Relawan:</strong>
+                            <ul class="list-disc pl-4 mt-1.5 space-y-1 text-stone-400">
+                                <li>Awali dengan salam, perkenalkan diri, dan sampaikan maksud dengan jelas.</li>
+                                <li>Gunakan bahasa yang santun dan hindari mengirim pesan berulang (<em>spam</em>).</li>
+                                <li>Relawan memiliki kesibukan pribadi, mohon maklum dan bersabar jika tidak langsung dibalas.</li>
+                            </ul>
+                        </span>
+                </DialogDescription>
+            </DialogHeader>
+            
+            <div class="pt-4 flex flex-col gap-2">
+                <button 
+                    @click="hubungiWhatsapp"
+                    class="w-full flex items-center justify-center gap-2 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-600/10 transition-all"
+                >
+                    <Send class="size-4 fill-current" />
+                    Buka WhatsApp
+                </button>
+                
+                <button 
+                    @click="showPesanDialog = false"
+                    class="w-full py-2.5 bg-transparent hover:bg-stone-900 border border-transparent hover:border-stone-800 text-stone-400 hover:text-stone-200 text-xs font-medium rounded-xl transition-all"
+                >
+                    Kembali
+                </button>
+            </div>
+        </DialogContent>
+    </Dialog>    
 
   </AppLayoutPublic>
 </template>

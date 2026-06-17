@@ -3,8 +3,10 @@ import KalamController from './KalamController'
 import DonasiController from './DonasiController'
 import AcaraController from './AcaraController'
 import UkhuwahController from './UkhuwahController'
+import DashboardController from './DashboardController'
 import UjiKelayakanController from './UjiKelayakanController'
 import RatingController from './RatingController'
+import TentangSayaController from './TentangSayaController'
 import LingkaranController from './LingkaranController'
 import MasjidController from './MasjidController'
 import BannerController from './BannerController'
@@ -17,8 +19,10 @@ const Controllers = {
     DonasiController: Object.assign(DonasiController, DonasiController),
     AcaraController: Object.assign(AcaraController, AcaraController),
     UkhuwahController: Object.assign(UkhuwahController, UkhuwahController),
+    DashboardController: Object.assign(DashboardController, DashboardController),
     UjiKelayakanController: Object.assign(UjiKelayakanController, UjiKelayakanController),
     RatingController: Object.assign(RatingController, RatingController),
+    TentangSayaController: Object.assign(TentangSayaController, TentangSayaController),
     LingkaranController: Object.assign(LingkaranController, LingkaranController),
     MasjidController: Object.assign(MasjidController, MasjidController),
     BannerController: Object.assign(BannerController, BannerController),

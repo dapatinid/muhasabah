@@ -15,6 +15,7 @@ use App\Models\Province;
 use App\Models\City;
 use App\Models\District;
 use App\Models\Village;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 #[Fillable(['name', 'slug', 'email', 'password', 'is_active', 'class', 'is_admin', 'level', 'last_seen_at', 'whatsapp', 'negara', 'province_code', 'city_code', 'district_code', 'village_code', 'kode_pos', 'jalan', 'avatar', 'sampul'])]
@@ -95,5 +96,13 @@ class User extends Authenticatable
     public function getIsOnlineAttribute(): bool
     {
         return $this->last_seen_at && $this->last_seen_at->gt(now()->subMinutes(5));
+    }    
+
+    /**
+     * Relasi One-to-One ke profil data TentangSaya
+     */
+    public function tentangSaya(): HasOne
+    {
+        return $this->hasOne(TentangSaya::class, 'user_id');
     }    
 }

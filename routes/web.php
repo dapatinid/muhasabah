@@ -4,12 +4,14 @@ use App\Http\Controllers\BannerController;
 use App\Http\Controllers\DonasiController;
 use App\Http\Controllers\KalamController;
 use App\Http\Controllers\AcaraController; // Controller Baru
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\LaporanRiyadhohController;
 use App\Http\Controllers\LingkaranController;
 use App\Http\Controllers\MasjidController;
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\TentangSayaController;
 use App\Http\Controllers\UjiKelayakanController;
 use App\Http\Controllers\UkhuwahController;
 use App\Models\Province;
@@ -86,7 +88,7 @@ Route::inertia('halaman-dibangun', 'HalamanDibangun')->name('halaman-dibangun');
 
 Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
     
-    Route::inertia('dashboard', 'Dashboard')->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::inertia('/pendaftaran/relawan-donatur', 'Pendaftaran/RelawanDonatur')->name('pendaftaran.relawan-donatur');
     Route::inertia('/pendaftaran/penulis', 'Pendaftaran/Penulis')->name('pendaftaran.penulis');
     Route::inertia('/pendaftaran/penggalang-dana', 'Pendaftaran/PenggalangDana')->name('pendaftaran.penggalang-dana');
@@ -96,6 +98,15 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
 
     Route::post('/lingkaran/{lingkaran:slug}/rate', [RatingController::class, 'storeLingkaran']);
     Route::post('/masjid/{masjid:slug}/rate', [RatingController::class, 'storeMasjid']);
+
+    Route::get('/admin/tentang-saya', function () {
+        $tentangSaya = auth()->user()->tentangSaya; 
+        return inertia('Admin/TentangSaya/Edit', [
+            'tentangSaya' => $tentangSaya
+        ]);
+    })->name('tentang-saya.edit');
+    Route::post('/admin/tentang-saya', [TentangSayaController::class, 'storeOrUpdate'])->name('tentang-saya.update'); 
+    Route::post('/tentang-saya/upload-image', [TentangSayaController::class, 'uploadImage'])->name('tentang-saya.upload-image');
     
     Route::middleware(['admin', 'restrict_owner'])->group(function () {
 

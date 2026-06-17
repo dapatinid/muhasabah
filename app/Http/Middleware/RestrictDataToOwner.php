@@ -33,12 +33,12 @@ class RestrictDataToOwner
             // ==========================================
             // 1. KACAMATA KUDA
             // Semua model sekarang pakai pola sama:
-            // created_by ATAU terdaftar di tabel relasi (users)
+            // user_id ATAU terdaftar di tabel relasi (users)
             // ==========================================
 
             $flexibleScope = function (Builder $builder) use ($user) {
                 $builder->where(function ($query) use ($user) {
-                    $query->where('created_by', $user->id)
+                    $query->where('user_id', $user->id)
                           ->orWhereHas('users', function ($q) use ($user) {
                               $q->where('users.id', $user->id);
                           });
@@ -54,8 +54,8 @@ class RestrictDataToOwner
             // ==========================================
             // 2. PENJAGA PINTU
             // Semua model sekarang pakai pengecekan sama:
-            // created_by SELALU boleh edit/hapus, terlepas isAttached atau tidak.
-            // Selain created_by, hanya yang isAttached yang boleh.
+            // user_id SELALU boleh edit/hapus, terlepas isAttached atau tidak.
+            // Selain user_id, hanya yang isAttached yang boleh.
             // ==========================================
 
             $models = [
@@ -77,7 +77,7 @@ class RestrictDataToOwner
                 }
 
                 if ($model instanceof \Illuminate\Database\Eloquent\Model) {
-                    $isOwner = $model->created_by == $user->id;
+                    $isOwner = $model->user_id == $user->id;
 
                     if ($isOwner) {
                         continue;

@@ -49,7 +49,17 @@ const FontSize = Extension.create({
   },
 })
 
-const props = defineProps<{ modelValue: string }>()
+// Ganti baris ini:
+// const props = defineProps<{ modelValue: string }>()
+
+// Menjadi ini:
+const props = withDefaults(defineProps<{ 
+  modelValue: string;
+  uploadUrl?: string; // Jadikan opsional
+}>(), {
+  modelValue: '',
+  uploadUrl: '/admin/kalam/upload-image' // Default tetap ke kalam agar fitur lama tidak rusak
+})
 const emit = defineEmits(['update:modelValue'])
 
 const isUploading = ref(false)
@@ -124,11 +134,27 @@ function handleImageUpload(event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (!file) return
   isUploading.value = true
-  router.post('/admin/kalam/upload-image', { image: file }, {
+  
+  router.post(props.uploadUrl, { image: file }, {
     forceFormData: true,
+    preserveScroll: true,
+    preserveState: true, // Tambahkan ini agar state editor tidak ter-reset
     onSuccess: (page) => {
-      const url = (page.props as any).flash?.uploaded_image_url
-      if (url) editor.value?.chain().focus().setImage({ src: url }).run()
+      // 🌟 KITA CEK ISI PROPS DI CONSOLE
+      console.log("Berhasil Request! Isi Props:", page.props); 
+      
+      const url = (page.props as any).flash?.uploaded_image_url;
+      
+      if (url) {
+        editor.value?.chain().focus().setImage({ src: url }).run()
+      } else {
+        alert("Gambar berhasil di-upload, tapi URL gagal ditangkap oleh editor. Cek Console Inspect Element.");
+      }
+    },
+    // 🌟 TAMBAHKAN ONERROR UNTUK MENANGKAP KEGAGALAN VALIDASI (MISAL: FILE > 2MB)
+    onError: (errors) => {
+      console.error("Validasi Gagal:", errors);
+      alert("Gagal upload gambar: " + (errors.image || "Terjadi kesalahan pada server"));
     },
     onFinish: () => {
       isUploading.value = false

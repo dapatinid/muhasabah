@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/DonasiController.php:647
 * @route '/admin/donasi/{donasi}/bulk-donasi'
 */
-export const bulk = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const bulk = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: bulk.url(args, options),
     method: 'post',
 })
@@ -19,7 +19,7 @@ bulk.definition = {
 * @see app/Http/Controllers/DonasiController.php:647
 * @route '/admin/donasi/{donasi}/bulk-donasi'
 */
-bulk.url = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+bulk.url = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { donasi: args }
     }
@@ -52,7 +52,7 @@ bulk.url = (args: { donasi: string | number | { slug: string | number } } | [don
 * @see app/Http/Controllers/DonasiController.php:647
 * @route '/admin/donasi/{donasi}/bulk-donasi'
 */
-bulk.post = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+bulk.post = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: bulk.url(args, options),
     method: 'post',
 })
@@ -62,7 +62,7 @@ bulk.post = (args: { donasi: string | number | { slug: string | number } } | [do
 * @see app/Http/Controllers/DonasiController.php:647
 * @route '/admin/donasi/{donasi}/bulk-donasi'
 */
-const bulkForm = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const bulkForm = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: bulk.url(args, options),
     method: 'post',
 })
@@ -72,7 +72,7 @@ const bulkForm = (args: { donasi: string | number | { slug: string | number } } 
 * @see app/Http/Controllers/DonasiController.php:647
 * @route '/admin/donasi/{donasi}/bulk-donasi'
 */
-bulkForm.post = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+bulkForm.post = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: bulk.url(args, options),
     method: 'post',
 })

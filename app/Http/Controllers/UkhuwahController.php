@@ -22,7 +22,7 @@ class UkhuwahController extends Controller
         $items = null;
 
         if ($tab === 'tokoh') {
-            $query = User::query()->whereNotIn('id', [1]); // Bisa tambahkan ->where('is_active', true) jika ada
+            $query = User::query()->with(['province','city'])->whereNotIn('id', [1]); // Bisa tambahkan ->where('is_active', true) jika ada
             if ($search) $query->where('name', 'like', "%{$search}%");
 
             // Urutkan: yang online (last_seen_at dalam 5 menit terakhir) tampil di atas, lalu terbaru
@@ -66,6 +66,7 @@ class UkhuwahController extends Controller
         // Eager load relasi kota, serta ambil kalams, donasis, acaras milik user
         // Kita batasi hanya mengambil yang ter-publish dan beberapa data terbaru (contoh: 4 data terbaru)
         $user->load([
+            'tentangSaya',
             'city',
             'lingkarans:id,nama,slug,logo', // Ambil data lingkaran yang diikuti tokoh
             'masjids:id,nama,slug,logo',    // Ambil data masjid yang diikuti tokoh
