@@ -137,7 +137,7 @@ const pisahkanClass = (cls: string | null | undefined): string[] => {
 
             <div class="min-w-0">
               <h3 class="font-bold text-white text-sm truncate group-hover:text-emerald-400 transition-colors">{{ user.name }}</h3>
-              <p class="text-xs text-stone-400 mt-0.5 truncate">{{ user.level || 'Anggota' }} |  {{user.province?.name}}, {{ user.city?.name }}</p>
+              <p class="text-xs text-stone-400 mt-0.5 truncate">{{ user.level || 'Anggota' }} |  {{ user.city?.name?.replace('KABUPATEN', 'KAB.') || 'Indonesia'}}</p>
               <div class="flex flex-wrap gap-1.5 mt-2">
                 <template v-if="pisahkanClass(user.class).length > 0">
                   <span
