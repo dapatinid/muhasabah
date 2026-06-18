@@ -11,7 +11,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import SearchableSelect from '@/components/SearchableSelect.vue';
 import { edit } from '@/routes/profile';
 import { send } from '@/routes/verification';
-import { Camera, User as UserIcon } from 'lucide-vue-next'; // 🌟 Import Icon Baru
+import { Camera, User as UserIcon } from 'lucide-vue-next';
 
 type Props = {
     mustVerifyEmail: boolean;
@@ -34,6 +34,10 @@ defineOptions({
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user || {} as any);
+const gender = ref(user.value?.gender || null);
+
+// Ambil referensi form instance dari controller wrapper agar kita bisa memanipulasi datanya
+const profileForm = ProfileController.update.form();
 
 // ============================================
 // STATE MEDIA (AVATAR & SAMPUL)
@@ -43,13 +47,32 @@ const sampulPreview = ref(user.value?.sampul ? `/storage/${user.value.sampul}` :
 
 function handleAvatarChange(e: Event) {
     const file = (e.target as HTMLInputElement).files?.[0];
-    if (file) avatarPreview.value = URL.createObjectURL(file);
+    if (file) {
+        avatarPreview.value = URL.createObjectURL(file);
+        // 🌟 MASUKKAN FILE KE DATA FORM INERTIA
+        if (profileForm.data) {
+            profileForm.data.avatar = file;
+        }
+    }
 }
 
 function handleSampulChange(e: Event) {
     const file = (e.target as HTMLInputElement).files?.[0];
-    if (file) sampulPreview.value = URL.createObjectURL(file);
+    if (file) {
+        sampulPreview.value = URL.createObjectURL(file);
+        // 🌟 MASUKKAN FILE KE DATA FORM INERTIA
+        if (profileForm.data) {
+            profileForm.data.sampul = file;
+        }
+    }
 }
+
+// Sinkronisasi data gender manual ke form inertia setiap kali berubah
+watch(gender, (newGender) => {
+    if (profileForm.data) {
+        profileForm.data.gender = newGender;
+    }
+});
 
 // ============================================
 // STATE WILAYAH (DOMISILI)
@@ -83,12 +106,23 @@ onMounted(async () => {
     if (province_code.value) citiesList.value = await fetchWilayahData(`/api/wilayah/cities/${province_code.value}`);
     if (city_code.value) districtsList.value = await fetchWilayahData(`/api/wilayah/districts/${city_code.value}`);
     if (district_code.value) villagesList.value = await fetchWilayahData(`/api/wilayah/villages/${district_code.value}`);
+    
+    // Set awal gender ke data form jika ada
+    if (profileForm.data && gender.value) {
+        profileForm.data.gender = gender.value;
+    }
 });
 
 watch(province_code, async (newVal, oldVal) => {
     if (oldVal === undefined || newVal === oldVal) return;
     city_code.value = null; district_code.value = null; village_code.value = null;
     citiesList.value = []; districtsList.value = []; villagesList.value = [];
+    if (profileForm.data) {
+        profileForm.data.province_code = newVal;
+        profileForm.data.city_code = null;
+        profileForm.data.district_code = null;
+        profileForm.data.village_code = null;
+    }
     if (newVal) citiesList.value = await fetchWilayahData(`/api/wilayah/cities/${newVal}`);
 });
 
@@ -96,13 +130,26 @@ watch(city_code, async (newVal, oldVal) => {
     if (oldVal === undefined || newVal === oldVal) return;
     district_code.value = null; village_code.value = null;
     districtsList.value = []; villagesList.value = [];
+    if (profileForm.data) {
+        profileForm.data.city_code = newVal;
+        profileForm.data.district_code = null;
+        profileForm.data.village_code = null;
+    }
     if (newVal) districtsList.value = await fetchWilayahData(`/api/wilayah/districts/${newVal}`);
 });
 
 watch(district_code, async (newVal, oldVal) => {
     if (oldVal === undefined || newVal === oldVal) return;
     village_code.value = null; villagesList.value = [];
+    if (profileForm.data) {
+        profileForm.data.district_code = newVal;
+        profileForm.data.village_code = null;
+    }
     if (newVal) villagesList.value = await fetchWilayahData(`/api/wilayah/villages/${newVal}`);
+});
+
+watch(village_code, (newVal) => {
+    if (profileForm.data) profileForm.data.village_code = newVal;
 });
 </script>
 
@@ -114,7 +161,7 @@ watch(district_code, async (newVal, oldVal) => {
     <div class="flex flex-col space-y-8">
         
         <Form
-            v-bind="ProfileController.update.form()"
+            v-bind="profileForm"
             class="space-y-8"
             v-slot="{ errors, processing, recentlySuccessful }"
         >
@@ -126,38 +173,49 @@ watch(district_code, async (newVal, oldVal) => {
                     description="Kustomisasi foto profil dan sampul jejaring Anda."
                 />
                 
-                <Card class="border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden bg-white dark:bg-zinc-950">
-                    <div class="relative h-32 sm:h-48 bg-zinc-100 dark:bg-zinc-800 group/sampul flex items-center justify-center">
-                        <img v-if="sampulPreview" :src="sampulPreview" class="absolute inset-0 w-full h-full object-cover" />
+                <div class="relative mb-6">
+                    <div class="h-44 w-full rounded-2xl bg-zinc-100 dark:bg-zinc-800 overflow-hidden relative border border-zinc-200 dark:border-zinc-800">
+                        <img v-if="sampulPreview" :src="sampulPreview" class="w-full h-full object-cover" alt="Sampul Profil" />
+                        <div v-else class="w-full h-full bg-linear-to-r from-zinc-200 to-stone-200 dark:from-zinc-850 dark:to-stone-900 flex items-center justify-center text-zinc-400 text-xs">
+                            Belum ada foto sampul
+                        </div>
                         
-                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/sampul:opacity-100 transition-opacity flex items-center justify-center">
-                            <Label for="sampul" class="cursor-pointer flex items-center gap-2 px-4 py-2 bg-black/50 hover:bg-black/70 text-white rounded-full text-sm font-medium backdrop-blur-sm transition-colors">
-                                <Camera class="size-4" /> Ubah Sampul
-                            </Label>
-                            <input type="file" id="sampul" name="sampul" accept="image/*" class="hidden" @change="handleSampulChange" />
-                        </div>
+                        <label class="absolute bottom-3 right-3 p-2 bg-black/60 hover:bg-black/80 text-white rounded-xl cursor-pointer backdrop-blur-sm transition-all shadow-sm">
+                            <Camera class="size-4" />
+                            <input type="file" name="sampul" class="hidden" accept="image/*" @change="handleSampulChange" />
+                        </label>
                     </div>
 
-                    <div class="relative px-6 pb-6">
-                        <div class="relative -mt-12 sm:-mt-16 size-24 sm:size-32 rounded-full border-4 border-white dark:border-zinc-950 bg-zinc-50 dark:bg-zinc-900 overflow-hidden shadow-md group/avatar">
-                            
-                            <img v-if="avatarPreview" :src="avatarPreview" class="w-full h-full object-cover" />
-                            <div v-else class="w-full h-full flex items-center justify-center text-zinc-300 dark:text-zinc-700">
-                                <UserIcon class="size-12 sm:size-16" />
+                    <div class="px-6 flex flex-col md:flex-row md:items-end gap-4 -mt-14 relative z-10 pointer-events-none">
+                        <div class="relative size-28 rounded-full border-4 border-white dark:border-zinc-900 bg-zinc-200 dark:bg-zinc-800 shadow-lg overflow-hidden shrink-0 group pointer-events-auto">
+                            <img v-if="avatarPreview" :src="avatarPreview" class="w-full h-full object-cover" alt="Avatar" />
+                            <div v-else class="w-full h-full flex items-center justify-center text-zinc-400">
+                                <UserIcon class="size-8" />
                             </div>
 
-                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/avatar:opacity-100 transition-opacity flex items-center justify-center">
-                                <Label for="avatar" class="cursor-pointer flex flex-col items-center justify-center w-full h-full text-white text-xs font-medium">
-                                    <Camera class="size-6 mb-1" />
-                                </Label>
-                                <input type="file" id="avatar" name="avatar" accept="image/*" class="hidden" @change="handleAvatarChange" />
-                            </div>
+                            <label class="absolute inset-0 bg-black/50 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity duration-200 backdrop-blur-[1px]">
+                                <Camera class="size-5" />
+                                <input type="file" name="avatar" class="hidden" accept="image/*" @change="handleAvatarChange" />
+                            </label>
                         </div>
 
-                        <InputError class="mt-2" :message="errors.avatar" />
-                        <InputError class="mt-1" :message="errors.sampul" />
+                        <div class="mb-1 text-center md:text-left">
+                            <div class="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                                <h2 class="text-xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight">
+                                    {{ user?.name || 'Nama Pengguna' }}
+                                </h2>
+                                <span v-if="user?.class" class="text-[10px] uppercase tracking-wider px-2 py-0.5 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 font-bold rounded-md">
+                                    {{ user.class }}
+                                </span>
+                            </div>
+                            <p class="text-sm font-medium text-zinc-400 dark:text-zinc-500 mt-0.5 font-mono">
+                                @{{ user?.slug || 'username' }}
+                            </p>
+                        </div>
                     </div>
-                </Card>
+                    <InputError class="mt-2" :message="errors.avatar" />
+                    <InputError class="mt-2" :message="errors.sampul" />
+                </div>                
             </div>
 
             <div class="space-y-4">
@@ -166,7 +224,9 @@ watch(district_code, async (newVal, oldVal) => {
                     title="Informasi Pribadi"
                     description="Perbarui informasi kontak dan alamat email Anda."
                 />
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
                     <div class="grid gap-2">
                         <Label for="name">Nama Lengkap</Label>
                         <Input
@@ -179,6 +239,56 @@ watch(district_code, async (newVal, oldVal) => {
                             placeholder="Nama Lengkap"
                         />
                         <InputError class="mt-1" :message="errors.name" />
+                    </div>
+
+                    <div class="space-y-1">
+                        <Label for="slug">Username / Slug Profil</Label>
+                        <div class="relative flex items-center">
+                            <span class="absolute left-3 text-zinc-400 text-sm font-mono select-none">@</span>
+                            <Input
+                                id="slug"
+                                name="slug"
+                                :default-value="user?.slug"
+                                required
+                                placeholder="username_kamu"
+                                class="pl-7 font-mono text-sm lowercase"
+                                @input="(e) => e.target.value = (e.target as HTMLInputElement).value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9_-]/g, '')"
+                            />
+                        </div>
+                        <p class="text-[11px] text-zinc-400 dark:text-zinc-500 mt-0.5">
+                            Username unik untuk link profil Anda. Hanya boleh berisi huruf kecil, angka, tanda strip (-) dan (*underscore*).
+                        </p>
+                        <InputError :message="errors.slug" />
+                    </div>
+
+                    <div class="space-y-2 md:col-span-2">
+                        <Label>Jenis Kelamin</Label>
+                        <input type="hidden" name="gender" :value="gender || ''" />
+                        <div class="grid grid-cols-2 gap-3 md:max-w-md">
+                            <label
+                                :class="[
+                                    'flex items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium cursor-pointer transition-colors',
+                                    gender === 'L'
+                                        ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400'
+                                        : 'border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-700'
+                                ]"
+                            >
+                                <input type="radio" value="L" v-model="gender" class="hidden" />
+                                Laki-laki
+                            </label>
+                            <label
+                                :class="[
+                                    'flex items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium cursor-pointer transition-colors',
+                                    gender === 'P'
+                                        ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400'
+                                        : 'border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-700'
+                                ]"
+                            >
+                                <input type="radio" value="P" v-model="gender" class="hidden" />
+                                Perempuan
+                            </label>
+                        </div>
+                        <InputError class="mt-1" :message="errors.gender" />
                     </div>
 
                     <div class="grid gap-2">
@@ -196,7 +306,7 @@ watch(district_code, async (newVal, oldVal) => {
                         <InputError class="mt-1" :message="errors.email" />
                     </div>
 
-                    <div class="grid gap-2 md:col-span-2">
+                    <div class="grid gap-2">
                         <Label for="whatsapp">No. WhatsApp</Label>
                         <Input
                             id="whatsapp"
@@ -208,6 +318,7 @@ watch(district_code, async (newVal, oldVal) => {
                         />
                         <InputError class="mt-1" :message="errors.whatsapp" />
                     </div>
+
                 </div>
             </div>
 

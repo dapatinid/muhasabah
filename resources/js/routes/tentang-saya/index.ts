@@ -1,6 +1,6 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
-* @see routes/web.php:102
+* @see routes/web.php:103
 * @route '/admin/tentang-saya'
 */
 export const edit = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -14,7 +14,7 @@ edit.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:102
+* @see routes/web.php:103
 * @route '/admin/tentang-saya'
 */
 edit.url = (options?: RouteQueryOptions) => {
@@ -22,7 +22,7 @@ edit.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:102
+* @see routes/web.php:103
 * @route '/admin/tentang-saya'
 */
 edit.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -31,7 +31,7 @@ edit.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:102
+* @see routes/web.php:103
 * @route '/admin/tentang-saya'
 */
 edit.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -40,7 +40,7 @@ edit.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:102
+* @see routes/web.php:103
 * @route '/admin/tentang-saya'
 */
 const editForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -49,7 +49,7 @@ const editForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:102
+* @see routes/web.php:103
 * @route '/admin/tentang-saya'
 */
 editForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -58,7 +58,7 @@ editForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:102
+* @see routes/web.php:103
 * @route '/admin/tentang-saya'
 */
 editForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

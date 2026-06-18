@@ -4,6 +4,7 @@ use App\Http\Controllers\BannerController;
 use App\Http\Controllers\DonasiController;
 use App\Http\Controllers\KalamController;
 use App\Http\Controllers\AcaraController; // Controller Baru
+use App\Http\Controllers\AktifitasController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -100,18 +101,21 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
     Route::post('/masjid/{masjid:slug}/rate', [RatingController::class, 'storeMasjid']);
 
     Route::get('/admin/tentang-saya', function () {
-        // Gunakan optional operator (?) agar tidak error jika data kosong
         $tentangSaya = auth()->user()->tentangSaya; 
-        
         return inertia('Admin/TentangSaya/Edit', [
             'tentangSaya' => $tentangSaya
         ]);
     })->name('tentang-saya.edit');
-
     Route::post('/admin/tentang-saya', [TentangSayaController::class, 'storeOrUpdate'])->name('tentang-saya.update');
-    
-    // Rute Upload Gambar (PENTING: Pastikan URL-nya konsisten dengan di Vue)
     Route::post('/admin/tentang-saya/upload-image', [TentangSayaController::class, 'uploadImage'])->name('tentang-saya.upload-image');
+
+    Route::prefix('user/aktifitas')->name('user.aktifitas.')->group(function () {
+        Route::get('/donasi', [AktifitasController::class, 'donasi'])->name('donasi');
+        Route::get('/tiket', [AktifitasController::class, 'tiket'])->name('tiket');
+        Route::get('/reaksi', [AktifitasController::class, 'reaksi'])->name('reaksi');
+        Route::get('/komentar', [AktifitasController::class, 'komentar'])->name('komentar');
+        Route::get('/rating', [AktifitasController::class, 'rating'])->name('rating');
+    });
     
     Route::middleware(['admin', 'restrict_owner'])->group(function () {
 

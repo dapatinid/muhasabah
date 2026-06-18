@@ -68,7 +68,7 @@ const pisahkanClass = (cls: string | null | undefined): string[] => {
             Jejaring <span class="text-emerald-300">Ukhuwah</span>
           </h1>
           <p class="text-emerald-100/70 text-sm max-w-sm mx-auto leading-relaxed">
-            Temukan tokoh, lingkaran, dan masjid — bangun silaturahmi yang bermakna.
+            Temukan tokoh, lingkaran, dan masjid. Mari bangun silaturahmi yang bermakna.
           </p>
         </div>
       </div>
@@ -127,7 +127,7 @@ const pisahkanClass = (cls: string | null | undefined): string[] => {
                 class="size-14 rounded-2xl object-cover"
               />
               <img v-else
-                :src="user.gender === 'L' ? `/avatar_cowo.png` : `/avatar_cewe.png`"
+                :src="user.gender === 'P' ? `/avatar_cewe.png` : `/avatar_cowo.png`"
                 class="size-14 rounded-2xl object-cover"
               />
               <!-- <div
@@ -141,20 +141,20 @@ const pisahkanClass = (cls: string | null | undefined): string[] => {
 
             <div class="min-w-0">
               <h3 class="font-bold text-white text-sm truncate group-hover:text-emerald-400 transition-colors">{{ user.name }}</h3>
-              <p class="text-xs text-stone-400 mt-0.5 truncate">{{ user.level || 'Anggota' }} |  {{ user.city?.name?.replace('KABUPATEN', 'KAB.') || 'Indonesia'}}</p>
+              <p class="text-xs text-stone-400 mt-0.5 truncate">{{ user.level || 'Anggota' }} <span class="mx-1">•</span> {{ user.city?.name?.replace('KABUPATEN', 'KAB.') || 'Indonesia'}}</p>
               <div class="flex flex-wrap gap-1.5 mt-2">
                 <template v-if="pisahkanClass(user.class).length > 0">
                   <span
                     v-for="(clsItem, index) in pisahkanClass(user.class)"
                     :key="index"
-                    class="inline-block px-2 py-0.5 rounded-md bg-emerald-900/30 text-emerald-400 text-[10px] font-bold uppercase tracking-wide border border-emerald-500/10"
+                    class="inline-block px-2 py-0.5 rounded-md bg-emerald-900/30 text-emerald-400 text-[8px] font-bold uppercase tracking-wide border border-emerald-500/10"
                   >
                     {{ clsItem }}
                   </span>
                 </template>
                 <span
                   v-else
-                  class="inline-block px-2 py-0.5 rounded-md bg-stone-900 text-stone-500 text-[10px] font-bold uppercase tracking-wide border border-stone-800"
+                  class="inline-block px-2 py-0.5 rounded-md bg-stone-900 text-stone-500 text-[8px] font-bold uppercase tracking-wide border border-stone-800"
                 >
                   Umum
                 </span>

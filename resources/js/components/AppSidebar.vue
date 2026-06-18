@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { Award, BookOpen, Calendar, CircleStar, FolderGit2, GalleryThumbnails, HeartHandshake, LayoutGrid, Logs, MoonStar, Target } from 'lucide-vue-next';
+import { Award, BookOpen, Calendar, CircleStar, FolderGit2, GalleryThumbnails, HeartHandshake, LayoutGrid, Logs, MessageCircle, MoonStar, Smile, Star, Target, Ticket, Wallet } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavMainUkhuwah from '@/components/NavMainUkhuwah.vue';
+import NavMainAktifitas from '@/components/NavMainAktifitas.vue';
 import NavMainControlPanel from '@/components/NavMainControlPanel.vue';
 import NavUser from '@/components/NavUser.vue';
 import {
@@ -66,6 +67,38 @@ const mainNavItemsUkhuwah = computed(() => {
     return items;  
 });
 
+const mainNavItemsAktifitas = computed(() => {
+    const items: NavItem[] = [];
+        items.push(
+            {
+                title: 'Donasi',
+                href: '/user/aktifitas/donasi',
+                icon: Wallet,
+            },
+            {
+                title: 'Tiket',
+                href: '/user/aktifitas/tiket',
+                icon: Ticket,
+            },
+            {
+                title: 'Reaksi',
+                href: '/user/aktifitas/reaksi',
+                icon: Smile,
+            },
+            {
+                title: 'Komentar',
+                href: '/user/aktifitas/komentar',
+                icon: MessageCircle,
+            },
+            {
+                title: 'Rating',
+                href: '/user/aktifitas/rating',
+                icon: Star,
+            },
+        );
+    return items;  
+});
+
 const mainNavItemsControlPanel = computed(() => {
     const items: NavItem[] = [];
     if (canAccessControlPanel.value) {
@@ -106,8 +139,9 @@ const mainNavItemsControlPanel = computed(() => {
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain :items="mainNavItems" class="z-2"/>
-            <NavMainUkhuwah :items="mainNavItemsUkhuwah" class="z-1"/>
+            <NavMain :items="mainNavItems" class="z-3"/>
+            <NavMainUkhuwah :items="mainNavItemsUkhuwah" class="z-2"/>
+            <NavMainAktifitas :items="mainNavItemsAktifitas" class="z-1"/>
             <NavMainControlPanel :items="mainNavItemsControlPanel" v-if="canAccessControlPanel"/>
         </SidebarContent>
 

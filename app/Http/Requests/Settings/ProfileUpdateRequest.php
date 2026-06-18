@@ -16,9 +16,19 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // Aturan Utama
-            'gender' => ['required', 'string', 'max:255'],
+            'gender' => ['required', 'string', 'max:20'],
             'name' => ['required', 'string', 'max:255'],
+            
+            // 🌟 PERBAIKAN: Memperbaiki typo 'lowercase,' dan menambahkan format regex alfa-numerik
+            'slug' => [
+                'required', 
+                'string', 
+                'max:255', 
+                'lowercase', 
+                'alpha_dash', // Hanya mengizinkan huruf, angka, dash (-), dan underscore (_)
+                Rule::unique(User::class)->ignore($this->user()->id)
+            ],
+            
             'email' => [
                 'required',
                 'string',
@@ -28,7 +38,7 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
             
-            // 🌟 Aturan Baru (WhatsApp & Alamat)
+            // Aturan WhatsApp & Alamat lainnya tetap dibiarkan utuh...
             'whatsapp' => ['nullable', 'string', 'max:20'],
             'province_code' => ['nullable', 'string', 'exists:provinces,code'],
             'city_code' => ['nullable', 'string', 'exists:cities,code'],
@@ -37,7 +47,7 @@ class ProfileUpdateRequest extends FormRequest
             'jalan' => ['nullable', 'string'],
             'kode_pos' => ['nullable', 'string', 'max:10'],
             'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'sampul' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],            
+            'sampul' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
         ];
     }
 }

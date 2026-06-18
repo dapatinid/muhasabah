@@ -243,14 +243,14 @@ const submitKomentar = () => {
 const selectedReaksi = ref(null)
 const isSubmittingReaction = ref(false)
 const reaksiList = [
-  { type: 'love',  emoji: '❤️',  label: 'Takjub'      },
-  { type: 'like',  emoji: '👍',  label: 'Suka'             },
-  { type: 'pray',  emoji: '🤲',  label: 'Penuh Doa' },
-  { type: 'sad',   emoji: '😢',  label: 'Tidak Hadir'       },
+  { type: 'takjub',  emoji: '❤️',  label: 'Takjub'      },
+  { type: 'suka',  emoji: '👍',  label: 'Suka'             },
+  { type: 'penuh_doa',  emoji: '🤲',  label: 'Penuh Doa' },
+  { type: 'tidak_hadir',   emoji: '😢',  label: 'Tidak Hadir'       },
 ]
 
 const reaksiCount = computed(() => {
-  const counts = { love: 0, like: 0, pray: 0, sad: 0 }
+  const counts = { takjub: 0, suka: 0, penuh_doa: 0, tidak_hadir: 0 }
   props.acara.reaksis?.forEach(r => { counts[r.type]++ })
   return counts
 })
@@ -879,7 +879,7 @@ function closeDropdowns() {
           <p class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Ajukan Pertanyaan Kegiatan</p>
           <div class="space-y-3">
             <input v-if="!$page.props.auth.user" v-model="commentForm.nama_publik" type="text" placeholder="Nama Anda (Wajib isi)" class="w-full bg-stone-950 border border-stone-800 rounded-xl px-4 py-2.5 text-xs text-stone-200 placeholder-stone-600 focus:outline-none focus:border-amber-500/50 transition-colors" />
-            <textarea v-model="commentForm.body" required rows="3" placeholder="Tulis hal atau konfirmasi detail teknis yang ingin ditanyakan ke ta'mir masjid..." class="w-full bg-stone-950 border border-stone-800 rounded-xl px-4 py-3 text-xs text-stone-200 placeholder-stone-600 focus:outline-none focus:border-amber-500/50 transition-colors resize-none"></textarea>
+            <textarea v-model="commentForm.body" required rows="3" placeholder="Tulis hal atau konfirmasi detail teknis yang ingin ditanyakan ke panitia..." class="w-full bg-stone-950 border border-stone-800 rounded-xl px-4 py-3 text-xs text-stone-200 placeholder-stone-600 focus:outline-none focus:border-amber-500/50 transition-colors resize-none"></textarea>
           </div>
           <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
             <div v-if="!$page.props.auth.user" class="flex items-center gap-2 bg-stone-950 px-3 py-2 rounded-xl border border-stone-800">

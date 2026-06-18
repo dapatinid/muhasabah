@@ -18,7 +18,21 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
-const { isMobile, state } = useSidebar();
+
+// 1. Ambil setOpenMobile dari useSidebar
+const { isMobile, state, setOpenMobile } = useSidebar();
+
+// 2. Fungsi untuk menutup sidebar mobile saat menu user diklik
+const handleUserMenuClick = (event: MouseEvent) => {
+    if (!isMobile.value) return;
+
+    const target = event.target as HTMLElement;
+    
+    // Jika yang diklik adalah link (seperti Profile) atau button (seperti Logout)
+    if (target.closest('a') || target.closest('button')) {
+        setOpenMobile(false);
+    }
+};
 </script>
 
 <template>
@@ -47,7 +61,9 @@ const { isMobile, state } = useSidebar();
                     align="end"
                     :side-offset="4"
                 >
-                    <UserMenuContent :user="user" />
+                    <div @click="handleUserMenuClick">
+                        <UserMenuContent :user="user" />
+                    </div>
                 </DropdownMenuContent>
             </DropdownMenu>
         </SidebarMenuItem>

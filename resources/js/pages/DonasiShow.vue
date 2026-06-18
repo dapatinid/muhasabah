@@ -10,7 +10,8 @@ import {
   QrCode,
   CreditCard,
   MoreHorizontal,
-  AlertTriangle
+  AlertTriangle,
+  ShieldCheck
 } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'

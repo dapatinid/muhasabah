@@ -553,7 +553,7 @@ class AcaraController extends Controller
 
     public function storeReaksi(Request $request, Acara $acara)
     {
-        $request->validate(['type' => 'required|string|in:love,like,pray,sad']);
+        $request->validate(['type' => 'required|string|in:takjub,suka,penuh_doa,tidak_hadir']);
         $type = $request->input('type');
         $ipAddress = $request->ip();
         $userId = auth()->id();

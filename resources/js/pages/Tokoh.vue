@@ -125,6 +125,7 @@ const daftarClass = computed((): string[] => {
 // Fungsi pembantu jika ingin mengarahkan langsung ke WA dengan template teks
 const hubungiWhatsapp = () => {
   let nomor = props.user.whatsapp;
+  let sapaan = '';
 
   if (!nomor) {
     alert("Nomor WhatsApp tokoh belum tersedia.");
@@ -144,8 +145,14 @@ const hubungiWhatsapp = () => {
     nomor = '62' + nomor;
   }
 
+  if (props.user.gender === 'P') {
+    sapaan = 'Saudari';
+  } else {
+    sapaan = 'Saudara';
+  }
+
   // 4. Encode pesan
-  const teks = encodeURIComponent(`_Assalamu'alaikum wr wb._ \nSaudara/i ${props.user.name}. \nSaya ingin mengobrol, nomor ini saya dapat lewat halaman Tokoh di muhasabah.id.`);
+  const teks = encodeURIComponent(`_Assalamu'alaikum wr wb._ \n${sapaan} ${props.user.name}. \n\nSaya ingin mengobrol, nomor ini saya dapat lewat halaman Tokoh di muhasabah.id.`);
   
   // 5. Buka link
   const url = `https://wa.me/${nomor}?text=${teks}`;
@@ -171,7 +178,7 @@ const hubungiWhatsapp = () => {
           <div class="relative shrink-0">
             <img v-if="user.avatar" :src="`/storage/${user.avatar}`"
               class="size-32 sm:size-40 rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
-            <img v-else :src="user.gender === 'L' ? `/avatar_cowo.png` : `/avatar_cewe.png`"
+            <img v-else :src="user.gender === 'P' ? `/avatar_cewe.png` : `/avatar_cowo.png`"
               class="size-32 sm:size-40 rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
             <!-- <div v-else
               class="size-32 sm:size-40 rounded-full border-4 border-stone-950 bg-stone-900 flex items-center justify-center shadow-xl">
@@ -195,6 +202,10 @@ const hubungiWhatsapp = () => {
               </span>
             </div>
             <div class="flex flex-wrap gap-2 justify-center sm:justify-start">
+              <span :class="user.gender === 'P' ? `text-rose-300` : `text-green-300`"
+                class="inline-block px-3 py-1 rounded-lg bg-stone-900 text-[8px] font-bold uppercase tracking-widest border border-stone-800"
+              > {{ user.gender === 'P' ? `Muslimah` : `Muslim` }}
+              </span>
               <template v-if="daftarClass.length > 0">
                 <span
                   v-for="(item, index) in daftarClass"
@@ -206,7 +217,7 @@ const hubungiWhatsapp = () => {
               </template>
               <span
                 v-else
-                class="inline-block px-3 py-1 rounded-lg bg-stone-900 text-stone-400 text-xs font-bold uppercase tracking-widest border border-stone-800"
+                class="inline-block px-3 py-1 rounded-lg bg-stone-900 text-stone-400 text-[8px] font-bold uppercase tracking-widest border border-stone-800"
               >
                 Umum
               </span>
