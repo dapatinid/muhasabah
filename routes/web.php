@@ -100,13 +100,18 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
     Route::post('/masjid/{masjid:slug}/rate', [RatingController::class, 'storeMasjid']);
 
     Route::get('/admin/tentang-saya', function () {
+        // Gunakan optional operator (?) agar tidak error jika data kosong
         $tentangSaya = auth()->user()->tentangSaya; 
+        
         return inertia('Admin/TentangSaya/Edit', [
             'tentangSaya' => $tentangSaya
         ]);
     })->name('tentang-saya.edit');
-    Route::post('/admin/tentang-saya', [TentangSayaController::class, 'storeOrUpdate'])->name('tentang-saya.update'); 
-    Route::post('/tentang-saya/upload-image', [TentangSayaController::class, 'uploadImage'])->name('tentang-saya.upload-image');
+
+    Route::post('/admin/tentang-saya', [TentangSayaController::class, 'storeOrUpdate'])->name('tentang-saya.update');
+    
+    // Rute Upload Gambar (PENTING: Pastikan URL-nya konsisten dengan di Vue)
+    Route::post('/admin/tentang-saya/upload-image', [TentangSayaController::class, 'uploadImage'])->name('tentang-saya.upload-image');
     
     Route::middleware(['admin', 'restrict_owner'])->group(function () {
 

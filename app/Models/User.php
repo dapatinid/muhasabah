@@ -18,7 +18,7 @@ use App\Models\Village;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
-#[Fillable(['name', 'slug', 'email', 'password', 'is_active', 'class', 'is_admin', 'level', 'last_seen_at', 'whatsapp', 'negara', 'province_code', 'city_code', 'district_code', 'village_code', 'kode_pos', 'jalan', 'avatar', 'sampul'])]
+#[Fillable(['gender', 'name', 'slug', 'email', 'password', 'is_active', 'class', 'is_admin', 'level', 'last_seen_at', 'whatsapp', 'negara', 'province_code', 'city_code', 'district_code', 'village_code', 'kode_pos', 'jalan', 'avatar', 'sampul'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {

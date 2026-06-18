@@ -24,6 +24,36 @@ const props = defineProps({
   }
 })
 
+const formattedAuthors = computed(() => {
+  // Ambil nama pembuat utama dari objek acara
+  const mainUser = props.acara?.user?.name || 'Hamba Allah';
+  const relatedUsers = props.acara?.users || [];
+
+  if (relatedUsers.length === 0) {
+    return mainUser;
+  }
+
+  // Ekstrak semua nama ke dalam satu array
+  const names = [mainUser, ...relatedUsers.map(u => u.name || u.user?.name).filter(Boolean)];
+
+  // Hapus duplikasi nama (mencegah nama pembuat utama terduplikasi)
+  const uniqueNames = [...new Set(names)];
+
+  // Logika format text
+  if (uniqueNames.length === 1) return uniqueNames[0];
+  if (uniqueNames.length === 2) return `${uniqueNames[0]} dan ${uniqueNames[1]}`;
+  if (uniqueNames.length <= 3) {
+    // Misal: "Yuda, Wira dan Zainal"
+    return `${uniqueNames.slice(0, -1).join(', ')} dan ${uniqueNames[uniqueNames.length - 1]}`;
+  }
+
+  // Jika lebih dari 3 orang (Misal: "Yuda, Wira, Zainal dan 3 orang lainnya")
+  const displayedNames = uniqueNames.slice(0, 3).join(', ');
+  const remainingCount = uniqueNames.length - 3;
+  
+  return `${displayedNames} dan ${remainingCount} orang lainnya`;
+});
+
 // --- FORMATTING UTILITIES ---
 const formatRupiah = (value) => {
   if (!value) return 'Rp 0'
@@ -194,12 +224,7 @@ const commentForm = useForm({
 const isSubmittingComment = ref(false)
 
 const submitKomentar = () => {
-  const correctAnswer = captchaNum1.value + captchaNum2.value
-  if (parseInt(userCaptchaAnswer.value) !== correctAnswer) {
-    alert('Jawaban kode keamanan (Captcha) salah, silakan hitung kembali.')
-    generateCaptcha()
-    return
-  }
+
   commentForm.captcha_answer = userCaptchaAnswer.value
   isSubmittingComment.value = true
   commentForm.post(`/acara/${props.acara.slug}/komentar`, {
@@ -805,7 +830,7 @@ function closeDropdowns() {
       </div>
 
       <div ref="tabsTargetRef" class="w-full h-px invisible"></div>
-      <div :class="['bg-stone-950 border-b border-stone-800 transition-all duration-150 z-40', isTabsSticky ? 'fixed top-0 left-0 right-0 max-w-xl mx-auto px-5 shadow-xl pt-1' : 'relative -mx-5 px-5 mt-4']">
+      <div :class="['bg-stone-950 border-b border-stone-800 transition-all duration-150 z-40', isTabsSticky ? 'fixed top-0 left-0 right-0 max-w-xl mx-auto px-0 shadow-xl pt-1' : 'relative -mx-5 px-0 mt-4']">
         <div ref="tabsContainerRef" class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth w-full" style="-webkit-overflow-scrolling: touch; scroll-padding: 0 24px;">
           <div class="flex flex-nowrap min-w-full justify-start items-center px-4">
             <div class="w-[35%] shrink-0 snap-center"></div>
@@ -831,7 +856,9 @@ function closeDropdowns() {
 
       <div v-if="activeTab === 'cerita'" class="space-y-8">
         <div class="space-y-4">
-          <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500 border-l-2 border-amber-500 pl-3">Deskripsi Lengkap Kegiatan</p>
+          <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500 border-l-2 border-amber-500 pl-3">
+            Oleh : {{ formattedAuthors }}
+          </p>
           <div class="prose prose-invert prose-stone max-w-none prose-p:text-stone-300 prose-p:leading-relaxed prose-p:text-[15px] prose-headings:text-amber-100 prose-strong:text-amber-200 prose-img:rounded-3xl prose-img:border-stone-800" v-html="acara.body" />
         </div>
       </div>
@@ -851,11 +878,11 @@ function closeDropdowns() {
         <form @submit.prevent="submitKomentar" class="bg-stone-900 border border-stone-800/80 rounded-3xl p-5 space-y-4">
           <p class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Ajukan Pertanyaan Kegiatan</p>
           <div class="space-y-3">
-            <input v-model="commentForm.nama_publik" type="text" placeholder="Nama Anda (Wajib isi)" class="w-full bg-stone-950 border border-stone-800 rounded-xl px-4 py-2.5 text-xs text-stone-200 placeholder-stone-600 focus:outline-none focus:border-amber-500/50 transition-colors" />
+            <input v-if="!$page.props.auth.user" v-model="commentForm.nama_publik" type="text" placeholder="Nama Anda (Wajib isi)" class="w-full bg-stone-950 border border-stone-800 rounded-xl px-4 py-2.5 text-xs text-stone-200 placeholder-stone-600 focus:outline-none focus:border-amber-500/50 transition-colors" />
             <textarea v-model="commentForm.body" required rows="3" placeholder="Tulis hal atau konfirmasi detail teknis yang ingin ditanyakan ke ta'mir masjid..." class="w-full bg-stone-950 border border-stone-800 rounded-xl px-4 py-3 text-xs text-stone-200 placeholder-stone-600 focus:outline-none focus:border-amber-500/50 transition-colors resize-none"></textarea>
           </div>
           <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
-            <div class="flex items-center gap-2 bg-stone-950 px-3 py-2 rounded-xl border border-stone-800">
+            <div v-if="!$page.props.auth.user" class="flex items-center gap-2 bg-stone-950 px-3 py-2 rounded-xl border border-stone-800">
               <span class="text-xs font-mono text-stone-400 font-bold select-none tracking-wider">Jawab: {{ captchaNum1 }} + {{ captchaNum2 }} = </span>
               <input v-model="userCaptchaAnswer" type="number" required placeholder="?" class="w-12 bg-transparent text-center font-bold text-xs text-amber-400 focus:outline-none font-mono" />
             </div>
@@ -874,8 +901,8 @@ function closeDropdowns() {
           <div v-else class="space-y-3">
             <div v-for="komentar in acara.komentars" :key="komentar.id" class="bg-stone-900/20 border border-stone-800 rounded-2xl p-4">
               <div class="flex items-center gap-2 mb-1">
-                <span class="text-xs font-bold text-amber-200">{{ komentar.user ? komentar.user.name : (komentar.nama_publik || 'Hamba Allah') }}</span>
-                <span class="text-[9px] text-stone-600 font-mono">• {{ new Date(komentar.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'})}}</span>
+                <span class="text-xs font-bold text-amber-200">{{ komentar.nama_publik || komentar.user?.name || 'Hamba Allah' }}</span>
+                <span class="text-[9px] text-stone-600 font-mono">• {{ new Date(komentar.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'}).replace('pukul', '|')}}</span>
               </div>
               <p class="text-sm text-stone-400 leading-relaxed">{{ komentar.body }}</p>
             </div>

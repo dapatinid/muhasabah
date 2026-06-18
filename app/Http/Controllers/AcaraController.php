@@ -484,6 +484,7 @@ class AcaraController extends Controller
 
         $acara->load([
             'user:id,name', 
+            'users',
             'variants',
             'komentars' => function($q) { 
                 $q->with('user:id,name')->latest(); 
@@ -505,28 +506,46 @@ class AcaraController extends Controller
         ]);
     }
 
+// Contoh untuk Acara (Terapkan pola yang sama persis untuk Kalam dan Acara, cukup sesuaikan parameter modelnya)
     public function storeKomentar(Request $request, Acara $acara)
     {
-        $request->validate([
-            'nama_publik' => 'required|string|max:50',
+        // 1. Validasi Dasar (Body selalu wajib)
+        $rules = [
             'body' => 'required|string|max:1000',
-            'captcha_challenge' => 'required|string',
-            'captcha_answer' => 'required|integer',
-        ]);
+        ];
 
-        $challenge = $request->input('captcha_challenge');
-        if (strpos($challenge, '+') !== false) {
-            [$num1, $num2] = explode('+', $challenge);
-            if ((int)$request->input('captcha_answer') !== ((int)$num1 + (int)$num2)) {
-                return back()->withErrors(['captcha_answer' => 'Kode keamanan captcha salah.']);
+        // 2. Jika GUEST (belum login), wajibkan nama dan captcha
+        if (!auth()->check()) {
+            $rules['nama_publik'] = 'required|string|max:50';
+            $rules['captcha_challenge'] = 'required|string';
+            $rules['captcha_answer'] = 'required|integer';
+        }
+
+        $request->validate($rules);
+
+        // 3. Verifikasi Math Captcha (Hanya untuk GUEST)
+        if (!auth()->check()) {
+            $challenge = $request->input('captcha_challenge'); 
+            if (strpos($challenge, '+') !== false) {
+                [$num1, $num2] = explode('+', $challenge);
+                $correctAnswer = (int)$num1 + (int)$num2;
+
+                if ((int)$request->input('captcha_answer') !== $correctAnswer) {
+                    return back()->withErrors(['captcha_answer' => 'Kode keamanan captcha salah.']);
+                }
+            } else {
+                return back()->withErrors(['captcha_challenge' => 'Tantangan keamanan tidak valid.']);
             }
         }
 
+        // 4. Simpan komentar menggunakan relasi
         $komentar = new Komentar([
             'body' => $request->body,
-            'nama_publik' => strip_tags($request->nama_publik),
+            // Jika ada nama_publik (berarti guest), simpan. Jika login, biarkan null.
+            'nama_publik' => $request->filled('nama_publik') ? strip_tags($request->nama_publik) : null,
             'user_id' => auth()->check() ? auth()->id() : null,
         ]);
+
         $acara->komentars()->save($komentar);
 
         return back()->with('success', 'Komentar Anda berhasil diterbitkan.');

@@ -306,6 +306,12 @@ const displayedPages = computed(() => {
             <button @click="handleShare(kalam)" class="p-1.5 rounded-full hover:bg-emerald-500/10 transition-colors cursor-pointer group/btn">
               <Share2 class="size-[19px] text-stone-400 group-hover/btn:text-emerald-500" />
             </button>
+
+            <Link :href="`/kalam/${kalam.slug}`" class="ms-auto flex items-center gap-1.5 group/btn">
+              <div class="p-1.5 rounded-full hover:bg-blue-500/10 transition-colors">
+                <BookOpen class="size-[19px] text-stone-400 group-hover/btn:text-white" />
+              </div>
+            </Link>
           </div>
 
           <div class="flex items-center gap-1.5">

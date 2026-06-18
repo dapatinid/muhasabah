@@ -94,7 +94,7 @@ function submit() {
                 
                 <TiptapEditor 
                         v-model="form.autobiografi" 
-                        upload-url="/tentang-saya/upload-image" 
+                        upload-url="/admin/tentang-saya/upload-image" 
                     />
                 
                 <div v-if="form.errors.autobiografi" class="text-red-500 text-xs mt-1 font-medium">

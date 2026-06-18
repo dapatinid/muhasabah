@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:64
+* @see app/Http/Controllers/UkhuwahController.php:65
 * @route '/tokoh/{user}'
 */
 export const show = (args: { user: string | { slug: string } } | [user: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:64
+* @see app/Http/Controllers/UkhuwahController.php:65
 * @route '/tokoh/{user}'
 */
 show.url = (args: { user: string | { slug: string } } | [user: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ show.url = (args: { user: string | { slug: string } } | [user: string | { slug: 
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:64
+* @see app/Http/Controllers/UkhuwahController.php:65
 * @route '/tokoh/{user}'
 */
 show.get = (args: { user: string | { slug: string } } | [user: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,7 +59,7 @@ show.get = (args: { user: string | { slug: string } } | [user: string | { slug: 
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:64
+* @see app/Http/Controllers/UkhuwahController.php:65
 * @route '/tokoh/{user}'
 */
 show.head = (args: { user: string | { slug: string } } | [user: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -69,7 +69,7 @@ show.head = (args: { user: string | { slug: string } } | [user: string | { slug:
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:64
+* @see app/Http/Controllers/UkhuwahController.php:65
 * @route '/tokoh/{user}'
 */
 const showForm = (args: { user: string | { slug: string } } | [user: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ const showForm = (args: { user: string | { slug: string } } | [user: string | { 
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:64
+* @see app/Http/Controllers/UkhuwahController.php:65
 * @route '/tokoh/{user}'
 */
 showForm.get = (args: { user: string | { slug: string } } | [user: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -89,7 +89,7 @@ showForm.get = (args: { user: string | { slug: string } } | [user: string | { sl
 
 /**
 * @see \App\Http\Controllers\UkhuwahController::show
-* @see app/Http/Controllers/UkhuwahController.php:64
+* @see app/Http/Controllers/UkhuwahController.php:65
 * @route '/tokoh/{user}'
 */
 showForm.head = (args: { user: string | { slug: string } } | [user: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

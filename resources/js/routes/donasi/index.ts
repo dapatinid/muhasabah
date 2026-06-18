@@ -4,7 +4,7 @@ import progressFb9fab from './progress'
 import tasyaruf004c81 from './tasyaruf'
 /**
 * @see \App\Http\Controllers\DonasiController::payment
-* @see app/Http/Controllers/DonasiController.php:548
+* @see app/Http/Controllers/DonasiController.php:557
 * @route '/donasi/{donasi}/payment'
 */
 export const payment = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -19,7 +19,7 @@ payment.definition = {
 
 /**
 * @see \App\Http\Controllers\DonasiController::payment
-* @see app/Http/Controllers/DonasiController.php:548
+* @see app/Http/Controllers/DonasiController.php:557
 * @route '/donasi/{donasi}/payment'
 */
 payment.url = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -52,7 +52,7 @@ payment.url = (args: { donasi: string | { slug: string } } | [donasi: string | {
 
 /**
 * @see \App\Http\Controllers\DonasiController::payment
-* @see app/Http/Controllers/DonasiController.php:548
+* @see app/Http/Controllers/DonasiController.php:557
 * @route '/donasi/{donasi}/payment'
 */
 payment.get = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -62,7 +62,7 @@ payment.get = (args: { donasi: string | { slug: string } } | [donasi: string | {
 
 /**
 * @see \App\Http\Controllers\DonasiController::payment
-* @see app/Http/Controllers/DonasiController.php:548
+* @see app/Http/Controllers/DonasiController.php:557
 * @route '/donasi/{donasi}/payment'
 */
 payment.head = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -72,7 +72,7 @@ payment.head = (args: { donasi: string | { slug: string } } | [donasi: string | 
 
 /**
 * @see \App\Http\Controllers\DonasiController::payment
-* @see app/Http/Controllers/DonasiController.php:548
+* @see app/Http/Controllers/DonasiController.php:557
 * @route '/donasi/{donasi}/payment'
 */
 const paymentForm = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ const paymentForm = (args: { donasi: string | { slug: string } } | [donasi: stri
 
 /**
 * @see \App\Http\Controllers\DonasiController::payment
-* @see app/Http/Controllers/DonasiController.php:548
+* @see app/Http/Controllers/DonasiController.php:557
 * @route '/donasi/{donasi}/payment'
 */
 paymentForm.get = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -92,7 +92,7 @@ paymentForm.get = (args: { donasi: string | { slug: string } } | [donasi: string
 
 /**
 * @see \App\Http\Controllers\DonasiController::payment
-* @see app/Http/Controllers/DonasiController.php:548
+* @see app/Http/Controllers/DonasiController.php:557
 * @route '/donasi/{donasi}/payment'
 */
 paymentForm.head = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -109,7 +109,7 @@ payment.form = paymentForm
 
 /**
 * @see \App\Http\Controllers\DonasiController::storeKomentar
-* @see app/Http/Controllers/DonasiController.php:416
+* @see app/Http/Controllers/DonasiController.php:415
 * @route '/donasi/{donasi}/komentar'
 */
 export const storeKomentar = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -124,7 +124,7 @@ storeKomentar.definition = {
 
 /**
 * @see \App\Http\Controllers\DonasiController::storeKomentar
-* @see app/Http/Controllers/DonasiController.php:416
+* @see app/Http/Controllers/DonasiController.php:415
 * @route '/donasi/{donasi}/komentar'
 */
 storeKomentar.url = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -157,7 +157,7 @@ storeKomentar.url = (args: { donasi: string | { slug: string } } | [donasi: stri
 
 /**
 * @see \App\Http\Controllers\DonasiController::storeKomentar
-* @see app/Http/Controllers/DonasiController.php:416
+* @see app/Http/Controllers/DonasiController.php:415
 * @route '/donasi/{donasi}/komentar'
 */
 storeKomentar.post = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -167,7 +167,7 @@ storeKomentar.post = (args: { donasi: string | { slug: string } } | [donasi: str
 
 /**
 * @see \App\Http\Controllers\DonasiController::storeKomentar
-* @see app/Http/Controllers/DonasiController.php:416
+* @see app/Http/Controllers/DonasiController.php:415
 * @route '/donasi/{donasi}/komentar'
 */
 const storeKomentarForm = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -177,7 +177,7 @@ const storeKomentarForm = (args: { donasi: string | { slug: string } } | [donasi
 
 /**
 * @see \App\Http\Controllers\DonasiController::storeKomentar
-* @see app/Http/Controllers/DonasiController.php:416
+* @see app/Http/Controllers/DonasiController.php:415
 * @route '/donasi/{donasi}/komentar'
 */
 storeKomentarForm.post = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -189,7 +189,7 @@ storeKomentar.form = storeKomentarForm
 
 /**
 * @see \App\Http\Controllers\DonasiController::storeReaksi
-* @see app/Http/Controllers/DonasiController.php:453
+* @see app/Http/Controllers/DonasiController.php:462
 * @route '/donasi/{donasi}/reaksi'
 */
 export const storeReaksi = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -204,7 +204,7 @@ storeReaksi.definition = {
 
 /**
 * @see \App\Http\Controllers\DonasiController::storeReaksi
-* @see app/Http/Controllers/DonasiController.php:453
+* @see app/Http/Controllers/DonasiController.php:462
 * @route '/donasi/{donasi}/reaksi'
 */
 storeReaksi.url = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -237,7 +237,7 @@ storeReaksi.url = (args: { donasi: string | { slug: string } } | [donasi: string
 
 /**
 * @see \App\Http\Controllers\DonasiController::storeReaksi
-* @see app/Http/Controllers/DonasiController.php:453
+* @see app/Http/Controllers/DonasiController.php:462
 * @route '/donasi/{donasi}/reaksi'
 */
 storeReaksi.post = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -247,7 +247,7 @@ storeReaksi.post = (args: { donasi: string | { slug: string } } | [donasi: strin
 
 /**
 * @see \App\Http\Controllers\DonasiController::storeReaksi
-* @see app/Http/Controllers/DonasiController.php:453
+* @see app/Http/Controllers/DonasiController.php:462
 * @route '/donasi/{donasi}/reaksi'
 */
 const storeReaksiForm = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -257,7 +257,7 @@ const storeReaksiForm = (args: { donasi: string | { slug: string } } | [donasi: 
 
 /**
 * @see \App\Http\Controllers\DonasiController::storeReaksi
-* @see app/Http/Controllers/DonasiController.php:453
+* @see app/Http/Controllers/DonasiController.php:462
 * @route '/donasi/{donasi}/reaksi'
 */
 storeReaksiForm.post = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -1207,7 +1207,7 @@ tasyaruf.form = tasyarufForm
 
 /**
 * @see \App\Http\Controllers\DonasiController::destroy
-* @see app/Http/Controllers/DonasiController.php:500
+* @see app/Http/Controllers/DonasiController.php:509
 * @route '/admin/donasi/{donasi}'
 */
 export const destroy = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -1222,7 +1222,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\DonasiController::destroy
-* @see app/Http/Controllers/DonasiController.php:500
+* @see app/Http/Controllers/DonasiController.php:509
 * @route '/admin/donasi/{donasi}'
 */
 destroy.url = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -1255,7 +1255,7 @@ destroy.url = (args: { donasi: string | { slug: string } } | [donasi: string | {
 
 /**
 * @see \App\Http\Controllers\DonasiController::destroy
-* @see app/Http/Controllers/DonasiController.php:500
+* @see app/Http/Controllers/DonasiController.php:509
 * @route '/admin/donasi/{donasi}'
 */
 destroy.delete = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -1265,7 +1265,7 @@ destroy.delete = (args: { donasi: string | { slug: string } } | [donasi: string 
 
 /**
 * @see \App\Http\Controllers\DonasiController::destroy
-* @see app/Http/Controllers/DonasiController.php:500
+* @see app/Http/Controllers/DonasiController.php:509
 * @route '/admin/donasi/{donasi}'
 */
 const destroyForm = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -1280,7 +1280,7 @@ const destroyForm = (args: { donasi: string | { slug: string } } | [donasi: stri
 
 /**
 * @see \App\Http\Controllers\DonasiController::destroy
-* @see app/Http/Controllers/DonasiController.php:500
+* @see app/Http/Controllers/DonasiController.php:509
 * @route '/admin/donasi/{donasi}'
 */
 destroyForm.delete = (args: { donasi: string | { slug: string } } | [donasi: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

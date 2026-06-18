@@ -63,7 +63,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll));
             style="background: radial-gradient(ellipse at 50% 0%, rgba(212,160,23,0.05) 0%, transparent 70%)"
         />
 
-        <div class="fixed top-0 left-0 z-[101] h-[3px] w-full bg-gradient-to-r from-amber-700 via-amber-400 to-amber-700 shadow-[0_1px_10px_rgba(251,191,36,0.3)]"></div>
+        <div class="fixed top-0 left-0 z-101 h-0.75 w-full bg-linear-to-r from-amber-700 via-amber-400 to-amber-700 shadow-[0_1px_10px_rgba(251,191,36,0.3)]"></div>
 
         <nav
             :class="[
@@ -92,7 +92,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll));
             </div>
         </nav>
 
-        <div class="relative z-10 max-w-xl mx-auto sm:border-x sm:border-stone-900 min-h-screen pt-20 pb-12 px-4 flex flex-col justify-center bg-background">
+        <div :class="title === 'Masuk ke Dashboard' ? '-mt-24' : ''" class="relative z-10 max-w-xl mx-auto sm:border-x sm:border-stone-900 min-h-screen pt-20 pb-12 px-4 flex flex-col justify-center bg-background">
             
             <div class="w-full max-w-md mx-auto">
                 <AuthLayout :title="title" :description="description">

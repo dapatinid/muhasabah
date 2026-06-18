@@ -73,19 +73,9 @@ const pisahkanClass = (cls: string | null | undefined): string[] => {
         </div>
       </div>
 
-      <div class="max-w-3xl mx-auto px-4 -mt-5 pb-16">
+      <div class="max-w-3xl mx-auto px-4 -mt-6 pb-16">
 
-        <div class="relative mb-6">
-          <Search class="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-stone-400 pointer-events-none" />
-          <input
-            v-model="search"
-            type="text"
-            placeholder="Cari nama tokoh, lingkaran, atau masjid…"
-            class="w-full pl-11 pr-5 py-3.5 bg-stone-900 border border-stone-800 rounded-2xl text-sm text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 shadow-none transition"
-          />
-        </div>
-
-        <div class="flex gap-2 mb-8 bg-stone-900 p-1.5 rounded-2xl border border-stone-800">
+        <div class="relative mb-2 flex gap-2 bg-stone-900 p-1.5 rounded-2xl border border-stone-800">
           <button
             v-for="t in tabs"
             :key="t.key"
@@ -100,6 +90,16 @@ const pisahkanClass = (cls: string | null | undefined): string[] => {
             <span><component :is="t.icon" class="size-4" /></span>
             <span>{{ t.label }}</span>
           </button>
+        </div>
+
+        <div class="relative mb-6">
+          <Search class="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-stone-400 pointer-events-none" />
+          <input
+            v-model="search"
+            type="search"
+            :placeholder="'Cari nama ' + activeTab + '…'"
+            class="w-full pl-11 pr-5 py-3.5 border-b border-b-stone-800 text-sm text-stone-100 placeholder-stone-400 focus:outline-none ring-0 focus:border-b-2 focus:border-b-emerald-500/60 shadow-none transition"
+          />
         </div>
 
         <div
@@ -126,12 +126,16 @@ const pisahkanClass = (cls: string | null | undefined): string[] => {
                 :src="`/storage/${user.avatar}`"
                 class="size-14 rounded-2xl object-cover"
               />
-              <div
+              <img v-else
+                :src="user.gender === 'L' ? `/avatar_cowo.png` : `/avatar_cewe.png`"
+                class="size-14 rounded-2xl object-cover"
+              />
+              <!-- <div
                 v-else
                 class="size-14 rounded-2xl bg-linear-to-br from-emerald-900/40 to-teal-900/40 flex items-center justify-center"
               >
                 <UserCircle2 class="size-7 text-emerald-500" />
-              </div>
+              </div> -->
               <span v-if="user.is_online" class="absolute -bottom-0.5 -right-0.5 size-3 bg-emerald-400 rounded-full border-2 border-stone-900"></span>
             </div>
 

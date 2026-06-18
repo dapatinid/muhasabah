@@ -21,6 +21,12 @@ const props = defineProps<{
     is_anonymous: boolean
     created_at: string
     user: { id: number; name: string } | null
+    users?: Array<{
+          id: number
+          user_id: number
+          name?: string
+          user?: { id: number; name: string }
+        }>    
     komentars: Array<{
       id: number
       body: string
@@ -35,6 +41,40 @@ const props = defineProps<{
     }>
   }
 }>()
+
+const formattedAuthors = computed(() => {
+  // Jika kalam diset anonim, langsung kembalikan Hamba Allah (sembunyikan semua nama)
+  if (props.kalam.is_anonymous) {
+    return 'Hamba Allah';
+  }
+
+  // Ambil nama pembuat utama
+  const mainUser = props.kalam.user?.name || 'Hamba Allah';
+  const relatedUsers = props.kalam.users || [];
+
+  if (relatedUsers.length === 0) {
+    return mainUser;
+  }
+
+  // Ekstrak semua nama ke dalam satu array
+  const names = [mainUser, ...relatedUsers.map(u => u.name || u.user?.name).filter(Boolean)];
+
+  // Hapus duplikasi barangkali nama user utama ikut terbawa di dalam relasi
+  const uniqueNames = [...new Set(names)];
+
+  // Logika format text
+  if (uniqueNames.length === 1) return uniqueNames[0];
+  if (uniqueNames.length === 2) return `${uniqueNames[0]} dan ${uniqueNames[1]}`;
+  if (uniqueNames.length <= 3) {
+    return `${uniqueNames.slice(0, -1).join(', ')} dan ${uniqueNames[uniqueNames.length - 1]}`;
+  }
+
+  // Jika lebih dari 3 orang
+  const displayedNames = uniqueNames.slice(0, 3).join(', ');
+  const remainingCount = uniqueNames.length - 3;
+  
+  return `${displayedNames} dan ${remainingCount} orang lainnya`;
+});
 
 // --- STATE MANAGEMENT ---
 const isSubmittingComment = ref(false)
@@ -66,12 +106,6 @@ const commentForm = useForm({
 
 // --- SUBMIT HANDLER ---
 const submitKomentar = () => {
-  const correctAnswer = captchaNum1.value + captchaNum2.value
-  if (parseInt(userCaptchaAnswer.value) !== correctAnswer) {
-    alert('Jawaban kode keamanan (Captcha) salah, silakan hitung kembali.')
-    generateCaptcha()
-    return
-  }
 
   commentForm.captcha_answer = userCaptchaAnswer.value
   isSubmittingComment.value = true
@@ -118,7 +152,7 @@ const penulis = computed(() =>
 const tanggal = computed(() =>
   new Date(props.kalam.created_at).toLocaleDateString('id-ID', {
     day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
-  })
+  }).replace('pukul', '|')
 )
 
 const kategoriLabel: Record<string, string> = {
@@ -249,7 +283,7 @@ function closeDropdowns() {
         <div class="flex flex-wrap gap-4 text-xs text-stone-500">
           <span class="flex items-center gap-1.5">
             <User class="size-3.5" />
-            {{ penulis }}
+            {{ formattedAuthors }}
           </span>
           <span class="flex items-center gap-1.5">
             <CalendarDays class="size-3.5" />
@@ -312,7 +346,7 @@ function closeDropdowns() {
           <p class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Kirim Pertanyaan / Tanggapan Publik</p>
           
           <div class="space-y-3">
-            <input 
+            <input v-if="!$page.props.auth.user"
               v-model="commentForm.nama_publik" 
               type="text" 
               placeholder="Nama Anda (Wajib isi)" 
@@ -328,7 +362,7 @@ function closeDropdowns() {
           </div>
 
           <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
-            <div class="flex items-center gap-2 bg-stone-950 px-3 py-2 rounded-xl border border-stone-800">
+            <div v-if="!$page.props.auth.user" class="flex items-center gap-2 bg-stone-950 px-3 py-2 rounded-xl border border-stone-800">
               <span class="text-xs font-mono text-stone-400 font-bold select-none tracking-wider">Jawab: {{ captchaNum1 }} + {{ captchaNum2 }} = </span>
               <input 
                 v-model="userCaptchaAnswer" 
@@ -371,9 +405,9 @@ function closeDropdowns() {
             >
               <div class="flex items-center gap-2 mb-1">
                 <span class="text-xs font-bold text-amber-200">
-                  {{ komentar.user ? komentar.user.name : (komentar.nama_publik || 'Hamba Allah (Anonim)') }}
+                  {{ komentar.nama_publik || komentar.user?.name || 'Hamba Allah' }}
                 </span>
-                <span class="text-[9px] text-stone-600 font-mono">• {{ new Date(komentar.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'})}}</span>
+                <span class="text-[9px] text-stone-600 font-mono">• {{ new Date(komentar.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'}).replace('pukul', '|')}}</span>
               </div>
               <p class="text-sm text-stone-400 leading-relaxed">{{ komentar.body }}</p>
             </div>

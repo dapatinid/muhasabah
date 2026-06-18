@@ -28,6 +28,12 @@ const props = defineProps<{
     villages?: any[];
 }>();
 
+const gender = ref('L'); // Default pilihan
+
+const setGender = (val: string) => {
+    gender.value = val;
+};
+
 // Gunakan local state khusus untuk mengendalikan dropdown wilayah
 const wilayahState = ref({
     province_code: '',
@@ -137,6 +143,38 @@ const handleVillageChange = (val: string | null) => {
                 <Label for="name" class="text-foreground">Nama Lengkap</Label>
                 <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" name="name" placeholder="Nama Lengkap" class="text-foreground"/>
                 <InputError :message="errors.name" />
+            </div>
+
+            <div class="grid gap-2">
+                <Label class="text-foreground">Gender</Label>
+                <div class="flex p-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg">
+                    <button
+                        type="button"
+                        @click="setGender('L')"
+                        :class="[
+                            'flex-1 py-2 text-sm font-medium rounded-md transition-all',
+                            gender === 'L' 
+                                ? 'bg-white dark:bg-zinc-700 shadow text-foreground' 
+                                : 'text-zinc-500 hover:text-zinc-700'
+                        ]"
+                    >
+                        Laki-laki
+                    </button>
+                    <button
+                        type="button"
+                        @click="setGender('P')"
+                        :class="[
+                            'flex-1 py-2 text-sm font-medium rounded-md transition-all',
+                            gender === 'P' 
+                                ? 'bg-white dark:bg-zinc-700 shadow text-foreground' 
+                                : 'text-zinc-500 hover:text-zinc-700'
+                        ]"
+                    >
+                        Perempuan
+                    </button>
+                </div>
+                <input type="hidden" name="gender" :value="gender" />
+                <InputError :message="errors.gender" />
             </div>
 
             <div class="grid gap-2">

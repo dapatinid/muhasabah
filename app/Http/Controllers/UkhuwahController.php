@@ -28,7 +28,8 @@ class UkhuwahController extends Controller
             // Urutkan: yang online (last_seen_at dalam 5 menit terakhir) tampil di atas, lalu terbaru
             $items = $query
                 ->orderByRaw('CASE WHEN last_seen_at >= ? THEN 0 ELSE 1 END', [now()->subMinutes(5)])
-                ->latest()
+                ->orderBy('last_seen_at', 'desc')
+                // ->latest()
                 ->paginate(12)
                 ->withQueryString();
 

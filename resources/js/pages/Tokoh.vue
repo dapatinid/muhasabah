@@ -171,10 +171,12 @@ const hubungiWhatsapp = () => {
           <div class="relative shrink-0">
             <img v-if="user.avatar" :src="`/storage/${user.avatar}`"
               class="size-32 sm:size-40 rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
-            <div v-else
+            <img v-else :src="user.gender === 'L' ? `/avatar_cowo.png` : `/avatar_cewe.png`"
+              class="size-32 sm:size-40 rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
+            <!-- <div v-else
               class="size-32 sm:size-40 rounded-full border-4 border-stone-950 bg-stone-900 flex items-center justify-center shadow-xl">
               <UserCircle2 class="size-16 text-emerald-600" />
-            </div>
+            </div> -->
             <div v-if="user.is_online" class="absolute bottom-2 right-2 bg-emerald-500 rounded-full p-1 border-2 border-stone-950"
               title="Terverifikasi">
               <Activity class="size-4 sm:size-5 text-stone-950" />
@@ -197,7 +199,7 @@ const hubungiWhatsapp = () => {
                 <span
                   v-for="(item, index) in daftarClass"
                   :key="index"
-                  class="inline-block px-3 py-1 rounded-lg bg-emerald-900/30 text-emerald-400 text-xs font-bold uppercase tracking-widest border border-emerald-500/20"
+                  class="inline-block px-3 py-1 rounded-lg bg-emerald-900/30 text-emerald-400 text-[8px] font-bold uppercase tracking-widest border border-emerald-500/20"
                 >
                   {{ item }}
                 </span>
@@ -214,12 +216,12 @@ const hubungiWhatsapp = () => {
 
         <div class="grid grid-cols-4 gap-3 px-5 mb-6">
             <button @click="showTentangDialog = true" class="flex items-center justify-center gap-2 py-2.5 bg-stone-900 hover:bg-stone-800 border border-stone-800 rounded-xl text-stone-300 text-xs font-bold transition-colors">
-                <Info class="size-4 text-amber-500" />
+                <Info class="size-4 text-teal-600" />
                 <!-- <span class="truncate">Tentang</span> -->
             </button>
 
             <button @click="showLingkaranDialog = true" class="flex items-center justify-center gap-2 py-2.5 bg-stone-900 hover:bg-stone-800 border border-stone-800 rounded-xl text-stone-300 text-xs font-bold transition-colors">
-                <Target class="size-4 text-emerald-500" />
+                <Target class="size-4 text-amber-500" />
                 <!-- <span class="truncate">Lingkaran</span> -->
             </button>
 

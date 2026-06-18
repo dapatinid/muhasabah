@@ -82,7 +82,7 @@ acara.form = acaraForm
 
 /**
 * @see \App\Http\Controllers\AcaraController::payment
-* @see app/Http/Controllers/AcaraController.php:562
+* @see app/Http/Controllers/AcaraController.php:581
 * @route '/acara/{acara}/payment'
 */
 export const payment = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -97,7 +97,7 @@ payment.definition = {
 
 /**
 * @see \App\Http\Controllers\AcaraController::payment
-* @see app/Http/Controllers/AcaraController.php:562
+* @see app/Http/Controllers/AcaraController.php:581
 * @route '/acara/{acara}/payment'
 */
 payment.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -130,7 +130,7 @@ payment.url = (args: { acara: string | { slug: string } } | [acara: string | { s
 
 /**
 * @see \App\Http\Controllers\AcaraController::payment
-* @see app/Http/Controllers/AcaraController.php:562
+* @see app/Http/Controllers/AcaraController.php:581
 * @route '/acara/{acara}/payment'
 */
 payment.get = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -140,7 +140,7 @@ payment.get = (args: { acara: string | { slug: string } } | [acara: string | { s
 
 /**
 * @see \App\Http\Controllers\AcaraController::payment
-* @see app/Http/Controllers/AcaraController.php:562
+* @see app/Http/Controllers/AcaraController.php:581
 * @route '/acara/{acara}/payment'
 */
 payment.head = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -150,7 +150,7 @@ payment.head = (args: { acara: string | { slug: string } } | [acara: string | { 
 
 /**
 * @see \App\Http\Controllers\AcaraController::payment
-* @see app/Http/Controllers/AcaraController.php:562
+* @see app/Http/Controllers/AcaraController.php:581
 * @route '/acara/{acara}/payment'
 */
 const paymentForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -160,7 +160,7 @@ const paymentForm = (args: { acara: string | { slug: string } } | [acara: string
 
 /**
 * @see \App\Http\Controllers\AcaraController::payment
-* @see app/Http/Controllers/AcaraController.php:562
+* @see app/Http/Controllers/AcaraController.php:581
 * @route '/acara/{acara}/payment'
 */
 paymentForm.get = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -170,7 +170,7 @@ paymentForm.get = (args: { acara: string | { slug: string } } | [acara: string |
 
 /**
 * @see \App\Http\Controllers\AcaraController::payment
-* @see app/Http/Controllers/AcaraController.php:562
+* @see app/Http/Controllers/AcaraController.php:581
 * @route '/acara/{acara}/payment'
 */
 paymentForm.head = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -187,7 +187,7 @@ payment.form = paymentForm
 
 /**
 * @see \App\Http\Controllers\AcaraController::storePayment
-* @see app/Http/Controllers/AcaraController.php:575
+* @see app/Http/Controllers/AcaraController.php:594
 * @route '/acara/{acara}/payment'
 */
 export const storePayment = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -202,7 +202,7 @@ storePayment.definition = {
 
 /**
 * @see \App\Http\Controllers\AcaraController::storePayment
-* @see app/Http/Controllers/AcaraController.php:575
+* @see app/Http/Controllers/AcaraController.php:594
 * @route '/acara/{acara}/payment'
 */
 storePayment.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -235,7 +235,7 @@ storePayment.url = (args: { acara: string | { slug: string } } | [acara: string 
 
 /**
 * @see \App\Http\Controllers\AcaraController::storePayment
-* @see app/Http/Controllers/AcaraController.php:575
+* @see app/Http/Controllers/AcaraController.php:594
 * @route '/acara/{acara}/payment'
 */
 storePayment.post = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -245,7 +245,7 @@ storePayment.post = (args: { acara: string | { slug: string } } | [acara: string
 
 /**
 * @see \App\Http\Controllers\AcaraController::storePayment
-* @see app/Http/Controllers/AcaraController.php:575
+* @see app/Http/Controllers/AcaraController.php:594
 * @route '/acara/{acara}/payment'
 */
 const storePaymentForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -255,7 +255,7 @@ const storePaymentForm = (args: { acara: string | { slug: string } } | [acara: s
 
 /**
 * @see \App\Http\Controllers\AcaraController::storePayment
-* @see app/Http/Controllers/AcaraController.php:575
+* @see app/Http/Controllers/AcaraController.php:594
 * @route '/acara/{acara}/payment'
 */
 storePaymentForm.post = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -267,7 +267,7 @@ storePayment.form = storePaymentForm
 
 /**
 * @see \App\Http\Controllers\AcaraController::storeKomentar
-* @see app/Http/Controllers/AcaraController.php:508
+* @see app/Http/Controllers/AcaraController.php:510
 * @route '/acara/{acara}/komentar'
 */
 export const storeKomentar = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -282,7 +282,7 @@ storeKomentar.definition = {
 
 /**
 * @see \App\Http\Controllers\AcaraController::storeKomentar
-* @see app/Http/Controllers/AcaraController.php:508
+* @see app/Http/Controllers/AcaraController.php:510
 * @route '/acara/{acara}/komentar'
 */
 storeKomentar.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -315,7 +315,7 @@ storeKomentar.url = (args: { acara: string | { slug: string } } | [acara: string
 
 /**
 * @see \App\Http\Controllers\AcaraController::storeKomentar
-* @see app/Http/Controllers/AcaraController.php:508
+* @see app/Http/Controllers/AcaraController.php:510
 * @route '/acara/{acara}/komentar'
 */
 storeKomentar.post = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -325,7 +325,7 @@ storeKomentar.post = (args: { acara: string | { slug: string } } | [acara: strin
 
 /**
 * @see \App\Http\Controllers\AcaraController::storeKomentar
-* @see app/Http/Controllers/AcaraController.php:508
+* @see app/Http/Controllers/AcaraController.php:510
 * @route '/acara/{acara}/komentar'
 */
 const storeKomentarForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -335,7 +335,7 @@ const storeKomentarForm = (args: { acara: string | { slug: string } } | [acara: 
 
 /**
 * @see \App\Http\Controllers\AcaraController::storeKomentar
-* @see app/Http/Controllers/AcaraController.php:508
+* @see app/Http/Controllers/AcaraController.php:510
 * @route '/acara/{acara}/komentar'
 */
 storeKomentarForm.post = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -347,7 +347,7 @@ storeKomentar.form = storeKomentarForm
 
 /**
 * @see \App\Http\Controllers\AcaraController::storeReaksi
-* @see app/Http/Controllers/AcaraController.php:535
+* @see app/Http/Controllers/AcaraController.php:554
 * @route '/acara/{acara}/reaksi'
 */
 export const storeReaksi = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -362,7 +362,7 @@ storeReaksi.definition = {
 
 /**
 * @see \App\Http\Controllers\AcaraController::storeReaksi
-* @see app/Http/Controllers/AcaraController.php:535
+* @see app/Http/Controllers/AcaraController.php:554
 * @route '/acara/{acara}/reaksi'
 */
 storeReaksi.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -395,7 +395,7 @@ storeReaksi.url = (args: { acara: string | { slug: string } } | [acara: string |
 
 /**
 * @see \App\Http\Controllers\AcaraController::storeReaksi
-* @see app/Http/Controllers/AcaraController.php:535
+* @see app/Http/Controllers/AcaraController.php:554
 * @route '/acara/{acara}/reaksi'
 */
 storeReaksi.post = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -405,7 +405,7 @@ storeReaksi.post = (args: { acara: string | { slug: string } } | [acara: string 
 
 /**
 * @see \App\Http\Controllers\AcaraController::storeReaksi
-* @see app/Http/Controllers/AcaraController.php:535
+* @see app/Http/Controllers/AcaraController.php:554
 * @route '/acara/{acara}/reaksi'
 */
 const storeReaksiForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -415,7 +415,7 @@ const storeReaksiForm = (args: { acara: string | { slug: string } } | [acara: st
 
 /**
 * @see \App\Http\Controllers\AcaraController::storeReaksi
-* @see app/Http/Controllers/AcaraController.php:535
+* @see app/Http/Controllers/AcaraController.php:554
 * @route '/acara/{acara}/reaksi'
 */
 storeReaksiForm.post = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -1510,7 +1510,7 @@ storeTasyaruf.form = storeTasyarufForm
 
 /**
 * @see \App\Http\Controllers\AcaraController::destroy
-* @see app/Http/Controllers/AcaraController.php:556
+* @see app/Http/Controllers/AcaraController.php:575
 * @route '/admin/acara/{acara}'
 */
 export const destroy = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -1525,7 +1525,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\AcaraController::destroy
-* @see app/Http/Controllers/AcaraController.php:556
+* @see app/Http/Controllers/AcaraController.php:575
 * @route '/admin/acara/{acara}'
 */
 destroy.url = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -1558,7 +1558,7 @@ destroy.url = (args: { acara: string | { slug: string } } | [acara: string | { s
 
 /**
 * @see \App\Http\Controllers\AcaraController::destroy
-* @see app/Http/Controllers/AcaraController.php:556
+* @see app/Http/Controllers/AcaraController.php:575
 * @route '/admin/acara/{acara}'
 */
 destroy.delete = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -1568,7 +1568,7 @@ destroy.delete = (args: { acara: string | { slug: string } } | [acara: string | 
 
 /**
 * @see \App\Http\Controllers\AcaraController::destroy
-* @see app/Http/Controllers/AcaraController.php:556
+* @see app/Http/Controllers/AcaraController.php:575
 * @route '/admin/acara/{acara}'
 */
 const destroyForm = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -1583,7 +1583,7 @@ const destroyForm = (args: { acara: string | { slug: string } } | [acara: string
 
 /**
 * @see \App\Http\Controllers\AcaraController::destroy
-* @see app/Http/Controllers/AcaraController.php:556
+* @see app/Http/Controllers/AcaraController.php:575
 * @route '/admin/acara/{acara}'
 */
 destroyForm.delete = (args: { acara: string | { slug: string } } | [acara: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
