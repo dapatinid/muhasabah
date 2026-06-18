@@ -142,6 +142,8 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
             Route::get('/admin/kalam/{kalam}/edit', [KalamController::class, 'edit'])->name('kalam.edit');
             Route::put('/admin/kalam/{kalam}', [KalamController::class, 'update'])->name('kalam.update');
             Route::patch('/admin/kalam/{kalam}', [KalamController::class, 'update']);
+            Route::get('/admin/kalam/{kalam}/reaksi', [KalamController::class, 'reaksi'])->name('kalam.reaksi');
+            Route::get('/admin/kalam/{kalam}/komentar', [KalamController::class, 'komentar'])->name('kalam.komentar');            
             Route::delete('/admin/kalam/{kalam}', [KalamController::class, 'destroy'])->name('kalam.destroy');
         });
 

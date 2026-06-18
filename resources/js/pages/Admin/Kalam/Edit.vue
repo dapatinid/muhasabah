@@ -1,7 +1,17 @@
 <script setup lang="ts">
 import { Head, useForm, Link, usePage } from '@inertiajs/vue3'
 import TiptapEditor from '@/components/TiptapEditor.vue'
-import { ArrowLeft, Globe, Lock, Save, Search } from 'lucide-vue-next'
+import { ArrowLeft, 
+    Globe, 
+    Lock, 
+    Save, 
+    Search,
+    Settings, 
+    ChevronDown, 
+    SquarePen, 
+    HeartHandshake, 
+    MessageSquare,
+ } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -36,6 +46,8 @@ const form = useForm({
     is_published: Boolean(props.kalam.is_published),
     users: props.attachedUsers ?? [],
 })
+
+const dropdownOpen = ref(false)
 
 // Fitur Filter dan Auto-Sort User (Tercentang di Atas)
 const searchUser = ref('');
@@ -84,13 +96,70 @@ function submit() {
     <Head :title="`Edit: ${props.kalam.judul}`" />
         <div class="py-10 px-4 max-w-4xl mx-auto">
             
-            <div class="flex items-center gap-4 mb-8">
-                <Link href="/admin/kalam" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:bg-zinc-200 transition-colors">
-                    <ArrowLeft class="size-5" />
-                </Link>
+        <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-100 dark:border-zinc-800 pb-6">
                 <div>
-                    <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Edit Kalam</h1>
-                    <p class="text-sm text-zinc-500">Sesuaikan hikmah yang telah Anda bagikan.</p>
+                    <Link href="/admin/kalam" class="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 mb-2 transition-colors">
+                        <ArrowLeft class="size-4" />
+                        Kembali ke Manajemen Kalam
+                    </Link>
+                    <h1 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+                        Edit Kalam
+                    </h1>
+                    <p class="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">
+                        Kelola konten teks, media, reaksi, serta komentar publik.
+                    </p>
+                </div>
+
+                <div class="relative z-50">
+                    <button 
+                        type="button"
+                        @click="dropdownOpen = !dropdownOpen"
+                        class="w-full md:w-auto inline-flex items-center justify-between gap-2 px-4 py-2.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-bold text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors shadow-sm"
+                    >
+                        <span class="flex items-center gap-2">
+                            <Settings class="size-4 text-zinc-400" />
+                            Opsi Navigasi
+                        </span>
+                        <ChevronDown class="size-4 text-zinc-400 transition-transform duration-200" :class="{ 'rotate-180': dropdownOpen }" />
+                    </button>
+
+                    <div v-if="dropdownOpen" class="fixed inset-0 z-40" @click="dropdownOpen = false"></div>
+
+                    <div 
+                        v-if="dropdownOpen"
+                        class="absolute right-0 mt-2 w-56 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl py-1.5 z-50 origin-top-right divide-y divide-zinc-100 dark:divide-zinc-800"
+                    >
+                        <div class="px-1 py-1">
+                            <Link 
+                                :href="`/admin/kalam/${kalam.slug}/edit`"
+                                @click="dropdownOpen = false"
+                                class="flex items-center gap-2.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors w-full text-left text-emerald-600 dark:text-emerald-400 bg-emerald-50/50 dark:bg-emerald-950/20"
+                            >
+                                <SquarePen class="size-4 shrink-0" />
+                                Edit Konten Kalam
+                            </Link>
+                        </div>
+
+                        <div class="px-1 py-1">
+                            <Link 
+                                :href="`/admin/kalam/${kalam.slug}/reaksi`"
+                                @click="dropdownOpen = false"
+                                class="flex items-center gap-2.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors w-full text-left text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                            >
+                                <HeartHandshake class="size-4 text-zinc-400 shrink-0" />
+                                Manajemen Reaksi
+                            </Link>
+                            
+                            <Link 
+                                :href="`/admin/kalam/${kalam.slug}/komentar`"
+                                @click="dropdownOpen = false"
+                                class="flex items-center gap-2.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors w-full text-left text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                            >
+                                <MessageSquare class="size-4 text-zinc-400 shrink-0" />
+                                Komentar Publik
+                            </Link>
+                        </div>
+                    </div>
                 </div>
             </div>
 

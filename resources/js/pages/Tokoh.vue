@@ -432,7 +432,7 @@ const hubungiWhatsapp = () => {
                     v-html="user.tentang_saya.autobiografi"
                 ></div>
                 
-                <div v-else class="text-center py-8 text-sm text-stone-500 italic border border-dashed border-stone-800 rounded-xl">
+                <div v-else class="text-center px-3 py-8 text-sm text-stone-500 italic border border-dashed border-stone-800 rounded-xl">
                     Tokoh ini belum menuliskan riwayat hidup atau autobiografinya.
                 </div>
             </div>

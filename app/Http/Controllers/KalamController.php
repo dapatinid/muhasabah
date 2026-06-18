@@ -119,6 +119,64 @@ class KalamController extends Controller
         return redirect()->route('kalam.index')->with('success', 'Kalam berhasil diperbarui.');
     }
 
+
+    /**
+     * Halaman Manajemen Reaksi / Emoticon Program Kalam
+     */
+    public function reaksi(Kalam $kalam)
+    {
+        // 1. Ambil summary/total per tipe reaksi (Grup data)
+        $summaryReaksi = $kalam->reaksis()
+            ->select('type', DB::raw('count(*) as total'))
+            ->groupBy('type')
+            ->pluck('total', 'type') // Menghasilkan format: ['love' => 12, 'pray' => 45]
+            ->toArray();
+
+        // Pastikan semua tipe default terisi minimal 0 agar frontend tidak error
+        $tipeDefault = ['barakallah' => 0, 'masya_allah' => 0, 'subhanallah' => 0, 'aamiin' => 0];
+        $stats = array_merge($tipeDefault, $summaryReaksi);
+
+        // 2. Ambil list log riwayat reaksi terbaru
+        $logs = $kalam->reaksis()
+            ->with('user:id,name') // Sertakan info user jika donatur login saat klik
+            ->latest()
+            ->paginate(20);
+
+        return Inertia::render('Admin/Kalam/Reaksi', [
+            'kalam' => $kalam,
+            'stats' => $stats,
+            'reaksis' => $logs,
+            'breadcrumbs' => [
+                ['title' => 'Kalam', 'href' => '/admin/kalam'],
+                ['title' => 'Edit Kalam', 'href' => "/admin/kalam/{$kalam->slug}/edit"],
+                ['title' => 'Reaksi', 'href' => "/admin/kalam/{$kalam->slug}/reaksi"],
+            ],
+        ]);
+    }
+
+    /**
+     * Halaman Manajemen Komentar dan Doa Donatur
+     */
+    public function komentar(Kalam $kalam, Request $request)
+    {
+        // Asumsi nama relasi di model Kalam adalah 'komentars'
+        $komentarsPublik = $kalam->komentars()
+            ->latest()
+            ->paginate(15, ['*'], 'page_komentar') // parameter halaman unik
+            ->withQueryString();
+
+        return Inertia::render('Admin/Kalam/Komentar', [
+            'kalam' => $kalam,
+            'komentarsPublik' => $komentarsPublik,
+            'breadcrumbs' => [
+                ['title' => 'Kalam', 'href' => '/admin/kalam'],
+                ['title' => 'Edit Kalam', 'href' => "/admin/kalam/{$kalam->slug}/edit"],
+                ['title' => 'Komentar', 'href' => "/admin/kalam/{$kalam->slug}/komentar"],
+            ],
+        ]);
+    }
+
+
     /**
      * Detail Kalam (Publik/Admin) dengan Optimasi SEO Meta & Relasi Eager Loading
      */

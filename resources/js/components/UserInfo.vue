@@ -15,18 +15,26 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { getInitials } = useInitials();
 
-// Solusi: Memastikan URL gambar selalu mengarah ke Root Domain dengan awalan '/'
+// Solusi: Memastikan URL gambar selalu mengarah ke direktori publik penyimpanan Laravel
 const absoluteAvatarUrl = computed(() => {
     const avatar = props.user?.avatar;
     if (!avatar) return '';
     
-    // Jika URL sudah berupa full URL (http/https) atau sudah diawali '/', biarkan saja
-    if (avatar.startsWith('http') || avatar.startsWith('/')) {
+    // 1. Jika URL sudah berupa full eksternal URL (misal: Avatar dari Google/OAuth)
+    if (avatar.startsWith('http') || avatar.startsWith('https')) {
         return avatar;
     }
     
-    // Jika relatif (seperti 'storage/avatar.jpg'), tambahkan '/' di depannya
-    return `/${avatar}`;
+    // 2. Jika di database sudah ada kata 'storage/' (jaga-jaga jika format datanya berbeda)
+    if (avatar.includes('storage/')) {
+        return avatar.startsWith('/') ? avatar : `/${avatar}`;
+    }
+    
+    // 3. Hapus slash di awal (jika ada) agar tidak terjadi dobel slash
+    const cleanPath = avatar.replace(/^\//, '');
+
+    // 4. Tambahkan prefix /storage/ bawaan Laravel
+    return `/storage/${cleanPath}`;
 });
 </script>
 
