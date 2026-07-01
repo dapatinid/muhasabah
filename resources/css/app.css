@@ -84,20 +84,36 @@
         touch-action: manipulation;
     }    
     @media (pointer: coarse) {
-        /* Menggunakan :not() untuk mengecualikan input date, datetime-local, dan time */
-        input:not([type="date"]):not([type="datetime-local"]):not([type="time"]),
+        input,
         select,
         textarea,
         [contenteditable="true"] {
             font-size: 16px !important;
         }
-        /* Opsional: Jika ingin input date tetap 16px tapi ukurannya aman di Safari */
+
+        /* Fix lebar khusus Safari untuk date & datetime-local */
         input[type="date"],
-        input[type="datetime-local"] {
+        input[type="datetime-local"],
+        input[type="time"] {
+            width: 100%;
             max-width: 100%;
             min-width: 0;
-            /* Memaksa elemen mematuhi sistem border-box webkit */
-            box-sizing: border-box; 
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        /* Elemen internal Safari (shadow parts) juga perlu dipaksa mengikuti lebar container */
+        input[type="date"]::-webkit-date-and-time-value,
+        input[type="datetime-local"]::-webkit-date-and-time-value {
+            text-align: left;
+            min-width: 0;
+        }
+
+        input[type="date"]::-webkit-datetime-edit,
+        input[type="datetime-local"]::-webkit-datetime-edit {
+            max-width: 100%;
+            overflow: hidden;
         }
     }
 }
