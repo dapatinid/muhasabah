@@ -81,9 +81,11 @@
     }
 
     body {
-        /* Tambahkan baris di bawah ini untuk mematikan double-click zoom */
         touch-action: manipulation;
     }    
+    input, select, textarea {
+        @apply text-[16px] md:text-sm;
+    }
 }
 
 @layer utilities {
