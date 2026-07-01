@@ -211,3 +211,10 @@
 .fade-up-enter-active, .fade-up-leave-active { transition: all 0.3s ease; }
 .fade-up-enter-from, .fade-up-leave-to { opacity: 0; transform: translateY(10px); }
 
+@layer base {
+    body {
+        /* Tambahkan baris di bawah ini untuk mematikan double-click zoom */
+        touch-action: manipulation;
+    }
+}
+
