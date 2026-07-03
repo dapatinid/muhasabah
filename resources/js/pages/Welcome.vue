@@ -390,7 +390,7 @@ function getHargaBadgeInfo(acara: any) {
 
       <Link
         :href="user ? '/dashboard' : '/login'"
-        class="mt-2.5 mb-2 w-10 h-10 rounded-full bg-stone-800 border border-amber-500/30 flex items-center justify-center text-stone-400 hover:text-amber-400 transition-colors"
+        class="mt-3.75 mb-3 w-10 h-10 rounded-full bg-stone-800 border border-amber-500/30 flex items-center justify-center text-stone-400 hover:text-amber-400 transition-colors"
       >
         <img v-if="user?.avatar" :src="`/storage/${user.avatar}`" class="w-full h-full rounded-full object-cover" />
         <UserRound v-else class="size-5" />
