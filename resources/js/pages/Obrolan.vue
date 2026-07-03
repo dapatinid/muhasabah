@@ -112,7 +112,7 @@ onMounted(() => {
                         preserveScroll: true,
                         onSuccess: () => {
                             // Jika laci obrolan sedang terbuka dan pesan itu dari lawan bicara di laci ini, scroll ke bawah
-                            if (props.activeChat && props.activeChat.id === newNotif.data.conversation_id) {
+                            if (props.activeChat && props.activeChat.id == newNotif.data.conversation_id) {
                                 scrollToBottom()
                             }
                         }
@@ -143,7 +143,7 @@ const formatRelativeTime = (dateString: string) => {
     if (hours < 24) return `${hours} jam lalu`;
     
     const days = Math.floor(hours / 24);
-    if (days === 1) return 'kemarin';
+    if (days == 1) return 'kemarin';
     if (days < 7) return `${days} hari lalu`;
     
     return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -165,7 +165,7 @@ const formatRelativeTime = (dateString: string) => {
                 Pesan Masuk
             </h1>
 
-            <div v-if="conversations.length === 0" class="text-center text-stone-500 py-10">
+            <div v-if="conversations.length == 0" class="text-center text-stone-500 py-10">
                 Belum ada obrolan.
             </div>
 
@@ -242,7 +242,7 @@ const formatRelativeTime = (dateString: string) => {
                         v-for="msg in messages" :key="msg.id"
                         :class="[
                             'flex flex-col gap-1 max-w-[75%]', // Tambahkan flex-col agar bisa menumpuk waktu
-                            msg.sender_id === activeChat.user.id 
+                            msg.sender_id == activeChat.user.id 
                                 ? 'self-start mr-auto' 
                                 : 'self-end ml-auto'
                         ]"
@@ -250,7 +250,7 @@ const formatRelativeTime = (dateString: string) => {
                         <div 
                             :class="[
                                 'p-3 text-sm',
-                                msg.sender_id === activeChat.user.id 
+                                msg.sender_id == activeChat.user.id 
                                     ? 'bg-stone-800 text-stone-200 rounded-2xl rounded-bl-none' 
                                     : 'bg-emerald-600 text-white rounded-2xl rounded-br-none'
                             ]"
@@ -261,7 +261,7 @@ const formatRelativeTime = (dateString: string) => {
                         <span 
                             :class="[
                                 'text-[10px] opacity-70 px-1 flex items-center ',
-                                msg.sender_id === activeChat.user.id ? 'text-stone-500 ' : 'text-emerald-100 justify-end'
+                                msg.sender_id == activeChat.user.id ? 'text-stone-500 ' : 'text-emerald-100 justify-end'
                             ]"
                         >
                             {{ formatRelativeTime(msg.created_at) }}

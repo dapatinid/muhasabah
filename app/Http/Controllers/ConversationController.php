@@ -33,7 +33,7 @@ class ConversationController extends Controller
             }])
             ->get()
             ->map(function($conv) use ($userId) {
-                $otherUser = $conv->user_one_id === $userId ? $conv->userTwo : $conv->userOne;
+                $otherUser = $conv->user_one_id == $userId ? $conv->userTwo : $conv->userOne;
                 
                 // Hitung pesan masuk yang belum dibaca (Otomatis bernilai 0 jika room ini sedang dibuka)
                 $unreadCount = $conv->messages()
