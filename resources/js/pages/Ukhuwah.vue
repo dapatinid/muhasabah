@@ -142,19 +142,19 @@ const pisahkanClass = (cls: string | null | undefined): string[] => {
             <div class="min-w-0">
               <h3 class="font-bold text-white text-sm truncate group-hover:text-emerald-400 transition-colors">{{ user.name }}</h3>
               <p class="text-xs text-stone-400 mt-0.5 truncate">{{ user.level || 'Anggota' }} <span class="mx-1">•</span> {{ user.city?.name?.replace('KABUPATEN', 'KAB.') || 'Indonesia'}}</p>
-              <div class="flex flex-wrap gap-1.5 mt-2">
+              <div class="flex flex-nowrap gap-1.5 mt-2 overflow-auto no-scrollbar">
                 <template v-if="pisahkanClass(user.class).length > 0">
                   <span
                     v-for="(clsItem, index) in pisahkanClass(user.class)"
                     :key="index"
-                    class="inline-block px-2 py-0.5 rounded-md bg-emerald-900/30 text-emerald-400 text-[8px] font-bold uppercase tracking-wide border border-emerald-500/10"
+                    class="text-nowrap inline-block px-2 py-0.5 rounded-md bg-emerald-900/30 text-emerald-400 text-[8px] font-bold uppercase tracking-wide border border-emerald-500/10"
                   >
                     {{ clsItem }}
                   </span>
                 </template>
                 <span
                   v-else
-                  class="inline-block px-2 py-0.5 rounded-md bg-stone-900 text-stone-500 text-[8px] font-bold uppercase tracking-wide border border-stone-800"
+                  class="text-nowrap inline-block px-2 py-0.5 rounded-md bg-stone-900 text-stone-500 text-[8px] font-bold uppercase tracking-wide border border-stone-800"
                 >
                   Umum
                 </span>
