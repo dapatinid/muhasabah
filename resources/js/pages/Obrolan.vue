@@ -50,18 +50,12 @@ const sendMessage = () => {
     form.post(`/obrolan/${props.activeChat.id}/messages`, {
         preserveScroll: true,
         preserveState: true,
-        only: ['messages', 'conversations'], // Update pesan & list preview inbox
+        only: ['messages', 'conversations'],
         onSuccess: () => {
-            form.reset('body') // Kosongkan input pesan
-            scrollToBottom()   // Scroll otomatis ke bawah
-            
-            // Menggunakan nextTick ganda atau sedikit delay untuk memastikan 
-            // input sudah lepas dari kondisi 'disabled' sebelum memanggil .focus()
-            nextTick(() => {
-                setTimeout(() => {
-                    messageInput.value?.focus()
-                }, 50)
-            })
+            form.reset('body')
+            scrollToBottom()
+            // fallback saja, karena readonly harusnya sudah menjaga fokus tetap ada
+            nextTick(() => messageInput.value?.focus())
         }
     })
 }
@@ -188,7 +182,7 @@ const formatRelativeTime = (dateString: string) => {
             </div>
         </div>          
 
-        <div class="max-w-2xl mx-auto min-h-screen pb-24 pt-20 -mt-21">
+        <div class="max-w-2xl mx-auto min-h-screen pb-24 pt-22 -mt-21">
 
             <div v-if="conversations.length == 0" class="px-3 text-center text-stone-500 py-10">
                 Belum ada obrolan.
@@ -296,8 +290,9 @@ const formatRelativeTime = (dateString: string) => {
                             v-model="form.body"
                             type="text" 
                             placeholder="Ketik pesan..."
-                            class="flex-1 bg-stone-800 border-none rounded-full px-4 py-2.5 text-sm text-white outline-none focus:outline-none focus:ring-1 focus:ring-emerald-500 [-webkit-tap-highlight-color:transparent] appearance-none"
-                            :disabled="form.processing"
+                            class="flex-1 bg-stone-800 border-none rounded-full px-4 py-2.5 text-sm text-white outline-none focus:outline-none focus:ring-1 focus:ring-emerald-500 [-webkit-tap-highlight-color:transparent] appearance-none disabled:opacity-50"
+                            :readonly="form.processing"
+                            :aria-disabled="form.processing"
                         />
                         <button 
                             type="submit"
