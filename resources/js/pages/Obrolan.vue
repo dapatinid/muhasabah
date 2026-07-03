@@ -3,7 +3,7 @@ import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { Head, router, useForm, usePage, Link } from '@inertiajs/vue3'
 import { createClient } from '@supabase/supabase-js'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
-import { ArrowLeft, Send } from 'lucide-vue-next'
+import { ArrowLeft, Send, X } from 'lucide-vue-next'
 
 const props = defineProps<{
     conversations: any[];
@@ -178,22 +178,22 @@ const formatRelativeTime = (dateString: string) => {
     <AppLayoutPublic >
         <Head title="Obrolan" />
 
-        <div class="max-w-2xl mx-auto min-h-screen pb-24 px-4 sm:px-6 pt-6 -mt-16">
-            <h1 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+        <div class="max-w-2xl mx-auto min-h-screen pb-24 pt-6 -mt-21">
+            <h1 class="relative text-white mb-4 px-3 flex items-center gap-3 bg-stone-900 border-stone-800 z-60 shadow-2xl">
                 <Link
                     :href="`/ukhuwah`"
                     class="my-4 w-9 h-9 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center text-stone-400 hover:text-amber-400 hover:border-amber-500/40 transition-all shrink-0"
                     >
                     <ArrowLeft class="size-4" />
                 </Link>
-                Pesan Masuk
+                <span class="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold">Pesan Masuk</span>
             </h1>
 
-            <div v-if="conversations.length == 0" class="text-center text-stone-500 py-10">
+            <div v-if="conversations.length == 0" class="px-3 text-center text-stone-500 py-10">
                 Belum ada obrolan.
             </div>
 
-            <div v-else class="space-y-2">
+            <div v-else class="px-3 space-y-3">
                 <div 
                     v-for="conv in conversations" :key="conv.id"
                     @click="openChat(conv)"
@@ -251,7 +251,7 @@ const formatRelativeTime = (dateString: string) => {
                 
                 <div class="h-16 px-4 flex items-center gap-3 border-b border-stone-800 bg-stone-900/90 backdrop-blur-sm shrink-0">
                     <button @click="closeChat" class="p-2 -ml-2 rounded-full hover:bg-stone-800 text-stone-400 transition">
-                        <ArrowLeft class="size-5" />
+                        <X class="size-5" />
                     </button>
                     <div class="font-bold text-stone-200 truncate">{{ activeChat.user.name }}</div>
                 </div>

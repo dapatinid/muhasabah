@@ -72,6 +72,12 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
     *,
     ::after,
     ::before,
@@ -115,6 +121,9 @@
             max-width: 100%;
             overflow: hidden;
         }
+    }
+    input, button, a {
+        -webkit-tap-highlight-color: transparent;
     }
 }
 
@@ -199,15 +208,6 @@
     --sidebar-border: hsl(0 0% 15.9%);
     --sidebar-ring: hsl(217.2 91.2% 59.8%);
     --sidebar: hsl(240 5.9% 10%);
-}
-
-@layer base {
-    * {
-        @apply border-border outline-ring/50;
-    }
-    body {
-        @apply bg-background text-foreground;
-    }
 }
 
 /* Targetkan class .dark atau selector yang menandakan mode dark */
