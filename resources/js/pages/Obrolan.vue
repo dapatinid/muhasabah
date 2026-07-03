@@ -178,16 +178,17 @@ const formatRelativeTime = (dateString: string) => {
     <AppLayoutPublic >
         <Head title="Obrolan" />
 
-        <div class="max-w-2xl mx-auto min-h-screen pb-24 pt-6 -mt-21">
-            <h1 class="relative text-white mb-4 px-3 flex items-center gap-3 bg-stone-900 border-stone-800 z-60 shadow-2xl">
-                <Link
-                    :href="`/ukhuwah`"
-                    class="my-4 w-9 h-9 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center text-stone-400 hover:text-amber-400 hover:border-amber-500/40 transition-all shrink-0"
-                    >
-                    <ArrowLeft class="size-4" />
-                </Link>
-                <span class="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold">Pesan Masuk</span>
-            </h1>
+        <div class="fixed top-0 max-w-xl mx-auto inset-x-0 z-50 pointer-events-none">
+            <div class="absolute w-full pointer-events-auto gap-3">
+                
+                    <h1 class="h-12 text-white mb-4 pt-1 px-3 flex items-center justify-center gap-3 bg-stone-900 border-stone-800 border-b z-60 shadow-2xl">
+                        <span class="text-xl font-bold">Pesan Masuk</span>
+                    </h1>
+
+            </div>
+        </div>          
+
+        <div class="max-w-2xl mx-auto min-h-screen pb-24 pt-20 -mt-21">
 
             <div v-if="conversations.length == 0" class="px-3 text-center text-stone-500 py-10">
                 Belum ada obrolan.
