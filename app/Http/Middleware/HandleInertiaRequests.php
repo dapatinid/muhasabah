@@ -69,6 +69,7 @@ class HandleInertiaRequests extends Middleware
                 'error'              => fn () => $request->session()->get('error'),
                 'info'               => fn () => $request->session()->get('info'),
                 'uploaded_image_url' => fn () => $request->session()->get('uploaded_image_url'),
+                'new_chat'           => fn () => $request->session()->get('new_chat'),
             ],      
         ];
     }
