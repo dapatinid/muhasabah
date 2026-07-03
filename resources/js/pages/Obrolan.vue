@@ -281,9 +281,9 @@ const formatRelativeTime = (dateString: string) => {
                         <button 
                             type="submit"
                             :disabled="form.processing"
-                            class="bg-emerald-600 disabled:opacity-50 hover:bg-emerald-700 p-2.5 rounded-full text-white transition shrink-0"
+                            class="relative bg-emerald-600 disabled:opacity-50 hover:bg-emerald-700 p-2.5 rounded-full text-white transition shrink-0"
                         >
-                            <Send class="size-5 pt-0.5" />
+                            <Send class="size-5 mt-0.5 mx-0.5" />
                         </button>
                     </form>
                 </div>
