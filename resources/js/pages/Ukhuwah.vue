@@ -68,7 +68,7 @@ onMounted(() => {
             (payload) => {
                 if (payload.new.type === 'message.new') {
                     // Minta Inertia menarik ulang data counter unread secara diam-diam
-                    router.reload({ only: ['unread_chats_count'] })
+                    router.reload({ only: ['messages', 'conversations', 'unread_chats_count'] })
                 }
             }
         )

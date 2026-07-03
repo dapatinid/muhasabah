@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Inertia\Inertia;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -54,15 +55,15 @@ class HandleInertiaRequests extends Middleware
                     : [],
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
-            'unread_chats_count' => auth()->check()
-                        ? \App\Models\Message::whereHas('conversation', function ($query) {
-                            $query->where('user_one_id', auth()->id())
-                                ->orWhere('user_two_id', auth()->id());
-                        })
-                        ->where('sender_id', '!=', auth()->id()) // Pesan dari orang lain
-                        ->whereNull('read_at')                   // Yang belum dibaca
-                        ->count()
-                        : 0,            
+            'unread_chats_count' => Inertia::always(fn () => auth()->check()
+                    ? \App\Models\Message::whereHas('conversation', function ($query) {
+                        $query->where('user_one_id', auth()->id())
+                            ->orWhere('user_two_id', auth()->id());
+                    })
+                    ->where('sender_id', '!=', auth()->id())
+                    ->whereNull('read_at')
+                    ->count()
+                    : 0),         
             'flash' => [
                 'success'            => fn () => $request->session()->get('success'),
                 'error'              => fn () => $request->session()->get('error'),
