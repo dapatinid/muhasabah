@@ -22,7 +22,7 @@ class UkhuwahController extends Controller
         $items = null;
 
         if ($tab === 'tokoh') {
-            $query = User::query()->with(['province','city'])->whereNotIn('id', [1]); // Bisa tambahkan ->where('is_active', true) jika ada
+            $query = User::query()->with(['province','city'])->whereNotIn('id', [1, 2]); // Bisa tambahkan ->where('is_active', true) jika ada
             if ($search) $query->where('name', 'like', "%{$search}%");
 
             // Urutkan: yang online (last_seen_at dalam 5 menit terakhir) tampil di atas, lalu terbaru
