@@ -227,22 +227,22 @@ const hubungiWhatsapp = () => {
 
         <div class="grid grid-cols-4 gap-3 px-5 mb-6">
             <button @click="showTentangDialog = true" class="flex items-center justify-center gap-2 py-2.5 bg-stone-900 hover:bg-stone-800 border border-stone-800 rounded-xl text-stone-300 text-xs font-bold transition-colors">
-                <Info class="size-4 text-teal-600" />
+                <Info class="size-4 text-sky-600" />
                 <!-- <span class="truncate">Tentang</span> -->
             </button>
 
             <button @click="showLingkaranDialog = true" class="flex items-center justify-center gap-2 py-2.5 bg-stone-900 hover:bg-stone-800 border border-stone-800 rounded-xl text-stone-300 text-xs font-bold transition-colors">
-                <Target class="size-4 text-amber-500" />
+                <Target class="size-4 text-teal-600" />
                 <!-- <span class="truncate">Lingkaran</span> -->
             </button>
 
             <button @click="showMasjidDialog = true" class="flex items-center justify-center gap-2 py-2.5 bg-stone-900 hover:bg-stone-800 border border-stone-800 rounded-xl text-stone-300 text-xs font-bold transition-colors">
-                <MoonStar class="size-4 text-emerald-500" />
+                <MoonStar class="size-4 text-amber-500" />
                 <!-- <span class="truncate">Masjid</span> -->
             </button>
 
             <button @click="showPesanDialog = true" class="flex items-center justify-center gap-2 py-2.5 bg-stone-900 hover:bg-stone-800 border border-stone-800 rounded-xl text-stone-300 text-xs font-bold transition-colors">
-                <MessageCircle class="size-4 text-sky-500" />
+                <MessageCircle class="size-4 text-emerald-500" />
                 <!-- <span class="truncate">Pesan</span> -->
             </button>
         </div>
@@ -453,7 +453,7 @@ const hubungiWhatsapp = () => {
     <Dialog :open="showPesanDialog" @update:open="showPesanDialog = $event">
         <DialogContent class="bg-stone-950 border-stone-800 text-stone-100 max-w-sm rounded-2xl text-center">
             <DialogHeader class="items-center text-center">
-                <div class="p-3 bg-sky-500/10 text-sky-500 rounded-full w-fit mb-2">
+                <div class="p-3 bg-sky-500/10 text-emerald-500 rounded-full w-fit mb-2">
                     <MessageCircle class="size-6" />
                 </div>
                 <DialogTitle class="text-stone-100 font-bold text-lg">
