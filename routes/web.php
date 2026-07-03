@@ -5,12 +5,14 @@ use App\Http\Controllers\DonasiController;
 use App\Http\Controllers\KalamController;
 use App\Http\Controllers\AcaraController; // Controller Baru
 use App\Http\Controllers\AktifitasController;
+use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\LaporanRiyadhohController;
 use App\Http\Controllers\LingkaranController;
 use App\Http\Controllers\MasjidController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\TentangSayaController;
 use App\Http\Controllers\UjiKelayakanController;
@@ -116,6 +118,12 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
         Route::get('/komentar', [AktifitasController::class, 'komentar'])->name('komentar');
         Route::get('/rating', [AktifitasController::class, 'rating'])->name('rating');
     });
+
+    // Rute Obrolan
+    Route::get('/obrolan', [ConversationController::class, 'index'])->name('obrolan.index');
+    Route::post('/obrolan/mulai', [ConversationController::class, 'getOrCreate'])->name('obrolan.mulai');
+    Route::get('/obrolan/{conversation}/messages', [ConversationController::class, 'messages']);
+    Route::post('/obrolan/{conversation}/messages', [MessageController::class, 'store']);    
     
     Route::middleware(['admin', 'restrict_owner'])->group(function () {
 

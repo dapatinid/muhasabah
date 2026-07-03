@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3'
+import { Head, Link, router } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 import { 
   MapPin, UserCircle2, CheckCircle2, ShieldCheck, 
@@ -467,25 +467,39 @@ const hubungiWhatsapp = () => {
                                 <li>Awali dengan salam, perkenalkan diri, dan sampaikan maksud dengan jelas.</li>
                                 <li>Gunakan bahasa yang santun dan hindari mengirim pesan berulang (<em>spam</em>).</li>
                                 <li>Relawan memiliki kesibukan pribadi, mohon maklum dan bersabar jika tidak langsung dibalas.</li>
+                                <li>Jika ingin mengobrol lebih lanjut dan intens, bisa meminta kontak WhatsApp dari chat ini.</li>
                             </ul>
                         </span>
                 </DialogDescription>
             </DialogHeader>
             
             <div class="pt-4 flex flex-col gap-2">
-                <button 
-                    @click="hubungiWhatsapp"
-                    class="w-full flex items-center justify-center gap-2 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-600/10 transition-all"
-                >
-                    <Send class="size-4 fill-current" />
-                    Buka WhatsApp
-                </button>
+                <div class="flex gap-2">
+                    <Link 
+                        href="/obrolan/mulai" 
+                        method="post" 
+                        :data="{ user_id: props.user.id }" 
+                        as="button"
+                        class="flex-1 flex items-center justify-center gap-2 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-600/10 transition-all"
+                    >
+                        <MessageCircle class="size-4" />
+                        Kirim Pesan
+                    </Link>
+                    
+                    <!-- <button 
+                        @click="hubungiWhatsapp"
+                        class="grow-0 flex-none w-12 flex items-center justify-center bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#25D366] rounded-xl transition-all"
+                        title="Buka WhatsApp"
+                    >
+                        <Send class="size-5" /> 
+                    </button> -->
+                </div>
                 
                 <button 
                     @click="showPesanDialog = false"
                     class="w-full py-2.5 bg-transparent hover:bg-stone-900 border border-transparent hover:border-stone-800 text-stone-400 hover:text-stone-200 text-xs font-medium rounded-xl transition-all"
                 >
-                    Kembali
+                    Batal
                 </button>
             </div>
         </DialogContent>

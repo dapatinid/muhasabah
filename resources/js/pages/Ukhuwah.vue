@@ -1,15 +1,20 @@
 <script setup lang="ts">
-import { Head, Link, router } from '@inertiajs/vue3'
-import { ref, watch } from 'vue'
+import { Head, Link, router, usePage } from '@inertiajs/vue3' // Tambahkan usePage di sini
+import { ref, watch, computed } from 'vue' // Tambahkan computed di sini
 import debounce from 'lodash/debounce'
-import { Search, MapPin, Star, UserCircle2, CircleStar, MoonStar, Target } from 'lucide-vue-next'
+import { Search, MapPin, Star, UserCircle2, CircleStar, MoonStar, Target, MessageCircle } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
+import { onMounted, onUnmounted } from 'vue'
+import { createClient } from '@supabase/supabase-js'
 
 const props = defineProps<{
   items: any;
   tab: string;
   filters: { search?: string; tab?: string };
 }>();
+
+const page = usePage()
+const unreadChatsCount = computed(() => page.props.unread_chats_count)
 
 const search = ref(props.filters?.search ?? '');
 const activeTab = ref(props.tab ?? 'tokoh');
@@ -37,6 +42,44 @@ const pisahkanClass = (cls: string | null | undefined): string[] => {
   return cls.split(',').map((item: string) => item.trim()).filter(Boolean);
 };
 
+// Inisialisasi Supabase
+const supabase = createClient(
+    import.meta.env.VITE_SUPABASE_URL,
+    import.meta.env.VITE_SUPABASE_ANON_KEY
+)
+
+let realtimeChannel = null
+
+onMounted(() => {
+    const authUserId = String(page.props.auth.user?.id)
+    if (!authUserId) return
+
+    // Dengarkan notifikasi masuk saat berada di halaman Ukhuwah
+    realtimeChannel = supabase
+        .channel('public:notifications_global')
+        .on(
+            'postgres_changes',
+            {
+                event: 'INSERT',
+                schema: 'public',
+                table: 'notifications',
+                filter: `audience=eq.${authUserId}`
+            },
+            (payload) => {
+                if (payload.new.type === 'message.new') {
+                    // Minta Inertia menarik ulang data counter unread secara diam-diam
+                    router.reload({ only: ['unread_chats_count'] })
+                }
+            }
+        )
+        .subscribe()
+})
+
+onUnmounted(() => {
+    if (realtimeChannel) {
+        supabase.removeChannel(realtimeChannel)
+    }
+})
 </script>
 
 <template>
@@ -237,7 +280,30 @@ const pisahkanClass = (cls: string | null | undefined): string[] => {
           />
         </div>
 
-      </div>
+      </div> 
+
     </div>
+
+    <div class="fixed bottom-32 max-w-xl mx-auto inset-x-0 z-50 pointer-events-none">
+      <div class="absolute left-5 pointer-events-auto flex flex-col gap-3">
+        
+        <Link 
+            href="/obrolan"
+            class="relative size-12 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full flex items-center justify-center shadow-lg shadow-emerald-600/20 transition-all pointer-events-auto"
+        >
+            <MessageCircle class="size-5" />
+
+            <span 
+                v-if="unreadChatsCount > 0"
+                class="absolute -top-1.5 -right-1.5 min-w-[18px] h-4 px-1 flex items-center justify-center bg-rose-500 text-white text-[10px] font-black rounded-full border-2 border-stone-900 animate-bounce"
+            >
+                {{ unreadChatsCount }}
+            </span>
+        </Link>
+
+      </div>
+    </div>  
+ 
+
   </AppLayoutPublic>
 </template>

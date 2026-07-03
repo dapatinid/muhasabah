@@ -38,6 +38,7 @@
     "dependencies": {
         "@inertiajs/vite": "^3.0.0",
         "@inertiajs/vue3": "^3.0.0",
+        "@supabase/supabase-js": "^2.110.0",
         "@tiptap/extension-color": "^3.23.1",
         "@tiptap/extension-horizontal-rule": "^3.23.1",
         "@tiptap/extension-image": "^3.23.1",

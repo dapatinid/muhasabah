@@ -1,0 +1,306 @@
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { Head, router, useForm, usePage, Link } from '@inertiajs/vue3'
+import { createClient } from '@supabase/supabase-js'
+import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
+import { ArrowLeft, Send } from 'lucide-vue-next'
+
+const props = defineProps<{
+    conversations: any[];
+    activeChat?: any;
+    messages?: any[];
+}>()
+
+const messagesContainer = ref<HTMLElement | null>(null)
+
+// 1. Inisialisasi Inertia Form
+const form = useForm({
+    body: ''
+})
+
+// 2. Fungsi Membuka Obrolan (Menggunakan Inertia Partial Reload)
+const openChat = (conversation: any) => {
+    router.get('/obrolan', { chat: conversation.id }, {
+        preserveState: true,  
+        preserveScroll: true, 
+        only: ['activeChat', 'messages', 'conversations'], // SANGAT PENTING: Tambahkan 'conversations' di sini
+        onSuccess: () => scrollToBottom()
+    })
+}
+
+// 3. Fungsi Menutup Obrolan
+const closeChat = () => {
+    router.get('/obrolan', {}, {
+        preserveState: true,
+        preserveScroll: true,
+        only: ['activeChat', 'messages'] // Menghapus parameter 'chat' dari URL
+    })
+}
+
+// 4. Fungsi Kirim Pesan via Inertia
+const sendMessage = () => {
+    if (!form.body.trim() || !props.activeChat) return
+
+    form.post(`/obrolan/${props.activeChat.id}/messages`, {
+        preserveScroll: true,
+        preserveState: true,
+        only: ['messages', 'conversations'], // Update pesan & list preview inbox
+        onSuccess: () => {
+            form.reset('body') // Kosongkan input
+            scrollToBottom()
+        }
+    })
+}
+
+// Utilitas Scroll Otomatis ke Pesan Terbaru
+const scrollToBottom = async () => {
+    await nextTick()
+    if (messagesContainer.value) {
+        messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+    }
+}
+
+// Scroll otomatis jika URL diakses dengan ?chat=xxx (dari Tokoh.vue)
+onMounted(() => {
+    if (props.activeChat) scrollToBottom()
+})
+
+// Opsional: Pantau perubahan pesan jika di-refresh
+watch(() => props.messages, () => {
+    scrollToBottom()
+}, { deep: true })
+
+
+// --- SETUP SUPABASE ---
+const page = usePage()
+// Gunakan import.meta.env untuk membaca variabel VITE_ di Vue
+const supabase = createClient(
+    import.meta.env.VITE_SUPABASE_URL,
+    import.meta.env.VITE_SUPABASE_ANON_KEY
+)
+
+let realtimeChannel = null;
+
+onMounted(() => {
+    // Scroll ke bawah jika ada chat aktif
+    if (props.activeChat) scrollToBottom()
+
+    // Ambil ID user yang sedang login untuk memfilter notifikasi
+    const authUserId = String(page.props.auth.user.id)
+
+    // Mulai Mendengarkan (Subscribe) ke Supabase
+    realtimeChannel = supabase
+        .channel('public:notifications')
+        .on(
+            'postgres_changes',
+            {
+                event: 'INSERT',
+                schema: 'public',
+                table: 'notifications',
+                filter: `audience=eq.${authUserId}` // SANGAT PENTING: Hanya dengarkan pesan untuk user ini
+            },
+            (payload) => {
+                const newNotif = payload.new
+
+                // Jika tipe notifikasinya adalah pesan baru
+                if (newNotif.type === 'message.new') {
+                    
+                    // Tarik data terbaru dari Laravel secara gaib (tanpa refresh browser)
+                    router.reload({
+                        only: ['messages', 'conversations'], // Update isi laci chat DAN list inbox luar
+                        preserveState: true,
+                        preserveScroll: true,
+                        onSuccess: () => {
+                            // Jika laci obrolan sedang terbuka dan pesan itu dari lawan bicara di laci ini, scroll ke bawah
+                            if (props.activeChat && props.activeChat.id === newNotif.data.conversation_id) {
+                                scrollToBottom()
+                            }
+                        }
+                    })
+
+                }
+            }
+        )
+        .subscribe()
+})
+
+// Bersihkan memori jaringan jika pengguna keluar dari halaman obrolan
+onUnmounted(() => {
+    if (realtimeChannel) {
+        supabase.removeChannel(realtimeChannel)
+    }
+})
+
+const formatRelativeTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    if (seconds < 60) return 'barusan';
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes} menit lalu`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} jam lalu`;
+    
+    const days = Math.floor(hours / 24);
+    if (days === 1) return 'kemarin';
+    if (days < 7) return `${days} hari lalu`;
+    
+    return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+};
+</script>
+
+<template>
+    <AppLayoutPublic >
+        <Head title="Obrolan" />
+
+        <div class="max-w-2xl mx-auto min-h-screen pb-24 px-4 sm:px-6 pt-6 -mt-16">
+            <h1 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                <Link
+                    :href="`/ukhuwah`"
+                    class="my-4 w-9 h-9 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center text-stone-400 hover:text-amber-400 hover:border-amber-500/40 transition-all shrink-0"
+                    >
+                    <ArrowLeft class="size-4" />
+                </Link>
+                Pesan Masuk
+            </h1>
+
+            <div v-if="conversations.length === 0" class="text-center text-stone-500 py-10">
+                Belum ada obrolan.
+            </div>
+
+            <div v-else class="space-y-2">
+                <div 
+                    v-for="conv in conversations" :key="conv.id"
+                    @click="openChat(conv)"
+                    :class="[
+                        'flex items-center gap-4 p-4 border rounded-2xl cursor-pointer transition-colors',
+                        // Jika ada pesan belum dibaca, berikan background yang sedikit berbeda/lebih tegas
+                        conv.unread_count > 0 
+                            ? 'bg-emerald-950/20 border-emerald-800/40 hover:bg-emerald-950/30' 
+                            : 'bg-stone-900 border-stone-800 hover:bg-stone-800'
+                    ]"
+                >
+                    <div class="size-12 bg-stone-800 rounded-full flex items-center justify-center shrink-0 relative">
+                        <span class="text-stone-400 font-bold">{{ conv.user.name.charAt(0) }}</span>
+                        
+                        <span v-if="conv.unread_count > 0" class="absolute top-0 right-0 size-3 bg-emerald-500 rounded-full border-2 border-stone-900"></span>
+                    </div>
+                    
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-baseline gap-2">
+                            <h3 
+                                :class="[
+                                    'text-sm truncate',
+                                    // Jika belum dibaca, nama lawan bicara menjadi lebih tebal (bold)
+                                    conv.unread_count > 0 ? 'font-black text-white' : 'font-bold text-stone-200'
+                                ]"
+                            >
+                                {{ conv.user.name }}
+                            </h3>
+                            
+                            <span class="text-[10px] text-stone-500 shrink-0">
+                                {{ conv.last_message ? new Date(conv.last_message.created_at).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}) : '' }}
+                            </span>
+                        </div>
+
+                        <div class="flex justify-between items-center gap-2 mt-0.5">
+                            <p 
+                                :class="[
+                                    'text-xs truncate flex-1',
+                                    // Teks preview menjadi lebih terang jika belum dibaca
+                                    conv.unread_count > 0 ? 'text-stone-200 font-semibold' : 'text-stone-400'
+                                ]"
+                            >
+                                {{ conv.last_message?.body || 'Belum ada pesan' }}
+                            </p>
+
+                            <div 
+                                v-if="conv.unread_count > 0" 
+                                class="min-w-[18px] h-4 px-1 flex items-center justify-center bg-emerald-500 text-stone-950 text-[10px] font-black rounded-full shrink-0 animate-pulse"
+                            >
+                                {{ conv.unread_count }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <Transition name="drawer">
+            <div v-if="activeChat" class="fixed inset-y-0 right-0 w-full sm:w-[400px] bg-stone-900 border-l border-stone-800 z-[60] flex flex-col shadow-2xl">
+                
+                <div class="h-16 px-4 flex items-center gap-3 border-b border-stone-800 bg-stone-900/90 backdrop-blur-sm shrink-0">
+                    <button @click="closeChat" class="p-2 -ml-2 rounded-full hover:bg-stone-800 text-stone-400 transition">
+                        <ArrowLeft class="size-5" />
+                    </button>
+                    <div class="font-bold text-stone-200 truncate">{{ activeChat.user.name }}</div>
+                </div>
+
+                <div ref="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-3 bg-[#0a0a0a]">
+                    <div 
+                        v-for="msg in messages" :key="msg.id"
+                        :class="[
+                            'flex flex-col gap-1 max-w-[75%]', // Tambahkan flex-col agar bisa menumpuk waktu
+                            msg.sender_id === activeChat.user.id 
+                                ? 'self-start mr-auto' 
+                                : 'self-end ml-auto'
+                        ]"
+                    >
+                        <div 
+                            :class="[
+                                'p-3 text-sm',
+                                msg.sender_id === activeChat.user.id 
+                                    ? 'bg-stone-800 text-stone-200 rounded-2xl rounded-bl-none' 
+                                    : 'bg-emerald-600 text-white rounded-2xl rounded-br-none'
+                            ]"
+                        >
+                            {{ msg.body }}
+                        </div>
+
+                        <span 
+                            :class="[
+                                'text-[10px] opacity-70 px-1 flex items-center ',
+                                msg.sender_id === activeChat.user.id ? 'text-stone-500 ' : 'text-emerald-100 justify-end'
+                            ]"
+                        >
+                            {{ formatRelativeTime(msg.created_at) }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-stone-900 border-t border-stone-800 shrink-0">
+                    <form @submit.prevent="sendMessage" class="flex gap-2">
+                        <input 
+                            v-model="form.body"
+                            type="text" 
+                            placeholder="Ketik pesan..."
+                            class="flex-1 bg-stone-800 border-none rounded-full px-4 py-2.5 text-sm text-white focus:ring-1 focus:ring-emerald-500"
+                            :disabled="form.processing"
+                        />
+                        <button 
+                            type="submit"
+                            :disabled="!form.body.trim() || form.processing"
+                            class="bg-emerald-600 disabled:opacity-50 hover:bg-emerald-700 p-2.5 rounded-full text-white transition shrink-0"
+                        >
+                            <Send class="size-5" />
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </Transition>
+
+        <Transition name="fade">
+            <div v-if="activeChat" @click="closeChat" class="fixed inset-0 bg-black/50 z-[55] sm:block hidden"></div>
+        </Transition>
+
+    </AppLayoutPublic>
+</template>
+
+<style scoped>
+.drawer-enter-active, .drawer-leave-active { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.drawer-enter-from, .drawer-leave-to { transform: translateX(100%); }
+.fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+</style>
