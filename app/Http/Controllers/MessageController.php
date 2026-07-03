@@ -27,7 +27,7 @@ class MessageController extends Controller
         ]);
 
         // Menentukan siapa penerima pesan (Audience)
-        $receiverId = $conversation->user_one_id === $sender->id 
+        $receiverId = $conversation->user_one_id == $sender->id 
             ? $conversation->user_two_id 
             : $conversation->user_one_id;
 

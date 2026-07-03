@@ -15,6 +15,11 @@ class Conversation extends Model
         'user_two_id',
     ];
 
+    protected $casts = [
+        'user_one_id' => 'integer',
+        'user_two_id' => 'integer',
+    ];
+
     // 2. Relasi ke User Pertama
     public function userOne()
     {
