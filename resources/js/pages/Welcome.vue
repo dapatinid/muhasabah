@@ -379,7 +379,7 @@ function getHargaBadgeInfo(acara: any) {
   <AppLayoutPublic> 
 
     <template #header>
-      <div class="flex-1 pt-2.5">
+      <div class="flex-1 pt-2">
         <p class="text-[10px] text-amber-500 tracking-[0.2em] uppercase font-bold">
           {{ user ? "Ahlan wa Sahlan," : "Assalamu'alaikum," }}
         </p>
@@ -390,7 +390,7 @@ function getHargaBadgeInfo(acara: any) {
 
       <Link
         :href="user ? '/dashboard' : '/login'"
-        class="my-3.5 w-10 h-10 rounded-full bg-stone-800 border border-amber-500/30 flex items-center justify-center text-stone-400 hover:text-amber-400 transition-colors"
+        class="mt-2.5 mb-2 w-10 h-10 rounded-full bg-stone-800 border border-amber-500/30 flex items-center justify-center text-stone-400 hover:text-amber-400 transition-colors"
       >
         <img v-if="user?.avatar" :src="`/storage/${user.avatar}`" class="w-full h-full rounded-full object-cover" />
         <UserRound v-else class="size-5" />

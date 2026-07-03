@@ -228,9 +228,9 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
     <div class="fixed inset-0 z-0 pointer-events-none" style="background: radial-gradient(ellipse at 50% 0%, rgba(120,90,40,0.12) 0%, transparent 60%)" />
 
     <div class="relative z-10 max-w-xl mx-auto sm:border-x sm:border-stone-800 min-h-screen">
-      <div class="fixed top-0 left-0 z-[101] h-1 w-full bg-gradient-to-r from-amber-700 via-amber-400 to-amber-700 shadow-[0_1px_10px_rgba(251,191,36,0.3)]"></div>
+      <div class="fixed top-0 left-0 z-101 h-1 w-full bg-linear-to-r from-amber-700 via-amber-400 to-amber-700 shadow-[0_1px_10px_rgba(251,191,36,0.3)]"></div>
 
-      <nav :class="['fixed top-0 inset-x-0 z-[100] max-w-xl mx-auto bg-stone-950/80 backdrop-blur-md border-b border-stone-800/50 sm:border-x sm:border-stone-800 px-5 flex items-center gap-3 transition-transform duration-300 ease-in-out', headerVisible ? 'translate-y-0' : '-translate-y-full']">
+      <nav :class="['fixed top-0 inset-x-0 z-100 pt-0.5 max-w-xl mx-auto bg-stone-950/80 backdrop-blur-md border-b border-stone-800/50 sm:border-x sm:border-stone-800 px-5 flex items-center gap-3 transition-transform duration-300 ease-in-out', headerVisible ? 'translate-y-0' : '-translate-y-full']">
         <button
           v-if="showBack"
           @click="handleBack"

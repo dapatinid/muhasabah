@@ -284,14 +284,14 @@ onUnmounted(() => {
 
     </div>
 
-    <div class="fixed bottom-32 max-w-xl mx-auto inset-x-0 z-50 pointer-events-none">
-      <div class="absolute left-5 pointer-events-auto flex flex-col gap-3">
+    <div class="fixed top-4 max-w-xl mx-auto inset-x-0 z-101 pointer-events-none">
+      <div class="absolute right-5 pointer-events-auto flex flex-col gap-3">
         
         <Link 
             href="/obrolan"
-            class="relative size-12 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full flex items-center justify-center shadow-lg shadow-emerald-600/20 transition-all pointer-events-auto"
+            class="relative size-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full flex items-center justify-center shadow-lg shadow-emerald-600/20 transition-all pointer-events-auto"
         >
-            <MessageCircle class="size-5" />
+            <MessageCircle class="size-4" />
 
             <span 
                 v-if="unreadChatsCount > 0"
