@@ -152,10 +152,10 @@ function closeModal() {
   <Head title="Agenda Kegiatan & Acara" />
   <AppLayoutPublic subtitle="Informasi Kegiatan" title="Agenda Acara" :show-back="true">
 
-    <div class="px-2 py-3 space-y-6 pb-50">
+    <div class="py-3 space-y-6 pb-50">
 
-      <div class="relative group">
-        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-stone-500 group-focus-within:text-amber-400 transition-colors">
+      <div class="relative group px-2">
+        <span class="absolute left-6 top-1/2 -translate-y-1/2 text-stone-500 group-focus-within:text-amber-400 transition-colors">
           <Search class="size-4" />
         </span>
         <input
@@ -166,7 +166,7 @@ function closeModal() {
         >
       </div>
 
-      <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+      <div class="flex px-2 gap-2 overflow-x-auto no-scrollbar pb-1">
         <button
           v-for="kat in kategoriList"
           :key="kat"
@@ -184,13 +184,13 @@ function closeModal() {
 
       <div
         v-if="acaras.data.length === 0"
-        class="text-center py-20 text-stone-600 text-sm border border-dashed border-stone-800 rounded-2xl"
+        class="text-center px-2 py-20 text-stone-600 text-sm border border-dashed border-stone-800 rounded-2xl"
       >
         <p class="text-3xl mb-3">📅</p>
         <p>Belum ada agenda acara terdekat</p>
       </div>
 
-      <div v-else class="grid grid-cols-2 gap-2 md:gap-4">
+      <div v-else class="grid grid-cols-2 px-2 gap-2 md:gap-4">
         <div
           v-for="acara in acaras.data"
           :key="acara.id"
@@ -224,7 +224,7 @@ function closeModal() {
         </div>
       </div>      
 
-      <div v-if="acaras.links.length > 3" class="flex justify-center gap-1.5 pt-6 flex-wrap">
+      <div v-if="acaras.links.length > 3" class="flex justify-center px-2 gap-1.5 pt-6 flex-wrap">
         <button
           v-for="(link, i) in acaras.links"
           :key="i"

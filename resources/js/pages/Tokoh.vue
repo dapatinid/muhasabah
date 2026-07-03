@@ -3,7 +3,7 @@ import { Head, Link, router } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 import { 
   MapPin, UserCircle2, CheckCircle2, ShieldCheck, 
-  BookOpen, Heart, CalendarDays, Target, MoonStar, MessageCircle, Share2, Info,
+  BookOpen, Heart, CalendarDays, Target, MoonStar, MessageCircle, MessageCirclePlus, MessageSquare, Share2, Info,
   Check, Activity, Send
 } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
@@ -227,7 +227,7 @@ const hubungiWhatsapp = () => {
 
         <div class="grid grid-cols-4 gap-3 px-5 mb-6">
             <button @click="showTentangDialog = true" class="flex items-center justify-center gap-2 py-2.5 bg-stone-900 hover:bg-stone-800 border border-stone-800 rounded-xl text-stone-300 text-xs font-bold transition-colors">
-                <Info class="size-4 text-sky-600" />
+                <Info class="size-4 text-sky-500" />
                 <!-- <span class="truncate">Tentang</span> -->
             </button>
 
@@ -282,7 +282,7 @@ const hubungiWhatsapp = () => {
                     <span class="text-[10px] uppercase text-emerald-500 font-bold tracking-wider">{{ kalam.kategori }}</span>
                     <div class="flex items-center gap-3 text-stone-500 text-xs font-mono">
                       <span class="flex items-center gap-1" title="Reaksi"><Heart class="size-3" /> {{ kalam.reaksis_count || 0 }}</span>
-                        <span class="flex items-center gap-1" title="Komentar"><MessageCircle class="size-3" /> {{ kalam.komentars_count || 0 }}</span>
+                        <span class="flex items-center gap-1" title="Komentar"><MessageSquare class="size-3" /> {{ kalam.komentars_count || 0 }}</span>
                     </div>
                 </div>
                 <h3 class="text-stone-200 font-bold line-clamp-2 leading-snug group-hover:text-emerald-400 transition-colors">{{ kalam.judul }}</h3>
@@ -371,7 +371,7 @@ const hubungiWhatsapp = () => {
     <Dialog v-model:open="showLingkaranDialog">
         <DialogContent class="bg-stone-950 border border-stone-800 text-stone-200">
             <DialogHeader>
-                <DialogTitle class="flex items-center gap-2"><Target class="size-5 text-emerald-500"/> Relasi Lingkaran</DialogTitle>
+                <DialogTitle class="flex items-center gap-2"><Target class="size-5 text-teal-600"/> Relasi Lingkaran</DialogTitle>
                 <DialogDescription class="text-stone-400">
                     Daftar komunitas, yayasan, atau entitas yang menaungi <strong>{{ user.name }}</strong>.
                 </DialogDescription>
@@ -399,7 +399,7 @@ const hubungiWhatsapp = () => {
     <Dialog v-model:open="showMasjidDialog">
         <DialogContent class="bg-stone-950 border border-stone-800 text-stone-200">
             <DialogHeader>
-                <DialogTitle class="flex items-center gap-2"><MoonStar class="size-5 text-emerald-500"/> Relasi Masjid</DialogTitle>
+                <DialogTitle class="flex items-center gap-2"><MoonStar class="size-5 text-amber-500"/> Relasi Masjid</DialogTitle>
                 <DialogDescription class="text-stone-400">
                     Daftar masjid tempat <strong>{{ user.name }}</strong> berkontribusi atau terdaftar sebagai pengurus/jamaah.
                 </DialogDescription>
@@ -428,7 +428,7 @@ const hubungiWhatsapp = () => {
         <DialogContent class="bg-stone-950 border-stone-800 text-stone-100 max-w-lg rounded-2xl">
             <DialogHeader>
                 <DialogTitle class="flex items-center gap-2 text-stone-100 font-bold">
-                    <Info class="size-5 text-amber-500" />
+                    <Info class="size-5 text-sky-500" />
                     Autobiografi / Riwayat Hidup
                 </DialogTitle>
                 <DialogDescription class="text-stone-400 text-xs">
@@ -459,7 +459,7 @@ const hubungiWhatsapp = () => {
                 <DialogTitle class="text-stone-100 font-bold text-lg">
                     Hubungi Tokoh
                 </DialogTitle>
-                <DialogDescription class="text-stone-400 text-sm mt-2 leading-relaxed text-center">                    Pesan atau obrolan ini akan dialihkan langsung menuju aplikasi <strong>WhatsApp</strong>.
+                <DialogDescription class="text-stone-400 text-sm mt-2 leading-relaxed text-center">                    Fitur <strong>Real-Time</strong> chat. Obrolan lebih intens, bisa meminta kontak WhatsApp tokoh dari chat ini.
                         
                         <span class="text-stone-400 text-xs block leading-relaxed text-left bg-stone-900/50 p-3 rounded-xl border border-stone-800/60 mt-4">
                             <strong class="text-stone-300">💡 Etika Menghubungi Tokoh/Relawan:</strong>
@@ -467,7 +467,6 @@ const hubungiWhatsapp = () => {
                                 <li>Awali dengan salam, perkenalkan diri, dan sampaikan maksud dengan jelas.</li>
                                 <li>Gunakan bahasa yang santun dan hindari mengirim pesan berulang (<em>spam</em>).</li>
                                 <li>Relawan memiliki kesibukan pribadi, mohon maklum dan bersabar jika tidak langsung dibalas.</li>
-                                <li>Jika ingin mengobrol lebih lanjut dan intens, bisa meminta kontak WhatsApp dari chat ini.</li>
                             </ul>
                         </span>
                 </DialogDescription>
@@ -482,7 +481,7 @@ const hubungiWhatsapp = () => {
                         as="button"
                         class="flex-1 flex items-center justify-center gap-2 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-600/10 transition-all"
                     >
-                        <MessageCircle class="size-4" />
+                        <MessageCirclePlus class="size-4" />
                         Kirim Pesan
                     </Link>
                     

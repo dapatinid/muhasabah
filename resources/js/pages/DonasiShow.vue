@@ -3,7 +3,7 @@ import { Head, Link, useForm, router } from '@inertiajs/vue3'
 import { computed, ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { 
   CalendarDays, Tag, Target, Wallet, 
-  Share2, BookOpen, MessageCircle, 
+  Share2, BookOpen, MessageSquare, 
   ClipboardList, ArrowDownCircle, ArrowUpCircle, AlertCircle, SendHorizontal,
   RefreshCw, Newspaper, Heart, ChevronDown, Upload, FileText,
   X, Camera,
@@ -365,7 +365,7 @@ let observer: IntersectionObserver | null = null
 const tabItems = [
   { id: 'cerita', label: 'Cerita', icon: BookOpen },
   { id: 'berita', label: 'Berita', icon: Newspaper },
-  { id: 'komentar', label: 'Komentar', icon: MessageCircle },
+  { id: 'komentar', label: 'Komentar', icon: MessageSquare },
   { id: 'doa', label: 'Doa Donatur', icon: Heart },
   { id: 'laporan', label: 'Laporan Keuangan', icon: ClipboardList },
 ]

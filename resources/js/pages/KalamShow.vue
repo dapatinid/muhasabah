@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, Link, useForm } from '@inertiajs/vue3'
 import { computed, ref, onMounted } from 'vue'
-import { CalendarDays, Share2, Tag, User, SendHorizontal, MessageCircle, MoreHorizontal, AlertTriangle } from 'lucide-vue-next'
+import { CalendarDays, Share2, Tag, User, SendHorizontal, MessageSquare, MoreHorizontal, AlertTriangle } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
 
@@ -424,7 +424,7 @@ function closeDropdowns() {
           title="Ke bagian komentar"
           class="w-10 h-10 bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-300 hover:text-amber-400 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.5)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer"
         >
-          <MessageCircle class="w-4 h-4 stroke-[2.5]" />
+          <MessageSquare class="w-4 h-4 stroke-[2.5]" />
         </button>
 
         <button 

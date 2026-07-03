@@ -20,7 +20,7 @@ const formatIDR = (value: number) => {
         <div class="mb-6">
             <h1 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
                 <Ticket class="size-6 text-amber-500" />
-                Aktivitas Saya
+                Tiket Saya
             </h1>
             <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                 Jejak riwayat kontribusi yang pernah Anda berikan.

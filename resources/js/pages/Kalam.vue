@@ -184,13 +184,13 @@ const displayedPages = computed(() => {
   <AppLayoutPublic subtitle="Terkini" title="Kalam Kalam" :show-back="true">
     
     <div class="max-w-2xl mx-auto pb-32">
-      <div class="sticky top-0 z-20 bg-stone-955/80 backdrop-blur-md border-b border-stone-800/50 px-5 py-4 space-y-4">
-        <div class="relative">
-          <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-stone-500" />
+      <div class="sticky top-0 z-20 bg-stone-955/80 backdrop-blur-md border-b border-stone-800/50 py-4 space-y-4">
+        <div class="relative px-5">
+          <Search class="absolute left-8.5 top-1/2 -translate-y-1/2 size-4 text-stone-500" />
           <input v-model="search" type="search" placeholder="Cari kalam..." 
             class="w-full bg-stone-900/50 border border-stone-800 rounded-xl py-2.5 pl-10 pr-4 text-sm text-stone-200 placeholder:text-stone-500 outline-none focus:ring-1 focus:ring-amber-500/50" />
         </div>
-        <div class="flex gap-2 overflow-x-auto no-scrollbar">
+        <div class="flex px-5 gap-2 overflow-x-auto no-scrollbar">
           <button v-for="kat in kategoriList" :key="kat" @click="filterKategori(kat)"
             :class="[ aktifKategori === kat ? 'bg-white text-black' : 'bg-stone-900 text-stone-400 border border-stone-800' ]"
             class="shrink-0 px-4 py-1.5 rounded-lg text-xs font-bold transition-all"

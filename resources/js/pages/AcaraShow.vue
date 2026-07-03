@@ -5,7 +5,7 @@ import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
 import { 
   Tag, MapPin, HandHeart, CalendarDays, Calendar, Ticket, 
-  Newspaper, SendHorizontal, Heart, Users, AlertCircle, MessageCircle,
+  Newspaper, SendHorizontal, Heart, Users, AlertCircle, MessageSquare,
   ArrowDownCircle, ChevronDown, QrCode, Upload, FileText, X, Share2 , Camera,
   MoreHorizontal, AlertTriangle,
   RefreshCw,
@@ -70,7 +70,7 @@ const activeTab = ref('cerita')
 const tabItems = [
   { id: 'cerita',  label: 'Detail Acara',    icon: Calendar },
   { id: 'berita',  label: 'Maklumat',         icon: Newspaper },
-  { id: 'komentar',label: 'Tanya Jawab',      icon: MessageCircle },
+  { id: 'komentar',label: 'Tanya Jawab',      icon: MessageSquare },
   { id: 'doa',     label: 'Donatur/Sponsor',  icon: HandHeart },
   { id: 'peserta', label: 'Peserta',          icon: Users },
 ]

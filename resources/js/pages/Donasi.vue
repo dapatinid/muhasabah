@@ -157,11 +157,11 @@ function getJumlahDonatur(donasi: any): number {
   <Head title="Donasi — Uluran Tangan Anda" />
   <AppLayoutPublic subtitle="Program Kebaikan" title="Donasi" :show-back="true">
 
-    <div class="px-5 py-6 space-y-6 pb-50">
+    <div class="py-6 space-y-6 pb-50">
 
         <!-- Search -->
-        <div class="relative group">
-          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-stone-500 group-focus-within:text-amber-400 transition-colors">
+        <div class="relative group px-5">
+          <span class="absolute left-9 top-1/2 -translate-y-1/2 text-stone-500 group-focus-within:text-amber-400 transition-colors">
             <Search class="size-4" />
           </span>
           <input
@@ -173,7 +173,7 @@ function getJumlahDonatur(donasi: any): number {
         </div>
 
         <!-- Filter kategori -->
-        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+        <div class="flex px-5 gap-2 overflow-x-auto no-scrollbar pb-1">
           <button
             v-for="kat in kategoriList"
             :key="kat"
@@ -191,13 +191,13 @@ function getJumlahDonatur(donasi: any): number {
 
         <!-- Kosong -->
         <div v-if="donasis.data.length === 0"
-             class="text-center py-20 text-stone-600 text-sm border border-dashed border-stone-800 rounded-2xl">
+             class="text-center px-5 py-20 text-stone-600 text-sm border border-dashed border-stone-800 rounded-2xl">
           <p class="text-3xl mb-3">🤝</p>
           <p>Belum ada donasi aktif</p>
         </div>
 
         <!-- List Donasi -->
-        <div v-else class="grid grid-cols-1 gap-4">
+        <div v-else class="grid grid-cols-1 px-5 gap-4">
           <Link
             v-for="donasi in donasis.data"
             :key="donasi.id"
@@ -316,7 +316,7 @@ function getJumlahDonatur(donasi: any): number {
         </div>        
 
         <!-- Pagination -->
-        <div v-if="donasis.links.length > 3" class="flex justify-center gap-1.5 pt-6 flex-wrap">
+        <div v-if="donasis.links.length > 3" class="flex justify-center px-5 gap-1.5 pt-6 flex-wrap">
           <button
             v-for="(link, i) in donasis.links"
             :key="i"
