@@ -154,7 +154,7 @@ function closeModal() {
 
     <div class="py-3 space-y-6 pb-50">
 
-      <div class="relative group px-2">
+      <div class="relative group px-2 mt-3">
         <span class="absolute left-6 top-1/2 -translate-y-1/2 text-stone-500 group-focus-within:text-amber-400 transition-colors">
           <Search class="size-4" />
         </span>

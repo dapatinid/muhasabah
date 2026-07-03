@@ -244,7 +244,7 @@ const formatRelativeTime = (dateString: string) => {
         <Transition name="drawer">
             <div v-if="activeChat" class="fixed inset-y-0 right-0 w-full sm:w-[400px] bg-stone-900 sm:border-l border-stone-800 z-[60] flex flex-col shadow-2xl">
                 
-                <div class="h-16 px-4 flex items-center gap-3 border-b border-stone-800 bg-stone-900/90 backdrop-blur-sm shrink-0">
+                <div class="h-14 pt-1 px-4 flex items-center gap-3 border-b border-stone-800 bg-stone-900/90 backdrop-blur-sm shrink-0">
                     <button @click="closeChat" class="p-2 -ml-2 rounded-full hover:bg-stone-800 text-stone-400 transition">
                         <X class="size-5" />
                     </button>
