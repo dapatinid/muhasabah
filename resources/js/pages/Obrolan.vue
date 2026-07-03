@@ -145,17 +145,32 @@ const formatRelativeTime = (dateString: string) => {
     const now = new Date();
     const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
+    // 1. Logika untuk "barusan" (di bawah 60 detik)
     if (seconds < 60) return 'barusan';
+
+    // 2. Logika untuk "xx menit lalu" (di bawah 60 menit)
     const minutes = Math.floor(seconds / 60);
     if (minutes < 60) return `${minutes} menit lalu`;
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours} jam lalu`;
+
+    // 3. Selain kondisi di atas, format tanggal absolut (contoh: "2026 Juli 3, 10:23")
+    const hour = String(date.getHours()).padStart(2, '0');
+    const minute = String(date.getMinutes()).padStart(2, '0');
     
-    const days = Math.floor(hours / 24);
-    if (days == 1) return 'kemarin';
-    if (days < 7) return `${days} hari lalu`;
-    
-    return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+    // Ambil nama bulan dalam bahasa Indonesia secara manual
+    const months = [
+        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    const monthName = months[date.getMonth()];
+    const day = date.getDate();
+
+    // Jika tahun berbeda dengan tahun sekarang, tampilkan tahun di depan
+    if (date.getFullYear() !== now.getFullYear()) {
+        return `${date.getFullYear()} ${monthName} ${day}, ${hour}:${minute}`;
+    }
+
+    // Jika tahun sama, tahun disembunyikan
+    return `${monthName} ${day}, ${hour}:${minute}`;
 };
 </script>
 
