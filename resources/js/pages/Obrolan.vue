@@ -52,12 +52,15 @@ const sendMessage = () => {
         preserveState: true,
         only: ['messages', 'conversations'], // Update pesan & list preview inbox
         onSuccess: () => {
-            form.reset('body') // Kosongkan input
-            scrollToBottom()
+            form.reset('body') // Kosongkan input pesan
+            scrollToBottom()   // Scroll otomatis ke bawah
             
-            // Mengembalikan fokus kursor ke kolom ketik pesan secara instan
+            // Menggunakan nextTick ganda atau sedikit delay untuk memastikan 
+            // input sudah lepas dari kondisi 'disabled' sebelum memanggil .focus()
             nextTick(() => {
-                messageInput.value?.focus()
+                setTimeout(() => {
+                    messageInput.value?.focus()
+                }, 50)
             })
         }
     })
