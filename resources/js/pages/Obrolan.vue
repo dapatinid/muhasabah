@@ -295,7 +295,7 @@ const formatRelativeTime = (dateString: string) => {
                             v-model="form.body"
                             type="text" 
                             placeholder="Ketik pesan..."
-                            class="flex-1 bg-stone-800 border-none rounded-full px-4 py-2.5 text-sm text-white focus:ring-1 focus:ring-emerald-500"
+                            class="flex-1 bg-stone-800 border-none rounded-full px-4 py-2.5 text-sm text-white outline-none focus:outline-none focus:ring-1 focus:ring-emerald-500 [-webkit-tap-highlight-color:transparent] appearance-none"
                             :disabled="form.processing"
                         />
                         <button 
