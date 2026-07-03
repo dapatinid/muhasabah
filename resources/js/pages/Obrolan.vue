@@ -12,6 +12,8 @@ const props = defineProps<{
 }>()
 
 const messagesContainer = ref<HTMLElement | null>(null)
+// Buat referensi DOM untuk elemen input chat
+const messageInput = ref<HTMLInputElement | null>(null)
 
 // 1. Inisialisasi Inertia Form
 const form = useForm({
@@ -24,7 +26,11 @@ const openChat = (conversation: any) => {
         preserveState: true,  
         preserveScroll: true, 
         only: ['activeChat', 'messages', 'conversations'], // SANGAT PENTING: Tambahkan 'conversations' di sini
-        onSuccess: () => scrollToBottom()
+        onSuccess: () => {
+            scrollToBottom()
+            // Berikan auto focus ke input saat laci obrolan dibuka
+            nextTick(() => messageInput.value?.focus())
+        }
     })
 }
 
@@ -48,6 +54,11 @@ const sendMessage = () => {
         onSuccess: () => {
             form.reset('body') // Kosongkan input
             scrollToBottom()
+            
+            // Mengembalikan fokus kursor ke kolom ketik pesan secara instan
+            nextTick(() => {
+                messageInput.value?.focus()
+            })
         }
     })
 }
@@ -62,7 +73,10 @@ const scrollToBottom = async () => {
 
 // Scroll otomatis jika URL diakses dengan ?chat=xxx (dari Tokoh.vue)
 onMounted(() => {
-    if (props.activeChat) scrollToBottom()
+    if (props.activeChat) {
+        scrollToBottom()
+        nextTick(() => messageInput.value?.focus())
+    }
 })
 
 // Opsional: Pantau perubahan pesan jika di-refresh
@@ -73,7 +87,6 @@ watch(() => props.messages, () => {
 
 // --- SETUP SUPABASE ---
 const page = usePage()
-// Gunakan import.meta.env untuk membaca variabel VITE_ di Vue
 const supabase = createClient(
     import.meta.env.VITE_SUPABASE_URL,
     import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -82,13 +95,10 @@ const supabase = createClient(
 let realtimeChannel = null;
 
 onMounted(() => {
-    // Scroll ke bawah jika ada chat aktif
     if (props.activeChat) scrollToBottom()
 
-    // Ambil ID user yang sedang login untuk memfilter notifikasi
     const authUserId = String(page.props.auth.user.id)
 
-    // Mulai Mendengarkan (Subscribe) ke Supabase
     realtimeChannel = supabase
         .channel('public:notifications')
         .on(
@@ -97,21 +107,18 @@ onMounted(() => {
                 event: 'INSERT',
                 schema: 'public',
                 table: 'notifications',
-                filter: `audience=eq.${authUserId}` // SANGAT PENTING: Hanya dengarkan pesan untuk user ini
+                filter: `audience=eq.${authUserId}`
             },
             (payload) => {
                 const newNotif = payload.new
 
-                // Jika tipe notifikasinya adalah pesan baru
                 if (newNotif.type === 'message.new') {
                     
-                    // Tarik data terbaru dari Laravel secara gaib (tanpa refresh browser)
                     router.reload({
-                        only: ['messages', 'conversations'], // Update isi laci chat DAN list inbox luar
+                        only: ['messages', 'conversations'],
                         preserveState: true,
                         preserveScroll: true,
                         onSuccess: () => {
-                            // Jika laci obrolan sedang terbuka dan pesan itu dari lawan bicara di laci ini, scroll ke bawah
                             if (props.activeChat && props.activeChat.id == newNotif.data.conversation_id) {
                                 scrollToBottom()
                             }
@@ -124,7 +131,6 @@ onMounted(() => {
         .subscribe()
 })
 
-// Bersihkan memori jaringan jika pengguna keluar dari halaman obrolan
 onUnmounted(() => {
     if (realtimeChannel) {
         supabase.removeChannel(realtimeChannel)
@@ -175,7 +181,6 @@ const formatRelativeTime = (dateString: string) => {
                     @click="openChat(conv)"
                     :class="[
                         'flex items-center gap-4 p-4 border rounded-2xl cursor-pointer transition-colors',
-                        // Jika ada pesan belum dibaca, berikan background yang sedikit berbeda/lebih tegas
                         conv.unread_count > 0 
                             ? 'bg-emerald-950/20 border-emerald-800/40 hover:bg-emerald-950/30' 
                             : 'bg-stone-900 border-stone-800 hover:bg-stone-800'
@@ -183,7 +188,6 @@ const formatRelativeTime = (dateString: string) => {
                 >
                     <div class="size-12 bg-stone-800 rounded-full flex items-center justify-center shrink-0 relative">
                         <span class="text-stone-400 font-bold">{{ conv.user.name.charAt(0) }}</span>
-                        
                         <span v-if="conv.unread_count > 0" class="absolute top-0 right-0 size-3 bg-emerald-500 rounded-full border-2 border-stone-900"></span>
                     </div>
                     
@@ -192,13 +196,11 @@ const formatRelativeTime = (dateString: string) => {
                             <h3 
                                 :class="[
                                     'text-sm truncate',
-                                    // Jika belum dibaca, nama lawan bicara menjadi lebih tebal (bold)
                                     conv.unread_count > 0 ? 'font-black text-white' : 'font-bold text-stone-200'
                                 ]"
                             >
                                 {{ conv.user.name }}
                             </h3>
-                            
                             <span class="text-[10px] text-stone-500 shrink-0">
                                 {{ conv.last_message ? new Date(conv.last_message.created_at).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}) : '' }}
                             </span>
@@ -208,7 +210,6 @@ const formatRelativeTime = (dateString: string) => {
                             <p 
                                 :class="[
                                     'text-xs truncate flex-1',
-                                    // Teks preview menjadi lebih terang jika belum dibaca
                                     conv.unread_count > 0 ? 'text-stone-200 font-semibold' : 'text-stone-400'
                                 ]"
                             >
@@ -241,7 +242,7 @@ const formatRelativeTime = (dateString: string) => {
                     <div 
                         v-for="msg in messages" :key="msg.id"
                         :class="[
-                            'flex flex-col gap-1 max-w-[75%]', // Tambahkan flex-col agar bisa menumpuk waktu
+                            'flex flex-col gap-1 max-w-[75%]',
                             msg.sender_id == activeChat.user.id 
                                 ? 'self-start mr-auto' 
                                 : 'self-end ml-auto'
@@ -272,6 +273,7 @@ const formatRelativeTime = (dateString: string) => {
                 <div class="p-3 bg-stone-900 border-t border-stone-800 shrink-0">
                     <form @submit.prevent="sendMessage" class="flex gap-2">
                         <input 
+                            ref="messageInput"
                             v-model="form.body"
                             type="text" 
                             placeholder="Ketik pesan..."
