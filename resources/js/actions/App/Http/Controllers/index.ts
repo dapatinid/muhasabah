@@ -13,6 +13,7 @@ import MessageController from './MessageController'
 import LingkaranController from './LingkaranController'
 import MasjidController from './MasjidController'
 import BannerController from './BannerController'
+import Admin from './Admin'
 import WebhookController from './WebhookController'
 import Settings from './Settings'
 
@@ -32,6 +33,7 @@ const Controllers = {
     LingkaranController: Object.assign(LingkaranController, LingkaranController),
     MasjidController: Object.assign(MasjidController, MasjidController),
     BannerController: Object.assign(BannerController, BannerController),
+    Admin: Object.assign(Admin, Admin),
     WebhookController: Object.assign(WebhookController, WebhookController),
     Settings: Object.assign(Settings, Settings),
 }

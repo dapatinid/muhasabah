@@ -241,10 +241,10 @@ onBeforeUnmount(() => { editor.value?.destroy() })
 </script>
 
 <template>
-  <div v-if="editor" class="border rounded-2xl overflow-hidden bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800">
+  <div v-if="editor" class="border rounded-2xl bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800">
     
     <!-- Toolbar -->
-    <div class="flex flex-wrap items-center gap-1 p-2 bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-100 dark:border-zinc-800">
+    <div class="sticky top-0 z-10 flex flex-wrap items-center gap-1 p-2 bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-100 dark:border-zinc-800 rounded-t-2xl">
 
       <!-- Font Size -->
       <div class="flex items-center bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 p-0.5 shadow-sm">

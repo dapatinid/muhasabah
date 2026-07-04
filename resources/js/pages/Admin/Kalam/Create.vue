@@ -53,13 +53,10 @@ const breadcrumbs = [
 
     <div class="py-10 px-4 max-w-4xl mx-auto">
       <div class="flex items-center gap-4 mb-8">
-        <Link href="/admin/kalam" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500">
-          <ArrowLeft class="size-5" />
-        </Link>
         <h1 class="text-3xl font-bold tracking-tight">Tulis Kalam Baru</h1>
       </div>
 
-      <form @submit.prevent="submit" class="space-y-8 bg-white dark:bg-zinc-900 border p-8 rounded-3xl shadow-sm">
+      <form @submit.prevent="submit" class="space-y-8 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 rounded-3xl shadow-sm">
         
         <!-- Judul -->
         <div class="space-y-2">

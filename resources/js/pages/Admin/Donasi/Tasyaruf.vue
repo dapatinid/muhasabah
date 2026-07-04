@@ -51,9 +51,6 @@ const total_tasyaruf = computed(() => {
     <div class="py-10 px-4 w-full mx-auto space-y-8">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
-                <Link href="/admin/donasi" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-amber-600 transition-colors">
-                    <ArrowLeft class="size-5" />
-                </Link>
                 <div>
                     <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Penyaluran Dana (Tasyaruf)</h1>
                     <p class="text-sm text-zinc-500">Log historis pencairan operasional dan penyaluran kemanfaatan dana.</p>
@@ -80,7 +77,7 @@ const total_tasyaruf = computed(() => {
         </div>
 
         <!-- SALDO INFO & BUTTON PENCATATAN -->
-        <div class="p-6 bg-zinc-900 border border-zinc-800 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+        <div class="p-6 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
             <div>
                 <span class="text-xs text-zinc-500 block">Saldo vs Tasyaruf</span>
                 <span class="text-base sm:text-xl md:text-2xl font-black text-blue-500">{{ formatIDR(donasi.saldo) }}</span>

@@ -184,7 +184,7 @@ onUnmounted(() => {
 
             <div class="min-w-0">
               <h3 class="font-bold text-white text-sm truncate group-hover:text-emerald-400 transition-colors">{{ user.name }}</h3>
-              <p class="text-xs text-stone-400 mt-0.5 truncate">{{ user.level || 'Anggota' }} <span class="mx-1">•</span> {{ user.city?.name?.replace('KABUPATEN', 'KAB.') || 'Indonesia'}}</p>
+              <p :class="user.level === 'Banned' || user.level === 'Suspend' ? 'text-red-400' : 'text-stone-400'" class="text-xs mt-0.5 truncate">{{ user.level || 'Anggota' }} <span class="mx-1">•</span> {{ user.city?.name?.replace('KABUPATEN', 'KAB.') || 'Indonesia'}}</p>
               <div class="flex flex-nowrap gap-1.5 mt-2 overflow-auto no-scrollbar">
                 <template v-if="pisahkanClass(user.class).length > 0">
                   <span
@@ -284,14 +284,14 @@ onUnmounted(() => {
 
     </div>
 
-    <div class="fixed bottom-29 max-w-xl mx-auto inset-x-0 z-101 pointer-events-none">
+    <div class="fixed bottom-31 max-w-xl mx-auto inset-x-0 z-101 pointer-events-none">
       <div class="absolute right-5 pointer-events-auto flex flex-col gap-3">
         
         <Link 
             href="/obrolan"
-            class="relative size-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full flex items-center justify-center shadow-lg shadow-emerald-600/20 transition-all pointer-events-auto"
+            class="relative size-12 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full flex items-center justify-center shadow-lg shadow-emerald-600/20 transition-all pointer-events-auto"
         >
-            <MessageCircle class="size-4" />
+            <MessageCircle class="size-6" />
 
             <span 
                 v-if="unreadChatsCount > 0"

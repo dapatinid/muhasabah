@@ -175,14 +175,14 @@ const formatRelativeTime = (dateString: string) => {
         <div class="fixed top-0 max-w-xl mx-auto inset-x-0 z-50 pointer-events-none">
             <div class="absolute w-full pointer-events-auto gap-3">
                 
-                    <h1 class="h-12 text-white mb-4 pt-1 px-3 flex items-center justify-center gap-3 bg-stone-900 border-stone-800 border-b z-60 shadow-2xl">
+                    <h1 class="h-14 text-white mb-4 pt-1 px-3 flex items-center justify-center gap-3 bg-stone-900 border-stone-800 border-b z-60 shadow-2xl">
                         <span class="text-xl font-bold">Pesan Masuk</span>
                     </h1>
 
             </div>
         </div>          
 
-        <div class="max-w-2xl mx-auto min-h-screen pb-24 pt-22 -mt-21">
+        <div class="max-w-2xl mx-auto min-h-screen pb-24 mt-2">
 
             <div v-if="conversations.length == 0" class="px-3 text-center text-stone-500 py-10">
                 Belum ada obrolan.
@@ -245,10 +245,10 @@ const formatRelativeTime = (dateString: string) => {
             <div v-if="activeChat" class="fixed inset-y-0 right-0 w-full sm:w-[400px] bg-stone-900 sm:border-l border-stone-800 z-[60] flex flex-col shadow-2xl">
                 
                 <div class="h-14 pt-1 px-4 flex items-center gap-3 border-b border-stone-800 bg-stone-900/90 backdrop-blur-sm shrink-0">
-                    <button @click="closeChat" class="p-2 -ml-2 rounded-full hover:bg-stone-800 text-stone-400 transition">
+                    <div class="font-bold text-stone-200 truncate">{{ activeChat.user.name }}</div>
+                    <button @click="closeChat" class="p-2 ms-auto rounded-full hover:bg-stone-600 bg-stone-800 text-stone-400 transition">
                         <X class="size-5" />
                     </button>
-                    <div class="font-bold text-stone-200 truncate">{{ activeChat.user.name }}</div>
                 </div>
 
                 <div ref="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-3 bg-[#0a0a0a]">

@@ -187,9 +187,6 @@ const customPagination = computed(() => {
         <!-- HEADER SECTION -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
-                <Link href="/admin/donasi" class="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-amber-600 transition-colors">
-                    <ArrowLeft class="size-5" />
-                </Link>
                 <div>
                     <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Arus Dana Masuk</h1>
                     <p class="text-sm text-zinc-500">Log transaksi masuk baik Donasi Pokok maupun dana Tipping Pemeliharaan.</p>

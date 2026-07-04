@@ -325,7 +325,7 @@ penyelenggaraAcara.form = penyelenggaraAcaraForm
 
 /**
 * @see \App\Http\Controllers\UjiKelayakanController::store
-* @see app/Http/Controllers/UjiKelayakanController.php:12
+* @see app/Http/Controllers/UjiKelayakanController.php:64
 * @route '/pendaftaran/uji-kelayakan'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -340,7 +340,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\UjiKelayakanController::store
-* @see app/Http/Controllers/UjiKelayakanController.php:12
+* @see app/Http/Controllers/UjiKelayakanController.php:64
 * @route '/pendaftaran/uji-kelayakan'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -349,7 +349,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\UjiKelayakanController::store
-* @see app/Http/Controllers/UjiKelayakanController.php:12
+* @see app/Http/Controllers/UjiKelayakanController.php:64
 * @route '/pendaftaran/uji-kelayakan'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -359,7 +359,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\UjiKelayakanController::store
-* @see app/Http/Controllers/UjiKelayakanController.php:12
+* @see app/Http/Controllers/UjiKelayakanController.php:64
 * @route '/pendaftaran/uji-kelayakan'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -369,7 +369,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\UjiKelayakanController::store
-* @see app/Http/Controllers/UjiKelayakanController.php:12
+* @see app/Http/Controllers/UjiKelayakanController.php:64
 * @route '/pendaftaran/uji-kelayakan'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

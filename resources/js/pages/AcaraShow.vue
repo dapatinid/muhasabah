@@ -805,7 +805,7 @@ function closeDropdowns() {
             </span>
           </Link>
           
-          <div v-else class="w-full bg-stone-800 text-stone-500 font-bold py-3.5 rounded-2xl text-center text-xs uppercase tracking-wider border border-stone-700/50">
+          <div v-else class="w-full bg-stone-800 text-stone-500 font-bold px-3 py-3.5 rounded-2xl text-center text-xs uppercase tracking-wider border border-stone-700/50">
             ❌ {{ getStatusRegistrasiPendaftaran.teks }}
           </div>
         </div>   

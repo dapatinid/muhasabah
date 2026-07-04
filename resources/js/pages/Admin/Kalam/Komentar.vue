@@ -33,10 +33,6 @@ const goToPagination = (url: string | null) => {
 
         <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-100 dark:border-zinc-800 pb-6">
                 <div>
-                    <Link href="/admin/kalam" class="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 mb-2 transition-colors">
-                        <ArrowLeft class="size-4" />
-                        Kembali ke Manajemen Kalam
-                    </Link>
                     <h1 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
                        Komentar Publik
                     </h1>

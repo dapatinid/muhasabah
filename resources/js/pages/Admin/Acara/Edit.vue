@@ -192,9 +192,6 @@ const submit = () => {
     <div class="pt-8 px-4 w-full mx-auto max-w-5xl">   
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-100 dark:border-zinc-800 pb-5">
             <div class="flex items-center gap-3">
-                <Link href="/admin/acara" class="p-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                    <ArrowLeft class="w-4 h-4" />
-                </Link>
                 <div>
                     <h1 class="text-xl font-bold tracking-tight">Edit Agenda Acara</h1>
                     <p class="text-xs text-zinc-400">Sesuaikan info agenda, paket investasi varian kursi, atau pengelolaan donasi.</p>

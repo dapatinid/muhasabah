@@ -245,7 +245,7 @@ function closeModal() {
 
     <div 
       v-if="isModalOpen && selectedAcara" 
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/80 backdrop-blur-md transition-all animate-in fade-in duration-200"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/30 backdrop-blur-md transition-all animate-in fade-in duration-200"
       @click.self="closeModal"
     >
       <div class="bg-stone-900 border border-stone-800 w-full max-w-md rounded-3xl overflow-hidden shadow-2xl relative flex flex-col max-h-[80vh]">

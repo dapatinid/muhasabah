@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { Award, BookOpen, Calendar, CircleStar, FolderGit2, GalleryThumbnails, HeartHandshake, LayoutGrid, Logs, MessageCircle, MoonStar, Smile, Star, Target, Ticket, Wallet } from 'lucide-vue-next';
+import { Award, BookOpen, Calendar, CircleStar, FolderGit2, GalleryThumbnails, HeartHandshake, LayoutGrid, Logs, MessageCircle, MoonStar, ShieldCheck, Smile, Star, Target, Ticket, Users, Wallet } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -117,7 +117,17 @@ const mainNavItemsControlPanel = computed(() => {
                 title: 'Rapor Riyadhoh',
                 href: '/rapor-riyadhoh',
                 icon: Award,
-            }
+            },
+            {
+                title: 'Uji Kelayakan',
+                href: '/admin/uji-kelayakan',
+                icon: ShieldCheck,
+            },
+            {
+                title: 'Kelola Pengguna',
+                href: '/admin/pengguna',
+                icon: Users,
+            },
         );
     }      
     return items;  

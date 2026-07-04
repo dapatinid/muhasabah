@@ -66,13 +66,6 @@ function submit() {
                 </div>
             </div>
 
-            <Link 
-                href="/admin/dashboard" 
-                class="inline-flex items-center gap-2 text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50 transition-colors"
-            >
-                <ArrowLeft class="size-4" />
-                Kembali ke Dashboard
-            </Link>
         </div>
 
         <form @submit.prevent="submit" class="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-3xl p-6 shadow-xs space-y-6">

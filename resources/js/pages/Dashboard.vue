@@ -77,13 +77,13 @@ const props = defineProps<{
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="md:col-span-2 p-6 rounded-3xl bg-zinc-900 text-zinc-100 shadow-2xl shadow-zinc-900/20">
+            <div class="md:col-span-2 p-6 rounded-3xl bg-zinc-100 dark:bg-zinc-900 text-foreground shadow-2xl shadow-zinc-900/20">
                 <h4 class="font-bold mb-2">Pusat Kendali Cepat</h4>
                 <p class="text-sm text-zinc-400 mb-6">Kelola data utama Anda dengan cepat melalui shortcut di bawah.</p>
                 <div class="flex gap-3">
-                    <Link href="/admin/kalam" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-sm font-medium transition-all">Kelola Kalam</Link>
-                    <Link href="/admin/donasi" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-sm font-medium transition-all">Kelola Donasi</Link>
-                    <Link href="/admin/acara" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-sm font-medium transition-all">Kelola Acara</Link>
+                    <Link href="/admin/kalam" class="px-4 py-2 bg-foreground/10 hover:bg-foreground/20 rounded-xl border text-sm font-medium transition-all">Kelola Kalam</Link>
+                    <Link href="/admin/donasi" class="px-4 py-2 bg-foreground/10 hover:bg-foreground/20 rounded-xl border text-sm font-medium transition-all">Kelola Donasi</Link>
+                    <Link href="/admin/acara" class="px-4 py-2 bg-foreground/10 hover:bg-foreground/20 rounded-xl border text-sm font-medium transition-all">Kelola Acara</Link>
                 </div>
             </div>
             

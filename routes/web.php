@@ -4,6 +4,7 @@ use App\Http\Controllers\BannerController;
 use App\Http\Controllers\DonasiController;
 use App\Http\Controllers\KalamController;
 use App\Http\Controllers\AcaraController; // Controller Baru
+use App\Http\Controllers\Admin\UserAdminController;
 use App\Http\Controllers\AktifitasController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\DashboardController;
@@ -204,6 +205,8 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
             Route::get('/admin/banner', [BannerController::class, 'index'])->name('banner.index');
 
             Route::middleware(['super.admin'])->group(function () {
+                Route::get('/admin/uji-kelayakan', [UjiKelayakanController::class, 'index'])->name('uji-kelayakan.index');
+
                 Route::delete('/admin/lingkaran/{lingkaran:slug}', [LingkaranController::class, 'destroy'])->name('lingkaran.destroy'); 
                 Route::delete('/admin/masjid/{masjid:slug}', [MasjidController::class, 'destroy'])->name('masjid.destroy'); 
                     
@@ -219,7 +222,14 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
                 Route::get('/log-riyadhoh', [LaporanRiyadhohController::class, 'logRiyadhoh'])->name('log-riyadhoh');
                 Route::patch('/log-riyadhoh/{id}', [LaporanRiyadhohController::class, 'updateLog'])->name('log-riyadhoh.update');
                 Route::delete('/log-riyadhoh/{id}', [LaporanRiyadhohController::class, 'deleteLog'])->name('log-riyadhoh.destroy');
-                Route::get('/rapor-riyadhoh', [LaporanRiyadhohController::class, 'raporRiyadhoh'])->name('rapor-riyadhoh');        
+                Route::get('/rapor-riyadhoh', [LaporanRiyadhohController::class, 'raporRiyadhoh'])->name('rapor-riyadhoh');  
+                
+                // User Management
+                Route::get('admin/pengguna', [UserAdminController::class, 'index'])->name('admin.pengguna.index');
+                Route::get('admin/pengguna/create', [UserAdminController::class, 'create'])->name('admin.pengguna.create');
+                Route::post('admin/pengguna', [UserAdminController::class, 'store'])->name('admin.pengguna.store');
+                Route::get('admin/pengguna/{user}/edit', [UserAdminController::class, 'edit'])->name('admin.pengguna.edit');
+                Route::put('admin/pengguna/{user}', [UserAdminController::class, 'update'])->name('admin.pengguna.update');
             });
         });
 
