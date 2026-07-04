@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick, watch, computed } from 'vue' // Tambahkan computed
 import { Head, router, useForm, usePage, Link } from '@inertiajs/vue3'
 import { createClient } from '@supabase/supabase-js'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
-import { ArrowLeft, Send, X } from 'lucide-vue-next'
+import { ArrowLeft, Send, X, Search } from 'lucide-vue-next'
 
 const props = defineProps<{
     conversations: any[];
@@ -166,6 +166,30 @@ const formatRelativeTime = (dateString: string) => {
     // Jika tahun sama, tahun disembunyikan
     return `${monthName} ${day}, ${hour}:${minute}`;
 };
+
+// State untuk pencarian
+const isSearching = ref(false)
+const searchQuery = ref('')
+
+// Filter obrolan berdasarkan nama user secara frontend
+const filteredConversations = computed(() => {
+    if (!searchQuery.value.trim()) {
+        return props.conversations
+    }
+    return props.conversations.filter(conv => 
+        conv.user?.name?.toLowerCase().includes(searchQuery.value.toLowerCase())
+    )
+})
+
+// Fungsi untuk menutup mode pencarian & reset filter
+const clearSearch = () => {
+    searchQuery.value = ''
+    isSearching.value = false
+}
+
+const vFocusOnMount = {
+    mounted: (el: HTMLInputElement) => el.focus()
+}
 </script>
 
 <template>
@@ -175,23 +199,41 @@ const formatRelativeTime = (dateString: string) => {
         <div class="fixed top-0 max-w-xl mx-auto inset-x-0 z-50 pointer-events-none">
             <div class="absolute w-full pointer-events-auto gap-3">
                 
-                    <h1 class="h-14 text-white mb-4 pt-1 px-3 flex items-center justify-center gap-3 bg-stone-900 border-stone-800 border-b z-60 shadow-2xl">
-                        <span class="text-xl font-bold">Pesan Masuk</span>
-                    </h1>
+                <div v-if="isSearching" class="h-14 bg-stone-900 border-stone-800 border-b z-60 shadow-2xl flex items-center px-5 pt-1 gap-2">
+                    <Search class="size-5 text-stone-400 shrink-0" />
+                    <input 
+                        v-model="searchQuery"
+                        type="text" 
+                        placeholder="Cari nama..." 
+                        class="ms-2 flex-1 bg-transparent border-none text-white text-sm outline-none focus:outline-none placeholder-stone-500"
+                        v-focus-on-mount
+                    />
+                    <button @click="clearSearch" class="p-1.5 rounded-full hover:bg-stone-800 text-stone-400 transition">
+                        <X class="size-4" />
+                    </button>
+                </div>
+
+                <h1 v-else class="h-14 text-white mb-4 pt-1 px-3 flex items-center justify-center relative bg-stone-900 border-stone-800 border-b z-60 shadow-2xl">
+                    <button @click="isSearching = true" class="absolute left-3 p-2 rounded-full hover:bg-stone-800 text-stone-400 transition">
+                        <Search class="size-5" />
+                    </button>
+                    
+                    <span class="text-xl font-bold">Obrolan</span>
+                </h1>
 
             </div>
-        </div>          
+        </div>       
 
-        <div class="max-w-2xl mx-auto min-h-screen pb-24 mt-2">
+        <div class="max-w-2xl mx-auto mt-2">
 
-            <div v-if="conversations.length == 0" class="px-3 text-center text-stone-500 py-10">
-                Belum ada obrolan.
+            <div v-if="filteredConversations.length == 0" class="px-3 text-center text-stone-500 py-10">
+                {{ searchQuery ? 'Nama tidak ditemukan.' : 'Belum ada obrolan.' }}
             </div>
 
             <div v-else class="px-3 space-y-3">
                 <div 
-                    v-for="conv in conversations" :key="conv.id"
-                    @click="openChat(conv)"
+                    v-for="conv in filteredConversations" :key="conv.id"
+                            @click="openChat(conv)"
                     :class="[
                         'flex items-center gap-4 p-4 border rounded-2xl cursor-pointer transition-colors',
                         conv.unread_count > 0 
@@ -200,9 +242,16 @@ const formatRelativeTime = (dateString: string) => {
                     ]"
                 >
                     <div class="size-12 bg-stone-800 rounded-full flex items-center justify-center shrink-0 relative">
+                        <img v-if="conv.user.avatar" :src="`/storage/${conv.user.avatar}`"
+                          class=" rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
+                        <img v-else :src="conv.user.gender === 'P' ? `/avatar_cewe.png` : `/avatar_cowo.png`"
+                          class=" rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
+                    </div>
+                    <!-- <div class="size-12 bg-stone-800 rounded-full flex items-center justify-center shrink-0 relative">
                         <span class="text-stone-400 font-bold">{{ conv.user.name.charAt(0) }}</span>
                         <span v-if="conv.unread_count > 0" class="absolute top-0 right-0 size-3 bg-emerald-500 rounded-full border-2 border-stone-900"></span>
-                    </div>
+                    </div> -->
+                        
                     
                     <div class="flex-1 min-w-0">
                         <div class="flex justify-between items-baseline gap-2">
@@ -244,7 +293,13 @@ const formatRelativeTime = (dateString: string) => {
         <Transition name="drawer">
             <div v-if="activeChat" class="fixed inset-y-0 right-0 w-full sm:w-[400px] bg-stone-900 sm:border-l border-stone-800 z-[60] flex flex-col shadow-2xl">
                 
-                <div class="h-14 pt-1 px-4 flex items-center gap-3 border-b border-stone-800 bg-stone-900/90 backdrop-blur-sm shrink-0">
+                <div class="h-14 pt-1 sm:px-4 px-2 flex items-center gap-2 border-b border-stone-800 bg-stone-900/90 backdrop-blur-sm shrink-0">
+                    <div class="size-10 bg-stone-800 rounded-full flex items-center justify-center shrink-0 relative sm:hidden">
+                        <img v-if="activeChat.user.avatar" :src="`/storage/${activeChat.user.avatar}`"
+                          class=" rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
+                        <img v-else :src="activeChat.user.gender === 'P' ? `/avatar_cewe.png` : `/avatar_cowo.png`"
+                          class=" rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
+                    </div>
                     <div class="font-bold text-stone-200 truncate">{{ activeChat.user.name }}</div>
                     <button @click="closeChat" class="p-2 ms-auto rounded-full hover:bg-stone-600 bg-stone-800 text-stone-400 transition">
                         <X class="size-5" />
