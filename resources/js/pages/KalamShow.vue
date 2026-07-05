@@ -233,6 +233,39 @@ function closeDropdowns() {
   activeDropdownId.value = null
 }
 
+// State untuk mengontrol visibilitas dropdown
+const showAuthorDropdown = ref(false);
+
+// Mengumpulkan semua data penulis (utama & relasi) untuk dropdown
+const authorList = computed(() => {
+  if (props.kalam.is_anonymous) return [];
+
+  const list = [];
+  
+  // 1. Masukkan penulis utama
+  if (props.kalam.user) {
+    list.push(props.kalam.user);
+  }
+
+  // 2. Masukkan penulis tambahan dari relasi
+  if (props.kalam.users && props.kalam.users.length > 0) {
+    props.kalam.users.forEach(item => {
+      // Cerdas mendeteksi: Jika 'item' memiliki 'name', berarti itu langsung objek user. 
+      // Jika tidak, kita coba cari di dalam 'item.user'
+      const authorData = item.name ? item : item.user;
+      
+      if (authorData && authorData.id) {
+        // Mencegah duplikasi jika penulis utama terdaftar juga di relasi
+        if (!list.find(u => u.id === authorData.id)) {
+          list.push(authorData);
+        }
+      }
+    });
+  }
+  
+  return list;
+});
+
 </script>
 
 <template>
@@ -282,8 +315,44 @@ function closeDropdowns() {
 
         <div class="flex flex-wrap gap-4 text-xs text-stone-500">
           <span class="flex items-center gap-1.5">
-            <User class="size-3.5" />
-            {{ formattedAuthors }}
+            <User class="size-3.5 shrink-0" />
+            <div class="relative flex items-center">
+              <button
+                type="button"
+                @click="showAuthorDropdown = !showAuthorDropdown"
+                @blur="setTimeout(() => showAuthorDropdown = false, 200)"
+                :disabled="kalam.is_anonymous"
+                class="text-left font-medium text-emerald-500 hover:text-emerald-400 transition-colors focus:outline-none"
+                :class="{ 'text-stone-400 hover:text-stone-400 cursor-default': kalam.is_anonymous }"
+              >
+                {{ formattedAuthors }}
+              </button>
+
+              <transition 
+                enter-active-class="transition ease-out duration-100" 
+                enter-from-class="transform opacity-0 scale-95" 
+                enter-to-class="transform opacity-100 scale-100" 
+                leave-active-class="transition ease-in duration-75" 
+                leave-from-class="transform opacity-100 scale-100" 
+                leave-to-class="transform opacity-0 scale-95"
+              >
+                <div
+                  v-if="showAuthorDropdown && !kalam.is_anonymous"
+                  class="absolute left-0 top-full mt-2 w-48 bg-stone-900 border border-stone-700 rounded-lg shadow-xl z-50 overflow-hidden"
+                >
+                  <div class="py-1">
+                    <Link
+                      v-for="author in authorList"
+                      :key="author.id"
+                      :href="`/tokoh/${author.slug}`"
+                      class="block px-4 py-2 text-sm text-stone-300 hover:bg-stone-800 hover:text-amber-400 transition-colors"
+                    >
+                      {{ author.name }}
+                    </Link>
+                  </div>
+                </div>
+              </transition>
+            </div>
           </span>
           <span class="flex items-center gap-1.5">
             <CalendarDays class="size-3.5" />

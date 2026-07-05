@@ -389,7 +389,7 @@ class DonasiController extends Controller
 
         return Inertia::render('DonasiShow', [
             'donasi' => $donasi->load([
-                'user:id,name', 
+                'user:id,name,slug', 
                 'users',
                 'komentars' => function($q) {
                     $q->with('user:id,name')->latest();

@@ -483,7 +483,7 @@ class AcaraController extends Controller
         }], 'nominal');
 
         $acara->load([
-            'user:id,name', 
+            'user:id,name,slug', 
             'users',
             'variants',
             'komentars' => function($q) { 

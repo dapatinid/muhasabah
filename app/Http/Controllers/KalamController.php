@@ -183,7 +183,7 @@ class KalamController extends Controller
     public function show(Kalam $kalam)
     {
         $kalam->load([
-            'user:id,name',
+            'user:id,name,slug',
             'users',
             'komentars' => function ($q) {
                 $q->with('user:id,name')->latest();
