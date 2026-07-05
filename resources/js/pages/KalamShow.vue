@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { Head, Link, useForm } from '@inertiajs/vue3'
 import { computed, ref, onMounted } from 'vue'
-import { CalendarDays, Share2, Tag, User, SendHorizontal, MessageSquare, MoreHorizontal, AlertTriangle } from 'lucide-vue-next'
+import { CalendarDays, Share2, Tag, User, SendHorizontal, MessageSquare, MoreHorizontal, AlertTriangle, X } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
+import Separator from '@/components/ui/separator/Separator.vue'
 
 const props = defineProps<{
   meta?: {
@@ -341,6 +342,15 @@ const authorList = computed(() => {
                   class="absolute left-0 top-full mt-2 w-48 bg-stone-900 border border-stone-700 rounded-lg shadow-xl z-50 overflow-hidden"
                 >
                   <div class="py-1">
+                    <button 
+                      @click="showAuthorDropdown = false" 
+                      type="button"
+                      title="Tutup menu"
+                      class="w-full flex px-4 py-2 text-sm text-emerald-500 hover:text-emerald-400"
+                    >
+                      <span>Authors</span><span class="ms-auto"><X class="text-red-500 hover:text-red-300 w-4 h-4 stroke-[2.5]" /></span>
+                    </button>
+                    <Separator class="w-full h-px bg-stone-800 my-1" /> 
                     <Link
                       v-for="author in authorList"
                       :key="author.id"
