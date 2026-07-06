@@ -150,7 +150,7 @@ const getStatusWaktu = (tglMulai: string | null) => {
           href="/admin/acara/create" 
           class="inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm transition-all"
         >
-          <Plus class="size-5" /> Buat Acara
+          <Plus class="size-5" /> Acara
         </Link>
       </div>
 
@@ -168,7 +168,7 @@ const getStatusWaktu = (tglMulai: string | null) => {
         <div 
           v-for="acara in acaras.data" 
           :key="acara.id" 
-          class="group relative flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 hover:shadow-xl transition-all overflow-hidden"
+          class="group relative flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 hover:shadow-xl hover:border-indigo-200 dark:hover:border-indigo-900 transition-all overflow-hidden"
         >
           <div class="flex justify-between items-start mb-4">
             <span class="px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold uppercase tracking-widest">

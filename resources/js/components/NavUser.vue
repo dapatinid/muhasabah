@@ -18,6 +18,7 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
+const unreadChatsCount = computed(() => (page.props.unread_chats_count as number) ?? 0);
 
 // 1. Ambil setOpenMobile dari useSidebar
 const { isMobile, state, setOpenMobile } = useSidebar();
@@ -33,6 +34,7 @@ const handleUserMenuClick = (event: MouseEvent) => {
         setOpenMobile(false);
     }
 };
+
 </script>
 
 <template>
@@ -42,10 +44,16 @@ const handleUserMenuClick = (event: MouseEvent) => {
                 <DropdownMenuTrigger as-child>
                     <SidebarMenuButton
                         size="lg"
-                        class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                        class="relative data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                         data-test="sidebar-menu-button"
                     >
-                        <UserInfo :user="user" />
+                        <UserInfo :user="user" /> 
+                        <span
+                            v-if="unreadChatsCount > 0"
+                            class="absolute right-2 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-emerald-500 text-[10px] font-black text-stone-950"
+                        >
+                            {{ unreadChatsCount > 99 ? '99+' : unreadChatsCount }}
+                        </span>
                         <ChevronsUpDown class="ml-auto size-4" />
                     </SidebarMenuButton>
                 </DropdownMenuTrigger>

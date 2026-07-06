@@ -175,7 +175,7 @@ const getSisaHari = (tglSelesai: string | null, createdAt: string) => {
         <div 
           v-for="donasi in donasis.data" 
           :key="donasi.id" 
-          class="group relative flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 hover:shadow-xl transition-all overflow-hidden"
+          class="group relative flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 hover:shadow-xl hover:border-amber-200 dark:hover:border-amber-900 transition-all overflow-hidden"
         >
           <!-- Status & Actions -->
           <div class="flex justify-between items-start mb-4">

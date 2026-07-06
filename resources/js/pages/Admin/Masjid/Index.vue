@@ -50,7 +50,7 @@ function formatJenis(jenis: string) {
             </div>
             <Link href="/admin/masjid/create" class="w-full sm:w-auto">
                 <Button class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl gap-2 font-bold h-11 shadow-lg shadow-emerald-500/10">
-                    <Plus class="size-4" /> Tambah
+                    <Plus class="size-4" /> Masjid
                 </Button>
             </Link>
         </div>
