@@ -250,10 +250,10 @@ const playNotificationSound = () => {
 </script>
 
 <template>
-    <AppLayoutPublic >
+    <AppLayoutPublic>
         <Head title="Obrolan" />
 
-        <div class="fixed top-0 max-w-xl mx-auto inset-x-0 z-50 pointer-events-none">
+        <div class="mx-auto z-50 pointer-events-none -mt-16">
             <div class="absolute w-full pointer-events-auto gap-3">
                 
                 <div v-if="isSearching" class="h-14 bg-stone-900 border-stone-800 border-b z-60 shadow-2xl flex items-center px-5 pt-1 gap-2">
@@ -279,11 +279,9 @@ const playNotificationSound = () => {
                 </h1>
 
             </div>
-        </div>       
+        </div>           
 
-        <div class="h-2"></div> <!-- Spacer untuk header -->        
-
-        <div class="max-w-2xl mx-auto">
+        <div class="mx-auto mt-18">
 
             <div v-if="filteredConversations.length == 0" class="px-3 text-center text-stone-500 py-10">
                 {{ searchQuery ? 'Nama tidak ditemukan.' : 'Belum ada obrolan.' }}
