@@ -31,7 +31,24 @@ const supabase = createClient(
 
 let realtimeChannel: any = null
 
-// Fungsi untuk mengaktifkan pemantauan notifikasi chat global
+// ── 3. INISIALISASI AUDIO (HANYA SEKALI) ──────────────────────────────────────
+// Jangan lupa ubah '/suara-notif.mp3' sesuai dengan lokasi file suara Anda di folder public
+const notifAudio = typeof window !== 'undefined' ? new Audio('/suara-notif.mp3') : null;
+
+const playNotificationSound = () => {
+    if (!notifAudio) return;
+    
+    // Reset durasi audio ke 0 agar suara tidak bertumpuk jika ada pesan beruntun
+    notifAudio.currentTime = 0; 
+    
+    // Gunakan catch untuk mencegah error blank screen jika iOS memblokir autoplay 
+    // sebelum pengguna melakukan interaksi (klik/sentuh) di layar
+    notifAudio.play().catch((err) => {
+        console.warn("Autoplay audio dicegah oleh iOS/Browser:", err);
+    });
+};
+
+// ── 4. LISTENER NOTIFIKASI REAL-TIME GLOBAL ───────────────────────────────────
 const initRealtimeNotifications = () => {
   const authUserId = page.props.auth?.user ? String(page.props.auth.user.id) : null
   if (!authUserId) return
@@ -40,226 +57,37 @@ const initRealtimeNotifications = () => {
     .channel('public:notifications_global_layout')
     .on(
       'postgres_changes',
-      {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'notifications',
-        filter: `audience=eq.${authUserId}`
-      },
+      { event: 'INSERT', schema: 'public', table: 'messages' }, 
       (payload) => {
-        // Cek jika tipe notifikasi adalah pesan baru
-        if (payload.new.type === 'message.new') {
-          
-          // A. Selalu reload counter/state unread chat secara diam-diam agar badge counter di semua halaman sinkron
-          router.reload({ only: ['messages', 'conversations', 'unread_chats_count'] })
-
-          // B. Ambil detail konten pesan dari payload data notifications Anda
-          // (Sesuaikan key 'title' dan 'content' dengan nama kolom asli di tabel notifications Anda)
-          const senderName = payload.new.title || 'Pesan Baru'
-          const messageText = payload.new.content || 'Ada pesan baru masuk ke obrolan Anda.'
-
-          // C. Jangan tampilkan popup toast jika user sedang berada aktif di dalam halaman obrolan
-          if (window.location.pathname.startsWith('/obrolan')) {
-            return
-          }
-
-          // D. Tampilkan popup Sonner Toast secara instan
-          playNotificationSound() // Mainkan suara notifikasi
-          toast.success(senderName, {
-            description: messageText,
-            duration: 5000,
-            action: {
-              label: 'Buka',
-              onClick: () => router.get('/obrolan')
-            }
-          })
+        // FILTER 1: Jangan bunyi jika yang mengirim pesan adalah kita sendiri
+        if (String(payload.new.sender_id) === authUserId) {
+            return; 
         }
+
+        // FILTER 2: Jangan bunyi jika pengguna sedang berada di halaman obrolan
+        if (page.url.startsWith('/obrolan')) {
+            return;
+        }
+
+        // Jika lolos kedua filter di atas, bunyikan notifikasi dan tampilkan Toast!
+        playNotificationSound();
+        toast('Ada pesan baru masuk');
       }
     )
     .subscribe()
 }
 
-// ── History Helper ────────────────────────────────────────────────────────────
-const getHistory = (): { path: string; scrollY: number }[] => {
-  try {
-    return JSON.parse(localStorage.getItem('app_history') || '[]')
-  } catch {
-    return []
-  }
-}
-
-// ── Scroll Restore Helper ─────────────────────────────────────────────────────
-const restoreScroll = (targetY: number) => {
-  if (targetY <= 0) return
-  const start = Date.now()
-  const attempt = () => {
-    if (document.body.scrollHeight >= targetY + window.innerHeight || Date.now() - start > 1000) {
-      window.scrollTo({ top: targetY, behavior: 'instant' })
-    } else {
-      requestAnimationFrame(attempt)
-    }
-  }
-  requestAnimationFrame(attempt)
-}
-
-// ── Flags ─────────────────────────────────────────────────────────────────────
-const isNavigatingBack = ref(false)
-const isPopState = ref(false)
-
-// ── Tombol Back (in-app) ──────────────────────────────────────────────────────
-const handleBack = () => {
-  if (props.backHref) {
-    router.visit(props.backHref)
-    return
-  }
-
-  let history = getHistory()
-
-  if (history.length > 0) {
-    history = history.slice(0, -1)
-    localStorage.setItem('app_history', JSON.stringify(history))
-  }
-
-  const target      = history.length > 0 ? history[history.length - 1].path    : '/'
-  const targetScrollY = history.length > 0 ? history[history.length - 1].scrollY : 0
-
-  isNavigatingBack.value = true
-  router.visit(target, {
-    preserveScroll: false,
-    replace: true,
-    onFinish: () => {
-      restoreScroll(targetScrollY)
-      isNavigatingBack.value = false
-    }
-  })
-}
-
-// ── Tombol Back Browser (popstate) ───────────────────────────────────────────
-const handlePopState = () => {
-  isPopState.value = true
-
-  let history = getHistory()
-  if (history.length > 0) {
-    history = history.slice(0, -1)
-    localStorage.setItem('app_history', JSON.stringify(history))
-  }
-
-  const targetScrollY = history.length > 0 ? history[history.length - 1].scrollY : 0
-
-  router.visit(window.location.href, {
-    preserveScroll: false,
-    replace: true,
-    onFinish: () => {
-      restoreScroll(targetScrollY)
-      isPopState.value = false
-    }
-  })
-}
-
-// ── Flash Toast ───────────────────────────────────────────────────────────────
-const removeFinishListener = router.on('finish', () => {
-  const flash = page.props.flash as any
-  if (flash?.success) toast.success(flash.success)
-  else if (flash?.error) toast.error(flash.error)
-  else if (flash?.info) toast.info(flash.info)
-  if (flash) { flash.success = null; flash.error = null; flash.info = null }
-})
-
-// ── Rekam Scroll + Path sebelum navigasi ─────────────────────────────────────
-const removeBeforeListener = router.on('before', () => {
-  if (isNavigatingBack.value || isPopState.value) return
-
-  const currentPath = window.location.pathname + window.location.search
-  let history = getHistory()
-
-  if (history.length > 0 && history[history.length - 1].path === currentPath) {
-    history[history.length - 1].scrollY = window.scrollY
-  } else {
-    history.push({ path: currentPath, scrollY: window.scrollY })
-  }
-
-  if (history.length > 10) history = history.slice(-10)
-  localStorage.setItem('app_history', JSON.stringify(history))
-})
-
-// ── Lifecycle Hooks ───────────────────────────────────────────────────────────
+// ── 5. JALANKAN SAAT KOMPONEN DIMUAT (MOUNTED) ────────────────────────────────
 onMounted(() => {
-  window.addEventListener('popstate', handlePopState)
-  // Aktifkan channel real-time notifikasi chat global
-  initRealtimeNotifications()
-
-  // 🔔 Tambahkan ini untuk membuka gembok proteksi audio Safari iOS
-  document.addEventListener('click', unlockAudioForIOS, { passive: true })
-  document.addEventListener('touchstart', unlockAudioForIOS, { passive: true })  
+    initRealtimeNotifications()
 })
 
+// Jangan lupa bersihkan listener saat berpindah/menutup halaman untuk menghemat memori
 onUnmounted(() => {
-  window.removeEventListener('popstate', handlePopState)
-  removeFinishListener()
-  removeBeforeListener()
-  
-  // Bersihkan channel Supabase saat berganti layout utama agar tidak bocor memori
-  if (realtimeChannel) {
-    supabase.removeChannel(realtimeChannel)
-  }
-
-  // 🔔 Bersihkan juga listener audio jika user langsung keluar halaman sebelum sempat klik
-  document.removeEventListener('click', unlockAudioForIOS)
-  document.removeEventListener('touchstart', unlockAudioForIOS)
+    if (realtimeChannel) {
+        supabase.removeChannel(realtimeChannel)
+    }
 })
-
-// ── Hide/show header on scroll ────────────────────────────────────────────────
-const headerVisible = ref(true)
-let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0
-const THRESHOLD = 10
-
-function onScroll() {
-  const currentY = window.scrollY
-  if (currentY < 10) { headerVisible.value = true; lastScrollY = currentY; return }
-  const delta = currentY - lastScrollY
-  if (Math.abs(delta) < THRESHOLD) return
-  headerVisible.value = delta <= 0 || currentY <= 80
-  lastScrollY = currentY
-}
-
-onMounted(() => window.addEventListener('scroll', onScroll, { passive: true }))
-onUnmounted(() => window.removeEventListener('scroll', onScroll))
-
-// ── INJEKSI AUDIO NOTIFIKASI ─────────────────────────────────────────────────
-let notificationAudio: HTMLAudioElement | null = null
-
-// Fungsi inisialisasi awal (dipanggil saat interaksi pertama user)
-const unlockAudioForIOS = () => {
-  if (!notificationAudio) {
-    notificationAudio = new Audio('/mixkit-correct-answer-tone-2870.wav')
-    notificationAudio.volume = 0.5
-    
-    // Putar audio kosong/senyap sejenak untuk memicu izin iOS Safari
-    notificationAudio.play()
-      .then(() => {
-        // Jika sukses dipicu oleh user gesture, bersihkan event listener agar tidak boros memori
-        document.removeEventListener('click', unlockAudioForIOS)
-        document.removeEventListener('touchstart', unlockAudioForIOS)
-      })
-      .catch(err => console.log('iOS Audio unlock failed:', err))
-  }
-}
-
-// Fungsi utama untuk memutar suara chat masuk
-const playNotificationSound = () => {
-  // Jika belum di-unlock (kasus user belum menyentuh layar tapi chat masuk)
-  if (!notificationAudio) {
-    notificationAudio = new Audio('/mixkit-correct-answer-tone-2870.wav')
-    notificationAudio.volume = 0.5
-  }
-
-  // Set ulang durasi ke awal agar jika ada chat beruntun, suara tetap keluar
-  notificationAudio.currentTime = 0
-  
-  notificationAudio.play().catch(error => {
-    console.log('Audio playback blocked on iOS:', error)
-  })
-}
 </script>
 
 <template>
