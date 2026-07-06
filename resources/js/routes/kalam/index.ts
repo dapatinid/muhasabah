@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\KalamController::storeKomentar
-* @see app/Http/Controllers/KalamController.php:212
+* @see app/Http/Controllers/KalamController.php:219
 * @route '/kalam/{kalam}/komentar'
 */
 export const storeKomentar = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ storeKomentar.definition = {
 
 /**
 * @see \App\Http\Controllers\KalamController::storeKomentar
-* @see app/Http/Controllers/KalamController.php:212
+* @see app/Http/Controllers/KalamController.php:219
 * @route '/kalam/{kalam}/komentar'
 */
 storeKomentar.url = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ storeKomentar.url = (args: { kalam: string | number | { slug: string | number } 
 
 /**
 * @see \App\Http\Controllers\KalamController::storeKomentar
-* @see app/Http/Controllers/KalamController.php:212
+* @see app/Http/Controllers/KalamController.php:219
 * @route '/kalam/{kalam}/komentar'
 */
 storeKomentar.post = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -59,7 +59,7 @@ storeKomentar.post = (args: { kalam: string | number | { slug: string | number }
 
 /**
 * @see \App\Http\Controllers\KalamController::storeKomentar
-* @see app/Http/Controllers/KalamController.php:212
+* @see app/Http/Controllers/KalamController.php:219
 * @route '/kalam/{kalam}/komentar'
 */
 const storeKomentarForm = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -69,7 +69,7 @@ const storeKomentarForm = (args: { kalam: string | number | { slug: string | num
 
 /**
 * @see \App\Http\Controllers\KalamController::storeKomentar
-* @see app/Http/Controllers/KalamController.php:212
+* @see app/Http/Controllers/KalamController.php:219
 * @route '/kalam/{kalam}/komentar'
 */
 storeKomentarForm.post = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -81,7 +81,7 @@ storeKomentar.form = storeKomentarForm
 
 /**
 * @see \App\Http\Controllers\KalamController::storeReaksi
-* @see app/Http/Controllers/KalamController.php:259
+* @see app/Http/Controllers/KalamController.php:266
 * @route '/kalam/{kalam}/reaksi'
 */
 export const storeReaksi = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -96,7 +96,7 @@ storeReaksi.definition = {
 
 /**
 * @see \App\Http\Controllers\KalamController::storeReaksi
-* @see app/Http/Controllers/KalamController.php:259
+* @see app/Http/Controllers/KalamController.php:266
 * @route '/kalam/{kalam}/reaksi'
 */
 storeReaksi.url = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
@@ -129,7 +129,7 @@ storeReaksi.url = (args: { kalam: string | number | { slug: string | number } } 
 
 /**
 * @see \App\Http\Controllers\KalamController::storeReaksi
-* @see app/Http/Controllers/KalamController.php:259
+* @see app/Http/Controllers/KalamController.php:266
 * @route '/kalam/{kalam}/reaksi'
 */
 storeReaksi.post = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -139,7 +139,7 @@ storeReaksi.post = (args: { kalam: string | number | { slug: string | number } }
 
 /**
 * @see \App\Http\Controllers\KalamController::storeReaksi
-* @see app/Http/Controllers/KalamController.php:259
+* @see app/Http/Controllers/KalamController.php:266
 * @route '/kalam/{kalam}/reaksi'
 */
 const storeReaksiForm = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -149,7 +149,7 @@ const storeReaksiForm = (args: { kalam: string | number | { slug: string | numbe
 
 /**
 * @see \App\Http\Controllers\KalamController::storeReaksi
-* @see app/Http/Controllers/KalamController.php:259
+* @see app/Http/Controllers/KalamController.php:266
 * @route '/kalam/{kalam}/reaksi'
 */
 storeReaksiForm.post = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -379,7 +379,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\KalamController::uploadImage
-* @see app/Http/Controllers/KalamController.php:312
+* @see app/Http/Controllers/KalamController.php:319
 * @route '/admin/kalam/upload-image'
 */
 export const uploadImage = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -394,7 +394,7 @@ uploadImage.definition = {
 
 /**
 * @see \App\Http\Controllers\KalamController::uploadImage
-* @see app/Http/Controllers/KalamController.php:312
+* @see app/Http/Controllers/KalamController.php:319
 * @route '/admin/kalam/upload-image'
 */
 uploadImage.url = (options?: RouteQueryOptions) => {
@@ -403,7 +403,7 @@ uploadImage.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\KalamController::uploadImage
-* @see app/Http/Controllers/KalamController.php:312
+* @see app/Http/Controllers/KalamController.php:319
 * @route '/admin/kalam/upload-image'
 */
 uploadImage.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -413,7 +413,7 @@ uploadImage.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\KalamController::uploadImage
-* @see app/Http/Controllers/KalamController.php:312
+* @see app/Http/Controllers/KalamController.php:319
 * @route '/admin/kalam/upload-image'
 */
 const uploadImageForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -423,7 +423,7 @@ const uploadImageForm = (options?: RouteQueryOptions): RouteFormDefinition<'post
 
 /**
 * @see \App\Http\Controllers\KalamController::uploadImage
-* @see app/Http/Controllers/KalamController.php:312
+* @see app/Http/Controllers/KalamController.php:319
 * @route '/admin/kalam/upload-image'
 */
 uploadImageForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -435,7 +435,7 @@ uploadImage.form = uploadImageForm
 
 /**
 * @see \App\Http\Controllers\KalamController::edit
-* @see app/Http/Controllers/KalamController.php:81
+* @see app/Http/Controllers/KalamController.php:88
 * @route '/admin/kalam/{kalam}/edit'
 */
 export const edit = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -450,7 +450,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\KalamController::edit
-* @see app/Http/Controllers/KalamController.php:81
+* @see app/Http/Controllers/KalamController.php:88
 * @route '/admin/kalam/{kalam}/edit'
 */
 edit.url = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
@@ -483,7 +483,7 @@ edit.url = (args: { kalam: string | number | { slug: string | number } } | [kala
 
 /**
 * @see \App\Http\Controllers\KalamController::edit
-* @see app/Http/Controllers/KalamController.php:81
+* @see app/Http/Controllers/KalamController.php:88
 * @route '/admin/kalam/{kalam}/edit'
 */
 edit.get = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -493,7 +493,7 @@ edit.get = (args: { kalam: string | number | { slug: string | number } } | [kala
 
 /**
 * @see \App\Http\Controllers\KalamController::edit
-* @see app/Http/Controllers/KalamController.php:81
+* @see app/Http/Controllers/KalamController.php:88
 * @route '/admin/kalam/{kalam}/edit'
 */
 edit.head = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -503,7 +503,7 @@ edit.head = (args: { kalam: string | number | { slug: string | number } } | [kal
 
 /**
 * @see \App\Http\Controllers\KalamController::edit
-* @see app/Http/Controllers/KalamController.php:81
+* @see app/Http/Controllers/KalamController.php:88
 * @route '/admin/kalam/{kalam}/edit'
 */
 const editForm = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -513,7 +513,7 @@ const editForm = (args: { kalam: string | number | { slug: string | number } } |
 
 /**
 * @see \App\Http\Controllers\KalamController::edit
-* @see app/Http/Controllers/KalamController.php:81
+* @see app/Http/Controllers/KalamController.php:88
 * @route '/admin/kalam/{kalam}/edit'
 */
 editForm.get = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -523,7 +523,7 @@ editForm.get = (args: { kalam: string | number | { slug: string | number } } | [
 
 /**
 * @see \App\Http\Controllers\KalamController::edit
-* @see app/Http/Controllers/KalamController.php:81
+* @see app/Http/Controllers/KalamController.php:88
 * @route '/admin/kalam/{kalam}/edit'
 */
 editForm.head = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -540,7 +540,7 @@ edit.form = editForm
 
 /**
 * @see \App\Http\Controllers\KalamController::update
-* @see app/Http/Controllers/KalamController.php:97
+* @see app/Http/Controllers/KalamController.php:104
 * @route '/admin/kalam/{kalam}'
 */
 export const update = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -555,7 +555,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\KalamController::update
-* @see app/Http/Controllers/KalamController.php:97
+* @see app/Http/Controllers/KalamController.php:104
 * @route '/admin/kalam/{kalam}'
 */
 update.url = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
@@ -588,7 +588,7 @@ update.url = (args: { kalam: string | number | { slug: string | number } } | [ka
 
 /**
 * @see \App\Http\Controllers\KalamController::update
-* @see app/Http/Controllers/KalamController.php:97
+* @see app/Http/Controllers/KalamController.php:104
 * @route '/admin/kalam/{kalam}'
 */
 update.put = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -598,7 +598,7 @@ update.put = (args: { kalam: string | number | { slug: string | number } } | [ka
 
 /**
 * @see \App\Http\Controllers\KalamController::update
-* @see app/Http/Controllers/KalamController.php:97
+* @see app/Http/Controllers/KalamController.php:104
 * @route '/admin/kalam/{kalam}'
 */
 const updateForm = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -613,7 +613,7 @@ const updateForm = (args: { kalam: string | number | { slug: string | number } }
 
 /**
 * @see \App\Http\Controllers\KalamController::update
-* @see app/Http/Controllers/KalamController.php:97
+* @see app/Http/Controllers/KalamController.php:104
 * @route '/admin/kalam/{kalam}'
 */
 updateForm.put = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -630,7 +630,7 @@ update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\KalamController::reaksi
-* @see app/Http/Controllers/KalamController.php:126
+* @see app/Http/Controllers/KalamController.php:133
 * @route '/admin/kalam/{kalam}/reaksi'
 */
 export const reaksi = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -645,7 +645,7 @@ reaksi.definition = {
 
 /**
 * @see \App\Http\Controllers\KalamController::reaksi
-* @see app/Http/Controllers/KalamController.php:126
+* @see app/Http/Controllers/KalamController.php:133
 * @route '/admin/kalam/{kalam}/reaksi'
 */
 reaksi.url = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
@@ -678,7 +678,7 @@ reaksi.url = (args: { kalam: string | number | { slug: string | number } } | [ka
 
 /**
 * @see \App\Http\Controllers\KalamController::reaksi
-* @see app/Http/Controllers/KalamController.php:126
+* @see app/Http/Controllers/KalamController.php:133
 * @route '/admin/kalam/{kalam}/reaksi'
 */
 reaksi.get = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -688,7 +688,7 @@ reaksi.get = (args: { kalam: string | number | { slug: string | number } } | [ka
 
 /**
 * @see \App\Http\Controllers\KalamController::reaksi
-* @see app/Http/Controllers/KalamController.php:126
+* @see app/Http/Controllers/KalamController.php:133
 * @route '/admin/kalam/{kalam}/reaksi'
 */
 reaksi.head = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -698,7 +698,7 @@ reaksi.head = (args: { kalam: string | number | { slug: string | number } } | [k
 
 /**
 * @see \App\Http\Controllers\KalamController::reaksi
-* @see app/Http/Controllers/KalamController.php:126
+* @see app/Http/Controllers/KalamController.php:133
 * @route '/admin/kalam/{kalam}/reaksi'
 */
 const reaksiForm = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -708,7 +708,7 @@ const reaksiForm = (args: { kalam: string | number | { slug: string | number } }
 
 /**
 * @see \App\Http\Controllers\KalamController::reaksi
-* @see app/Http/Controllers/KalamController.php:126
+* @see app/Http/Controllers/KalamController.php:133
 * @route '/admin/kalam/{kalam}/reaksi'
 */
 reaksiForm.get = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -718,7 +718,7 @@ reaksiForm.get = (args: { kalam: string | number | { slug: string | number } } |
 
 /**
 * @see \App\Http\Controllers\KalamController::reaksi
-* @see app/Http/Controllers/KalamController.php:126
+* @see app/Http/Controllers/KalamController.php:133
 * @route '/admin/kalam/{kalam}/reaksi'
 */
 reaksiForm.head = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -735,7 +735,7 @@ reaksi.form = reaksiForm
 
 /**
 * @see \App\Http\Controllers\KalamController::komentar
-* @see app/Http/Controllers/KalamController.php:160
+* @see app/Http/Controllers/KalamController.php:167
 * @route '/admin/kalam/{kalam}/komentar'
 */
 export const komentar = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -750,7 +750,7 @@ komentar.definition = {
 
 /**
 * @see \App\Http\Controllers\KalamController::komentar
-* @see app/Http/Controllers/KalamController.php:160
+* @see app/Http/Controllers/KalamController.php:167
 * @route '/admin/kalam/{kalam}/komentar'
 */
 komentar.url = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
@@ -783,7 +783,7 @@ komentar.url = (args: { kalam: string | number | { slug: string | number } } | [
 
 /**
 * @see \App\Http\Controllers\KalamController::komentar
-* @see app/Http/Controllers/KalamController.php:160
+* @see app/Http/Controllers/KalamController.php:167
 * @route '/admin/kalam/{kalam}/komentar'
 */
 komentar.get = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -793,7 +793,7 @@ komentar.get = (args: { kalam: string | number | { slug: string | number } } | [
 
 /**
 * @see \App\Http\Controllers\KalamController::komentar
-* @see app/Http/Controllers/KalamController.php:160
+* @see app/Http/Controllers/KalamController.php:167
 * @route '/admin/kalam/{kalam}/komentar'
 */
 komentar.head = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -803,7 +803,7 @@ komentar.head = (args: { kalam: string | number | { slug: string | number } } | 
 
 /**
 * @see \App\Http\Controllers\KalamController::komentar
-* @see app/Http/Controllers/KalamController.php:160
+* @see app/Http/Controllers/KalamController.php:167
 * @route '/admin/kalam/{kalam}/komentar'
 */
 const komentarForm = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -813,7 +813,7 @@ const komentarForm = (args: { kalam: string | number | { slug: string | number }
 
 /**
 * @see \App\Http\Controllers\KalamController::komentar
-* @see app/Http/Controllers/KalamController.php:160
+* @see app/Http/Controllers/KalamController.php:167
 * @route '/admin/kalam/{kalam}/komentar'
 */
 komentarForm.get = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -823,7 +823,7 @@ komentarForm.get = (args: { kalam: string | number | { slug: string | number } }
 
 /**
 * @see \App\Http\Controllers\KalamController::komentar
-* @see app/Http/Controllers/KalamController.php:160
+* @see app/Http/Controllers/KalamController.php:167
 * @route '/admin/kalam/{kalam}/komentar'
 */
 komentarForm.head = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -840,7 +840,7 @@ komentar.form = komentarForm
 
 /**
 * @see \App\Http\Controllers\KalamController::destroy
-* @see app/Http/Controllers/KalamController.php:304
+* @see app/Http/Controllers/KalamController.php:311
 * @route '/admin/kalam/{kalam}'
 */
 export const destroy = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -855,7 +855,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\KalamController::destroy
-* @see app/Http/Controllers/KalamController.php:304
+* @see app/Http/Controllers/KalamController.php:311
 * @route '/admin/kalam/{kalam}'
 */
 destroy.url = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
@@ -888,7 +888,7 @@ destroy.url = (args: { kalam: string | number | { slug: string | number } } | [k
 
 /**
 * @see \App\Http\Controllers\KalamController::destroy
-* @see app/Http/Controllers/KalamController.php:304
+* @see app/Http/Controllers/KalamController.php:311
 * @route '/admin/kalam/{kalam}'
 */
 destroy.delete = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -898,7 +898,7 @@ destroy.delete = (args: { kalam: string | number | { slug: string | number } } |
 
 /**
 * @see \App\Http\Controllers\KalamController::destroy
-* @see app/Http/Controllers/KalamController.php:304
+* @see app/Http/Controllers/KalamController.php:311
 * @route '/admin/kalam/{kalam}'
 */
 const destroyForm = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -913,7 +913,7 @@ const destroyForm = (args: { kalam: string | number | { slug: string | number } 
 
 /**
 * @see \App\Http\Controllers\KalamController::destroy
-* @see app/Http/Controllers/KalamController.php:304
+* @see app/Http/Controllers/KalamController.php:311
 * @route '/admin/kalam/{kalam}'
 */
 destroyForm.delete = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -930,7 +930,7 @@ destroy.form = destroyForm
 
 /**
 * @see \App\Http\Controllers\KalamController::show
-* @see app/Http/Controllers/KalamController.php:183
+* @see app/Http/Controllers/KalamController.php:190
 * @route '/kalam/{kalam}'
 */
 export const show = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -945,7 +945,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\KalamController::show
-* @see app/Http/Controllers/KalamController.php:183
+* @see app/Http/Controllers/KalamController.php:190
 * @route '/kalam/{kalam}'
 */
 show.url = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
@@ -978,7 +978,7 @@ show.url = (args: { kalam: string | number | { slug: string | number } } | [kala
 
 /**
 * @see \App\Http\Controllers\KalamController::show
-* @see app/Http/Controllers/KalamController.php:183
+* @see app/Http/Controllers/KalamController.php:190
 * @route '/kalam/{kalam}'
 */
 show.get = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -988,7 +988,7 @@ show.get = (args: { kalam: string | number | { slug: string | number } } | [kala
 
 /**
 * @see \App\Http\Controllers\KalamController::show
-* @see app/Http/Controllers/KalamController.php:183
+* @see app/Http/Controllers/KalamController.php:190
 * @route '/kalam/{kalam}'
 */
 show.head = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -998,7 +998,7 @@ show.head = (args: { kalam: string | number | { slug: string | number } } | [kal
 
 /**
 * @see \App\Http\Controllers\KalamController::show
-* @see app/Http/Controllers/KalamController.php:183
+* @see app/Http/Controllers/KalamController.php:190
 * @route '/kalam/{kalam}'
 */
 const showForm = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1008,7 +1008,7 @@ const showForm = (args: { kalam: string | number | { slug: string | number } } |
 
 /**
 * @see \App\Http\Controllers\KalamController::show
-* @see app/Http/Controllers/KalamController.php:183
+* @see app/Http/Controllers/KalamController.php:190
 * @route '/kalam/{kalam}'
 */
 showForm.get = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1018,7 +1018,7 @@ showForm.get = (args: { kalam: string | number | { slug: string | number } } | [
 
 /**
 * @see \App\Http\Controllers\KalamController::show
-* @see app/Http/Controllers/KalamController.php:183
+* @see app/Http/Controllers/KalamController.php:190
 * @route '/kalam/{kalam}'
 */
 showForm.head = (args: { kalam: string | number | { slug: string | number } } | [kalam: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

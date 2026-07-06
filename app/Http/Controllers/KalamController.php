@@ -73,7 +73,14 @@ class KalamController extends Controller
             'is_anonymous' => 'boolean',
         ]);
 
-        $request->user()->kalams()->create($validated);
+        // 1. Buat data Kalam baru terlebih dahulu
+        $kalam = $request->user()->kalams()->create($validated);
+
+        // 2. Ambil array 'users' dari request frontend (jika tidak ada, default array kosong [])
+        $userIds = $request->input('users', []);
+
+        // 3. Amankan pivot menggunakan method secure Anda
+        $kalam->syncUsersSecure($userIds);
 
         return redirect('/admin/kalam')->with('success', 'Kalam berhasil diterbitkan.');
     }
@@ -107,14 +114,14 @@ class KalamController extends Controller
             'users.*' => 'exists:users,id',
         ]);
 
+        // 1. Update data Kalam utama
         $kalam->update($validated);
 
-        // 🌟 SINKRONISASI RELASI MANY-TO-MANY 🌟
-        if ($request->has('users')) {
-            $kalam->users()->sync($request->users);
-        } else {
-            $kalam->users()->sync([]); // Kosongkan jika tidak ada user yang dicentang
-        }        
+        // 2. Tangkap kiriman array 'users' dari form frontend, jika tidak dicentang sama sekali default ke []
+        $userIds = $request->input('users', []);
+
+        // 3. Ganti fungsi ->users()->sync() bawaan menjadi fungsi secure buatan Anda 🌟
+        $kalam->syncUsersSecure($userIds);     
 
         return redirect()->route('kalam.index')->with('success', 'Kalam berhasil diperbarui.');
     }

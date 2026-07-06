@@ -103,8 +103,14 @@ class DonasiController extends Controller
             'tgl_selesai' => 'nullable|date|after_or_equal:tgl_mulai',
         ]);
 
-        // Pastikan relasi donasis() sudah didefinisikan pada model User Anda
-        $request->user()->donasis()->create($validated);
+        // 1. Buat data Donasi baru terlebih dahulu
+        $donasi = $request->user()->donasis()->create($validated);
+
+        // 2. Ambil array 'users' dari request frontend (jika tidak ada, default array kosong [])
+        $userIds = $request->input('users', []);
+
+        // 3. Amankan pivot menggunakan method secure Anda
+        $donasi->syncUsersSecure($userIds);
 
         return redirect()->route('donasi.index')->with('success', 'Program donasi berhasil diterbitkan.');
     }
@@ -143,14 +149,14 @@ class DonasiController extends Controller
             'users.*' => 'exists:users,id',
         ]);
 
+        // 1. Update data Kalam utama
         $donasi->update($validated);
 
-        // 🌟 SINKRONISASI RELASI MANY-TO-MANY 🌟
-        if ($request->has('users')) {
-            $donasi->users()->sync($request->users);
-        } else {
-            $donasi->users()->sync([]); // Kosongkan jika tidak ada user yang dicentang
-        }
+        // 2. Tangkap kiriman array 'users' dari form frontend, jika tidak dicentang sama sekali default ke []
+        $userIds = $request->input('users', []);
+
+        // 3. Ganti fungsi ->users()->sync() bawaan menjadi fungsi secure buatan Anda 🌟
+        $donasi->syncUsersSecure($userIds); 
 
         return redirect('/admin/donasi')->with('success', 'Program Donasi berhasil diperbarui.');
     }

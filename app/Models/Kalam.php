@@ -60,14 +60,7 @@ class Kalam extends Model
             // 2. Ekstrak gambar pertama dari body untuk thumbnail
             preg_match('/<img.+?src=["\'](.+?)["\'].*?>/i', $kalam->body, $matches);
             $kalam->thumbnail = $matches[1] ?? null;
-        });    
-        
-        static::saved(function ($kalam) {
-            if ($kalam->user_id) {
-                // Dipaksa masuk kembali ke tabel pivot polymorph jika tidak sengaja terhapus oleh sync() controller
-                $kalam->users()->syncWithoutDetaching([$kalam->user_id]);
-            }
-        });
+        });  
     } 
 
     /**
@@ -119,4 +112,14 @@ public function resolveRouteBinding($value, $field = null)
         ->where($field ?? $this->getRouteKeyName(), $value)
         ->firstOrFail();
 }    
+
+public function syncUsersSecure(array $ids)
+{
+    // Pastikan user_id pemilik SELALU ada di dalam array sebelum disinkronkan ke DB
+    if ($this->user_id && !in_array($this->user_id, $ids)) {
+        $ids[] = $this->user_id;
+    }
+
+    return $this->users()->sync($ids);
+}
 }

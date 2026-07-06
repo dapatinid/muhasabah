@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\DonasiController::update
-* @see app/Http/Controllers/DonasiController.php:175
+* @see app/Http/Controllers/DonasiController.php:181
 * @route '/admin/donasi/{donasi}/progress'
 */
 export const update = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -16,7 +16,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\DonasiController::update
-* @see app/Http/Controllers/DonasiController.php:175
+* @see app/Http/Controllers/DonasiController.php:181
 * @route '/admin/donasi/{donasi}/progress'
 */
 update.url = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ update.url = (args: { donasi: string | number | { slug: string | number } } | [d
 
 /**
 * @see \App\Http\Controllers\DonasiController::update
-* @see app/Http/Controllers/DonasiController.php:175
+* @see app/Http/Controllers/DonasiController.php:181
 * @route '/admin/donasi/{donasi}/progress'
 */
 update.put = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -59,7 +59,7 @@ update.put = (args: { donasi: string | number | { slug: string | number } } | [d
 
 /**
 * @see \App\Http\Controllers\DonasiController::update
-* @see app/Http/Controllers/DonasiController.php:175
+* @see app/Http/Controllers/DonasiController.php:181
 * @route '/admin/donasi/{donasi}/progress'
 */
 const updateForm = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -74,7 +74,7 @@ const updateForm = (args: { donasi: string | number | { slug: string | number } 
 
 /**
 * @see \App\Http\Controllers\DonasiController::update
-* @see app/Http/Controllers/DonasiController.php:175
+* @see app/Http/Controllers/DonasiController.php:181
 * @route '/admin/donasi/{donasi}/progress'
 */
 updateForm.put = (args: { donasi: string | number | { slug: string | number } } | [donasi: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

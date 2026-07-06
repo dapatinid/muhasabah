@@ -84,7 +84,6 @@ class AcaraController extends Controller
         return Inertia::render('Admin/Acara/Create');
     }
 
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -96,7 +95,7 @@ class AcaraController extends Controller
             'lokasi' => 'required|string|max:255',
             'accept_tiket' => 'required|boolean',
             'accept_donasi' => 'required|boolean',
-            'kuota_tiket' => 'required_if:accept_tiket,true|integer|min:0', // hapus harga_tiket dari baris ini
+            'kuota_tiket' => 'required_if:accept_tiket,true|integer|min:0', 
             'target_donasi' => 'required_if:accept_donasi,true|numeric|min:0',
             'tgl_mulai' => 'nullable|date',
             'tgl_selesai' => 'nullable|date|after_or_equal:tgl_mulai',
@@ -107,18 +106,32 @@ class AcaraController extends Controller
             'variants.*.nama_varian' => 'required|string|max:100',
             'variants.*.harga' => 'required|numeric|min:0',
             'variants.*.jumlah_kursi' => 'required|integer|min:1',
+
+            // 🌟 Tambahkan Validasi untuk Users/Authors Multi-select
+            'users' => 'nullable|array',
+            'users.*' => 'exists:users,id',
         ]);
 
-        DB::transaction(function () use ($request, $validated) {
+        // 1. Jalankan transaksi database dan pastikan me-return objek $acara
+        $acara = DB::transaction(function () use ($request, $validated) {
             // Buat data acara dasar tanpa array variants
-            $acaraData = collect($validated)->except('variants')->toArray();
-            $acara = $request->user()->acaras()->create($acaraData);
+            $acaraData = collect($validated)->except('variants', 'users')->toArray();
+            $acaraModel = $request->user()->acaras()->create($acaraData);
 
             // Simpan varian tiket jika fitur tiket aktif
             if ($validated['accept_tiket'] && !empty($validated['variants'])) {
-                $acara->variants()->createMany($validated['variants']);
+                $acaraModel->variants()->createMany($validated['variants']);
             }
+
+            // 🌟 KRUSIAL: Kembalikan objek model agar bisa dipakai di luar closure transaction
+            return $acaraModel;
         });
+
+        // 2. Ambil array 'users' dari request frontend (jika kosong, default [])
+        $userIds = $request->input('users', []);
+
+        // 3. Amankan pivot menggunakan method secure milik Anda 🌟
+        $acara->syncUsersSecure($userIds);
 
         return redirect()->route('acara.index')->with('success', 'Event/Acara baru berhasil diterbitkan.');
     }
@@ -198,12 +211,11 @@ class AcaraController extends Controller
             }
         });
 
-        // 🌟 SINKRONISASI RELASI MANY-TO-MANY 🌟
-        if ($request->has('users')) {
-            $acara->users()->sync($request->users);
-        } else {
-            $acara->users()->sync([]); // Kosongkan jika tidak ada user yang dicentang
-        }        
+        // 2. Tangkap kiriman array 'users' dari form frontend, jika tidak dicentang sama sekali default ke []
+        $userIds = $request->input('users', []);
+
+        // 3. Ganti fungsi ->users()->sync() bawaan menjadi fungsi secure buatan Anda 🌟
+        $acara->syncUsersSecure($userIds);       
 
         return redirect()->route('acara.index')->with('success', 'Acara berhasil diperbarui.');
     }    

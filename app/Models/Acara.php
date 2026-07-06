@@ -124,5 +124,15 @@ public function resolveRouteBinding($value, $field = null)
     return $this->withoutGlobalScope('owner')
         ->where($field ?? $this->getRouteKeyName(), $value)
         ->firstOrFail();
-}    
+}   
+
+public function syncUsersSecure(array $ids)
+{
+    // Pastikan user_id pemilik SELALU ada di dalam array sebelum disinkronkan ke DB
+    if ($this->user_id && !in_array($this->user_id, $ids)) {
+        $ids[] = $this->user_id;
+    }
+
+    return $this->users()->sync($ids);
+}
 }

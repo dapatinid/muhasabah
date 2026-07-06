@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\AcaraController::store
-* @see app/Http/Controllers/AcaraController.php:424
+* @see app/Http/Controllers/AcaraController.php:436
 * @route '/admin/acara/{acara}/tasyaruf'
 */
 export const store = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\AcaraController::store
-* @see app/Http/Controllers/AcaraController.php:424
+* @see app/Http/Controllers/AcaraController.php:436
 * @route '/admin/acara/{acara}/tasyaruf'
 */
 store.url = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ store.url = (args: { acara: string | number | { slug: string | number } } | [aca
 
 /**
 * @see \App\Http\Controllers\AcaraController::store
-* @see app/Http/Controllers/AcaraController.php:424
+* @see app/Http/Controllers/AcaraController.php:436
 * @route '/admin/acara/{acara}/tasyaruf'
 */
 store.post = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -59,7 +59,7 @@ store.post = (args: { acara: string | number | { slug: string | number } } | [ac
 
 /**
 * @see \App\Http\Controllers\AcaraController::store
-* @see app/Http/Controllers/AcaraController.php:424
+* @see app/Http/Controllers/AcaraController.php:436
 * @route '/admin/acara/{acara}/tasyaruf'
 */
 const storeForm = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -69,7 +69,7 @@ const storeForm = (args: { acara: string | number | { slug: string | number } } 
 
 /**
 * @see \App\Http\Controllers\AcaraController::store
-* @see app/Http/Controllers/AcaraController.php:424
+* @see app/Http/Controllers/AcaraController.php:436
 * @route '/admin/acara/{acara}/tasyaruf'
 */
 storeForm.post = (args: { acara: string | number | { slug: string | number } } | [acara: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
