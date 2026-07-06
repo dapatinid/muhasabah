@@ -56,8 +56,10 @@ const initRealtimeNotifications = () => {
 
           // B. Ambil detail konten pesan dari payload data notifications Anda
           // (Sesuaikan key 'title' dan 'content' dengan nama kolom asli di tabel notifications Anda)
-          const senderName = payload.new.title || 'Pesan Baru'
-          const messageText = payload.new.content || 'Ada pesan baru masuk ke obrolan Anda.'
+          // console.log('Notifikasi pesan baru diterima:', payload.new)
+          const senderName = payload.new.data.sender_name || 'Pesan Baru'
+          const rawBody = payload.new.data.body_preview || 'Ada pesan baru masuk ke obrolan Anda.'
+          const messageText = rawBody.length > 30 ? rawBody.substring(0, 30) + '...' : rawBody
 
           // C. Jangan tampilkan popup toast jika user sedang berada aktif di dalam halaman obrolan
           if (window.location.pathname.startsWith('/obrolan')) {
