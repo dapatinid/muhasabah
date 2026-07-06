@@ -46,6 +46,16 @@ const activeDropdownId = ref<number | null>(null)
 onMounted(() => {
   baseUrl.value = window.location.origin
   window.addEventListener('click', closeDropdowns)
+
+  // ANTISIPASI PRODUCTION: Jika URL mengandung '#respon', paksa scroll ke elemennya
+  if (window.location.hash === '#respon') {
+    setTimeout(() => {
+      const element = document.getElementById('respon')
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 300) // Beri waktu ekstra bagi komponen Hydration di production
+  }  
 })
 
 onUnmounted(() => {
@@ -323,25 +333,28 @@ const toggleReaksi = (type: string) => {
 }
 
 const goToKalamRespon = () => {
-  // Evaluasi di awal
-  if (!activeKalamModal.value || !activeKalamModal.value.slug) {
-    console.error("Data modal tidak ditemukan");
-    return;
-  }
+  if (!activeKalamModal.value || !activeKalamModal.value.slug) return
 
-  // Mengisolasi data string slug agar tidak terpengaruh oleh penutupan modal
-  const savedSlug = String(activeKalamModal.value.slug);
+  const targetSlug = String(activeKalamModal.value.slug)
 
-  // Tutup modal terlebih dahulu
-  closeInteraksiModal();
+  // 1. Tutup modal terlebih dahulu
+  closeInteraksiModal()
 
-  // Berikan jeda 1 detik untuk animasi keluar modal di production, lalu redirect
+  // 2. Beri jeda transisi, lalu arahkan menggunakan Inertia
   setTimeout(() => {
-    router.get(`/kalam/${savedSlug}/#respon`, {}, { 
-      preserveState: false, // Biar state halaman list dilepas dan fokus ke halaman detail
-      replace: true 
-    });
-  }, 500);
+    router.get(`/kalam/${targetSlug}/#respon`, {}, {
+      preserveState: false,
+      onSuccess: () => {
+        // Paksa scroll manual jika browser di production melewatkan hash URL
+        setTimeout(() => {
+          const element = document.getElementById('respon')
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          }
+        }, 100) // Jeda tipis memberikan waktu DOM production selesai render
+      }
+    })
+  }, 1000)
 }
 </script>
 
