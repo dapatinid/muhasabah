@@ -312,6 +312,6 @@ const playNotificationSound = () => {
       <BottomNavigation v-if="shouldShowNav" />
     </div>
 
-    <Toaster position="top-right" richColors theme="dark" />
+    <Toaster position="top-right" richColors theme="system"/>
   </div>
 </template>
