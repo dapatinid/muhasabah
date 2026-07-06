@@ -168,6 +168,9 @@ const getExcerpt = (html: string, wordLimit: number) => {
                 :alt="kalam.judul" 
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
+              <div v-if="!kalam.is_published" class="absolute inset-0 bg-black/50 flex items-center justify-center">
+                <span class="text-white text-xs font-bold uppercase tracking-widest bg-red-800 px-3 py-1 rounded">Non-Publik</span>
+              </div>
             </div>
 
             <!-- Cuplikan Body -->

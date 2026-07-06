@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { Head, Link, router } from '@inertiajs/vue3'
+import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3'
 import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
 import debounce from 'lodash/debounce'
 import { 
   Search, BookOpen, MessageCircle, Heart, MoreHorizontal, 
-  CheckCircle2, Share2, AlertTriangle, ChevronsLeft, ChevronsRight, Ellipsis 
+  CheckCircle2, Share2, AlertTriangle, ChevronsLeft, ChevronsRight, Ellipsis,
+  X, SendHorizontal,
+  ChevronsDown,
+  ChevronDown
 } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
@@ -89,6 +92,40 @@ function tanggal(dateStr: string): string {
 
 const kategoriEmoji: Record<string, string> = {
   hikmah: '💡', doa: '🤲', kisah: '📖', tips: '✨', berita: '📰',
+}
+
+const getFormattedAuthors = (kalam: any) => {
+  // Jika kalam diset anonim, langsung kembalikan Hamba Allah (sembunyikan semua nama)
+  if (kalam.is_anonymous) {
+    return 'Hamba Allah';
+  }
+
+  // Ambil nama pembuat utama
+  const mainUser = kalam.user?.name || 'Hamba Allah';
+  const relatedUsers = kalam.users || [];
+
+  if (relatedUsers.length === 0) {
+    return mainUser;
+  }
+
+  // Ekstrak semua nama ke dalam satu array
+  const names = [mainUser, ...relatedUsers.map((u: any) => u.name || u.user?.name).filter(Boolean)];
+
+  // Hapus duplikasi barangkali nama user utama ikut terbawa di dalam relasi
+  const uniqueNames = [...new Set(names)];
+
+  // Logika format text
+  if (uniqueNames.length === 1) return uniqueNames[0];
+  if (uniqueNames.length === 2) return `${uniqueNames[0]} dan ${uniqueNames[1]}`;
+  if (uniqueNames.length <= 3) {
+    return `${uniqueNames.slice(0, -1).join(', ')} dan ${uniqueNames[uniqueNames.length - 1]}`;
+  }
+
+  // Jika lebih dari 3 orang
+  const displayedNames = uniqueNames.slice(0, 3).join(', ');
+  const remainingCount = uniqueNames.length - 3;
+  
+  return `${displayedNames} dan ${remainingCount} orang lainnya`;
 }
 
 // --- Fungsionalitas Share Sheet ---
@@ -177,6 +214,113 @@ const displayedPages = computed(() => {
   }
   return pages;
 });
+
+// 2. Inisialisasi page instance untuk membaca shared props auth
+const page = usePage()
+const isUserLoggedIn = computed(() => !!page.props.auth?.user)
+
+// --- STATE MODAL INTERAKSI DI FEED ---
+const isModalOpen = ref(false)
+const activeKalamModal = ref<any>(null)
+const isSubmittingComment = ref(false)
+const isSubmittingReaction = ref(false)
+
+const reaksiList = [
+  { type: 'barakallah',  emoji: '🤲', label: 'Barakallah' },
+  { type: 'masya_allah', emoji: '✨', label: "Masyaa Allah" },
+  { type: 'subhanallah', emoji: '❤️', label: 'Subhanallah' },
+  { type: 'aamiin',      emoji: '🙏', label: 'Aamiin' },
+]
+
+const getLocalReaction = (slug: string) => {
+  return localStorage.getItem(`kalam_reaksi_${slug}`)
+}
+
+// --- LOGIKA MATH CAPTCHA ---
+const captchaNum1 = ref(0)
+const captchaNum2 = ref(0)
+const userCaptchaAnswer = ref('')
+
+const generateCaptcha = () => {
+  // Hanya generate captcha jika user belum login
+  if (isUserLoggedIn.value) return
+  
+  captchaNum1.value = Math.floor(Math.random() * 9) + 1
+  captchaNum2.value = Math.floor(Math.random() * 9) + 1
+  userCaptchaAnswer.value = ''
+}
+
+// --- INERTIA FORM KOMENTAR ---
+const commentForm = useForm({
+  nama_publik: '',
+  body: '',
+  // Menggunakan fungsi bersyarat agar tidak mengirim challenge jika sudah login
+  captcha_challenge: computed(() => isUserLoggedIn.value ? '' : `${captchaNum1.value}+${captchaNum2.value}`),
+  captcha_answer: ''
+})
+
+const openInteraksiModal = (kalam: any) => {
+  activeKalamModal.value = kalam
+  generateCaptcha()
+  isModalOpen.value = true
+}
+
+const closeInteraksiModal = () => {
+  isModalOpen.value = false
+  activeKalamModal.value = null
+  commentForm.reset('body', 'nama_publik', 'captcha_answer')
+}
+
+// --- ACTION SUBMIT HANDLER ---
+const submitKomentar = () => {
+  if (!activeKalamModal.value) return
+  
+  // Set jawaban captcha hanya jika belum login
+  if (!isUserLoggedIn.value) {
+    commentForm.captcha_answer = userCaptchaAnswer.value
+  } else {
+    commentForm.captcha_answer = ''
+    commentForm.nama_publik = '' // Kosongkan nama_publik agar backend mendeteksinya dari user login
+  }
+  
+  isSubmittingComment.value = true
+
+  commentForm.post(`/kalam/${activeKalamModal.value.slug}/komentar`, {
+    preserveScroll: true,
+    onSuccess: () => {
+      commentForm.reset('body', 'nama_publik', 'captcha_answer')
+      generateCaptcha()
+      toast.success('Komentar berhasil ditambahkan!')
+    },
+    onFinish: () => {
+      isSubmittingComment.value = false
+    }
+  })
+}
+
+const toggleReaksi = (type: string) => {
+  if (isSubmittingReaction.value || !activeKalamModal.value) return
+  isSubmittingReaction.value = true
+
+  const storageKey = `kalam_reaksi_${activeKalamModal.value.slug}`
+
+  useForm({ type }).post(`/kalam/${activeKalamModal.value.slug}/reaksi`, {
+    preserveScroll: true,
+    onSuccess: () => {
+      const currentStored = localStorage.getItem(storageKey)
+      if (currentStored === type) {
+        localStorage.removeItem(storageKey)
+      } else {
+        localStorage.setItem(storageKey, type)
+      }
+      // Trigger pembaruan reaktivitas manual jika diperlukan
+      toast.success('Reaksi diperbarui!')
+    },
+    onFinish: () => {
+      isSubmittingReaction.value = false
+    }
+  })
+}
 </script>
 
 <template>
@@ -203,25 +347,25 @@ const displayedPages = computed(() => {
       <div class="divide-y divide-stone-800">
         <div v-for="kalam in kalams.data" :key="kalam.id" class="p-5 flex flex-col gap-4 group relative overflow-hidden odd:bg-transparent even:bg-stone-900/70">          
           <div class="w-full space-y-3">
-            <div class="flex items-center justify-between relative">
-              <div class="flex items-center gap-3">
+            <div class="flex items-center justify-between relative gap-3">
+            <div class="flex items-center w-full gap-3">
                 <div class="size-9 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center overflow-hidden shrink-0">
                   <span v-if="kalam.is_anonymous" class="text-stone-500 text-xs font-bold">HA</span>
-                  <span v-else class="text-amber-500 text-xs font-bold">{{ (kalam.user?.name ?? 'A')[0] }}</span>
+                  <span v-else class="text-amber-500 text-xs font-bold">
+                    {{ (getFormattedAuthors(kalam) ?? 'A')[0].toUpperCase() }}
+                  </span>
                 </div>
-                <div class="flex items-center gap-1.5">
-                  <h3 class="font-bold text-[14px] text-stone-100 truncate max-w-[140px] sm:max-w-xs">
-                    {{ kalam.is_anonymous ? 'Hamba.Allah' : (kalam.user?.name || 'anonim') }}
-                  </h3>
-                  <!-- <CheckCircle2 class="size-3.5 text-blue-500 fill-blue-500/10" v-if="!kalam.is_anonymous" /> -->
-                  <span class="text-stone-500 text-sm">·</span>
-                  <span class="text-stone-500 text-xs">{{ tanggal(kalam.created_at) }}</span>
-                </div>
+                  <span 
+                    :title="getFormattedAuthors(kalam)" 
+                    class="w-full font-bold text-[14px] text-stone-100 line-clamp-2"
+                  >
+                    {{ getFormattedAuthors(kalam) }}
+                  </span>
               </div>
               
-              <div class="relative">
-                <button @click.stop="toggleDropdown(kalam.id)" class="text-stone-600 hover:text-stone-400 p-1 rounded-full transition-colors">
-                  <MoreHorizontal class="size-5" />
+              <div class="relative">                
+                <button @click.stop="toggleDropdown(kalam.id)" class="flex flex-nowrap text-stone-600 hover:text-stone-400 p-1 rounded-full transition-colors">
+                  <span class="text-stone-500 text-xs text-nowrap">{{ tanggal(kalam.created_at) }}</span> <ChevronDown class="size-5 pb-0.5" />
                 </button>
                 
                 <div v-if="activeDropdownId === kalam.id" 
@@ -289,19 +433,21 @@ const displayedPages = computed(() => {
           </template>               
 
           <div class="flex items-center gap-5 pt-1">
-            <Link :href="`/kalam/${kalam.slug}#respon`" class="flex items-center gap-1.5 group/btn">
-              <div class="p-1.5 rounded-full hover:bg-red-500/10 transition-colors">
-                <Heart class="size-[19px] text-stone-400 group-hover/btn:text-red-500" />
-              </div>
-              <span class="text-xs text-stone-500 font-medium">{{ kalam.reaksis_count }}</span>
-            </Link>
+            <button 
+              @click="openInteraksiModal(kalam)" 
+              class="flex items-center gap-2 hover:text-amber-400 transition-colors"
+            >
+              <Heart class="w-4 h-4" :class="{'fill-amber-400 text-amber-400': getLocalReaction(kalam.slug)}" />
+              <span>{{ kalam.reaksis_count ?? 0 }}</span>
+            </button>
 
-            <Link :href="`/kalam/${kalam.slug}#respon`" class="flex items-center gap-1.5 group/btn">
-              <div class="p-1.5 rounded-full hover:bg-blue-500/10 transition-colors">
-                <MessageCircle class="size-[19px] text-stone-400 group-hover/btn:text-blue-500" />
-              </div>
-              <span class="text-xs text-stone-500 font-medium">{{ kalam.komentars_count }}</span>
-            </Link>
+            <button 
+              @click="openInteraksiModal(kalam)" 
+              class="flex items-center gap-2 hover:text-amber-400 transition-colors"
+            >
+              <MessageCircle class="w-4 h-4" />
+              <span>{{ kalam.komentars_count ?? 0 }}</span>
+            </button>
             
             <button @click="handleShare(kalam)" class="p-1.5 rounded-full hover:bg-emerald-500/10 transition-colors cursor-pointer group/btn">
               <Share2 class="size-[19px] text-stone-400 group-hover/btn:text-emerald-500" />
@@ -369,6 +515,97 @@ const displayedPages = computed(() => {
       </div>
 
     </div>
+
+
+    <div v-if="isModalOpen && activeKalamModal" class="fixed inset-0 z-50 flex items-start pt-20 sm:pt-0 sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
+      <div @click="closeInteraksiModal" class="absolute inset-0 bg-stone-950/80 backdrop-blur-sm"></div>
+
+      <div class="relative w-full sm:max-w-lg bg-stone-900 border-t sm:border border-stone-800 rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[85vh] sm:max-h-[75vh] z-10 animate-in slide-in-from-bottom duration-200">
+        
+        <div class="p-4 border-b border-stone-800/60 flex items-center justify-between">
+          <div>
+            <h3 class="text-sm font-bold text-stone-200 line-clamp-1">Beri Respon</h3>
+            <p class="text-[11px] text-stone-500 line-clamp-1">{{activeKalamModal.judul}}</p>
+          </div>
+          <button @click="closeInteraksiModal" class="p-1 rounded-xl bg-stone-800 text-stone-400 hover:text-stone-200">
+            <X class="w-4 h-4" />
+          </button>
+        </div>
+
+        <div class="overflow-y-auto p-4 space-y-6 no-scrollbar flex-1">
+          <div class="space-y-2">
+            <label class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Pilih Reaksi</label>
+            <div class="grid grid-cols-4 gap-2">
+              <button
+                v-for="reaksi in reaksiList"
+                :key="reaksi.type"
+                @click="toggleReaksi(reaksi.type)"
+                :disabled="isSubmittingReaction"
+                class="flex flex-col items-center justify-center p-3 rounded-xl border text-center transition-all active:scale-95 duration-150"
+                :class="getLocalReaction(activeKalamModal.slug) === reaksi.type
+                  ? 'bg-amber-500/10 border-amber-500/50 text-amber-400 scale-105'
+                  : 'bg-stone-950 border-stone-800 text-stone-400 hover:border-stone-700'"
+              >
+                <span class="text-xl mb-1">{{ reaksi.emoji }}</span>
+                <span class="text-[10px] font-semibold">{{ reaksi.label }}</span>
+              </button>
+            </div>
+          </div>
+
+          <form @submit.prevent="submitKomentar" class="space-y-4 pt-2 border-t border-stone-800/50">
+            <label class="text-[11px] font-bold uppercase tracking-wider text-stone-400 block">Tulis Komentar</label>
+            
+            <div class="space-y-3">
+              <input
+                v-if="!isUserLoggedIn"
+                v-model="commentForm.nama_publik"
+                type="text"
+                placeholder="Nama Anda (Opsional / Anonim)"
+                maxlength="50"
+                class="w-full bg-stone-950 border border-stone-800 rounded-xl px-4 py-2 text-xs text-stone-200 placeholder:text-stone-600 outline-none focus:border-amber-500/50"
+              />
+
+              <textarea
+                v-model="commentForm.body"
+                required
+                rows="3"
+                placeholder="Tulis untaian komentar atau doa terbaik Anda disini..."
+                maxlength="500"
+                class="w-full bg-stone-950 border border-stone-800 rounded-xl px-4 py-3 text-xs text-stone-200 placeholder:text-stone-600 outline-none focus:border-amber-500/50 resize-none"
+              ></textarea>
+            </div>
+
+            <div v-if="!isUserLoggedIn" class="flex items-center justify-between bg-stone-950 border border-stone-800/80 p-3 rounded-xl gap-4">
+              <div class="flex flex-col">
+                <span class="text-[10px] text-stone-500 font-medium">Pengaman Bot</span>
+                <span class="text-xs font-bold text-amber-400 tracking-wider">Berapakah: {{ captchaNum1 }} + {{ captchaNum2 }}?</span>
+              </div>
+              <input
+                v-model="userCaptchaAnswer"
+                type="number"
+                required
+                placeholder="Hasil"
+                class="w-20 bg-stone-900 border border-stone-800 rounded-lg py-1.5 px-2 text-center text-xs text-stone-200 outline-none focus:border-amber-500/50"
+              />
+            </div>
+
+            <button
+              type="submit"
+              :disabled="isSubmittingComment || !commentForm.body || (!isUserLoggedIn && !userCaptchaAnswer)"
+              class="w-full bg-amber-500 disabled:bg-amber-500/20 text-stone-950 disabled:text-stone-500 font-bold text-xs py-3 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform duration-150"
+            >
+              <SendHorizontal class="w-3.5 h-3.5" />
+              <span>{{ isSubmittingComment ? 'Mengirim...' : 'Kirim Komentar Resmi' }}</span>
+            </button>
+
+            <div class="text-center text-[11px] text-stone-500 font-medium">
+              <Link :href="`/kalam/${activeKalamModal.slug}/#respon`" class="text-amber-400 font-bold hover:underline">Lihat semua komentar</Link>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>    
   </AppLayoutPublic>
 </template>
 

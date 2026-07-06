@@ -18,7 +18,7 @@ class KalamController extends Controller
      */
     public function kalam(Request $request)
     {
-        $query = Kalam::where('is_published', true)->with('user:id,name')->withCount(['komentars', 'reaksis']);
+        $query = Kalam::where('is_published', true)->with(['user:id,name','users'])->withCount(['komentars', 'reaksis']);
 
         if ($search = $request->input('search')) {
             $query->where('judul', 'like', "%{$search}%")
@@ -189,6 +189,10 @@ class KalamController extends Controller
      */
     public function show(Kalam $kalam)
     {
+        if (!$kalam->is_published) {
+            return redirect()->route('kalam')->with('error', 'Kalam ini belum diterbitkan atau tidak tersedia untuk publik.');
+        }
+
         $kalam->load([
             'user:id,name,slug',
             'users',

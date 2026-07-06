@@ -386,6 +386,10 @@ class DonasiController extends Controller
      */
     public function show(Donasi $donasi)
     {
+        if (!$donasi->is_published) {
+            return redirect()->route('donasi')->with('error', 'Program donasi ini belum diterbitkan atau tidak tersedia untuk publik.');
+        }
+
         // Bersihkan bodi dari tag HTML untuk deskripsi pratinjau WA (Maks 150 karakter)
         $cleanDescription = Str::limit(strip_tags($donasi->body), 150, '...');
 

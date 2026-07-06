@@ -141,7 +141,7 @@ getOrCreate.form = getOrCreateForm
 * @see app/Http/Controllers/ConversationController.php:116
 * @route '/obrolan/{conversation}/messages'
 */
-export const messages = (args: { conversation: string | number | { id: string | number } } | [conversation: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const messages = (args: { conversation: number | { id: number } } | [conversation: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: messages.url(args, options),
     method: 'get',
 })
@@ -156,7 +156,7 @@ messages.definition = {
 * @see app/Http/Controllers/ConversationController.php:116
 * @route '/obrolan/{conversation}/messages'
 */
-messages.url = (args: { conversation: string | number | { id: string | number } } | [conversation: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+messages.url = (args: { conversation: number | { id: number } } | [conversation: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { conversation: args }
     }
@@ -189,7 +189,7 @@ messages.url = (args: { conversation: string | number | { id: string | number } 
 * @see app/Http/Controllers/ConversationController.php:116
 * @route '/obrolan/{conversation}/messages'
 */
-messages.get = (args: { conversation: string | number | { id: string | number } } | [conversation: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+messages.get = (args: { conversation: number | { id: number } } | [conversation: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: messages.url(args, options),
     method: 'get',
 })
@@ -199,7 +199,7 @@ messages.get = (args: { conversation: string | number | { id: string | number } 
 * @see app/Http/Controllers/ConversationController.php:116
 * @route '/obrolan/{conversation}/messages'
 */
-messages.head = (args: { conversation: string | number | { id: string | number } } | [conversation: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+messages.head = (args: { conversation: number | { id: number } } | [conversation: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: messages.url(args, options),
     method: 'head',
 })
@@ -209,7 +209,7 @@ messages.head = (args: { conversation: string | number | { id: string | number }
 * @see app/Http/Controllers/ConversationController.php:116
 * @route '/obrolan/{conversation}/messages'
 */
-const messagesForm = (args: { conversation: string | number | { id: string | number } } | [conversation: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const messagesForm = (args: { conversation: number | { id: number } } | [conversation: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: messages.url(args, options),
     method: 'get',
 })
@@ -219,7 +219,7 @@ const messagesForm = (args: { conversation: string | number | { id: string | num
 * @see app/Http/Controllers/ConversationController.php:116
 * @route '/obrolan/{conversation}/messages'
 */
-messagesForm.get = (args: { conversation: string | number | { id: string | number } } | [conversation: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+messagesForm.get = (args: { conversation: number | { id: number } } | [conversation: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: messages.url(args, options),
     method: 'get',
 })
@@ -229,7 +229,7 @@ messagesForm.get = (args: { conversation: string | number | { id: string | numbe
 * @see app/Http/Controllers/ConversationController.php:116
 * @route '/obrolan/{conversation}/messages'
 */
-messagesForm.head = (args: { conversation: string | number | { id: string | number } } | [conversation: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+messagesForm.head = (args: { conversation: number | { id: number } } | [conversation: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: messages.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

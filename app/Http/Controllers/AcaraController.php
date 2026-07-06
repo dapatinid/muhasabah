@@ -487,6 +487,10 @@ class AcaraController extends Controller
 
     public function show(Acara $acara)
     {
+        if (!$acara->is_published) {
+            return redirect()->route('acara')->with('error', 'Acara ini belum diterbitkan atau tidak tersedia untuk publik.');
+        }
+
         $cleanDescription = Str::limit(strip_tags($acara->body), 150, '...');
         $imageUrl = $acara->thumbnail ? $acara->thumbnail : asset('favicon.png');
 
