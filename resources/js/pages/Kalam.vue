@@ -46,16 +46,6 @@ const activeDropdownId = ref<number | null>(null)
 onMounted(() => {
   baseUrl.value = window.location.origin
   window.addEventListener('click', closeDropdowns)
-
-  // ANTISIPASI PRODUCTION: Jika URL mengandung '#respon', paksa scroll ke elemennya
-  if (window.location.hash === '#respon') {
-    setTimeout(() => {
-      const element = document.getElementById('respon')
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
-    }, 300) // Beri waktu ekstra bagi komponen Hydration di production
-  }  
 })
 
 onUnmounted(() => {
