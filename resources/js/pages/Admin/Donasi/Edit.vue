@@ -179,197 +179,200 @@ function submit() {
             </div>             
         </div>
 
-        <form @submit.prevent="submit" class="space-y-8 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 rounded-3xl shadow-sm">   
+        <form @submit.prevent="submit">   
 
-            <!-- Status Publikasi -->
-            <div v-if="user.level === 'Super Admin'" class="p-4 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/50">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div :class="form.is_published ? 'bg-blue-100 text-blue-600' : 'bg-zinc-200 text-zinc-500'" class="p-2 rounded-lg">
-                            <Globe v-if="form.is_published" class="size-5" />
-                            <Lock v-else class="size-5" />
+            <div class="space-y-8 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-4 sm:p-8 rounded-2xl">
+                <!-- Status Publikasi -->
+                <div v-if="user.level === 'Super Admin'" class="p-4 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/50">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div :class="form.is_published ? 'bg-blue-100 text-blue-600' : 'bg-zinc-200 text-zinc-500'" class="p-2 rounded-lg">
+                                <Globe v-if="form.is_published" class="size-5" />
+                                <Lock v-else class="size-5" />
+                            </div>
+                            <div>
+                                <label for="is_published" class="text-sm font-bold cursor-pointer block">
+                                    {{ form.is_published ? 'Terbit (Publik)' : 'Draft (Privat)' }}
+                                </label>
+                                <p class="text-[11px] text-zinc-500">Tentukan visibilitas program ini bagi donatur.</p>
+                            </div>
                         </div>
-                        <div>
-                            <label for="is_published" class="text-sm font-bold cursor-pointer block">
-                                {{ form.is_published ? 'Terbit (Publik)' : 'Draft (Privat)' }}
-                            </label>
-                            <p class="text-[11px] text-zinc-500">Tentukan visibilitas program ini bagi donatur.</p>
-                        </div>
+                        <input 
+                            type="checkbox" 
+                            id="is_published" 
+                            v-model="form.is_published"
+                            class="size-6 rounded-lg border-zinc-300 text-amber-600 focus:ring-amber-500 cursor-pointer"
+                        />
                     </div>
-                    <input 
-                        type="checkbox" 
-                        id="is_published" 
-                        v-model="form.is_published"
-                        class="size-6 rounded-lg border-zinc-300 text-amber-600 focus:ring-amber-500 cursor-pointer"
-                    />
                 </div>
-            </div>
-            
-            <!-- Judul & Slug -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="space-y-2">
-                    <Label for="judul">Judul Program</Label>
-                    <Input 
-                        id="judul" 
-                        v-model="form.judul" 
-                        class="h-12 rounded-xl focus:ring-amber-500 font-semibold"
-                        required
-                    />
-                    <div v-if="form.errors.judul" class="text-red-500 text-xs mt-1">{{ form.errors.judul }}</div>
-                </div>
-                <div class="space-y-2">
-                    <Label for="slug">URL Slug</Label>
-                    <Input 
-                        id="slug" 
-                        v-model="form.slug" 
-                        class="h-12 rounded-xl focus:ring-amber-500"
-                        required
-                    />
-                    <div v-if="form.errors.slug" class="text-red-500 text-xs mt-1">{{ form.errors.slug }}</div>
-                </div>
-            </div>
-
-            <!-- Kategori, Subkategori, Tanggal & Target -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="space-y-2">
-                    <Label for="kategori">Kategori</Label>
-                    <select 
-                        id="kategori"
-                        v-model="form.kategori"
-                        class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-amber-500 focus:border-amber-500"
-                    >
-                        <option v-for="cat in categories" :key="cat.value" :value="cat.value">
-                            {{ cat.label }}
-                        </option>
-                    </select>
-                </div>
-
-                <!-- Subkategori -->
-                <div class="space-y-2">
-                    <Label for="subkategori">Subkategori Donasi</Label>
-                    <select 
-                    id="subkategori"
-                    v-model="form.subkategori"
-                    class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-amber-500 focus:border-amber-500"
-                    >
-                    <!-- Ubah iterasi di sini -->
-                    <option v-for="subcat in availableSubcategories" :key="subcat.value" :value="subcat.value">
-                        {{ subcat.label }}
-                    </option>
-                    </select>
-                </div>
-
-                <!-- Tanggal Mulai -->
-                <div class="space-y-2">
-                    <Label for="tgl_mulai">Tanggal Mulai</Label>
-                    <Input 
-                        id="tgl_mulai" 
-                        type="date"
-                        v-model="form.tgl_mulai" 
-                        class="h-11 rounded-xl focus-visible:ring-amber-500"
-                    />
-                    <div v-if="form.errors.tgl_mulai" class="text-red-500 text-xs mt-1">{{ form.errors.tgl_mulai }}</div>
-                </div>
-
-                <!-- Tanggal Selesai -->
-                <div class="space-y-2">
-                    <Label for="tgl_selesai">Tanggal Selesai (Batas Penggalangan)</Label>
-                    <Input 
-                        id="tgl_selesai" 
-                        type="date"
-                        v-model="form.tgl_selesai" 
-                        class="h-11 rounded-xl focus-visible:ring-amber-500"
-                        :disabled="Number(form.target_dana) === 0"
-                    />
-                    <p v-if="Number(form.target_dana) === 0" class="text-[11px] text-zinc-400 italic mt-1">
-                        * Dinonaktifkan otomatis karena target dana bernilai 0 (Program Berkelanjutan).
-                    </p>
-                    <div v-if="form.errors.tgl_selesai" class="text-red-500 text-xs mt-1">{{ form.errors.tgl_selesai }}</div>
-                </div>
-
-                <!-- Target Dana -->
-                <div class="space-y-2 md:col-span-2">
-                    <Label for="target_dana">Target Dana (Rp)</Label>
-                    <div class="relative">
-                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 font-bold text-sm">Rp</span>
+                
+                <!-- Judul & Slug -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <Label for="judul">Judul Program</Label>
                         <Input 
-                            id="target_dana" 
-                            type="number"
-                            v-model="form.target_dana" 
-                            class="pl-10 h-11 rounded-xl focus:ring-amber-500"
+                            id="judul" 
+                            v-model="form.judul" 
+                            class="h-12 rounded-xl focus:ring-amber-500 font-semibold"
                             required
                         />
+                        <div v-if="form.errors.judul" class="text-red-500 text-xs mt-1">{{ form.errors.judul }}</div>
                     </div>
-                    <p class="text-[11px] leading-normal text-amber-600 dark:text-amber-400 font-medium mt-1">
-                        * Jika diisi <span class="font-bold font-mono">0</span>, sistem otomatis menganggap program ini sebagai <span class="font-bold underline">Donasi Rutin / Tanpa Batas Target</span>.
-                    </p>
-                    <div v-if="form.errors.target_dana" class="text-red-500 text-xs mt-1">{{ form.errors.target_dana }}</div>
-                </div>
-            </div>       
-
-            <!-- Panduan Donasi Singkat -->
-            <div class="space-y-2">
-                <Label for="panduan_donasi">Panduan / Aturan Singkat Donasi</Label>
-                <Input 
-                    id="panduan_donasi" 
-                    v-model="form.panduan_donasi" 
-                    placeholder="Contoh: Minimal donasi paket Rp 50.000 atau kelipatannya." 
-                    class="h-11 rounded-xl focus-visible:ring-amber-500"
-                    required
-                />
-                <p class="text-[11px] text-zinc-400 italic">
-                    * Keterangan ini akan muncul di widget detail donasi untuk memandu nominal transfer donatur.
-                </p>
-                <div v-if="form.errors.panduan_donasi" class="text-red-500 text-xs mt-1">{{ form.errors.panduan_donasi }}</div>
-            </div>
-
-            <div class="space-y-2">
-                <Label>Pilih Penggalang Dana / Panitia</Label>
-                <p class="text-[10px] text-zinc-500 mb-2">Pilih pengguna yang terkait sebagai panitia/relawan untuk program donasi ini.</p>
-                
-                <div class="border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden bg-white dark:bg-zinc-950">
-                    <div class="p-2 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 relative">
-                        <Search class="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-zinc-400" />
-                        <input 
-                            type="text"
-                            v-model="searchUser"
-                            placeholder="Cari nama pengguna..."
-                            class="w-full pl-8 pr-3 py-1.5 text-sm bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-zinc-900 dark:text-zinc-100"
+                    <div class="space-y-2">
+                        <Label for="slug">URL Slug</Label>
+                        <Input 
+                            id="slug" 
+                            v-model="form.slug" 
+                            class="h-12 rounded-xl focus:ring-amber-500"
+                            required
                         />
+                        <div v-if="form.errors.slug" class="text-red-500 text-xs mt-1">{{ form.errors.slug }}</div>
                     </div>
-                    
-                    <div class="max-h-52 overflow-y-auto p-2 space-y-1">
-                        <label 
-                            v-for="user in filteredUsers" 
-                            :key="user.id" 
-                            class="flex items-center gap-3 p-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-900 rounded-lg cursor-pointer transition-colors border border-transparent hover:border-zinc-100 dark:hover:border-zinc-800"
+                </div>
+
+                <!-- Kategori, Subkategori, Tanggal & Target -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <Label for="kategori">Kategori</Label>
+                        <select 
+                            id="kategori"
+                            v-model="form.kategori"
+                            class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-amber-500 focus:border-amber-500"
                         >
-                            <input 
-                                type="checkbox" 
-                                :value="user.id" 
-                                v-model="form.users"
-                                class="size-4 rounded border-zinc-300 text-amber-600 focus:ring-amber-500 cursor-pointer"
+                            <option v-for="cat in categories" :key="cat.value" :value="cat.value">
+                                {{ cat.label }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Subkategori -->
+                    <div class="space-y-2">
+                        <Label for="subkategori">Subkategori Donasi</Label>
+                        <select 
+                        id="subkategori"
+                        v-model="form.subkategori"
+                        class="w-full h-11 px-3 rounded-xl border-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 text-sm focus:ring-amber-500 focus:border-amber-500"
+                        >
+                        <!-- Ubah iterasi di sini -->
+                        <option v-for="subcat in availableSubcategories" :key="subcat.value" :value="subcat.value">
+                            {{ subcat.label }}
+                        </option>
+                        </select>
+                    </div>
+
+                    <!-- Tanggal Mulai -->
+                    <div class="space-y-2">
+                        <Label for="tgl_mulai">Tanggal Mulai</Label>
+                        <Input 
+                            id="tgl_mulai" 
+                            type="date"
+                            v-model="form.tgl_mulai" 
+                            class="h-11 rounded-xl focus-visible:ring-amber-500"
+                        />
+                        <div v-if="form.errors.tgl_mulai" class="text-red-500 text-xs mt-1">{{ form.errors.tgl_mulai }}</div>
+                    </div>
+
+                    <!-- Tanggal Selesai -->
+                    <div class="space-y-2">
+                        <Label for="tgl_selesai">Tanggal Selesai (Batas Penggalangan)</Label>
+                        <Input 
+                            id="tgl_selesai" 
+                            type="date"
+                            v-model="form.tgl_selesai" 
+                            class="h-11 rounded-xl focus-visible:ring-amber-500"
+                            :disabled="Number(form.target_dana) === 0"
+                        />
+                        <p v-if="Number(form.target_dana) === 0" class="text-[11px] text-zinc-400 italic mt-1">
+                            * Dinonaktifkan otomatis karena target dana bernilai 0 (Program Berkelanjutan).
+                        </p>
+                        <div v-if="form.errors.tgl_selesai" class="text-red-500 text-xs mt-1">{{ form.errors.tgl_selesai }}</div>
+                    </div>
+
+                    <!-- Target Dana -->
+                    <div class="space-y-2 md:col-span-2">
+                        <Label for="target_dana">Target Dana (Rp)</Label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 font-bold text-sm">Rp</span>
+                            <Input 
+                                id="target_dana" 
+                                type="number"
+                                v-model="form.target_dana" 
+                                class="pl-10 h-11 rounded-xl focus:ring-amber-500"
+                                required
                             />
-                            <span class="text-sm font-medium text-zinc-700 dark:text-zinc-200">{{ user.slug }} ~ {{ user.name }}</span>
-                        </label>
+                        </div>
+                        <p class="text-[11px] leading-normal text-amber-600 dark:text-amber-400 font-medium mt-1">
+                            * Jika diisi <span class="font-bold font-mono">0</span>, sistem otomatis menganggap program ini sebagai <span class="font-bold underline">Donasi Rutin / Tanpa Batas Target</span>.
+                        </p>
+                        <div v-if="form.errors.target_dana" class="text-red-500 text-xs mt-1">{{ form.errors.target_dana }}</div>
+                    </div>
+                </div>       
+
+                <!-- Panduan Donasi Singkat -->
+                <div class="space-y-2">
+                    <Label for="panduan_donasi">Panduan / Aturan Singkat Donasi</Label>
+                    <Input 
+                        id="panduan_donasi" 
+                        v-model="form.panduan_donasi" 
+                        placeholder="Contoh: Minimal donasi paket Rp 50.000 atau kelipatannya." 
+                        class="h-11 rounded-xl focus-visible:ring-amber-500"
+                        required
+                    />
+                    <p class="text-[11px] text-zinc-400 italic">
+                        * Keterangan ini akan muncul di widget detail donasi untuk memandu nominal transfer donatur.
+                    </p>
+                    <div v-if="form.errors.panduan_donasi" class="text-red-500 text-xs mt-1">{{ form.errors.panduan_donasi }}</div>
+                </div>
+
+                <div class="space-y-2">
+                    <Label>Pilih Penggalang Dana / Panitia</Label>
+                    <p class="text-[10px] text-zinc-500 mb-2">Pilih pengguna yang terkait sebagai panitia/relawan untuk program donasi ini.</p>
+                    
+                    <div class="border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden bg-white dark:bg-zinc-950">
+                        <div class="p-2 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 relative">
+                            <Search class="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-zinc-400" />
+                            <input 
+                                type="text"
+                                v-model="searchUser"
+                                placeholder="Cari nama pengguna..."
+                                class="w-full pl-8 pr-3 py-1.5 text-sm bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-zinc-900 dark:text-zinc-100"
+                            />
+                        </div>
                         
-                        <div v-if="filteredUsers.length === 0" class="p-6 text-center text-sm text-zinc-500 italic">
-                            Pengguna tidak ditemukan.
+                        <div class="max-h-52 overflow-y-auto p-2 space-y-1">
+                            <label 
+                                v-for="user in filteredUsers" 
+                                :key="user.id" 
+                                class="flex items-center gap-3 p-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-900 rounded-lg cursor-pointer transition-colors border border-transparent hover:border-zinc-100 dark:hover:border-zinc-800"
+                            >
+                                <input 
+                                    type="checkbox" 
+                                    :value="user.id" 
+                                    v-model="form.users"
+                                    class="size-4 rounded border-zinc-300 text-amber-600 focus:ring-amber-500 cursor-pointer"
+                                />
+                                <span class="text-sm font-medium text-zinc-700 dark:text-zinc-200">{{ user.slug }} ~ {{ user.name }}</span>
+                            </label>
+                            
+                            <div v-if="filteredUsers.length === 0" class="p-6 text-center text-sm text-zinc-500 italic">
+                                Pengguna tidak ditemukan.
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div v-if="form.errors.users" class="text-red-500 text-xs mt-1">{{ form.errors.users }}</div>
-            </div>            
+                    <div v-if="form.errors.users" class="text-red-500 text-xs mt-1">{{ form.errors.users }}</div>
+                </div>    
+            
+            </div>
 
             <!-- Rich Editor -->
-            <div class="space-y-2">
+            <div class="space-y-2 mt-10">
                 <Label>Deskripsi Lengkap</Label>
                 <TiptapEditor v-model="form.body" />
                 <div v-if="form.errors.body" class="text-red-500 text-xs mt-1">{{ form.errors.body }}</div>
             </div>
 
             <!-- Action Buttons -->
-            <div class="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-zinc-100 dark:border-zinc-800 gap-4">
+            <div class="flex flex-col md:flex-row justify-between items-center pt-6 gap-4">
                 <p class="text-xs text-zinc-400 italic">Formulir Manajemen Pembaruan Sistem</p>
                 
                 <div class="flex gap-3 w-full md:w-auto">
@@ -378,11 +381,11 @@ function submit() {
                     </Link>
                     <Button 
                         type="submit" 
-                        class="flex-1 md:flex-none bg-amber-600 hover:bg-amber-700 text-white px-8 h-11 rounded-xl font-bold gap-2 shadow-lg shadow-amber-500/20"
+                        class="flex-1 md:flex-none bg-amber-600 hover:bg-amber-700 text-white px-8 h-11 rounded-xl font-bold gap-2 transition-all cursor-pointer"
                         :disabled="form.processing"
                     >
                         <Save class="size-4" />
-                        {{ form.processing ? 'Menyimpan...' : 'Simpan Perubahan' }}
+                        {{ form.processing ? 'Menyimpan...' : 'Simpan' }}
                     </Button>
                 </div>
             </div>

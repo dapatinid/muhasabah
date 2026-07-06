@@ -137,7 +137,7 @@ function deleteMasjid() {
             <Button 
                 type="button" 
                 variant="destructive"
-                class="rounded-xl font-bold h-10 gap-2 shadow-md shadow-red-500/10"
+                class="rounded-xl font-bold h-10 gap-2"
                 @click="showDeleteDialog = true"
             >
                 <Trash2 class="size-4" />
@@ -145,8 +145,8 @@ function deleteMasjid() {
             </Button>
         </div>
 
-        <div class="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-100 dark:border-zinc-800 shadow-sm">
-            <form @submit.prevent="submit" class="space-y-6">
+        <form @submit.prevent="submit">
+            <div class="bg-white dark:bg-zinc-900 p-4 sm:p-6 rounded-2xl border border-zinc-100 dark:border-zinc-800 space-y-6">
 
             <!-- Status Publikasi -->
             <div v-if="user.level === 'Super Admin'" class="p-4 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/50">
@@ -289,27 +289,29 @@ function deleteMasjid() {
                     <div v-if="form.errors.users" class="text-red-500 text-xs mt-1">{{ form.errors.users }}</div>
                 </div>
 
-                <div class="space-y-2">
+                </div>
+
+                <div class="space-y-2 mt-7">
                     <Label>Deskripsi Masjid</Label>
                     <TiptapEditor v-model="form.deskripsi" />
                     <div v-if="form.errors.deskripsi" class="text-red-500 text-xs mt-1">{{ form.errors.deskripsi }}</div>
                 </div>
 
-                <div class="flex justify-end pt-4 border-t border-zinc-100 dark:border-zinc-800 gap-3">
+                <div class="flex justify-end pt-4 gap-3">
                     <Link href="/admin/masjid" class="px-6 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 text-sm font-bold hover:bg-zinc-50 transition-colors dark:text-zinc-300">
                         Batal
                     </Link>
                     <Button 
                         type="submit" 
-                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 h-11 rounded-xl font-bold gap-2 shadow-lg shadow-emerald-500/20"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 h-11 rounded-xl font-bold gap-2"
                         :disabled="form.processing"
                     >
                         <Save class="size-4" />
-                        {{ form.processing ? 'Menyimpan...' : 'Simpan Perubahan' }}
+                        {{ form.processing ? 'Menyimpan...' : 'Simpan' }}
                     </Button>
                 </div>
             </form>
-        </div>
+        
     </div>
 
     <Dialog v-model:open="showDeleteDialog">

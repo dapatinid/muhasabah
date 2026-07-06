@@ -189,7 +189,7 @@ const submit = () => {
 <template>
     <Head :title="'Edit - ' + props.acara.judul" />
 
-    <div class="pt-8 px-4 w-full mx-auto max-w-5xl">   
+    <div class="pt-8 px-4 w-full">   
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-100 dark:border-zinc-800 pb-5">
             <div class="flex items-center gap-3">
                 <div>
@@ -216,9 +216,11 @@ const submit = () => {
         </div>
     </div>
 
-    <form @submit.prevent="submit" class="max-w-5xl mx-auto px-4 py-6 space-y-6 pb-24 text-zinc-800 dark:text-zinc-200"> 
+    <form @submit.prevent="submit"> 
         
-        <div v-if="user.level === 'Super Admin'" class="p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 shadow-xs">
+        <div class="mx-auto px-4 py-6 space-y-6 text-zinc-800 dark:text-zinc-200">   
+
+        <div v-if="user.level === 'Super Admin'" class="p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 ">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <div :class="form.is_published ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500'" class="p-2.5 rounded-xl border border-transparent" :style="form.is_published ? 'border-color: rgba(16,185,129,0.2)' : ''">
@@ -245,7 +247,7 @@ const submit = () => {
             
             <div class="lg:col-span-2 space-y-6">
                 
-                <div class="space-y-4 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80 shadow-xs">
+                <div class="space-y-4 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80 ">
                     <h3 class="text-xs font-black uppercase tracking-widest text-indigo-500 border-b border-zinc-50 dark:border-zinc-800/50 pb-2">Informasi Utama</h3>
                     
                     <div class="space-y-1.5">
@@ -263,7 +265,7 @@ const submit = () => {
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="space-y-1.5">
                             <Label class="text-xs font-semibold">Kategori Utama</Label>
-                            <select v-model="form.kategori" class="flex h-11 w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/30 dark:bg-zinc-950/30 px-3 py-1 text-sm shadow-xs transition-colors focus-visible:outline-hidden focus:border-zinc-400 dark:focus:border-zinc-700 focus:ring-0">
+                            <select v-model="form.kategori" class="flex h-11 w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/30 dark:bg-zinc-950/30 px-3 py-1 text-sm  transition-colors focus-visible:outline-hidden focus:border-zinc-400 dark:focus:border-zinc-700 focus:ring-0">
                                 <option v-for="cat in categories" :key="cat.value" :value="cat.value">{{ cat.label }}</option>
                             </select>
                         </div>
@@ -280,7 +282,7 @@ const submit = () => {
                     </div>
                 </div>
 
-                <div class="space-y-4 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80 shadow-xs">
+                <div class="space-y-4 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80 ">
                     <div class="flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800 pb-3">
                         <div class="flex items-center gap-2">
                             <Ticket class="w-4 h-4 text-indigo-500" />
@@ -363,7 +365,7 @@ const submit = () => {
                             </div>
                         </div>
 
-                        <div class="flex justify-between items-center p-3 rounded-xl bg-indigo-50/50 dark:bg-indigo-950/10 border border-indigo-100/40 text-xs font-semibold text-indigo-600 dark:text-indigo-400 font-mono shadow-xs">
+                        <div class="flex justify-between items-center p-3 rounded-xl bg-indigo-50/50 dark:bg-indigo-950/10 border border-indigo-100/40 text-xs font-semibold text-indigo-600 dark:text-indigo-400 font-mono ">
                             <span>Total Distribusi Alokasi Varian:</span>
                             <span>{{ totalAlokasiVarian }} / {{ form.kuota_tiket }} Kursi</span>
                         </div>
@@ -379,7 +381,7 @@ const submit = () => {
 
             <div class="space-y-6">
                 
-                <div class="space-y-4 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80 shadow-xs">
+                <div class="space-y-4 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80 ">
                     <div class="flex items-center gap-2 border-b border-zinc-50 dark:border-zinc-800/50 pb-2">
                         <CalendarDays class="w-4 h-4 text-indigo-500" />
                         <h3 class="text-xs font-black uppercase tracking-widest text-indigo-500">Waktu Pelaksanaan</h3>
@@ -405,7 +407,7 @@ const submit = () => {
                     </div>
                 </div>
 
-                <div class="space-y-4 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80 shadow-xs">
+                <div class="space-y-4 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80 ">
                     <div class="flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800 pb-3">
                         <div class="flex items-center gap-2">
                             <HeartHandshake class="w-4 h-4 text-indigo-500" />
@@ -442,50 +444,53 @@ const submit = () => {
                         Modul penggalangan donasi patungan dinonaktifkan.
                     </div>
                 </div>
-            </div>
 
-        </div>
-
-            <div class="space-y-2">
-                <Label>Pilih Panitia Acara</Label>
-                <p class="text-[10px] text-zinc-500 mb-2">Pilih pengguna yang terkait sebagai panitia acara ini.</p>
-                
-                <div class="border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden bg-white dark:bg-zinc-950">
-                    <div class="p-2 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 relative">
-                        <Search class="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-zinc-400" />
-                        <input 
-                            type="text"
-                            v-model="searchUser"
-                            placeholder="Cari nama pengguna..."
-                            class="w-full pl-8 pr-3 py-1.5 text-sm bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-zinc-900 dark:text-zinc-100"
-                        />
-                    </div>
+                <div class="space-y-2">
+                    <Label>Pilih Panitia Acara</Label>
+                    <p class="text-[10px] text-zinc-500 mb-2">Pilih pengguna yang terkait sebagai panitia acara ini.</p>
                     
-                    <div class="max-h-52 overflow-y-auto p-2 space-y-1">
-                        <label 
-                            v-for="user in filteredUsers" 
-                            :key="user.id" 
-                            class="flex items-center gap-3 p-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-900 rounded-lg cursor-pointer transition-colors border border-transparent hover:border-zinc-100 dark:hover:border-zinc-800"
-                        >
+                    <div class="border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden bg-white dark:bg-zinc-950">
+                        <div class="p-2 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 relative">
+                            <Search class="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-zinc-400" />
                             <input 
-                                type="checkbox" 
-                                :value="user.id" 
-                                v-model="form.users"
-                                class="size-4 rounded border-zinc-300 text-amber-600 focus:ring-amber-500 cursor-pointer"
+                                type="text"
+                                v-model="searchUser"
+                                placeholder="Cari nama pengguna..."
+                                class="w-full pl-8 pr-3 py-1.5 text-sm bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-zinc-900 dark:text-zinc-100"
                             />
-                            <span class="text-sm font-medium text-zinc-700 dark:text-zinc-200">{{ user.slug }} ~ {{ user.name }}</span>
-                        </label>
+                        </div>
                         
-                        <div v-if="filteredUsers.length === 0" class="p-6 text-center text-sm text-zinc-500 italic">
-                            Pengguna tidak ditemukan.
+                        <div class="max-h-72 overflow-y-auto p-2 space-y-1">
+                            <label 
+                                v-for="user in filteredUsers" 
+                                :key="user.id" 
+                                class="flex items-center gap-3 p-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-900 rounded-lg cursor-pointer transition-colors border border-transparent hover:border-zinc-100 dark:hover:border-zinc-800"
+                            >
+                                <input 
+                                    type="checkbox" 
+                                    :value="user.id" 
+                                    v-model="form.users"
+                                    class="size-4 rounded border-zinc-300 text-amber-600 focus:ring-amber-500 cursor-pointer"
+                                />
+                                <span class="text-sm font-medium text-zinc-700 dark:text-zinc-200">{{ user.slug }} ~ {{ user.name }}</span>
+                            </label>
+                            
+                            <div v-if="filteredUsers.length === 0" class="p-6 text-center text-sm text-zinc-500 italic">
+                                Pengguna tidak ditemukan.
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div v-if="form.errors.users" class="text-red-500 text-xs mt-1">{{ form.errors.users }}</div>
-            </div>       
+                    <div v-if="form.errors.users" class="text-red-500 text-xs mt-1">{{ form.errors.users }}</div>
+                </div>     
 
-        <div class="space-y-2 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80 shadow-xs">
-            <h3 class="text-xs font-black uppercase tracking-widest text-indigo-500 border-b border-zinc-50 dark:border-zinc-800/50 pb-2 mb-2">Konten Narasi Acara</h3>
+            </div>
+        
+        </div>
+
+        </div>    
+
+        <div class="space-y-2 p-4 ">
+            <h3 class="text-xs font-black uppercase tracking-widest text-indigo-500 border-b border-zinc-50 dark:border-zinc-800/50">Konten Narasi Acara</h3>
             <Label :class="{'text-red-500': form.errors.body}" class="text-xs font-semibold">Deskripsi Lengkap, Rencana Kegiatan & Susunan Acara</Label>
             <div class="mt-1.5">
                 <TiptapEditor v-model="form.body" />
@@ -493,7 +498,7 @@ const submit = () => {
             <div v-if="form.errors.body" class="text-red-500 text-xs mt-1">{{ form.errors.body }}</div>
         </div>
 
-        <div class="flex flex-col sm:flex-row justify-between items-center pt-6 border-t border-zinc-200 dark:border-zinc-800 gap-4">
+        <div class="flex flex-col sm:flex-row justify-between items-center p-4 gap-4">
             <p class="text-xs text-zinc-400 italic text-center sm:text-left">Pembaruan data agenda akan langsung disinkronkan langsung ke halaman publik.</p>
             
             <div class="flex gap-3 w-full sm:w-auto">
@@ -502,11 +507,11 @@ const submit = () => {
                 </Link>
                 <Button 
                     type="submit" 
-                    class="flex-1 sm:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-8 h-11 rounded-xl font-bold gap-2 shadow-lg shadow-indigo-500/20 transition-all cursor-pointer"
+                    class="flex-1 sm:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-8 h-11 rounded-xl font-bold gap-2 transition-all cursor-pointer"
                     :disabled="form.processing"
                 >
                     <Save class="w-4 h-4" />
-                    {{ form.processing ? 'Menyimpan...' : 'Perbarui Agenda' }}
+                    {{ form.processing ? 'Menyimpan...' : 'Perbarui' }}
                 </Button>
             </div>
         </div>

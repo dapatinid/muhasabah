@@ -33,7 +33,7 @@ const props = defineProps<{
                 <h1 class="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Ringkasan Sistem</h1>
                 <p class="text-sm text-zinc-500">Selamat datang kembali, pantau aktivitas terbaru di sini.</p>
             </div>
-            <Link href="/admin/tentang-saya" class="bg-emerald-600 hover:bg-emerald-700 text-center text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-emerald-500/20 transition-all">
+            <Link href="/admin/tentang-saya" class="bg-emerald-600 hover:bg-emerald-700 text-nowrap text-center text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-emerald-500/20 transition-all">
                 Edit Bio
             </Link>
         </div>

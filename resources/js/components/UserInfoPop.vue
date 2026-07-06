@@ -65,9 +65,9 @@ const whatsappHref = computed(() => {
 
         <!-- Avatar menjorok ke dalam sampul -->
         <div class="flex flex-col items-center px-4 pb-4 -mt-10 bg-linear-to-b from-accent to-background">
-            <Avatar class="h-20 w-20 overflow-hidden rounded-full border-4 border-foreground/50 shadow-xl">
+            <Avatar class="h-20 w-20 overflow-hidden rounded-full border-4 border-foreground shadow-xl">
                 <AvatarImage :src="absoluteAvatarUrl" :alt="user.name" class="object-cover" />
-                <AvatarFallback class="rounded-full bg-foreground/10 text-lg font-bold text-emerald-400">
+                <AvatarFallback class="rounded-full bg-accent text-lg font-bold text-emerald-400">
                     {{ getInitials(user.name) }}
                 </AvatarFallback>
             </Avatar>

@@ -91,7 +91,7 @@ const submit = () => {
 <template>
   <Head title="Buat Acara Baru" />
 
-  <div class="pt-8 px-4 w-full mx-auto max-w-5xl">
+  <div class="pt-8 px-4 w-full">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-100 dark:border-zinc-800 pb-5 mb-6">
       <div class="flex items-center gap-3">
         <div>
@@ -107,7 +107,7 @@ const submit = () => {
         
         <div class="lg:col-span-2 space-y-6">
           
-          <div class="space-y-4 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80 shadow-xs">
+          <div class="space-y-4 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80">
             <h3 class="text-xs font-black uppercase tracking-widest text-indigo-500 border-b border-zinc-50 dark:border-zinc-800/50 pb-2">Informasi Utama</h3>
             
             <div class="space-y-1.5">
@@ -119,7 +119,7 @@ const submit = () => {
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-1.5">
                 <Label class="text-xs font-semibold">Kategori Utama</Label>
-                <select v-model="form.kategori" class="flex h-11 w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/30 dark:bg-zinc-950/30 px-3 py-1 text-sm shadow-xs transition-colors focus-visible:outline-hidden focus:border-zinc-400 dark:focus:border-zinc-700 focus:ring-0">
+                <select v-model="form.kategori" class="flex h-11 w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/30 dark:bg-zinc-950/30 px-3 py-1 text-sm transition-colors focus-visible:outline-hidden focus:border-zinc-400 dark:focus:border-zinc-700 focus:ring-0">
                   <option v-for="cat in categories" :key="cat.value" :value="cat.value">{{ cat.label }}</option>
                 </select>
               </div>
@@ -136,7 +136,7 @@ const submit = () => {
             </div>
           </div>
 
-          <div class="space-y-4 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80 shadow-xs">
+          <div class="space-y-4 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80">
             <div class="flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800 pb-3">
               <div class="flex items-center gap-2">
                 <Ticket class="w-4 h-4 text-indigo-500" />
@@ -212,7 +212,7 @@ const submit = () => {
                 </div>
               </div>
 
-              <div class="flex justify-between items-center p-3 rounded-xl bg-indigo-50/50 dark:bg-indigo-950/10 border border-indigo-100/40 text-xs font-semibold text-indigo-600 dark:text-indigo-400 font-mono shadow-xs">
+              <div class="flex justify-between items-center p-3 rounded-xl bg-indigo-50/50 dark:bg-indigo-950/10 border border-indigo-100/40 text-xs font-semibold text-indigo-600 dark:text-indigo-400 font-mono">
                 <span>Total Kursi Teralokasi ke Varian:</span>
                 <span>{{ totalAlokasiVarian }} / {{ form.kuota_tiket }} Kursi</span>
               </div>
@@ -228,7 +228,7 @@ const submit = () => {
 
         <div class="space-y-6">
           
-          <div class="space-y-4 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80 shadow-xs">
+          <div class="space-y-4 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80">
             <div class="flex items-center gap-2 border-b border-zinc-50 dark:border-zinc-800/50 pb-2">
               <CalendarDays class="w-4 h-4 text-indigo-500" />
               <h3 class="text-xs font-black uppercase tracking-widest text-indigo-500">Waktu Pelaksanaan</h3>
@@ -254,7 +254,7 @@ const submit = () => {
             </div>
           </div>
 
-          <div class="space-y-4 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80 shadow-xs">
+          <div class="space-y-4 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80">
             <div class="flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800 pb-3">
               <div class="flex items-center gap-2">
                 <HandHeart class="w-4 h-4 text-indigo-500" />
@@ -288,7 +288,7 @@ const submit = () => {
 
       </div>
 
-      <div class="space-y-2 bg-white dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800/80 shadow-xs">
+      <div class="space-y-2">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-50 dark:border-zinc-800/50 pb-2 mb-2 gap-1">
           <h3 class="text-xs font-black uppercase tracking-widest text-indigo-500">Konten Narasi Acara</h3>
           <span class="text-[11px] text-zinc-400 italic">Gunakan gambar di dalam editor untuk dijadikan banner/thumbnail otomatis</span>
@@ -300,11 +300,11 @@ const submit = () => {
         <div v-if="form.errors.body" class="text-red-500 text-xs font-semibold mt-1">{{ form.errors.body }}</div>
       </div>
 
-      <div class="flex flex-col sm:flex-row gap-4 items-center justify-between pt-6 border-t border-zinc-200 dark:border-zinc-800">
+      <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
         <p class="text-xs text-zinc-400 italic text-center sm:text-left">Pembaruan data agenda baru akan langsung dikirimkan ke sistem database utama.</p>
         <Button 
           type="submit" 
-          class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-10 h-11 rounded-xl font-bold gap-2 shadow-lg shadow-indigo-500/20 transition-all cursor-pointer"
+          class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-10 h-11 rounded-xl font-bold gap-2 transition-all cursor-pointer"
           :disabled="form.processing"
         >
           <Save class="w-4 h-4" />
