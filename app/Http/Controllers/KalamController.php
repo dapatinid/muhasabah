@@ -80,7 +80,7 @@ class KalamController extends Controller
 
     public function edit(Kalam $kalam)
     {
-        $users = User::select('id', 'name')->orderBy('name')->get();
+        $users = User::whereNotIn('id', [1, 2])->select('id', 'name')->orderBy('name')->get();
         $attachedUsers = $kalam->users()->pluck('users.id')->toArray();
 
         return Inertia::render('Admin/Kalam/Edit', [

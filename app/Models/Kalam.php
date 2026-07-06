@@ -25,6 +25,11 @@ class Kalam extends Model
         'updated_by', // Tambahkan ke fillable
     ];
 
+    protected $casts = [
+        'is_published' => 'boolean',
+        'is_anonymous' => 'boolean',
+    ];   
+
     /**
      * Boot function untuk menangani logic otomatis
      */
@@ -56,12 +61,7 @@ class Kalam extends Model
             preg_match('/<img.+?src=["\'](.+?)["\'].*?>/i', $kalam->body, $matches);
             $kalam->thumbnail = $matches[1] ?? null;
         });        
-    }
-
-    protected $casts = [
-        'is_published' => 'boolean',
-        'is_anonymous' => 'boolean',
-    ];    
+    } 
 
     /**
      * Relasi ke penulis asli (User)

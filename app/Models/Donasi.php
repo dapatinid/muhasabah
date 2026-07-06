@@ -19,6 +19,12 @@ class Donasi extends Model
         'created_by', 'updated_by'
     ];
 
+    protected $casts = [
+        'tgl_mulai' => 'datetime',
+        'tgl_selesai' => 'datetime',
+        'is_published' => 'boolean',
+    ];    
+
     protected static function boot()
     {
         parent::boot();
