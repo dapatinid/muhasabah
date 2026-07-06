@@ -187,6 +187,10 @@ onMounted(() => {
   window.addEventListener('popstate', handlePopState)
   // Aktifkan channel real-time notifikasi chat global
   initRealtimeNotifications()
+
+  // 🔔 Tambahkan ini untuk membuka gembok proteksi audio Safari iOS
+  document.addEventListener('click', unlockAudioForIOS, { passive: true })
+  document.addEventListener('touchstart', unlockAudioForIOS, { passive: true })  
 })
 
 onUnmounted(() => {
@@ -198,6 +202,10 @@ onUnmounted(() => {
   if (realtimeChannel) {
     supabase.removeChannel(realtimeChannel)
   }
+
+  // 🔔 Bersihkan juga listener audio jika user langsung keluar halaman sebelum sempat klik
+  document.removeEventListener('click', unlockAudioForIOS)
+  document.removeEventListener('touchstart', unlockAudioForIOS)
 })
 
 // ── Hide/show header on scroll ────────────────────────────────────────────────
@@ -218,14 +226,38 @@ onMounted(() => window.addEventListener('scroll', onScroll, { passive: true }))
 onUnmounted(() => window.removeEventListener('scroll', onScroll))
 
 // ── INJEKSI AUDIO NOTIFIKASI ─────────────────────────────────────────────────
+let notificationAudio: HTMLAudioElement | null = null
+
+// Fungsi inisialisasi awal (dipanggil saat interaksi pertama user)
+const unlockAudioForIOS = () => {
+  if (!notificationAudio) {
+    notificationAudio = new Audio('/mixkit-correct-answer-tone-2870.wav')
+    notificationAudio.volume = 0.5
+    
+    // Putar audio kosong/senyap sejenak untuk memicu izin iOS Safari
+    notificationAudio.play()
+      .then(() => {
+        // Jika sukses dipicu oleh user gesture, bersihkan event listener agar tidak boros memori
+        document.removeEventListener('click', unlockAudioForIOS)
+        document.removeEventListener('touchstart', unlockAudioForIOS)
+      })
+      .catch(err => console.log('iOS Audio unlock failed:', err))
+  }
+}
+
+// Fungsi utama untuk memutar suara chat masuk
 const playNotificationSound = () => {
-  // Anda bisa mengganti URL ini dengan file .mp3 notifikasi pilihan Anda
-  const audio = new Audio('/mixkit-correct-answer-tone-2870.wav')
-  audio.volume = 0.5 // Mengatur volume (0.0 sampai 1.0)
+  // Jika belum di-unlock (kasus user belum menyentuh layar tapi chat masuk)
+  if (!notificationAudio) {
+    notificationAudio = new Audio('/mixkit-correct-answer-tone-2870.wav')
+    notificationAudio.volume = 0.5
+  }
+
+  // Set ulang durasi ke awal agar jika ada chat beruntun, suara tetap keluar
+  notificationAudio.currentTime = 0
   
-  audio.play().catch(error => {
-    // Mengantisipasi auto-play block dari browser sebelum user berinteraksi dengan halaman
-    console.log('Audio play blocked or interrupted:', error)
+  notificationAudio.play().catch(error => {
+    console.log('Audio playback blocked on iOS:', error)
   })
 }
 </script>
