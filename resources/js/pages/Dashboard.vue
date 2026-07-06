@@ -38,6 +38,25 @@ const props = defineProps<{
             </Link>
         </div>
 
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="p-6 rounded-3xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 text-center flex flex-col items-center justify-center">
+                <Users class="size-8 text-zinc-300 mb-3" />
+                <h4 class="font-bold text-zinc-900 dark:text-zinc-50">Menjadi Relawan / Donatur?</h4>
+                <p class="text-xs text-zinc-500 mt-1 mb-4">Isi questionnaire di bawah ini.</p>
+                <Link href="/pendaftaran/relawan-donatur" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 underline">Daftar di sini →</Link>
+            </div>
+
+            <div class="md:col-span-2 p-6 rounded-3xl bg-zinc-100 dark:bg-zinc-900 text-foreground shadow-2xl shadow-zinc-900/20">
+                <h4 class="font-bold mb-2">Pusat Kendali Cepat</h4>
+                <p class="text-sm text-zinc-400 mb-6">Kelola data utama Anda dengan cepat melalui shortcut di bawah.</p>
+                <div class="flex gap-3">
+                    <Link href="/admin/kalam" class="px-4 py-2 bg-foreground/10 hover:bg-foreground/20 rounded-xl border text-sm font-medium transition-all">Kelola Kalam</Link>
+                    <Link href="/admin/donasi" class="px-4 py-2 bg-foreground/10 hover:bg-foreground/20 rounded-xl border text-sm font-medium transition-all">Kelola Donasi</Link>
+                    <Link href="/admin/acara" class="px-4 py-2 bg-foreground/10 hover:bg-foreground/20 rounded-xl border text-sm font-medium transition-all">Kelola Acara</Link>
+                </div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-xs">
                 <div class="flex justify-between items-start mb-4">
@@ -73,25 +92,6 @@ const props = defineProps<{
                 </div>
                 <h3 class="text-2xl font-bold text-emerald-600">Rp{{ stats.donasi_terkumpul.toLocaleString() }}</h3>
                 <p class="text-xs text-zinc-500">Total dana terkumpul</p>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="md:col-span-2 p-6 rounded-3xl bg-zinc-100 dark:bg-zinc-900 text-foreground shadow-2xl shadow-zinc-900/20">
-                <h4 class="font-bold mb-2">Pusat Kendali Cepat</h4>
-                <p class="text-sm text-zinc-400 mb-6">Kelola data utama Anda dengan cepat melalui shortcut di bawah.</p>
-                <div class="flex gap-3">
-                    <Link href="/admin/kalam" class="px-4 py-2 bg-foreground/10 hover:bg-foreground/20 rounded-xl border text-sm font-medium transition-all">Kelola Kalam</Link>
-                    <Link href="/admin/donasi" class="px-4 py-2 bg-foreground/10 hover:bg-foreground/20 rounded-xl border text-sm font-medium transition-all">Kelola Donasi</Link>
-                    <Link href="/admin/acara" class="px-4 py-2 bg-foreground/10 hover:bg-foreground/20 rounded-xl border text-sm font-medium transition-all">Kelola Acara</Link>
-                </div>
-            </div>
-            
-            <div class="p-6 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 text-center flex flex-col items-center justify-center">
-                <Users class="size-8 text-zinc-300 mb-3" />
-                <h4 class="font-bold text-zinc-900 dark:text-zinc-50">Butuh Bantuan?</h4>
-                <p class="text-xs text-zinc-500 mt-1 mb-4">Panduan sistem tersedia untuk Anda.</p>
-                <button class="text-xs font-bold text-emerald-600 hover:text-emerald-700 underline">Lihat Dokumentasi →</button>
             </div>
         </div>
     </div>

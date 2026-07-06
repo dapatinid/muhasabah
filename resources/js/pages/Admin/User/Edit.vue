@@ -306,8 +306,8 @@ watch(() => page.props.flash, (flash: any) => {
         <CardHeader><CardTitle>Status</CardTitle></CardHeader>
         <CardContent>
           <div class="bg-gray-100 dark:bg-gray-950 p-2 rounded-lg flex gap-1 max-w-xs">
-            <button type="button" class="flex-1 py-1.5 rounded text-sm font-medium transition" :class="form.is_active === false ? 'bg-white shadow text-red-600' : 'text-gray-500'" @click="form.is_active = false">Tidak Aktif</button>
-            <button type="button" class="flex-1 py-1.5 rounded text-sm font-medium transition" :class="form.is_active === true ? 'bg-green-500 text-white shadow' : 'text-gray-500'" @click="form.is_active = true">Aktif</button>
+            <button type="button" class="flex-1 py-1.5 rounded text-sm font-medium transition" :class="!form.is_active ? 'bg-white shadow text-red-600' : 'text-gray-500'" @click="form.is_active = false">Tidak Aktif</button>
+            <button type="button" class="flex-1 py-1.5 rounded text-sm font-medium transition" :class="form.is_active ? 'bg-green-500 text-white shadow' : 'text-gray-500'" @click="form.is_active = true">Aktif</button>
           </div>
         </CardContent>
       </Card>
@@ -351,8 +351,8 @@ watch(() => page.props.flash, (flash: any) => {
           <div class="space-y-2">
             <Label class="block mb-1">Hak Akses Sistem</Label>
             <div class="bg-gray-100 dark:bg-gray-950 p-2 rounded-lg flex gap-1 max-w-xs">
-              <button type="button" class="flex-1 py-1.5 rounded text-sm font-medium transition" :class="form.is_admin === false ? 'bg-white shadow' : 'text-gray-500'" @click="form.is_admin = false">Non Admin</button>
-              <button type="button" class="flex-1 py-1.5 rounded text-sm font-medium transition" :class="form.is_admin === true ? 'bg-blue-600 text-white shadow' : 'text-gray-500'" @click="form.is_admin = true">Admin</button>
+              <button type="button" class="flex-1 py-1.5 rounded text-sm font-medium transition" :class="!form.is_admin ? 'bg-white shadow text-red-600' : 'text-gray-500'" @click="form.is_admin = false">Non Admin</button>
+              <button type="button" class="flex-1 py-1.5 rounded text-sm font-medium transition" :class="form.is_admin ? 'bg-blue-600 text-white shadow' : 'text-gray-500'" @click="form.is_admin = true">Admin</button>
             </div>
           </div>
 

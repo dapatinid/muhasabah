@@ -125,10 +125,13 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
     Route::post('/obrolan/mulai', [ConversationController::class, 'getOrCreate'])->name('obrolan.mulai');
     Route::get('/obrolan/{conversation}/messages', [ConversationController::class, 'messages']);
     Route::post('/obrolan/{conversation}/messages', [MessageController::class, 'store']);    
+
+
     
     Route::middleware(['admin', 'restrict_owner'])->group(function () {
 
-        Route::middleware(['auth', 'user_class:relawan-donatur'])->group(function () {
+        Route::middleware(['user_class:relawan-donatur'])->group(function () {
+
             Route::get('/admin/lingkaran', [LingkaranController::class, 'index'])->name('lingkaran.index');
             Route::get('/admin/lingkaran/create', [LingkaranController::class, 'create'])->name('lingkaran.create');
             Route::post('/admin/lingkaran', [LingkaranController::class, 'store'])->name('lingkaran.store');
@@ -147,7 +150,7 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
         });
         
         // Fitur Kelola Kalam (Admin)
-        Route::middleware(['auth', 'user_class:penulis'])->group(function () {
+        Route::middleware(['user_class:penulis'])->group(function () {
             Route::get('/admin/kalam', [KalamController::class, 'index'])->name('kalam.index');
             Route::get('/admin/kalam/create', [KalamController::class, 'create'])->name('kalam.create');
             Route::post('/admin/kalam', [KalamController::class, 'store'])->name('kalam.store');
@@ -161,7 +164,7 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
         });
 
         // Fitur Kelola Donasi (Admin)
-        Route::middleware(['auth', 'user_class:penggalang-dana'])->group(function () {
+        Route::middleware(['user_class:penggalang-dana'])->group(function () {
             Route::get('/admin/donasi', [DonasiController::class, 'index'])->name('donasi.index');
             Route::get('/admin/donasi/create', [DonasiController::class, 'create'])->name('donasi.create');
             Route::post('/admin/donasi', [DonasiController::class, 'store'])->name('donasi.store');
@@ -179,8 +182,8 @@ Route::middleware(['auth', 'verified', 'is_active'])->group(function () {
         });
         
         // Fitur Kelola Acara (Admin)
-        Route::middleware(['auth', 'user_class:penyelenggara-acara'])->group(function () {
-            Route::get('/admin/acara', [AcaraController::class, 'index'])->name('acara.index');
+        Route::middleware(['user_class:penyelenggara-acara'])->group(function () {
+            Route::get('/admin/acara', [AcaraController::class, 'index'])->name('acara.index'); 
             Route::get('/admin/acara/create', [AcaraController::class, 'create'])->name('acara.create');
             Route::post('/admin/acara', [AcaraController::class, 'store'])->name('acara.store');
             Route::get('/admin/acara/{acara:slug}/edit', [AcaraController::class, 'edit'])->name('acara.edit');
