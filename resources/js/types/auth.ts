@@ -13,7 +13,7 @@ export type User = {
 
 export type Auth = {
     user: User;
-    can_access_control_panel: boolean; 
+    super_admin: boolean; 
     classes: string[];
 };
 

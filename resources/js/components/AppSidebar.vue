@@ -22,7 +22,7 @@ import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
 const page = usePage();
-const canAccessControlPanel = computed(() => page.props.auth?.can_access_control_panel ?? false);
+const superAdmin = computed(() => page.props.auth?.super_admin ?? false);
 
 // Menu utama diatur agar selalu tampil tanpa pengecekan userClasses frontend
 const mainNavItems = computed(() => {
@@ -101,7 +101,7 @@ const mainNavItemsAktifitas = computed(() => {
 
 const mainNavItemsControlPanel = computed(() => {
     const items: NavItem[] = [];
-    if (canAccessControlPanel.value) {
+    if (superAdmin.value) {
         items.push(
             {
                 title: 'Banner',
@@ -152,7 +152,7 @@ const mainNavItemsControlPanel = computed(() => {
             <NavMain :items="mainNavItems" class="z-3"/>
             <NavMainUkhuwah :items="mainNavItemsUkhuwah" class="z-2"/>
             <NavMainAktifitas :items="mainNavItemsAktifitas" class="z-1"/>
-            <NavMainControlPanel :items="mainNavItemsControlPanel" v-if="canAccessControlPanel"/>
+            <NavMainControlPanel :items="mainNavItemsControlPanel" v-if="superAdmin"/>
         </SidebarContent>
 
         <SidebarFooter>

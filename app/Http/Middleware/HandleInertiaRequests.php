@@ -44,10 +44,10 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $user,
                 // 🔒 Sinkronisasi Logika dengan Middleware CanAccessControlPanel
-                'can_access_control_panel' => $user 
+                'super_admin' => $user 
                     && $user->is_admin 
                     && !is_null($user->level) 
-                    && $user->level !== '',
+                    && $user->level === 'Super Admin',
                 
                 // 🏷️ Konversi field class string/comma-separated menjadi array untuk Vue
                 'classes' => $user 

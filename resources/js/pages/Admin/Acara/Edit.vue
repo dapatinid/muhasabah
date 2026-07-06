@@ -511,7 +511,7 @@ const submit = () => {
                     :disabled="form.processing"
                 >
                     <Save class="w-4 h-4" />
-                    {{ form.processing ? 'Menyimpan...' : 'Perbarui' }}
+                    {{ form.processing ? 'Menyimpan...' : 'Perbarui Acara' }}
                 </Button>
             </div>
         </div>

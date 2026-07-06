@@ -54,7 +54,7 @@ function submit() {
 <template>
     <Head title="Tentang Saya - Autobiografi" />
 
-    <div class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+    <div class="px-4 py-8 space-y-6">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-zinc-100 dark:border-zinc-800">
             <div class="flex items-center gap-3">
                 <div class="p-3 bg-amber-500/10 text-amber-600 rounded-2xl">
@@ -68,7 +68,7 @@ function submit() {
 
         </div>
 
-        <form @submit.prevent="submit" class="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-3xl p-6 shadow-xs space-y-6">
+        <form @submit.prevent="submit" class="bg-white dark:bg-zinc-900 space-y-6">
             
             <div class="flex gap-3 p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
                 <FileText class="size-5 text-amber-600 shrink-0 mt-0.5" />

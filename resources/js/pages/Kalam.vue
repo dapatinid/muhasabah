@@ -321,6 +321,22 @@ const toggleReaksi = (type: string) => {
     }
   })
 }
+
+const goToKalamRespon = () => {
+  // 1. Pastikan data modal aktif ada, jika tidak ada batalkan proses
+  if (!activeKalamModal.value) return
+
+  // 2. Amankan slug ke dalam variabel lokal sebelum modal ditutup
+  const slug = activeKalamModal.value.slug
+
+  // 3. Tutup modal secara instan/langsung
+  closeInteraksiModal()
+
+  // 4. Tunggu 1 detik baru eksekusi perpindahan halaman/link
+  setTimeout(() => {
+    router.get(`/kalam/${slug}/#respon`, {}, { preserveState: true })
+  }, 500) // 500 ms = 1 detik
+}
 </script>
 
 <template>
@@ -449,7 +465,7 @@ const toggleReaksi = (type: string) => {
               <span>{{ kalam.komentars_count ?? 0 }}</span>
             </button>
             
-            <button @click="handleShare(kalam)" class="p-1.5 rounded-full hover:bg-emerald-500/10 transition-colors cursor-pointer group/btn">
+            <button @click="handleShare(kalam)" class="-ms-2 p-1.5 rounded-full hover:bg-emerald-500/10 transition-colors cursor-pointer group/btn">
               <Share2 class="size-[19px] group-hover/btn:text-emerald-500" />
             </button>
 
@@ -517,10 +533,10 @@ const toggleReaksi = (type: string) => {
     </div>
 
 
-    <div v-if="isModalOpen && activeKalamModal" class="fixed inset-0 z-100 flex items-start pt-20 sm:pt-0 sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
-      <div @click="closeInteraksiModal" class="absolute inset-0 bg-stone-950/80 backdrop-blur-sm"></div>
+    <div v-if="isModalOpen && activeKalamModal" class="fixed inset-0 z-100 flex items-end justify-center sm:px-4 animate-in fade-in duration-200">
+      <div @click="closeInteraksiModal" class="absolute inset-0 bg-stone-950/80"></div>
 
-      <div class="relative w-full sm:max-w-lg bg-stone-900 border-t sm:border border-stone-800 rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[85vh] sm:max-h-[75vh] z-10 animate-in slide-in-from-bottom duration-200">
+      <div class="relative w-full sm:max-w-lg bg-stone-900 border-t sm:border border-stone-800 rounded-t-2xl shadow-2xl flex flex-col max-h-[85vh] sm:max-h-[75vh] z-10 animate-in slide-in-from-bottom duration-200">
         
         <div class="p-4 border-b border-stone-800/60 flex items-center justify-between">
           <div>
@@ -599,7 +615,7 @@ const toggleReaksi = (type: string) => {
             </button>
 
             <div class="text-center text-[11px] text-stone-500 font-medium">
-              <Link :href="`/kalam/${activeKalamModal.slug}/#respon`" class="text-amber-400 font-bold hover:underline">Lihat semua komentar</Link>
+              <button type="button" @click="goToKalamRespon" class="underline hover:text-stone-300 transition-colors">Lihat Semua Komentar</button>
             </div>
           </form>
         </div>

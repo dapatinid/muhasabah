@@ -303,7 +303,7 @@ function submit() {
                             :disabled="form.processing"
                         >
                             <Save class="size-4" />
-                            {{ form.processing ? 'Menyimpan...' : 'Simpan' }}
+                            {{ form.processing ? 'Menyimpan...' : 'Simpan Perubahan' }}
                         </Button>
                     </div>
                 </div>

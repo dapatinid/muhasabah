@@ -3,7 +3,7 @@ import { ref, onMounted, onUnmounted, nextTick, watch, computed } from 'vue' // 
 import { Head, router, useForm, usePage, Link } from '@inertiajs/vue3'
 import { createClient } from '@supabase/supabase-js'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
-import { ArrowLeft, Send, X, Search } from 'lucide-vue-next'
+import { ArrowLeft, Send, X, Search, RefreshCw, Rocket, LoaderCircle } from 'lucide-vue-next'
 
 const props = defineProps<{
     conversations: any[];
@@ -253,7 +253,7 @@ const playNotificationSound = () => {
     <AppLayoutPublic>
         <Head title="Obrolan" />
 
-        <div class="mx-auto z-50 pointer-events-none -mt-16">
+        <div class="mx-auto z-101 pointer-events-none -mt-16 mb-18">
             <div class="absolute w-full pointer-events-auto gap-3">
                 
                 <div v-if="isSearching" class="h-14 bg-stone-900 border-stone-800 border-b z-60 shadow-2xl flex items-center px-5 pt-1 gap-2">
@@ -281,7 +281,7 @@ const playNotificationSound = () => {
             </div>
         </div>           
 
-        <div class="mx-auto mt-18">
+        <div class="mx-auto">
 
             <div v-if="filteredConversations.length == 0" class="px-3 text-center text-stone-500 py-10">
                 {{ searchQuery ? 'Nama tidak ditemukan.' : 'Belum ada obrolan.' }}
@@ -411,7 +411,9 @@ const playNotificationSound = () => {
                             :disabled="form.processing"
                             class="relative bg-emerald-600 disabled:opacity-50 hover:bg-emerald-700 p-2.5 rounded-full text-white transition shrink-0"
                         >
-                            <Send class="size-5 mt-0.5 mx-0.5" />
+                            <LoaderCircle v-if="form.processing" class="size-5 mt-0.5 mx-0.5 animate-spin" />
+                            <Send v-else class="size-5 mt-0.5 mx-0.5" />
+                        
                         </button>
                     </form>
                 </div>

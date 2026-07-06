@@ -253,7 +253,7 @@ function submit() {
             :disabled="form.processing"
           >
             <Save class="size-5" />
-            {{ form.processing ? 'Menyimpan...' : 'Terbitkan Program' }}
+            {{ form.processing ? 'Menyimpan...' : 'Terbitkan Donasi' }}
           </Button>
         </div>
 
