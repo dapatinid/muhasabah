@@ -65,7 +65,7 @@ class Kalam extends Model
         static::saved(function ($kalam) {
             if ($kalam->user_id) {
                 // Dipaksa masuk kembali ke tabel pivot polymorph jika tidak sengaja terhapus oleh sync() controller
-                $kalam->authors()->syncWithoutDetaching([$kalam->user_id]);
+                $kalam->users()->syncWithoutDetaching([$kalam->user_id]);
             }
         });
     } 

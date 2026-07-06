@@ -56,7 +56,7 @@ class Donasi extends Model
         static::saved(function ($donasi) {
             if ($donasi->user_id) {
                 // Dipaksa masuk kembali ke tabel pivot polymorph jika tidak sengaja terhapus oleh sync() controller
-                $donasi->authors()->syncWithoutDetaching([$donasi->user_id]);
+                $donasi->users()->syncWithoutDetaching([$donasi->user_id]);
             }
         });        
     }

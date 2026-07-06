@@ -60,7 +60,7 @@ class Acara extends Model
         static::saved(function ($acara) {
             if ($acara->user_id) {
                 // Dipaksa masuk kembali ke tabel pivot polymorph jika tidak sengaja terhapus oleh sync() controller
-                $acara->authors()->syncWithoutDetaching([$acara->user_id]);
+                $acara->users()->syncWithoutDetaching([$acara->user_id]);
             }
         });        
     }
