@@ -43,28 +43,13 @@ class Kalam extends Model
                 $kalam->created_by = auth()->id();
                 $kalam->updated_by = auth()->id();
             }
-        });
-
-        static::created(function ($kalam) {
-                if ($kalam->user_id) {
-                    // syncWithoutDetaching agar user_id masuk ke tabel pivot polymorphic 
-                    // tanpa menghapus user lain yang mungkin juga di-attach via controller
-                    $kalam->authors()->syncWithoutDetaching([$kalam->user_id]);
-                }
-            });        
+        });      
 
         static::updating(function ($kalam) {
             if (auth()->check()) {
                 $kalam->updated_by = auth()->id();
             }
-        });
-
-        static::updated(function ($kalam) {
-            if ($kalam->user_id) {
-                // Memastikan user_id pemilik Kalam tetap tercentang/ada di tabel pivot
-                $kalam->authors()->syncWithoutDetaching([$kalam->user_id]);
-            }
-        });        
+        });     
 
         static::saving(function ($kalam) {
             // 1. Auto-generate slug jika kosong
@@ -75,7 +60,14 @@ class Kalam extends Model
             // 2. Ekstrak gambar pertama dari body untuk thumbnail
             preg_match('/<img.+?src=["\'](.+?)["\'].*?>/i', $kalam->body, $matches);
             $kalam->thumbnail = $matches[1] ?? null;
-        });        
+        });    
+        
+        static::saved(function ($kalam) {
+            if ($kalam->user_id) {
+                // Dipaksa masuk kembali ke tabel pivot polymorph jika tidak sengaja terhapus oleh sync() controller
+                $kalam->authors()->syncWithoutDetaching([$kalam->user_id]);
+            }
+        });
     } 
 
     /**

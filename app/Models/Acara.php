@@ -39,28 +39,13 @@ class Acara extends Model
                 $acara->created_by = auth()->id();
                 $acara->updated_by = auth()->id();
             }
-        });
-
-        static::created(function ($acara) {
-            if ($acara->user_id) {
-                // syncWithoutDetaching agar user_id masuk ke tabel pivot polymorphic 
-                // tanpa menghapus user lain yang mungkin juga di-attach via controller
-                $acara->authors()->syncWithoutDetaching([$acara->user_id]);
-            }
-        });        
+        });     
 
         static::updating(function ($acara) {
             if (auth()->check()) {
                 $acara->updated_by = auth()->id();
             }
-        });
-
-        static::updated(function ($acara) {
-            if ($acara->user_id) {
-                // Memastikan user_id pemilik Acara tetap tercentang/ada di tabel pivot
-                $acara->authors()->syncWithoutDetaching([$acara->user_id]);
-            }
-        });    
+        });  
 
         static::saving(function ($acara) {
             if (empty($acara->slug)) {
@@ -71,6 +56,13 @@ class Acara extends Model
             preg_match('/<img.+?src=["\'](.+?)["\'].*?>/i', $acara->body, $matches);
             $acara->thumbnail = $matches[1] ?? null;
         });
+
+        static::saved(function ($acara) {
+            if ($acara->user_id) {
+                // Dipaksa masuk kembali ke tabel pivot polymorph jika tidak sengaja terhapus oleh sync() controller
+                $acara->authors()->syncWithoutDetaching([$acara->user_id]);
+            }
+        });        
     }
 
     /**

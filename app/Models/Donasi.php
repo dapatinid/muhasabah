@@ -35,28 +35,13 @@ class Donasi extends Model
                 $donasi->created_by = auth()->id();
                 $donasi->updated_by = auth()->id();
             }
-        });
-
-        static::created(function ($donasi) {
-            if ($donasi->user_id) {
-                // syncWithoutDetaching agar user_id masuk ke tabel pivot polymorphic 
-                // tanpa menghapus user lain yang mungkin juga di-attach via controller
-                $donasi->authors()->syncWithoutDetaching([$donasi->user_id]);
-            }
-        });        
+        });      
 
         static::updating(function ($donasi) {
             if (auth()->check()) {
                 $donasi->updated_by = auth()->id();
             }
         });
-
-        static::updated(function ($donasi) {
-            if ($donasi->user_id) {
-                // Memastikan user_id pemilik Donasi tetap tercentang/ada di tabel pivot
-                $donasi->authors()->syncWithoutDetaching([$donasi->user_id]);
-            }
-        });    
 
         static::saving(function ($donasi) {
             if (empty($donasi->slug)) {
@@ -67,6 +52,13 @@ class Donasi extends Model
             preg_match('/<img.+?src=["\'](.+?)["\'].*?>/i', $donasi->body, $matches);
             $donasi->thumbnail = $matches[1] ?? null;
         });
+
+        static::saved(function ($donasi) {
+            if ($donasi->user_id) {
+                // Dipaksa masuk kembali ke tabel pivot polymorph jika tidak sengaja terhapus oleh sync() controller
+                $donasi->authors()->syncWithoutDetaching([$donasi->user_id]);
+            }
+        });        
     }
 
     public function payments(): MorphMany
