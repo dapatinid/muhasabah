@@ -207,16 +207,28 @@ let notificationAudio: HTMLAudioElement | null = null
 const unlockAudioForIOS = () => {
   if (!notificationAudio) {
     notificationAudio = new Audio('/mixkit-long-pop-2358.wav')
-    notificationAudio.volume = 0.5
-    
-    // Putar audio kosong/senyap sejenak untuk memicu izin iOS Safari
+
+    // 🔇 Bisukan dulu saat proses "unlock" agar tidak terdengar bunyi acak
+    // setiap kali user tap/klik pertama kali di halaman ini.
+    notificationAudio.volume = 0
+
+    // Putar sejenak (senyap) untuk memicu izin iOS Safari, lalu langsung hentikan
     notificationAudio.play()
       .then(() => {
+        notificationAudio!.pause()
+        notificationAudio!.currentTime = 0
+        // Kembalikan volume ke level normal untuk notifikasi asli nanti
+        notificationAudio!.volume = 0.5
+
         // Jika sukses dipicu oleh user gesture, bersihkan event listener agar tidak boros memori
         document.removeEventListener('click', unlockAudioForIOS)
         document.removeEventListener('touchstart', unlockAudioForIOS)
       })
-      .catch(err => console.log('iOS Audio unlock failed:', err))
+      .catch(err => {
+        // Tetap kembalikan volume walau gagal, agar tidak nyangkut di 0
+        notificationAudio!.volume = 0.5
+        console.log('iOS Audio unlock failed:', err)
+      })
   }
 }
 
