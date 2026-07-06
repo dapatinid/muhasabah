@@ -5,6 +5,7 @@ import { Toaster, toast } from 'vue-sonner'
 import 'vue-sonner/style.css'
 import BottomNavigation from '@/components/BottomNavigation.vue'
 import { ArrowLeft } from 'lucide-vue-next'
+import MasjidPattern from '@/components/MasjidPattern.vue';
 
 // ── 1. Impor Supabase Client untuk Real-time ──────────────────────────────────
 import { createClient } from '@supabase/supabase-js'
@@ -280,7 +281,7 @@ const playNotificationSound = () => {
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <div class="min-h-screen bg-stone-950 relative overflow-x-hidden" style="font-family: 'Plus Jakarta Sans', sans-serif;">
-    <div class="fixed inset-0 z-0 opacity-[0.125] pointer-events-none" :style="{ backgroundImage: `url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 325 325%22%3E%3Cg fill=%22none%22 stroke=%22%23D4A017%22 stroke-width=%225%22%3E%3Cpath d=%22M324.268 160.718l-46.131-46.13V49.349c0-1.381-1.119-2.5-2.5-2.5h-65.24L164.268.718c-.938-.938-2.598-.938-3.535 0l-46.129 46.131H49.361c-1.381 0-2.5 1.119-2.5 2.5v65.239l-46.129 46.13c-.976.977-.976 2.559 0 3.535l46.129 46.13v65.239c0 1.381 1.119 2.5 2.5 2.5h65.242l46.129 46.131c.469.469 1.104.732 1.768.732.663 0 1.299-.264 1.768-.732l46.129-46.131h65.24c1.381 0 2.5-1.119 2.5-2.5v-65.239l46.131-46.13c.469-.469.732-1.104.732-1.768 0-1.076-.263-1.712-.732-2.18zM242.17 195.485v46.668h-46.672l-32.998 33-32.998-33H82.828v-46.668l-32.996-33 32.996-33V82.817h46.674l32.998-33l32.998 33h46.672v46.668l32.998 33-32.998 33z%22/%3E%3Cpath d=%22M228.893 96.097h-38.896L162.5 68.596l-27.498 27.501H96.107v38.889l-27.498 27.5 27.498 27.5v38.889h38.895l27.498 27.501l27.496-27.501h38.896v-38.889l27.498-27.5-27.498-27.5V96.097zm-18.665 78.595h-18.262l12.912 12.91.664 17.926-17.926-.664-12.912-12.911v18.259L162.5 223.356l-12.205-13.145v-18.261l-12.912 12.913-17.926.664.664-17.926 12.912-12.912-18.26.002-13.144-12.207 13.144-12.205 18.26-.002-12.912-12.91-.664-17.926 17.926.664 12.912 12.912v-18.26l12.205-13.145 12.205 13.145v18.26l12.912-12.912 17.926-.664-.664 17.926-12.912 12.912h18.262l13.141 12.205-13.141 12.205z%22/%3E%3Cpolygon points=%22150.768,134.162 134.174,150.755 134.174,174.217 150.766,190.809 174.232,190.809 190.822,174.219 190.822,150.753 174.232,134.162%22/%3E%3C/g%3E%3C/svg%3E')`, backgroundSize: '120px 120px' }" />
+    <MasjidPattern />
 
     <div class="fixed inset-0 z-0 pointer-events-none" style="background: radial-gradient(ellipse at 50% 0%, rgba(120,90,40,0.12) 0%, transparent 60%)" />
 

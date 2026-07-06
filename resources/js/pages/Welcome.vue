@@ -2,7 +2,7 @@
 import { Head, Link, usePage } from '@inertiajs/vue3'
 import { 
   BookOpen, CalendarDays, Search, UserRound, Target, Heart, User, Loader2, ArrowRight, X,
-  MapPin
+  MapPin, Phone, Mail, Facebook, Instagram, Youtube, Linkedin, Music2, ChevronRight, Grid, Box
 } from 'lucide-vue-next'
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import {
@@ -397,7 +397,7 @@ function getHargaBadgeInfo(acara: any) {
       </Link>
     </template>
 
-    <main class="space-y-8 pb-32">
+    <main class="space-y-8 pb-10">
       <section class="relative mt-5 px-5">
         <Dialog v-model:open="isSearchOpen">
           <DialogTrigger as-child>
@@ -853,6 +853,69 @@ function getHargaBadgeInfo(acara: any) {
       </section>
 
     </main>
+
+    <footer class="bg-[#181A1B] text-stone-300 pt-6 pb-8 border-t border-stone-800 -mb-14">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="flex justify-between items-center mb-8">
+            <div class="flex items-center gap-3">
+              <div class="size-10 bg-teal-500/20 rounded-xl flex items-center justify-center text-teal-400">
+                   <img src="/apple-touch-icon.png" alt="Muhasabah.ID" class="p-1" />
+              </div>
+              <h2 class="text-2xl font-bold text-teal-400">Muhasabah.ID</h2>
+            </div>   
+        </div>         
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 mb-4">
+          
+          <div class="space-y-4">
+
+            <p class="text-sm leading-relaxed text-stone-400 pr-4">
+              Platform for self-reflection, spiritual growth, and Islamic inspiration for modern Muslims.
+            </p>
+
+            <ul class="space-y-4 text-sm mb-6 lg:mb-8">
+              <li class="flex items-start gap-3">
+                <MapPin class="size-5 text-stone-400 shrink-0 mt-0.5" />
+                <span class="text-stone-400 leading-snug">RT 22 RW 01, Desa Nawangsari, Kec. Weleri, Kab. Kendal, Jawa Tengah, 51355</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <Phone class="size-5 text-stone-400 shrink-0" />
+                <span class="text-stone-400">0859-5054-0055 (WA)</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <Mail class="size-5 text-stone-400 shrink-0" />
+                <span class="text-stone-400">admin@muhasabah.id</span>
+              </li>
+            </ul>            
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold text-stone-100 tracking-wider uppercase mb-4 lg:mb-6">Layanan Kami</h3>
+            <ul class="space-y-2.5 text-sm text-stone-400">
+              <li><a href="#" class="hover:text-teal-400 transition">Donasi & Zakat</a></li>
+              <li><a href="#" class="hover:text-teal-400 transition">Konsultasi Syariah</a></li>
+              <li><a href="#" class="hover:text-teal-400 transition">Cari Mentor</a></li>
+              <li><a href="#" class="hover:text-teal-400 transition">E-Learning & Kursus</a></li>
+              <li><a href="#" class="hover:text-teal-400 transition">Forum Diskusi</a></li>
+              <li><a href="#" class="hover:text-teal-400 transition">Aplikasi Mobile</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+        <div class="pt-6 lg:pt-8 border-t border-stone-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-stone-500">
+          <p class="text-center md:text-left">&copy; 2026 Muhasabah.ID</p>
+          <div class="flex flex-wrap justify-center gap-3 items-center">
+            <a href="#" class="hover:text-stone-300 transition">Kebijakan Privasi</a>
+            <span class="text-stone-700 hidden sm:inline">|</span>
+            <a href="#" class="hover:text-stone-300 transition">Syarat & Ketentuan</a>
+          </div>
+        </div>
+        
+      </div>
+    </footer>
+
   </AppLayoutPublic>
 </template>
 

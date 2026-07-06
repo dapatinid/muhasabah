@@ -50,7 +50,7 @@ const props = defineProps<{
                 <CustomPagination :paginator="dataList" />
             </div>
 
-            <div v-else class="py-20 text-center text-zinc-400 text-sm">
+            <div v-else class="py-20 px-4 text-center text-zinc-400 text-sm">
                 <Star class="size-6 mx-auto mb-2 opacity-30" />
                 Belum ada aktivitas pemberian rating yang tercatat pada akun Anda.
             </div>
