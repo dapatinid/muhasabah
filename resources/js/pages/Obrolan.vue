@@ -281,7 +281,9 @@ const playNotificationSound = () => {
             </div>
         </div>       
 
-        <div class="max-w-2xl mx-auto mt-2">
+        <div class="h-2"></div> <!-- Spacer untuk header -->        
+
+        <div class="max-w-2xl mx-auto">
 
             <div v-if="filteredConversations.length == 0" class="px-3 text-center text-stone-500 py-10">
                 {{ searchQuery ? 'Nama tidak ditemukan.' : 'Belum ada obrolan.' }}
