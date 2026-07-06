@@ -330,21 +330,14 @@ const goToKalamRespon = () => {
   // 1. Tutup modal terlebih dahulu
   closeInteraksiModal()
 
-  // 2. Beri jeda transisi, lalu arahkan menggunakan Inertia
+  // 2. Beri jeda 1 detik untuk efek transisi penutupan modal murni
   setTimeout(() => {
-    router.get(`/kalam/${targetSlug}/#respon`, {}, {
+    // Kita arahkan menggunakan query parameter '?scroll=respon'
+    router.get(`/kalam/${targetSlug}`, { scroll: 'respon' }, {
       preserveState: false,
-      onSuccess: () => {
-        // Paksa scroll manual jika browser di production melewatkan hash URL
-        setTimeout(() => {
-          const element = document.getElementById('respon')
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-          }
-        }, 100) // Jeda tipis memberikan waktu DOM production selesai render
-      }
+      replace: true
     })
-  }, 1000)
+  }, 500)
 }
 </script>
 

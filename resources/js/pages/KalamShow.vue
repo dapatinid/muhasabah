@@ -219,15 +219,29 @@ onMounted(() => {
   baseUrl.value = window.location.origin
   window.addEventListener('click', closeDropdowns)
 
-  // ANTISIPASI PRODUCTION: Jika URL mengandung '#respon', paksa scroll ke elemennya
-  if (window.location.hash === '#respon') {
-    setTimeout(() => {
+  // AMAN UNTUK PRODUCTION: Deteksi parameter query '?scroll=respon'
+  const urlParams = new URLSearchParams(window.location.search)
+  
+  if (urlParams.get('scroll') === 'respon') {
+    // Lakukan pemeriksaan berkala (maksimal 2 detik) untuk memastikan elemen sudah dirender oleh Vue
+    let checkExist = setInterval(() => {
       const element = document.getElementById('respon')
+      
       if (element) {
+        // Jika elemen ditemukan, langsung gulirkan layar ke target
         element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        
+        // Hapus interval agar tidak berjalan terus-menerus
+        clearInterval(checkExist)
+        
+        // Opsional: Bersihkan parameter '?scroll=respon' dari URL browser agar rapi jika halaman di-refresh
+        window.history.replaceState({}, document.title, window.location.pathname)
       }
-    }, 300) // Beri waktu ekstra bagi komponen Hydration di production
-  }    
+    }, 100) // Cek setiap 100ms
+
+    // Pengaman: Matikan interval setelah 2.5 detik jika elemen memang tidak ditemukan (mencegah memory leak)
+    setTimeout(() => clearInterval(checkExist), 2500)
+  }
 })
 
 function getWhatsAppReportLink(slug: string) {
