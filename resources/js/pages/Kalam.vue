@@ -323,19 +323,25 @@ const toggleReaksi = (type: string) => {
 }
 
 const goToKalamRespon = () => {
-  // 1. Pastikan data modal aktif ada, jika tidak ada batalkan proses
-  if (!activeKalamModal.value) return
+  // Evaluasi di awal
+  if (!activeKalamModal.value || !activeKalamModal.value.slug) {
+    console.error("Data modal tidak ditemukan");
+    return;
+  }
 
-  // 2. Amankan slug ke dalam variabel lokal sebelum modal ditutup
-  const slug = activeKalamModal.value.slug
+  // Mengisolasi data string slug agar tidak terpengaruh oleh penutupan modal
+  const savedSlug = String(activeKalamModal.value.slug);
 
-  // 3. Tutup modal secara instan/langsung
-  closeInteraksiModal()
+  // Tutup modal terlebih dahulu
+  closeInteraksiModal();
 
-  // 4. Tunggu 1 detik baru eksekusi perpindahan halaman/link
+  // Berikan jeda 1 detik untuk animasi keluar modal di production, lalu redirect
   setTimeout(() => {
-    router.get(`/kalam/${slug}/#respon`, {}, { preserveState: true })
-  }, 500) // 500 ms = 1 detik
+    router.get(`/kalam/${savedSlug}/#respon`, {}, { 
+      preserveState: false, // Biar state halaman list dilepas dan fokus ke halaman detail
+      replace: true 
+    });
+  }, 500);
 }
 </script>
 
