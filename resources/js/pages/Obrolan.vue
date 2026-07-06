@@ -411,7 +411,7 @@ const playNotificationSound = () => {
                             :disabled="form.processing"
                             class="relative bg-emerald-600 disabled:opacity-50 hover:bg-emerald-700 p-2.5 rounded-full text-white transition shrink-0"
                         >
-                            <LoaderCircle v-if="form.processing" class="size-5 mx-0.5 animate-spin" />
+                            <Rocket v-if="form.processing" class="size-5 mt-0.5 mx-0.5 animate-pulse" />
                             <Send v-else class="size-5 mt-0.5 mx-0.5" />
                         
                         </button>
