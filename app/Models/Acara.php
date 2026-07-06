@@ -41,11 +41,26 @@ class Acara extends Model
             }
         });
 
+        static::created(function ($acara) {
+            if ($acara->user_id) {
+                // syncWithoutDetaching agar user_id masuk ke tabel pivot polymorphic 
+                // tanpa menghapus user lain yang mungkin juga di-attach via controller
+                $acara->authors()->syncWithoutDetaching([$acara->user_id]);
+            }
+        });        
+
         static::updating(function ($acara) {
             if (auth()->check()) {
                 $acara->updated_by = auth()->id();
             }
         });
+
+        static::updated(function ($acara) {
+            if ($acara->user_id) {
+                // Memastikan user_id pemilik Acara tetap tercentang/ada di tabel pivot
+                $acara->authors()->syncWithoutDetaching([$acara->user_id]);
+            }
+        });    
 
         static::saving(function ($acara) {
             if (empty($acara->slug)) {

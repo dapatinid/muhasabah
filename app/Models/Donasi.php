@@ -37,11 +37,26 @@ class Donasi extends Model
             }
         });
 
+        static::created(function ($donasi) {
+            if ($donasi->user_id) {
+                // syncWithoutDetaching agar user_id masuk ke tabel pivot polymorphic 
+                // tanpa menghapus user lain yang mungkin juga di-attach via controller
+                $donasi->authors()->syncWithoutDetaching([$donasi->user_id]);
+            }
+        });        
+
         static::updating(function ($donasi) {
             if (auth()->check()) {
                 $donasi->updated_by = auth()->id();
             }
         });
+
+        static::updated(function ($donasi) {
+            if ($donasi->user_id) {
+                // Memastikan user_id pemilik Donasi tetap tercentang/ada di tabel pivot
+                $donasi->authors()->syncWithoutDetaching([$donasi->user_id]);
+            }
+        });    
 
         static::saving(function ($donasi) {
             if (empty($donasi->slug)) {
