@@ -26,6 +26,7 @@ class Acara extends Model
         'batas_registrasi' => 'datetime',
         'accept_tiket' => 'boolean',
         'accept_donasi' => 'boolean',
+        'is_published' => 'boolean',
     ];
 
     protected static function boot()

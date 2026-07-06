@@ -58,6 +58,11 @@ class Kalam extends Model
         });        
     }
 
+    protected $casts = [
+        'is_published' => 'boolean',
+        'is_anonymous' => 'boolean',
+    ];    
+
     /**
      * Relasi ke penulis asli (User)
      */
