@@ -164,7 +164,7 @@ const hubungiWhatsapp = () => {
 <template>
   <Head :title="user.name" />
 
-  <AppLayoutPublic subtitle="Profil Tokoh" :title="user.name" :show-back="true" back-href="/ukhuwah">
+  <AppLayoutPublic subtitle="Profil Tokoh" :title="'@' + user.slug + ' ~ ' + user.name" :show-back="true" back-href="/ukhuwah">
     <div class="bg-linear-to-b from-black via-black to-black/0 pb-20 min-h-screen">
 
       <div class="relative h-48 sm:h-64 bg-stone-900 overflow-hidden">

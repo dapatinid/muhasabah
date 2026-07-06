@@ -517,7 +517,7 @@ const toggleReaksi = (type: string) => {
     </div>
 
 
-    <div v-if="isModalOpen && activeKalamModal" class="fixed inset-0 z-50 flex items-start pt-20 sm:pt-0 sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
+    <div v-if="isModalOpen && activeKalamModal" class="fixed inset-0 z-100 flex items-start pt-20 sm:pt-0 sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
       <div @click="closeInteraksiModal" class="absolute inset-0 bg-stone-950/80 backdrop-blur-sm"></div>
 
       <div class="relative w-full sm:max-w-lg bg-stone-900 border-t sm:border border-stone-800 rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[85vh] sm:max-h-[75vh] z-10 animate-in slide-in-from-bottom duration-200">
@@ -577,8 +577,8 @@ const toggleReaksi = (type: string) => {
 
             <div v-if="!isUserLoggedIn" class="flex items-center justify-between bg-stone-950 border border-stone-800/80 p-3 rounded-xl gap-4">
               <div class="flex flex-col">
-                <span class="text-[10px] text-stone-500 font-medium">Pengaman Bot</span>
-                <span class="text-xs font-bold text-amber-400 tracking-wider">Berapakah: {{ captchaNum1 }} + {{ captchaNum2 }}?</span>
+                <span class="text-[10px] text-stone-500 font-medium">Keamanan</span>
+                <span class="text-xs font-bold text-amber-400 tracking-wider">Berapakah: {{ captchaNum1 }} + {{ captchaNum2 }} ?</span>
               </div>
               <input
                 v-model="userCaptchaAnswer"
@@ -595,7 +595,7 @@ const toggleReaksi = (type: string) => {
               class="w-full bg-amber-500 disabled:bg-amber-500/20 text-stone-950 disabled:text-stone-500 font-bold text-xs py-3 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform duration-150"
             >
               <SendHorizontal class="w-3.5 h-3.5" />
-              <span>{{ isSubmittingComment ? 'Mengirim...' : 'Kirim Komentar Resmi' }}</span>
+              <span>{{ isSubmittingComment ? 'Mengirim...' : 'Kirim Komentar' }}</span>
             </button>
 
             <div class="text-center text-[11px] text-stone-500 font-medium">

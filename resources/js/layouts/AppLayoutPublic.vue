@@ -64,6 +64,7 @@ const initRealtimeNotifications = () => {
           }
 
           // D. Tampilkan popup Sonner Toast secara instan
+          playNotificationSound() // Mainkan suara notifikasi
           toast.success(senderName, {
             description: messageText,
             duration: 5000,
@@ -215,6 +216,18 @@ function onScroll() {
 
 onMounted(() => window.addEventListener('scroll', onScroll, { passive: true }))
 onUnmounted(() => window.removeEventListener('scroll', onScroll))
+
+// ── INJEKSI AUDIO NOTIFIKASI ─────────────────────────────────────────────────
+const playNotificationSound = () => {
+  // Anda bisa mengganti URL ini dengan file .mp3 notifikasi pilihan Anda
+  const audio = new Audio('/mixkit-correct-answer-tone-2870.wav')
+  audio.volume = 0.5 // Mengatur volume (0.0 sampai 1.0)
+  
+  audio.play().catch(error => {
+    // Mengantisipasi auto-play block dari browser sebelum user berinteraksi dengan halaman
+    console.log('Audio play blocked or interrupted:', error)
+  })
+}
 </script>
 
 <template>

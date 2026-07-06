@@ -121,6 +121,7 @@ onMounted(() => {
                             }
                         }
                     })
+                    playNotificationSound() // Mainkan suara notifikasi
 
                 }
             }
@@ -189,6 +190,18 @@ const clearSearch = () => {
 
 const vFocusOnMount = {
     mounted: (el: HTMLInputElement) => el.focus()
+}
+
+// ── INJEKSI AUDIO NOTIFIKASI ─────────────────────────────────────────────────
+const playNotificationSound = () => {
+  // Anda bisa mengganti URL ini dengan file .mp3 notifikasi pilihan Anda
+  const audio = new Audio('/mixkit-long-pop-2358.wav')
+  audio.volume = 0.5 // Mengatur volume (0.0 sampai 1.0)
+  
+  audio.play().catch(error => {
+    // Mengantisipasi auto-play block dari browser sebelum user berinteraksi dengan halaman
+    console.log('Audio play blocked or interrupted:', error)
+  })
 }
 </script>
 

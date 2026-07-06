@@ -36,7 +36,7 @@ const props = defineProps<{
             jumlah_kursi: number;
         }>
     };
-    users: Array<{ id: number, name: string }>; // (TAMBAHAN) Daftar semua user
+    users: Array<{ id: number, name: string, slug: string }>; // (TAMBAHAN) Daftar semua user
     attachedUsers: Array<number>;
 }>();
 
@@ -62,7 +62,7 @@ const filteredUsers = computed(() => {
     let result = props.users;
     if (searchUser.value) {
         const lower = searchUser.value.toLowerCase();
-        result = result.filter(u => u.name.toLowerCase().includes(lower));
+        result = result.filter(u => u.slug.toLowerCase().includes(lower));
     }
 
     // 2. Urutkan hasilnya (Reaktif terhadap form.users)
@@ -78,7 +78,7 @@ const filteredUsers = computed(() => {
 
         // Jika status centangnya sama (sama-sama tercentang atau tidak tercentang), 
         // urutkan rapi berdasarkan abjad nama
-        return a.name.localeCompare(b.name);
+        return a.slug.localeCompare(b.slug);
     });
 });
 
@@ -473,7 +473,7 @@ const submit = () => {
                                 v-model="form.users"
                                 class="size-4 rounded border-zinc-300 text-amber-600 focus:ring-amber-500 cursor-pointer"
                             />
-                            <span class="text-sm font-medium text-zinc-700 dark:text-zinc-200">{{ user.name }}</span>
+                            <span class="text-sm font-medium text-zinc-700 dark:text-zinc-200">{{ user.slug }} ~ {{ user.name }}</span>
                         </label>
                         
                         <div v-if="filteredUsers.length === 0" class="p-6 text-center text-sm text-zinc-500 italic">

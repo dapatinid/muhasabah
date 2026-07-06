@@ -138,7 +138,7 @@ class AcaraController extends Controller
 
     public function edit(Acara $acara)
     {
-        $users = User::whereNotIn('id', [1, 2])->select('id', 'name')->orderBy('name')->get();
+        $users = User::whereNotIn('id', [1, 2])->select('id', 'name', 'slug')->orderBy('name')->get();
         $attachedUsers = $acara->users()->pluck('users.id')->toArray();
 
         $acara->tgl_mulai = $acara->tgl_mulai ? Carbon::parse($acara->tgl_mulai)->format('Y-m-d\TH:i') : '';

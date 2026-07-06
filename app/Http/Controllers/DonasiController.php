@@ -120,7 +120,7 @@ class DonasiController extends Controller
      */
     public function edit(Donasi $donasi)
     {
-        $users = User::whereNotIn('id', [1, 2])->select('id', 'name')->orderBy('name')->get();
+        $users = User::whereNotIn('id', [1, 2])->select('id', 'name', 'slug')->orderBy('name')->get();
         $attachedUsers = $donasi->users()->pluck('users.id')->toArray();
 
         return Inertia::render('Admin/Donasi/Edit', [
