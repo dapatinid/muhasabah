@@ -535,10 +535,10 @@ const goToKalamRespon = () => {
     </div>
 
 
-    <div v-if="isModalOpen && activeKalamModal" class="fixed inset-0 z-100 flex items-end justify-center sm:px-4 animate-in fade-in duration-200">
+    <div v-if="isModalOpen && activeKalamModal" class="fixed inset-0 z-100 flex items-end justify-center px-1 animate-in fade-in duration-200">
       <div @click="closeInteraksiModal" class="absolute inset-0 bg-stone-950/80"></div>
 
-      <div class="relative w-full sm:max-w-lg bg-stone-900 border-t sm:border border-stone-800 rounded-t-2xl shadow-2xl flex flex-col max-h-[85vh] sm:max-h-[75vh] z-10 animate-in slide-in-from-bottom duration-200">
+      <div class="relative w-full sm:max-w-lg bg-stone-900 border-x border-t border-stone-700 rounded-t-2xl shadow-2xl flex flex-col max-h-[85vh] sm:max-h-[75vh] z-10 animate-in slide-in-from-bottom duration-200">
         
         <div class="p-4 border-b border-stone-800/60 flex items-center justify-between">
           <div>

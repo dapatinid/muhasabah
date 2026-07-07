@@ -92,17 +92,53 @@ const getHistory = (): { path: string; scrollY: number }[] => {
 }
 
 // ── Scroll Restore Helper ─────────────────────────────────────────────────────
+// Karena banyak <img loading="lazy">, gambar baru mulai di-load browser saat
+// posisinya mendekati viewport. Jadi kita tetap perlu "memaksa" scroll ke target
+// (agar gambar di sekitar situ ke-trigger loading-nya), TAPI kita berhenti bukan
+// berdasarkan waktu tetap, melainkan berdasarkan sinyal nyata bahwa halaman sudah
+// selesai load: tinggi dokumen sudah stabil (tidak ada elemen/gambar baru yang
+// mengubah layout) selama beberapa saat berturut-turut.
 const restoreScroll = (targetY: number) => {
-  if (targetY <= 0) return
-  const start = Date.now()
-  const attempt = () => {
-    if (document.body.scrollHeight >= targetY + window.innerHeight || Date.now() - start > 1000) {
-      window.scrollTo({ top: targetY, behavior: 'instant' })
-    } else {
-      requestAnimationFrame(attempt)
-    }
+  if (targetY <= 0) {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+    return
   }
-  requestAnimationFrame(attempt)
+
+  const maxWaitTime = 3000       // Batas aman maksimal menunggu, agar tidak loop selamanya
+  const requiredStableTime = 250 // Tinggi dokumen harus tidak berubah selama 250ms berturut-turut
+  const startTime = Date.now()
+
+  let lastHeight = document.documentElement.scrollHeight
+  let stableSince = Date.now()
+  let rafId = 0
+
+  const tick = () => {
+    // Paksa posisi scroll ke target setiap frame, supaya gambar lazy-load di
+    // sekitar area tersebut ikut ter-trigger oleh browser untuk mulai loading.
+    window.scrollTo({ top: targetY, behavior: 'instant' })
+
+    const currentHeight = document.documentElement.scrollHeight
+    if (currentHeight !== lastHeight) {
+      // Ada konten/gambar baru yang mengubah tinggi halaman -> reset penghitung stabil
+      lastHeight = currentHeight
+      stableSince = Date.now()
+    }
+
+    const reachedTarget = window.scrollY >= targetY - 5
+    const heightStable = Date.now() - stableSince >= requiredStableTime
+    const timedOut = Date.now() - startTime >= maxWaitTime
+
+    if ((reachedTarget && heightStable) || timedOut) {
+      // Pastikan posisi akhir presisi sebelum berhenti
+      window.scrollTo({ top: targetY, behavior: 'instant' })
+      cancelAnimationFrame(rafId)
+      return
+    }
+
+    rafId = requestAnimationFrame(tick)
+  }
+
+  rafId = requestAnimationFrame(tick)
 }
 
 // ── Flags ─────────────────────────────────────────────────────────────────────
@@ -131,13 +167,27 @@ const handleBack = () => {
     preserveScroll: false,
     replace: true,
     onFinish: () => {
-      restoreScroll(targetScrollY)
-      isNavigatingBack.value = false
+      // Tunggu satu frame agar DOM Inertia + Vue selesai ter-mount sebelum mulai restore scroll
+      requestAnimationFrame(() => {
+        restoreScroll(targetScrollY)
+        isNavigatingBack.value = false
+      })
     }
   })
 }
 
 // ── Tombol Back Browser (popstate) ───────────────────────────────────────────
+// PENTING: Inertia sudah otomatis mendengarkan event `popstate` dan melakukan
+// visit ke halaman sebelumnya sendiri di belakang layar. Memanggil
+// `router.visit(window.location.href, ...)` lagi di sini (seperti versi lama)
+// memicu NAVIGASI KEDUA yang berjalan bersamaan dengan navigasi Inertia yang asli.
+// Dua request yang saling tumpang tindih inilah yang membuat `onFinish` tidak
+// bisa diandalkan untuk menandai "halaman benar-benar sudah selesai dimuat",
+// sehingga restore scroll sering jalan sebelum gambar lazy-load sempat muncul.
+//
+// Solusinya: jangan panggil router.visit() manual sama sekali. Cukup tunggu
+// event 'finish' dari navigasi Inertia yang sudah berjalan otomatis itu,
+// baru lakukan restore scroll setelah render Inertia+Vue benar-benar selesai.
 const handlePopState = () => {
   isPopState.value = true
 
@@ -149,13 +199,16 @@ const handlePopState = () => {
 
   const targetScrollY = history.length > 0 ? history[history.length - 1].scrollY : 0
 
-  router.visit(window.location.href, {
-    preserveScroll: false,
-    replace: true,
-    onFinish: () => {
+  // Dengarkan SEKALI event 'finish' dari visit yang otomatis dijalankan Inertia
+  // akibat popstate ini, lalu langsung lepas listener-nya agar tidak menumpuk.
+  const removePopFinishListener = router.on('finish', () => {
+    removePopFinishListener()
+
+    // Tunggu satu frame agar DOM Vue selesai ter-mount sebelum mulai restore scroll
+    requestAnimationFrame(() => {
       restoreScroll(targetScrollY)
       isPopState.value = false
-    }
+    })
   })
 }
 

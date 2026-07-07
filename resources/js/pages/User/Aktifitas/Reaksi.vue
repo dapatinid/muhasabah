@@ -27,6 +27,24 @@ const renderEmoji = (type: string) => {
     }
 }
 
+// Fungsi helper untuk menentukan prefix URL
+const getRoutePrefix = (type) => {
+  if (!type) return 'lingkaran';
+
+  // Daftarkan semua kondisi di sini
+  const routes = {
+    'Masjid': 'masjid',
+    'Donasi': 'donasi',
+    'Acara': 'acara',
+    'Kalam': 'kalam'
+  };
+
+  // Cari key yang terkandung di dalam reaktiable_type
+  const match = Object.keys(routes).find(key => type.includes(key));
+  
+  // Jika cocok gunakan hasilnya, jika tidak ada yang cocok (default) jadi 'lingkaran'
+  return match ? routes[match] : 'lingkaran';
+};
 </script>
 
 <template>
@@ -60,7 +78,11 @@ const renderEmoji = (type: string) => {
                                 Berekspresi {{ renderEmoji(log.type).label }}
                             </div>
                             <span class="text-xs text-zinc-400 mt-0.5 block">
-                                Di tulisan: <span class="font-medium text-zinc-600 dark:text-zinc-300">{{ log.reaktiable?.judul || 'Konten telah dihapus' }}</span>
+                                Di tulisan: <span class="font-medium text-zinc-600 dark:text-zinc-300 hover:text-indigo-500">
+                                    <Link :href="`/${getRoutePrefix(log.reaktiable_type)}/${log.reaktiable?.slug}`">
+                                        {{ log.reaktiable?.judul || 'Konten telah dihapus' }}
+                                    </Link>
+                                </span>
                             </span>
                         </div>
                     </div>

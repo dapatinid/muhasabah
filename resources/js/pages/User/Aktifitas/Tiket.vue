@@ -42,7 +42,7 @@ const formatIDR = (value: number) => {
                         <div>
                             <div class="text-sm font-bold text-zinc-900 dark:text-zinc-100">{{ formatIDR(log.nominal) }}</div>
                             <div class="text-xs text-zinc-400 mt-0.5">
-                                Bertiket ke: <span class="font-medium text-zinc-600 dark:text-zinc-300">{{ log.paymentable?.judul || 'Program Terhapus' }}</span>
+                                Bertiket ke: <span class="font-medium text-zinc-600 dark:text-zinc-300 hover:text-indigo-500"><Link :href="`/acara/${log.paymentable?.slug}`">{{ log.paymentable?.judul || 'Acara Terhapus' }}</Link></span>
                             </div>
                             <div class="mt-1"><span class="text-[10px] uppercase px-2 py-0.5 rounded font-bold" :class="log.status === 'success' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'">{{ log.status }}</span></div>
                         </div>

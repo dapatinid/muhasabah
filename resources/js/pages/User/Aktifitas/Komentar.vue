@@ -15,6 +15,25 @@ const getModulePath = (type: string) => {
     if (type?.includes('Kalam')) return 'Kalam Hikmah'
     return 'Postingan Publik'
 }
+
+// Fungsi helper untuk menentukan prefix URL
+const getRoutePrefix = (type) => {
+  if (!type) return 'lingkaran';
+
+  // Daftarkan semua kondisi di sini
+  const routes = {
+    'Masjid': 'masjid',
+    'Donasi': 'donasi',
+    'Acara': 'acara',
+    'Kalam': 'kalam'
+  };
+
+  // Cari key yang terkandung di dalam reaktiable_type
+  const match = Object.keys(routes).find(key => type.includes(key));
+  
+  // Jika cocok gunakan hasilnya, jika tidak ada yang cocok (default) jadi 'lingkaran'
+  return match ? routes[match] : 'lingkaran';
+};
 </script>
 
 <template>
@@ -47,8 +66,11 @@ const getModulePath = (type: string) => {
                     </div>
                     
                     <div>
-                        <div class="text-sm font-semibold text-zinc-800 dark:text-zinc-200 line-clamp-1 mb-2">
-                            Topik: "{{ log.commentable?.judul || 'Konten Telah Dihapus' }}"
+                        <div class="text-sm font-semibold text-zinc-800 dark:text-zinc-200 line-clamp-1 mb-2 hover:text-indigo-500">
+                            Topik: 
+                                    <Link :href="`/${getRoutePrefix(log.commentable_type)}/${log.commentable?.slug}`">
+                                        "{{ log.commentable?.judul || 'Konten telah dihapus' }}"
+                                    </Link>
                         </div>
                         <div class="text-sm text-zinc-600 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-950 p-4 rounded-xl border border-zinc-100 dark:border-zinc-800/80 italic shadow-inner">
                             "{{ log.body }}"

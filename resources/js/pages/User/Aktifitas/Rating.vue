@@ -40,7 +40,7 @@ const props = defineProps<{
                                 Memberikan {{ log.score }} Bintang 
                             </div>
                             <div class="text-xs text-zinc-400 mt-0.5">
-                                Ke Target: <span class="font-medium text-zinc-600 dark:text-zinc-300">{{ log.rateable?.nama || log.rateable?.name || 'Entitas Terhapus' }}</span>
+                                Ke Target: <span class="font-medium text-zinc-600 dark:text-zinc-300 hover:text-indigo-500"><Link :href="`/${log.rateable_type.includes('Masjid') ? 'masjid' : 'lingkaran'}/${log.rateable.slug}`">{{ log.rateable?.nama || 'Entitas Terhapus' }}</Link></span>
                             </div>
                         </div>
                     </div>

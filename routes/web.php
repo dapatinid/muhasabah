@@ -24,7 +24,7 @@ use App\Models\District;
 use App\Models\Village;
 
 Route::get('/', function () {
-    $kalams = \App\Models\Kalam::with('users:id,name')->latest()->take(3)->get();
+    $kalams = \App\Models\Kalam::with(['user:id,name','users:id,name'])->latest()->take(3)->get();
     
     $donasis = \App\Models\Donasi::with('payments')
         ->where('is_published', true)

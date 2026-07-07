@@ -892,14 +892,14 @@ function getHargaBadgeInfo(acara: any) {
 
           <div>
             <h3 class="text-sm font-semibold text-stone-100 tracking-wider uppercase mb-4 lg:mb-6">Layanan Kami</h3>
-            <ul class="space-y-2.5 text-sm text-stone-400">
-              <li><a href="#" class="hover:text-teal-400 transition">Donasi & Zakat</a></li>
-              <li><a href="#" class="hover:text-teal-400 transition">Konsultasi Syariah</a></li>
-              <li><a href="#" class="hover:text-teal-400 transition">Cari Mentor</a></li>
-              <li><a href="#" class="hover:text-teal-400 transition">E-Learning & Kursus</a></li>
-              <li><a href="#" class="hover:text-teal-400 transition">Forum Diskusi</a></li>
-              <li><a href="#" class="hover:text-teal-400 transition">Aplikasi Mobile</a></li>
-            </ul>
+            <div class="grid grid-cols-2 sm:grid-cols-1 space-y-2.5 text-sm text-stone-400">
+              <div class="truncate"><a href="#" class="hover:text-teal-400 transition">Donasi & Zakat</a></div>
+              <div class="truncate"><a href="#" class="hover:text-teal-400 transition">Konsultasi Syariah</a></div>
+              <div class="truncate"><a href="#" class="hover:text-teal-400 transition">Cari Mentor</a></div>
+              <div class="truncate"><a href="#" class="hover:text-teal-400 transition">E-Learning & Kursus</a></div>
+              <div class="truncate"><a href="#" class="hover:text-teal-400 transition">Forum Diskusi</a></div>
+              <div class="truncate"><a href="#" class="hover:text-teal-400 transition">Aplikasi Mobile</a></div>
+            </div>
           </div>
 
         </div>
