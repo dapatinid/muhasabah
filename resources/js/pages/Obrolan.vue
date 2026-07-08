@@ -248,15 +248,21 @@ const playNotificationSound = () => {
   })
 }
 
+function isMobileDevice() {
+    return window.matchMedia('(pointer: coarse)').matches;
+}
+
 function handleKeydown(e) {
-    // Abaikan kalau masih dalam proses IME composition (mis. input bahasa Asia, atau autocorrect tertentu)
     if (e.isComposing || e.keyCode === 229) return;
 
+    // Di mobile: biarkan Enter selalu jadi newline, jangan intercept sama sekali
+    if (isMobileDevice()) return;
+
+    // Di desktop: Enter = kirim, Shift+Enter = newline
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         sendMessage();
     }
-    // Shift+Enter dibiarkan default → buat newline
 }
 </script>
 
@@ -292,7 +298,7 @@ function handleKeydown(e) {
 
         </div>             
 
-        <div class="bg-zinc-950 min-h-[calc(100vh*2)]">       
+        <div class="bg-zinc-950 min-h-screen">       
 
             <div v-if="filteredConversations.length == 0" class="px-3 text-center text-stone-500 py-10">
                 {{ searchQuery ? 'Nama tidak ditemukan.' : 'Belum ada obrolan.' }}
