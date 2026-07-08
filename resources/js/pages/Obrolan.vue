@@ -272,7 +272,7 @@ function handleKeydown(e) {
 
         <div class="w-full lg:w-[575px] pointer-events-auto gap-3 fixed top-0 z-10">
             
-            <div v-if="isSearching" class="h-16 bg-stone-900 border-stone-800 border z-60 shadow-2xl flex items-center px-5 pt-1 gap-2">
+            <div v-if="isSearching" class="h-16 bg-stone-900 border-stone-800 border-b lg:border-x z-60 shadow-2xl flex items-center px-5 pt-1 gap-2">
                 <Search class="size-5 text-stone-400 shrink-0" />
                 <input 
                     v-model="searchQuery"
@@ -286,7 +286,7 @@ function handleKeydown(e) {
                 </button>
             </div>
 
-            <h1 v-else class="h-16 text-white pt-1 px-3 flex items-center justify-center relative bg-stone-900 border-stone-800 border z-60 shadow-2xl">
+            <h1 v-else class="h-16 text-white pt-1 px-3 flex items-center justify-center relative bg-stone-900 border-stone-800 border-b lg:border-x z-60 shadow-2xl">
                 <Link :href="'/ukhuwah'" class="absolute left-3 p-2 rounded-full hover:bg-stone-800 text-stone-400 transition">
                     <ArrowLeft class="size-5" />
                 </Link>
@@ -309,13 +309,13 @@ function handleKeydown(e) {
                     v-for="conv in filteredConversations" :key="conv.id"
                             @click="openChat(conv)"
                     :class="[
-                        'flex items-center gap-4 p-4 border-y-[0.5px] cursor-pointer transition-colors',
+                        'flex items-center gap-3 p-3 border-y-[0.5px] cursor-pointer transition-colors select-none',
                         conv.unread_count > 0 
                             ? 'bg-emerald-950/20 border-emerald-800/40 hover:bg-emerald-950/30' 
                             : 'bg-stone-950 border-stone-800 hover:bg-stone-800'
                     ]"
                 >
-                    <div class="size-12 bg-stone-800 rounded-full flex items-center justify-center shrink-0 relative">
+                    <div class="size-14 bg-stone-800 rounded-full flex items-center justify-center shrink-0 relative">
                         <img v-if="conv.user.avatar" :src="`/storage/${conv.user.avatar}`"
                           class=" rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
                         <img v-else :src="conv.user.gender === 'P' ? `/avatar_cewe.png` : `/avatar_cowo.png`"
@@ -395,7 +395,7 @@ function handleKeydown(e) {
                     <div 
                         v-for="msg in messages" :key="msg.id"
                         :class="[
-                            'flex flex-col gap-1 max-w-[75%]',
+                            'flex flex-col gap-5 max-w-[75%]',
                             msg.sender_id == activeChat.user.id 
                                 ? 'self-start mr-auto' 
                                 : 'self-end ml-auto'
@@ -403,23 +403,30 @@ function handleKeydown(e) {
                     >
                         <div 
                             :class="[
-                                'p-3 text-sm whitespace-pre-wrap',
+                                'p-3 text-sm whitespace-pre-wrap relative',
                                 msg.sender_id == activeChat.user.id 
-                                    ? 'bg-stone-800 text-stone-200 rounded-2xl rounded-bl-none' 
-                                    : 'bg-emerald-600 text-white rounded-2xl rounded-br-none'
+                                    ? 'bg-stone-800 text-stone-200 rounded-2xl rounded-bl-none mb-8' 
+                                    : 'bg-emerald-600 text-white rounded-2xl rounded-br-none mb-5'
                             ]"
                         >
                             {{ msg.body }}
-                        </div>
 
-                        <span 
-                            :class="[
-                                'text-[10px] opacity-70 px-1 flex items-center ',
-                                msg.sender_id == activeChat.user.id ? 'text-stone-500 ' : 'text-emerald-100 justify-end'
-                            ]"
-                        >
-                            {{ formatRelativeTime(msg.created_at) }}
-                        </span>
+                            <span 
+                                :class="[
+                                    'text-[10px] opacity-70 mt-2 flex items-center absolute',
+                                    msg.sender_id == activeChat.user.id ? 'text-stone-500 left-9 -bottom-5' : 'text-emerald-100 right-0 -bottom-5'
+                                ]"
+                            >
+                                {{ formatRelativeTime(msg.created_at) }}
+                            </span>     
+                  
+                            <span v-if="msg.sender_id == activeChat.user.id " class="absolute left-0 -bottom-9 size-8 bg-stone-800 rounded-full flex items-center justify-center shrink-0">
+                                <img v-if="activeChat.user.avatar" :src="`/storage/${activeChat.user.avatar}`"
+                                class=" rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
+                                <img v-else :src="activeChat.user.gender === 'P' ? `/avatar_cewe.png` : `/avatar_cowo.png`"
+                                class=" rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
+                            </span>                         
+                        </div>
                     </div>
                 </div>
 
