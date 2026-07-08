@@ -2,6 +2,166 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 /**
 * @see \Inertia\Controller::__invoke
 * @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/kebijakan-privasi'
+*/
+const Controller8d420e8836099d9098a665641f2faef3 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: Controller8d420e8836099d9098a665641f2faef3.url(options),
+    method: 'get',
+})
+
+Controller8d420e8836099d9098a665641f2faef3.definition = {
+    methods: ["get","head"],
+    url: '/kebijakan-privasi',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/kebijakan-privasi'
+*/
+Controller8d420e8836099d9098a665641f2faef3.url = (options?: RouteQueryOptions) => {
+    return Controller8d420e8836099d9098a665641f2faef3.definition.url + queryParams(options)
+}
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/kebijakan-privasi'
+*/
+Controller8d420e8836099d9098a665641f2faef3.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: Controller8d420e8836099d9098a665641f2faef3.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/kebijakan-privasi'
+*/
+Controller8d420e8836099d9098a665641f2faef3.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: Controller8d420e8836099d9098a665641f2faef3.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/kebijakan-privasi'
+*/
+const Controller8d420e8836099d9098a665641f2faef3Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controller8d420e8836099d9098a665641f2faef3.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/kebijakan-privasi'
+*/
+Controller8d420e8836099d9098a665641f2faef3Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controller8d420e8836099d9098a665641f2faef3.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/kebijakan-privasi'
+*/
+Controller8d420e8836099d9098a665641f2faef3Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controller8d420e8836099d9098a665641f2faef3.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+Controller8d420e8836099d9098a665641f2faef3.form = Controller8d420e8836099d9098a665641f2faef3Form
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/syarat-ketentuan'
+*/
+const Controller03293bd771fb203395c1b7dcfc34d6ff = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: Controller03293bd771fb203395c1b7dcfc34d6ff.url(options),
+    method: 'get',
+})
+
+Controller03293bd771fb203395c1b7dcfc34d6ff.definition = {
+    methods: ["get","head"],
+    url: '/syarat-ketentuan',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/syarat-ketentuan'
+*/
+Controller03293bd771fb203395c1b7dcfc34d6ff.url = (options?: RouteQueryOptions) => {
+    return Controller03293bd771fb203395c1b7dcfc34d6ff.definition.url + queryParams(options)
+}
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/syarat-ketentuan'
+*/
+Controller03293bd771fb203395c1b7dcfc34d6ff.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: Controller03293bd771fb203395c1b7dcfc34d6ff.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/syarat-ketentuan'
+*/
+Controller03293bd771fb203395c1b7dcfc34d6ff.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: Controller03293bd771fb203395c1b7dcfc34d6ff.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/syarat-ketentuan'
+*/
+const Controller03293bd771fb203395c1b7dcfc34d6ffForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controller03293bd771fb203395c1b7dcfc34d6ff.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/syarat-ketentuan'
+*/
+Controller03293bd771fb203395c1b7dcfc34d6ffForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controller03293bd771fb203395c1b7dcfc34d6ff.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/syarat-ketentuan'
+*/
+Controller03293bd771fb203395c1b7dcfc34d6ffForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controller03293bd771fb203395c1b7dcfc34d6ff.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+Controller03293bd771fb203395c1b7dcfc34d6ff.form = Controller03293bd771fb203395c1b7dcfc34d6ffForm
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
 * @route '/laporan-riyadhoh'
 */
 const Controllerd695224dce3196d1787d0802ce2060c0 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -641,6 +801,8 @@ Controllere19ee86e9cf603ce1a59a1ec5d21dec5Form.head = (options?: RouteQueryOptio
 Controllere19ee86e9cf603ce1a59a1ec5d21dec5.form = Controllere19ee86e9cf603ce1a59a1ec5d21dec5Form
 
 const Controller = {
+    '/kebijakan-privasi': Controller8d420e8836099d9098a665641f2faef3,
+    '/syarat-ketentuan': Controller03293bd771fb203395c1b7dcfc34d6ff,
     '/laporan-riyadhoh': Controllerd695224dce3196d1787d0802ce2060c0,
     '/amal-ibadah': Controller0ae8bd5ae264ec9c75cf771d5afced2f,
     '/halaman-dibangun': Controllera0a232698784441c4a3e6e34ee783364,

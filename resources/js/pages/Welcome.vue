@@ -881,7 +881,7 @@ function getHargaBadgeInfo(acara: any) {
               </li>
               <li class="flex items-center gap-3">
                 <Phone class="size-5 text-stone-400 shrink-0" />
-                <span class="text-stone-400">0859-5054-0055 (WA)</span>
+                <span class="text-stone-400"><a href="https://wa.me/6285950540055?text='Halo admin, saya tertarik dengan Muhasabah.ID'" class="hover:text-teal-400 transition">0859-5054-0055 (WA)</a></span>
               </li>
               <li class="flex items-center gap-3">
                 <Mail class="size-5 text-stone-400 shrink-0" />
@@ -893,12 +893,12 @@ function getHargaBadgeInfo(acara: any) {
           <div>
             <h3 class="text-sm font-semibold text-stone-100 tracking-wider uppercase mb-4 lg:mb-6">Layanan Kami</h3>
             <div class="grid grid-cols-2 sm:grid-cols-1 space-y-2.5 text-sm text-stone-400">
-              <div class="truncate"><a href="#" class="hover:text-teal-400 transition">Donasi & Zakat</a></div>
-              <div class="truncate"><a href="#" class="hover:text-teal-400 transition">Konsultasi Syariah</a></div>
-              <div class="truncate"><a href="#" class="hover:text-teal-400 transition">Cari Mentor</a></div>
-              <div class="truncate"><a href="#" class="hover:text-teal-400 transition">E-Learning & Kursus</a></div>
-              <div class="truncate"><a href="#" class="hover:text-teal-400 transition">Forum Diskusi</a></div>
-              <div class="truncate"><a href="#" class="hover:text-teal-400 transition">Aplikasi Mobile</a></div>
+              <div class="truncate"><a href="https://wa.me/6285950540055?text='Halo admin, saya ingin konsultasi syariah'" class="hover:text-teal-400 transition">Konsultasi Syariah</a></div>
+              <div class="truncate"><a href="https://wa.me/6285950540055?text='Halo admin, saya ingin berdiskusi'" class="hover:text-teal-400 transition">Forum Diskusi</a></div>
+              <div class="truncate"><a href="https://wa.me/6285950540055?text='Halo admin, saya ingin mencari mentor'" class="hover:text-teal-400 transition">Cari Mentor</a></div>
+              <div class="truncate"><a href="https://wa.me/6285950540055?text='Halo admin, saya ingin mengunduh materi'" class="hover:text-teal-400 transition">Download Materi</a></div>
+              <div class="truncate"><a href="https://wa.me/6285950540055?text='Halo admin, saya ingin belajar lebih lanjut'" class="hover:text-teal-400 transition">E-Learning & Kursus</a></div>
+              <div class="truncate"><a href="https://wa.me/6285950540055?text='Halo admin, saya ingin tahu lebih banyak tentang aplikasi mobile'" class="hover:text-teal-400 transition">Aplikasi Mobile</a></div>
             </div>
           </div>
 
@@ -907,9 +907,9 @@ function getHargaBadgeInfo(acara: any) {
         <div class="pt-6 lg:pt-8 border-t border-stone-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-stone-500">
           <p class="text-center md:text-left">&copy; 2026 Muhasabah.ID</p>
           <div class="flex flex-wrap justify-center gap-3 items-center">
-            <a href="#" class="hover:text-stone-300 transition">Kebijakan Privasi</a>
+            <a href="/kebijakan-privasi" class="hover:text-stone-300 transition">Kebijakan Privasi</a>
             <span class="text-stone-700 hidden sm:inline">|</span>
-            <a href="#" class="hover:text-stone-300 transition">Syarat & Ketentuan</a>
+            <a href="/syarat-ketentuan" class="hover:text-stone-300 transition">Syarat & Ketentuan</a>
           </div>
         </div>
         

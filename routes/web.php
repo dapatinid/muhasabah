@@ -56,6 +56,10 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+// Halaman Legalitas - Publik
+Route::inertia('/kebijakan-privasi', 'Legal/KebijakanPrivasi')->name('kebijakan-privasi');
+Route::inertia('/syarat-ketentuan', 'Legal/SyaratKetentuan')->name('syarat-ketentuan');
+
 // Laporan Riyadhoh — publik
 Route::inertia('/laporan-riyadhoh', 'LaporanRiyadhoh')->name('laporan-riyadhoh');
 Route::inertia('/amal-ibadah', 'AmalIbadah')->name('amal-ibadah');

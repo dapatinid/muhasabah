@@ -98,13 +98,22 @@ const getHistory = (): { path: string; scrollY: number }[] => {
 // berdasarkan waktu tetap, melainkan berdasarkan sinyal nyata bahwa halaman sudah
 // selesai load: tinggi dokumen sudah stabil (tidak ada elemen/gambar baru yang
 // mengubah layout) selama beberapa saat berturut-turut.
-const restoreScroll = (targetY: number) => {
+// ── Skeleton Overlay (menyembunyikan lompatan scroll selama transisi) ────────
+const isPageLoading = ref(false)
+
+const restoreScroll = (targetY: number, options?: { longWait?: boolean; onSettled?: () => void }) => {
+  const notifySettled = () => options?.onSettled?.()
+
   if (targetY <= 0) {
     window.scrollTo({ top: 0, behavior: 'instant' })
+    notifySettled()
     return
   }
 
-  const maxWaitTime = 3000       // Batas aman maksimal menunggu, agar tidak loop selamanya
+  // Full remount (mis. dari handlePopState yang fetch ulang data) butuh waktu
+  // lebih lama: DOM mulai dari nol, gambar lazy-load harus dipicu ulang satu
+  // per satu seiring scroll mendekat, jadi progresnya bertahap, bukan instan.
+  const maxWaitTime = options?.longWait ? 6000 : 3000
   const requiredStableTime = 250 // Tinggi dokumen harus tidak berubah selama 250ms berturut-turut
   const startTime = Date.now()
 
@@ -132,6 +141,7 @@ const restoreScroll = (targetY: number) => {
       // Pastikan posisi akhir presisi sebelum berhenti
       window.scrollTo({ top: targetY, behavior: 'instant' })
       cancelAnimationFrame(rafId)
+      notifySettled()
       return
     }
 
@@ -177,19 +187,35 @@ const handleBack = () => {
 }
 
 // ── Tombol Back Browser (popstate) ───────────────────────────────────────────
-// PENTING: Inertia sudah otomatis mendengarkan event `popstate` dan melakukan
-// visit ke halaman sebelumnya sendiri di belakang layar. Memanggil
-// `router.visit(window.location.href, ...)` lagi di sini (seperti versi lama)
-// memicu NAVIGASI KEDUA yang berjalan bersamaan dengan navigasi Inertia yang asli.
-// Dua request yang saling tumpang tindih inilah yang membuat `onFinish` tidak
-// bisa diandalkan untuk menandai "halaman benar-benar sudah selesai dimuat",
-// sehingga restore scroll sering jalan sebelum gambar lazy-load sempat muncul.
+// Pendekatan disederhanakan supaya lebih pasti/predictable:
 //
-// Solusinya: jangan panggil router.visit() manual sama sekali. Cukup tunggu
-// event 'finish' dari navigasi Inertia yang sudah berjalan otomatis itu,
-// baru lakukan restore scroll setelah render Inertia+Vue benar-benar selesai.
+// Sebelumnya kita menunggu event 'navigate' (untuk mendeteksi swap otomatis
+// Inertia dari cache) sebelum memicu reload data -- rantai ini rawan meleset
+// urutannya. Sekarang kita langsung panggil `router.reload()` begitu popstate
+// terjadi, dengan `preserveState: true`.
+//
+// Kenapa ini lebih baik:
+// 1) `router.reload()` adalah visit SUNGGUHAN ke server -> onFinish DIJAMIN
+//    terpicu (beda dengan mengandalkan 'navigate' yang sulit dipastikan urutannya).
+// 2) `preserveState: true` membuat Inertia TIDAK me-remount komponen halaman --
+//    ia hanya mem-patch props (data) ke komponen yang sudah ada. Karena
+//    komponen & elemen DOM (termasuk <img> yang lazy-load) tidak dihancurkan,
+//    gambar yang sudah ter-load TIDAK ikut reset -- ini otomatis menghindari
+//    masalah "tinggi dokumen belum stabil" yang bikin scroll susah pas.
+// 3) `preserveScroll: true` mencegah Inertia mereset scroll ke atas secara
+//    otomatis -- kita kendalikan sendiri lewat restoreScroll setelah data fresh masuk.
+let pendingPopStateCleanup: (() => void) | null = null
+
 const handlePopState = () => {
+  // Kalau ada proses popstate sebelumnya yang belum selesai (misal user pencet
+  // tombol back berkali-kali dengan cepat), batalkan dulu supaya tidak tumpang tindih
+  if (pendingPopStateCleanup) {
+    pendingPopStateCleanup()
+    pendingPopStateCleanup = null
+  }
+
   isPopState.value = true
+  isPageLoading.value = true // Tutup layar dengan skeleton sampai data & posisi scroll benar-benar siap
 
   let history = getHistory()
   if (history.length > 0) {
@@ -199,17 +225,39 @@ const handlePopState = () => {
 
   const targetScrollY = history.length > 0 ? history[history.length - 1].scrollY : 0
 
-  // Dengarkan SEKALI event 'finish' dari visit yang otomatis dijalankan Inertia
-  // akibat popstate ini, lalu langsung lepas listener-nya agar tidak menumpuk.
-  const removePopFinishListener = router.on('finish', () => {
-    removePopFinishListener()
+  let cancelled = false
 
-    // Tunggu satu frame agar DOM Vue selesai ter-mount sebelum mulai restore scroll
-    requestAnimationFrame(() => {
-      restoreScroll(targetScrollY)
-      isPopState.value = false
-    })
+  const finalize = () => {
+    isPageLoading.value = false
+    isPopState.value = false
+    pendingPopStateCleanup = null
+  }
+
+  // Jaring pengaman keseluruhan: apa pun yang terjadi, jangan biarkan skeleton
+  // menggantung selamanya kalau reload gagal/lambat
+  const hardSafetyTimer = setTimeout(finalize, 8000)
+
+  router.reload({
+    preserveScroll: true,
+    preserveState: true,
+    onFinish: () => {
+      if (cancelled) return
+      clearTimeout(hardSafetyTimer)
+
+      // DOM tidak di-remount (preserveState:true), jadi tinggi halaman sudah
+      // representatif -- cukup tunggu 1 frame untuk memastikan Vue selesai
+      // mem-patch data terbaru, baru pulihkan posisi scroll.
+      requestAnimationFrame(() => {
+        restoreScroll(targetScrollY, { onSettled: finalize })
+      })
+    }
   })
+
+  pendingPopStateCleanup = () => {
+    cancelled = true
+    clearTimeout(hardSafetyTimer)
+    isPageLoading.value = false
+  }
 }
 
 // ── Flash Toast ───────────────────────────────────────────────────────────────
@@ -240,6 +288,13 @@ const removeBeforeListener = router.on('before', () => {
 
 // ── Lifecycle Hooks ───────────────────────────────────────────────────────────
 onMounted(() => {
+  // Matikan restorasi scroll bawaan browser: kita kontrol posisi scroll sepenuhnya
+  // secara manual (lewat restoreScroll), supaya tidak saling rebutan/konflik
+  // dengan mekanisme scroll-restore native browser saat back/forward.
+  if ('scrollRestoration' in window.history) {
+    window.history.scrollRestoration = 'manual'
+  }
+
   window.addEventListener('popstate', handlePopState)
   // Aktifkan channel real-time notifikasi chat global
   initRealtimeNotifications()
@@ -253,6 +308,13 @@ onUnmounted(() => {
   window.removeEventListener('popstate', handlePopState)
   removeFinishListener()
   removeBeforeListener()
+
+  // Bersihkan listener/timer restore popstate yang mungkin masih menggantung
+  if (pendingPopStateCleanup) {
+    pendingPopStateCleanup()
+    pendingPopStateCleanup = null
+  }
+  isPageLoading.value = false
   
   // Bersihkan channel Supabase saat berganti layout utama agar tidak bocor memori
   if (realtimeChannel) {
@@ -365,6 +427,40 @@ const playNotificationSound = () => {
       <BottomNavigation v-if="shouldShowNav" />
     </div>
 
+    <!-- Skeleton Overlay: menutupi layar selama proses kembali (popstate) berlangsung,
+         supaya user tidak pernah melihat lompatan/pergeseran posisi scroll -->
+    <transition name="skeleton-fade">
+      <div
+        v-if="isPageLoading"
+        class="fixed inset-0 z-201 bg-stone-950 overflow-hidden px-5 pt-20 pb-10 space-y-6"
+      >
+        <div v-for="n in 4" :key="n" class="space-y-3 animate-pulse">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-stone-800"></div>
+            <div class="space-y-1.5">
+              <div class="h-3 w-24 bg-stone-800 rounded"></div>
+              <div class="h-2.5 w-16 bg-stone-800/70 rounded"></div>
+            </div>
+          </div>
+          <div class="h-3.5 w-2/3 bg-stone-800 rounded"></div>
+          <div class="h-3 w-full bg-stone-800/70 rounded"></div>
+          <div class="h-3 w-5/6 bg-stone-800/70 rounded"></div>
+          <div class="h-56 sm:h-72 w-full bg-stone-800/60 rounded-xl"></div>
+        </div>
+      </div>
+    </transition>
+
     <Toaster position="top-right" richColors theme="system"/>
   </div>
 </template>
+
+<style scoped>
+.skeleton-fade-enter-active,
+.skeleton-fade-leave-active {
+  transition: opacity 0.15s ease;
+}
+.skeleton-fade-enter-from,
+.skeleton-fade-leave-to {
+  opacity: 0;
+}
+</style>

@@ -5,7 +5,9 @@ import {
   MapPin, UserCircle2, CheckCircle2, ShieldCheck, 
   BookOpen, Heart, CalendarDays, Target, MoonStar, MessageCircle, MessageCirclePlus, MessageSquare, Share2, Info,
   Check, Activity, Send,
-  ShieldX
+  ShieldX,
+  User,
+  ContactRound
 } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 
@@ -195,8 +197,17 @@ const hubungiWhatsapp = () => {
             <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-1">{{ user.name }}</h1>
             <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-sm text-stone-400 mb-3">
               <span class="inline-flex items-center gap-1">
-                <ShieldX v-if="user.level === 'Banned' || user.level === 'Suspend'" class="size-4 text-red-500" />
-                <ShieldCheck v-else class="size-4 text-emerald-500" /> {{ user.level || 'Anggota' }}
+                <template v-if="user.level === 'Banned' || user.level === 'Suspend'">
+                  <ShieldX class="size-4 text-red-500" /> {{ user.level }}
+                </template>
+
+                <template v-else-if="user.level">
+                  <ShieldCheck class="size-4 text-emerald-500" /> {{ user.level }}
+                </template>
+
+                <template v-else>
+                  <ContactRound class="size-4 text-stone-400" /> Anggota
+                </template>
               </span>
               <span>•</span>
               <span class="inline-flex items-center gap-1">

@@ -147,7 +147,7 @@ const getSisaHari = (tglSelesai: string | null, createdAt: string) => {
       <!-- HEADER SECTION -->
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">Program Donasi</h1>
+          <h1 class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">Manajemen Donasi</h1>
           <p class="text-zinc-500 dark:text-zinc-400 mt-1">Kelola penggalangan dana dan transparansi saldo donasi.</p>
         </div>
         

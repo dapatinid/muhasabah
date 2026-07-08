@@ -109,7 +109,7 @@ const getExcerpt = (html: string, wordLimit: number) => {
       <!-- HEADER SECTION -->
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">Kalam Riyadhoh</h1>
+          <h1 class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">Manajemen Kalam</h1>
           <p class="text-zinc-500 dark:text-zinc-400 mt-1">Berbagi hikmah, doa, dan perjalanan spiritual bersama.</p>
         </div>
         

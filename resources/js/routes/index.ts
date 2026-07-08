@@ -294,6 +294,168 @@ home.form = homeForm
 /**
 * @see \Inertia\Controller::__invoke
 * @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/kebijakan-privasi'
+*/
+export const kebijakanPrivasi = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: kebijakanPrivasi.url(options),
+    method: 'get',
+})
+
+kebijakanPrivasi.definition = {
+    methods: ["get","head"],
+    url: '/kebijakan-privasi',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/kebijakan-privasi'
+*/
+kebijakanPrivasi.url = (options?: RouteQueryOptions) => {
+    return kebijakanPrivasi.definition.url + queryParams(options)
+}
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/kebijakan-privasi'
+*/
+kebijakanPrivasi.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: kebijakanPrivasi.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/kebijakan-privasi'
+*/
+kebijakanPrivasi.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: kebijakanPrivasi.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/kebijakan-privasi'
+*/
+const kebijakanPrivasiForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: kebijakanPrivasi.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/kebijakan-privasi'
+*/
+kebijakanPrivasiForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: kebijakanPrivasi.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/kebijakan-privasi'
+*/
+kebijakanPrivasiForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: kebijakanPrivasi.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+kebijakanPrivasi.form = kebijakanPrivasiForm
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/syarat-ketentuan'
+*/
+export const syaratKetentuan = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: syaratKetentuan.url(options),
+    method: 'get',
+})
+
+syaratKetentuan.definition = {
+    methods: ["get","head"],
+    url: '/syarat-ketentuan',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/syarat-ketentuan'
+*/
+syaratKetentuan.url = (options?: RouteQueryOptions) => {
+    return syaratKetentuan.definition.url + queryParams(options)
+}
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/syarat-ketentuan'
+*/
+syaratKetentuan.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: syaratKetentuan.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/syarat-ketentuan'
+*/
+syaratKetentuan.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: syaratKetentuan.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/syarat-ketentuan'
+*/
+const syaratKetentuanForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: syaratKetentuan.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/syarat-ketentuan'
+*/
+syaratKetentuanForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: syaratKetentuan.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/syarat-ketentuan'
+*/
+syaratKetentuanForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: syaratKetentuan.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+syaratKetentuan.form = syaratKetentuanForm
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
 * @route '/laporan-riyadhoh'
 */
 export const laporanRiyadhoh = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({

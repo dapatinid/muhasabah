@@ -616,9 +616,10 @@ const goToKalamRespon = () => {
               <span>{{ isSubmittingComment ? 'Mengirim...' : 'Kirim Komentar' }}</span>
             </button>
 
-            <div class="text-center text-[11px] text-stone-500 font-medium">
+            <!-- <div class="text-center text-[11px] text-stone-500 font-medium">
               <button type="button" @click="goToKalamRespon" class="underline hover:text-stone-300 transition-colors">Lihat Semua Komentar</button>
-            </div>
+            </div> -->
+            <div class="h-4"></div>
           </form>
         </div>
 

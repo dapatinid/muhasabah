@@ -30,7 +30,7 @@ interface Question {
 
 // Daftar kategori kelayakan relawan/donatur
 const categories = [
-  { id: 1, name: 'Persetujuan', range: '1-20' },
+  { id: 1, name: 'Persetujuan Umum', range: '1-20' },
   { id: 2, name: 'Empati & Pemahaman Misi', range: '21-40' },
   { id: 3, name: 'Komitmen Waktu & Lapangan (Relawan)', range: '41-60' },
   { id: 4, name: 'Kapasitas & Konsistensi (Donatur)', range: '61-80' },
