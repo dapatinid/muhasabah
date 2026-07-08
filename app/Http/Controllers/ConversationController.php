@@ -47,7 +47,7 @@ class ConversationController extends Controller
 
                 return [
                     'id' => $conv->id,
-                    'user' => $otherUser->only(['id', 'name', 'avatar']),
+                    'user' => $otherUser->only(['id', 'name', 'avatar', 'gender']),
                     'last_message' => $conv->messages->first(),
                     'unread_count' => $unreadCount,
                     'last_message_time' => $lastMessageTime,

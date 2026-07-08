@@ -320,7 +320,7 @@ function handleKeydown(e) {
                           class=" rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
                         <img v-else :src="conv.user.gender === 'P' ? `/avatar_cewe.png` : `/avatar_cowo.png`"
                           class=" rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
-                          <span class="text-white">{{ JSON.stringify(conv.user.gender) }}</span>
+                          
                     </div>
                     <!-- <div class="size-12 bg-stone-800 rounded-full flex items-center justify-center shrink-0 relative">
                         <span class="text-stone-400 font-bold">{{ conv.user.name.charAt(0) }}</span>
@@ -336,7 +336,7 @@ function handleKeydown(e) {
                                     conv.unread_count > 0 ? 'font-black text-white' : 'font-bold text-stone-200'
                                 ]"
                             >
-                                {{ conv.user.name }}
+                                {{ conv.user.name }} 
                             </h3>
                             <span class="text-[10px] text-stone-500 shrink-0">
                                 {{ conv.last_message ? new Date(conv.last_message.created_at).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}) : '' }}
