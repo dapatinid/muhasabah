@@ -298,7 +298,9 @@ function handleKeydown(e) {
 
         </div>             
 
-        <div class="bg-zinc-950 min-h-[calc(100vh-7rem)] overflow-y-auto">    
+        <div class="bg-zinc-950 min-h-screen">    
+
+            <div class="h-18"></div>
 
             <div v-if="filteredConversations.length == 0" class="px-3 text-center text-stone-500 py-10">
                 {{ searchQuery ? 'Nama tidak ditemukan.' : 'Belum ada obrolan.' }}
