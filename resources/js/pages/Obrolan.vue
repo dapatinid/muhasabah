@@ -319,7 +319,7 @@ function handleKeydown(e) {
                         <img v-if="conv.user.avatar" :src="`/storage/${conv.user.avatar}`"
                           class=" rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
                         <img v-else :src="conv.user.gender === 'P' ? `/avatar_cewe.png` : `/avatar_cowo.png`"
-                          class=" rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
+                          class=" rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />{{ JSON.stringify(conv.user.gender) }}
                     </div>
                     <!-- <div class="size-12 bg-stone-800 rounded-full flex items-center justify-center shrink-0 relative">
                         <span class="text-stone-400 font-bold">{{ conv.user.name.charAt(0) }}</span>
