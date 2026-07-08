@@ -570,7 +570,7 @@ const goToKalamRespon = () => {
             </div>
           </div>
 
-          <form @submit.prevent="submitKomentar" class="space-y-4 pt-2 border-t border-stone-800/50">
+          <form @submit.prevent="submitKomentar" class="space-y-4 pt-3 border-t border-stone-800/50">
             <label class="text-[11px] font-bold uppercase tracking-wider text-stone-400 block">Tulis Komentar</label>
             
             <div class="space-y-3">
@@ -610,7 +610,7 @@ const goToKalamRespon = () => {
             <button
               type="submit"
               :disabled="isSubmittingComment || !commentForm.body || (!isUserLoggedIn && !userCaptchaAnswer)"
-              class="w-full bg-amber-500 disabled:bg-amber-500/20 text-stone-950 disabled:text-stone-500 font-bold text-xs py-3 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform duration-150"
+              class="w-full bg-amber-500 disabled:bg-amber-500/20 text-stone-950 disabled:text-stone-500 font-bold text-xs py-3 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform duration-150 mb-2"
             >
               <SendHorizontal class="w-3.5 h-3.5" />
               <span>{{ isSubmittingComment ? 'Mengirim...' : 'Kirim Komentar' }}</span>
@@ -619,7 +619,6 @@ const goToKalamRespon = () => {
             <!-- <div class="text-center text-[11px] text-stone-500 font-medium">
               <button type="button" @click="goToKalamRespon" class="underline hover:text-stone-300 transition-colors">Lihat Semua Komentar</button>
             </div> -->
-            <div class="h-4"></div>
           </form>
         </div>
 

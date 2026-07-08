@@ -898,7 +898,7 @@ function getHargaBadgeInfo(acara: any) {
               <div class="truncate"><a href="https://wa.me/6285950540055?text='Halo admin, saya ingin mencari mentor'" class="hover:text-teal-400 transition">Cari Mentor</a></div>
               <div class="truncate"><a href="https://wa.me/6285950540055?text='Halo admin, saya ingin mengunduh materi'" class="hover:text-teal-400 transition">Download Materi</a></div>
               <div class="truncate"><a href="https://wa.me/6285950540055?text='Halo admin, saya ingin belajar lebih lanjut'" class="hover:text-teal-400 transition">E-Learning & Kursus</a></div>
-              <div class="truncate"><a href="https://wa.me/6285950540055?text='Halo admin, saya ingin tahu lebih banyak tentang aplikasi mobile'" class="hover:text-teal-400 transition">Aplikasi Mobile</a></div>
+              <div class="truncate"><a href="https://wa.me/6285950540055?text='Halo admin, saya ingin memberi kritik dan saran'" class="hover:text-teal-400 transition">Kritik & Saran</a></div>
             </div>
           </div>
 

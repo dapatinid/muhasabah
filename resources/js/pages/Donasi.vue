@@ -2,7 +2,7 @@
 import { Head, Link, router } from '@inertiajs/vue3'
 import { computed, ref, watch } from 'vue'
 import debounce from 'lodash/debounce'
-import { Search, Heart, Target, CalendarDays, User } from 'lucide-vue-next'
+import { Search, Heart, Target, CalendarDays, User, Coins, ChartNoAxesCombined, Scale, HandHeart, Beef, LayoutGrid } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 
 const props = defineProps<{
@@ -41,7 +41,14 @@ const props = defineProps<{
 const search = ref(props.filters?.search ?? '')
 const kategori = ref(props.filters?.kategori ?? '')
 
-const kategoriList = ['Semua', 'infaq', 'program', 'zakat', 'waqaf', 'qurban']
+const kategoriList = [
+  { name: 'Semua', value: 'Semua', icon: LayoutGrid },
+  { name: 'Infaq', value: 'infaq', icon: Coins },
+  { name: 'Program', value: 'program', icon: ChartNoAxesCombined },
+  { name: 'Zakat', value: 'zakat', icon: Scale },
+  { name: 'Waqaf', value: 'waqaf', icon: HandHeart },
+  { name: 'Qurban', value: 'qurban', icon: Beef },
+]
 
 // Inisialisasi aktifKategori disesuaikan dengan isi props.filters.kategori jika ada
 const aktifKategori = ref(props.filters?.kategori ?? 'Semua')
@@ -173,19 +180,20 @@ function getJumlahDonatur(donasi: any): number {
         </div>
 
         <!-- Filter kategori -->
-        <div class="flex px-5 gap-2 overflow-x-auto no-scrollbar pb-1">
+        <div class="flex px-5 gap-3 overflow-x-auto no-scrollbar pb-2 pt-1">
           <button
             v-for="kat in kategoriList"
-            :key="kat"
-            @click="filterKategori(kat)"
+            :key="kat.value"
+            @click="filterKategori(kat.value)"
             :class="[
-              'shrink-0 px-5 py-2 rounded-full text-xs font-bold border transition-all uppercase tracking-wider',
-              aktifKategori === kat
+              'flex flex-col items-center justify-center gap-1.5 shrink-0 min-w-[76px] px-3 py-2.5 rounded-2xl text-[10px] font-bold border transition-all uppercase tracking-wider',
+              aktifKategori === kat.value
                 ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
                 : 'bg-stone-900 border-stone-800 text-stone-500 hover:border-amber-500/30 hover:text-amber-400'
             ]"
           >
-            {{ kat }}
+            <component :is="kat.icon" class="size-5" />
+            <span>{{ kat.name }}</span>
           </button>
         </div>
 
