@@ -44,7 +44,7 @@ import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
           <ul class="list-disc pl-5 mt-2 space-y-1 text-stone-400 marker:text-amber-500/50">
             <li>Mendaftar akun di Muhasabah.ID.</li>
             <li>Melakukan transaksi donasi atau infaq.</li>
-            <li>Berpartisipasi dalam forum interaktif, Kalam, atau Riyadhoh.</li>
+            <li>Berpartisipasi dalam forum interaktif, Artikel Kalam, Donasi atau Program Kebaikan, Acara Kegiatan dan Riyadhoh.</li>
           </ul>
         </div>
 
@@ -56,7 +56,7 @@ import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
           <ul class="list-disc pl-5 mt-2 space-y-1 text-stone-400 marker:text-amber-500/50">
             <li>Memastikan penyaluran infaq dan donasi Anda terdata secara transparan dan akuntabel.</li>
             <li>Mengirimkan laporan program donasi dan tanda terima transaksi.</li>
-            <li>Personalisasi pengalaman spiritual Anda, termasuk merekomendasikan artikel Kalam (dzikir, keutamaan sedekah, dsb) yang relevan.</li>
+            <li>Personalisasi pengalaman spiritual Anda, termasuk merekomendasikan artikel Kalam (berita, hikmah, doa, kisah, tips, dsb) yang relevan.</li>
             <li>Meningkatkan kualitas layanan <em>customer support</em> dan komunikasi.</li>
           </ul>
         </div>

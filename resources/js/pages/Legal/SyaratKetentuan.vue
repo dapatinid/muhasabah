@@ -56,16 +56,17 @@ import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
             Kami menjunjung tinggi transparansi dan prinsip amanah dalam setiap dana yang dititipkan:
           </p>
           <ul class="list-disc pl-5 mt-2 space-y-1 text-stone-400 marker:text-teal-500/50">
-            <li>Seluruh dana yang terkumpul akan disalurkan berdasarkan <strong>7 Pilar Utama Penyaluran Infaq</strong> yang telah ditetapkan oleh komite Muhasabah.ID.</li>
+            <li>Seluruh dana yang terkumpul akan disalurkan berdasarkan <strong>Keterangan atau Detail Program Donasi</strong> yang telah ditetapkan oleh penanggung jawab program.</li>
             <li>Muhasabah.ID berhak melakukan pemotongan biaya operasional platform (apabila ada) yang nominal atau persentasenya diinformasikan secara transparan pada setiap kampanye donasi.</li>
             <li>Laporan penyaluran dana (tasyaruf) akan diperbarui secara berkala dan dapat diakses publik pada masing-masing halaman program.</li>
+            <li>Jika terjadi pelanggaran terhadap ketentuan ini, Muhasabah.ID berhak mengambil tindakan yang sesuai, termasuk pada pemblokiran akun Pengguna.</li>
           </ul>
         </div>
 
         <div>
           <h2 class="text-base font-bold text-stone-100 mb-2 font-serif text-teal-400">4. Hak Kekayaan Intelektual (Konten Kalam)</h2>
           <p>
-            Seluruh konten edukasi keagamaan yang tersedia di platform, termasuk artikel tentang keutamaan sedekah, panduan dzikir pagi dan petang, hingga kajian mendalam tentang ibadah qurban, adalah milik Muhasabah.ID atau kontributor/penulis (tokoh) kami. 
+            Seluruh konten edukasi keagamaan yang tersedia di platform, termasuk Artikel "Kalam", Program "Donasi", atau "Acara" Kegiatan, adalah milik Muhasabah.ID atau kontributor/penulis (tokoh) kami. 
             Anda diizinkan untuk membagikan dan menyebarluaskan konten tersebut untuk tujuan dakwah dan kebaikan, dengan kewajiban menyertakan sumber (tautan kembali ke Muhasabah.ID).
           </p>
         </div>
