@@ -251,12 +251,13 @@ const playNotificationSound = () => {
 
 <template>
     <AppLayoutPublic>
-        <Head title="Obrolan" />
+        <Head title="Obrolan" />       
 
-        <div class="mx-auto z-101 pointer-events-none -mt-16 mb-18">
-            <div class="absolute w-full pointer-events-auto gap-3">
+        <div class="-mt-16">
+
+            <div class="w-full pointer-events-auto gap-3 ">
                 
-                <div v-if="isSearching" class="h-14 bg-stone-900 border-stone-800 border-b z-60 shadow-2xl flex items-center px-5 pt-1 gap-2">
+                <div v-if="isSearching" class="h-14 mb-4 bg-stone-900 border-stone-800 border-b z-60 shadow-2xl flex items-center px-5 pt-1 gap-2">
                     <Search class="size-5 text-stone-400 shrink-0" />
                     <input 
                         v-model="searchQuery"
@@ -271,17 +272,16 @@ const playNotificationSound = () => {
                 </div>
 
                 <h1 v-else class="h-14 text-white mb-4 pt-1 px-3 flex items-center justify-center relative bg-stone-900 border-stone-800 border-b z-60 shadow-2xl">
-                    <button @click="isSearching = true" class="absolute left-3 p-2 rounded-full hover:bg-stone-800 text-stone-400 transition">
+                    <Link :href="'/ukhuwah'" class="absolute left-3 p-2 rounded-full hover:bg-stone-800 text-stone-400 transition">
+                        <ArrowLeft class="size-5" />
+                    </Link>
+                    <span class="text-xl font-bold">Obrolan</span>
+                    <button @click="isSearching = true" class="absolute right-3 p-2 rounded-full hover:bg-stone-800 text-stone-400 transition">
                         <Search class="size-5" />
                     </button>
-                    
-                    <span class="text-xl font-bold">Obrolan</span>
                 </h1>
 
-            </div>
-        </div>           
-
-        <div class="mx-auto">
+            </div>            
 
             <div v-if="filteredConversations.length == 0" class="px-3 text-center text-stone-500 py-10">
                 {{ searchQuery ? 'Nama tidak ditemukan.' : 'Belum ada obrolan.' }}
@@ -348,7 +348,7 @@ const playNotificationSound = () => {
         </div>
 
         <Transition name="drawer">
-            <div v-if="activeChat" class="fixed inset-y-0 right-0 w-full sm:w-[400px] bg-stone-900 sm:border-l border-stone-800 z-[60] flex flex-col shadow-2xl">
+            <div v-if="activeChat" class="fixed inset-y-0 right-0 w-full lg:w-[calc(100vw-36rem)] bg-stone-900 sm:border-l border-stone-800 z-[60] flex flex-col shadow-2xl">
                 
                 <div class="h-14 pt-1 sm:px-4 px-2 flex items-center gap-2 border-b border-stone-800 bg-stone-900/90 backdrop-blur-sm shrink-0">
                     <div class="size-10 bg-stone-800 rounded-full flex items-center justify-center shrink-0 relative sm:hidden">
@@ -422,15 +422,31 @@ const playNotificationSound = () => {
         </Transition>
 
         <Transition name="fade">
-            <div v-if="activeChat" @click="closeChat" class="fixed inset-0 bg-black/50 z-55 sm:block hidden"></div>
+            <div v-if="activeChat" @click="closeChat" class="fixed inset-0 bg-black/50 z-55 sm:hidden"></div>
         </Transition>
 
     </AppLayoutPublic>
 </template>
 
 <style scoped>
-.drawer-enter-active, .drawer-leave-active { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-.drawer-enter-from, .drawer-leave-to { transform: translateX(100%); }
+/* Animasi masuk (muncul) dan keluar (hilang) */
+.drawer-enter-active, 
+.drawer-leave-active { 
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+}
+
+/* Posisi awal saat akan masuk, dan posisi akhir setelah keluar (Terdorong penuh ke kanan) */
+.drawer-enter-from, 
+.drawer-leave-to { 
+    transform: translateX(100%); 
+}
+
+/* Posisi normal saat sepenuhnya tampil (Tidak wajib ditulis jika browser sudah default ke 0) */
+.drawer-enter-to,
+.drawer-leave-from {
+    transform: translateX(0);
+}
+
 .fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
 </style>
