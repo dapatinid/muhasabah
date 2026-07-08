@@ -351,7 +351,7 @@ const playNotificationSound = () => {
             <div v-if="activeChat" class="fixed inset-y-0 right-0 w-full lg:w-[calc(100vw-36rem)] bg-stone-900 sm:border-l border-stone-800 z-[60] flex flex-col shadow-2xl">
                 
                 <div class="h-14 pt-1 sm:px-4 px-2 flex items-center gap-2 border-b border-stone-800 bg-stone-900/90 backdrop-blur-sm shrink-0">
-                    <div class="size-10 bg-stone-800 rounded-full flex items-center justify-center shrink-0 relative sm:hidden">
+                    <div class="size-10 bg-stone-800 rounded-full flex items-center justify-center shrink-0 relative">
                         <img v-if="activeChat.user.avatar" :src="`/storage/${activeChat.user.avatar}`"
                           class=" rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
                         <img v-else :src="activeChat.user.gender === 'P' ? `/avatar_cewe.png` : `/avatar_cowo.png`"
