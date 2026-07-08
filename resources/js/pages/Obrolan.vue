@@ -247,55 +247,66 @@ const playNotificationSound = () => {
     console.log('Audio playback blocked on iOS:', error)
   })
 }
+
+function handleKeydown(e) {
+    // Abaikan kalau masih dalam proses IME composition (mis. input bahasa Asia, atau autocorrect tertentu)
+    if (e.isComposing || e.keyCode === 229) return;
+
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+    // Shift+Enter dibiarkan default → buat newline
+}
 </script>
 
 <template>
     <AppLayoutPublic>
         <Head title="Obrolan" />       
 
-        <div class="-mt-16">
+        <div class="w-full lg:w-[575px] pointer-events-auto gap-3 fixed top-0 z-10">
+            
+            <div v-if="isSearching" class="h-16 bg-stone-900 border-stone-800 border z-60 shadow-2xl flex items-center px-5 pt-1 gap-2">
+                <Search class="size-5 text-stone-400 shrink-0" />
+                <input 
+                    v-model="searchQuery"
+                    type="text" 
+                    placeholder="Cari nama..." 
+                    class="ms-2 flex-1 bg-transparent border-none text-white text-sm outline-none focus:outline-none placeholder-stone-500"
+                    v-focus-on-mount
+                />
+                <button @click="clearSearch" class="p-1.5 rounded-full hover:bg-stone-800 text-stone-400 transition">
+                    <X class="size-4" />
+                </button>
+            </div>
 
-            <div class="w-full pointer-events-auto gap-3 ">
-                
-                <div v-if="isSearching" class="h-14 mb-4 bg-stone-900 border-stone-800 border-b z-60 shadow-2xl flex items-center px-5 pt-1 gap-2">
-                    <Search class="size-5 text-stone-400 shrink-0" />
-                    <input 
-                        v-model="searchQuery"
-                        type="text" 
-                        placeholder="Cari nama..." 
-                        class="ms-2 flex-1 bg-transparent border-none text-white text-sm outline-none focus:outline-none placeholder-stone-500"
-                        v-focus-on-mount
-                    />
-                    <button @click="clearSearch" class="p-1.5 rounded-full hover:bg-stone-800 text-stone-400 transition">
-                        <X class="size-4" />
-                    </button>
-                </div>
+            <h1 v-else class="h-16 text-white pt-1 px-3 flex items-center justify-center relative bg-stone-900 border-stone-800 border z-60 shadow-2xl">
+                <Link :href="'/ukhuwah'" class="absolute left-3 p-2 rounded-full hover:bg-stone-800 text-stone-400 transition">
+                    <ArrowLeft class="size-5" />
+                </Link>
+                <span class="text-xl font-bold">Obrolan</span>
+                <button @click="isSearching = true" class="absolute right-3 p-2 rounded-full hover:bg-stone-800 text-stone-400 transition">
+                    <Search class="size-5" />
+                </button>
+            </h1>
 
-                <h1 v-else class="h-14 text-white mb-4 pt-1 px-3 flex items-center justify-center relative bg-stone-900 border-stone-800 border-b z-60 shadow-2xl">
-                    <Link :href="'/ukhuwah'" class="absolute left-3 p-2 rounded-full hover:bg-stone-800 text-stone-400 transition">
-                        <ArrowLeft class="size-5" />
-                    </Link>
-                    <span class="text-xl font-bold">Obrolan</span>
-                    <button @click="isSearching = true" class="absolute right-3 p-2 rounded-full hover:bg-stone-800 text-stone-400 transition">
-                        <Search class="size-5" />
-                    </button>
-                </h1>
+        </div>             
 
-            </div>            
+        <div class="bg-zinc-950 min-h-[calc(100vh*2)]">       
 
             <div v-if="filteredConversations.length == 0" class="px-3 text-center text-stone-500 py-10">
                 {{ searchQuery ? 'Nama tidak ditemukan.' : 'Belum ada obrolan.' }}
             </div>
 
-            <div v-else class="px-3 space-y-3">
+            <div v-else class="divide-y-accent">
                 <div 
                     v-for="conv in filteredConversations" :key="conv.id"
                             @click="openChat(conv)"
                     :class="[
-                        'flex items-center gap-4 p-4 border rounded-2xl cursor-pointer transition-colors',
+                        'flex items-center gap-4 p-4 border-y-[0.5px] cursor-pointer transition-colors',
                         conv.unread_count > 0 
                             ? 'bg-emerald-950/20 border-emerald-800/40 hover:bg-emerald-950/30' 
-                            : 'bg-stone-900 border-stone-800 hover:bg-stone-800'
+                            : 'bg-stone-950 border-stone-800 hover:bg-stone-800'
                     ]"
                 >
                     <div class="size-12 bg-stone-800 rounded-full flex items-center justify-center shrink-0 relative">
@@ -348,10 +359,10 @@ const playNotificationSound = () => {
         </div>
 
         <Transition name="drawer">
-            <div v-if="activeChat" class="fixed inset-y-0 right-0 w-full lg:w-[calc(100vw-36rem)] bg-stone-900 sm:border-l border-stone-800 z-[60] flex flex-col shadow-2xl">
+            <div v-if="activeChat" class="fixed inset-y-0 right-0 w-full lg:w-[calc(100vw-36rem)] z-60 flex flex-col shadow-2xl">
                 
-                <div class="h-14 pt-1 sm:px-4 px-2 flex items-center gap-2 border-b border-stone-800 bg-stone-900/90 backdrop-blur-sm shrink-0">
-                    <div class="size-10 bg-stone-800 rounded-full flex items-center justify-center shrink-0 relative">
+                <div class="pt-[10px] pb-[5px] sm:px-4 px-2 flex items-center gap-2 border-b border-stone-800 bg-stone-900/90 backdrop-blur-sm shrink-0">
+                    <div class="size-12 bg-stone-800 rounded-full flex items-center justify-center shrink-0 relative">
                         <img v-if="activeChat.user.avatar" :src="`/storage/${activeChat.user.avatar}`"
                           class=" rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
                         <img v-else :src="activeChat.user.gender === 'P' ? `/avatar_cewe.png` : `/avatar_cowo.png`"
@@ -363,7 +374,18 @@ const playNotificationSound = () => {
                     </button>
                 </div>
 
-                <div ref="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-3 bg-[#0a0a0a]">
+                <div 
+                    ref="messagesContainer" 
+                    class="flex-1 overflow-y-auto p-4 space-y-3 bg-[#0a0a0a]"
+                    style="
+                        background-image: 
+                            url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%232a2a2a' stroke-width='1.1'%3E%3Cpath d='M40 20 L45 35 L60 35 L48 44 L53 60 L40 50 L27 60 L32 44 L20 35 L35 35 Z'/%3E%3Ccircle cx='40' cy='40' r='3' fill='%232a2a2a' stroke='none'/%3E%3C/g%3E%3C/svg%3E&quot;),
+                            url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%231e1e1e' stroke-width='1'%3E%3Cpath d='M40 20 L45 35 L60 35 L48 44 L53 60 L40 50 L27 60 L32 44 L20 35 L35 35 Z'/%3E%3C/g%3E%3C/svg%3E&quot;);
+                        background-repeat: repeat, repeat;
+                        background-size: 80px 80px, 80px 80px;
+                        background-position: 0 0, 40px 40px;
+                    "
+                >
                     <div 
                         v-for="msg in messages" :key="msg.id"
                         :class="[
@@ -375,7 +397,7 @@ const playNotificationSound = () => {
                     >
                         <div 
                             :class="[
-                                'p-3 text-sm',
+                                'p-3 text-sm whitespace-pre-wrap',
                                 msg.sender_id == activeChat.user.id 
                                     ? 'bg-stone-800 text-stone-200 rounded-2xl rounded-bl-none' 
                                     : 'bg-emerald-600 text-white rounded-2xl rounded-br-none'
@@ -397,15 +419,15 @@ const playNotificationSound = () => {
 
                 <div class="p-3 bg-stone-900 border-t border-stone-800 shrink-0">
                     <form @submit.prevent="sendMessage" class="flex gap-2">
-                        <input 
+                        <textarea
                             ref="messageInput"
                             v-model="form.body"
-                            type="text" 
+                            rows="1"
                             placeholder="Ketik pesan..."
-                            class="flex-1 bg-stone-800 border-none rounded-full px-4 py-2.5 text-sm text-white outline-none focus:outline-none focus:ring-1 focus:ring-emerald-500 [-webkit-tap-highlight-color:transparent] appearance-none disabled:opacity-50"
+                            class="flex-1 bg-stone-800 border-none rounded-2xl px-4 py-2.5 text-sm text-white outline-none focus:outline-none focus:ring-1 focus:ring-emerald-500 resize-none"
                             :readonly="form.processing"
-                            :aria-disabled="form.processing"
-                        />
+                            @keydown="handleKeydown"
+                        ></textarea>
                         <button 
                             type="submit"
                             :disabled="form.processing"
