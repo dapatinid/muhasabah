@@ -334,7 +334,7 @@ function handleDoubleClick(entry: LogEntry, columnKey: string, label: string) {
 <template>
     <Head :title="props.meta?.title ?? 'Log Riyadhoh'" />
 
-    <div class="max-w-5xl gap-4 p-4 space-y-4">
+    <div class="gap-4 p-4 space-y-4">
 
         <div class="flex flex-col gap-1">
             <h1 class="text-2xl font-bold text-zinc-800 dark:text-zinc-100">Log Riyadhoh</h1>
