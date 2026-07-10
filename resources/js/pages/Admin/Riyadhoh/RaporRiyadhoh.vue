@@ -248,7 +248,7 @@ const statsFrontend = computed(() => {
     <Head title="Rapor Riyadhoh" />
 
     <!-- Screen UI -->
-    <div class="print:hidden flex flex-col gap-6 p-4 max-w-3xl mx-auto">
+    <div class="print:hidden py-6 px-4 max-w-[calc(100%-300px)] w-full mx-auto space-y-6">
         <div class="flex flex-col gap-1">
             <h1 class="text-2xl font-bold text-zinc-800 dark:text-zinc-100">Rapor Riyadhoh</h1>
             <p class="text-sm text-zinc-500 dark:text-zinc-400">Masukkan nomor WhatsApp peserta untuk melihat rapor</p>
