@@ -68,6 +68,11 @@ public function logRiyadhoh(Request $request)
               ->orWhere('no_wa', 'like', "%{$search}%");
         });
     }
+    
+    if ($dayNum = $request->input('day_num')) {
+        // PERBAIKAN 1: Gunakan '=' alih-alih '==' (Atau bisa langsung diabaikan operatornya)
+        $query->where('hari_ke', '=', $dayNum);
+    }
 
     if ($dateFrom = $request->input('date_from')) {
         $query->whereDate('tanggal', '>=', $dateFrom);
@@ -85,10 +90,11 @@ public function logRiyadhoh(Request $request)
                      ->withQueryString();
 
     return Inertia::render('Admin/Riyadhoh/LogRiyadhoh', [
-        'entries' => $entries->items(), // Kembali gunakan items() jika ingin memisahkan meta
-        'filters' => $request->only(['search', 'date_from', 'date_to']),
+        'entries' => $entries->items(),
         
-        // Ganti nama key untuk paginasi agar tidak tabrakan dengan Meta SEO
+        // PERBAIKAN 2: Ubah 'hari_ke' menjadi 'day_num' agar sinkron dengan frontend (Vue)
+        'filters' => $request->only(['search', 'day_num', 'date_from', 'date_to']),
+        
         'pagination' => [
             'total'        => $entries->total(),
             'current_page' => $entries->currentPage(),
@@ -96,13 +102,12 @@ public function logRiyadhoh(Request $request)
             'per_page'     => $entries->perPage(),
         ],
         
-        // Kirim meta title asli untuk app.blade.php publik
         'meta'    => [
-                    'title'       => 'Log Riyadhoh',
-                    'description' => 'Data laporan ibadah harian peserta riyadhoh Muhasabah ID.',
-                    'image'       => asset('favicon.png'),
-                    'url'         => url()->current(),
-                ],
+            'title'       => 'Log Riyadhoh',
+            'description' => 'Data laporan ibadah harian peserta riyadhoh Muhasabah ID.',
+            'image'       => asset('favicon.png'),
+            'url'         => url()->current(),
+        ],
     ]);
 }
 
@@ -176,8 +181,6 @@ public function raporRiyadhoh(Request $request)
         ->map(fn($group) => $group->sortByDesc('created_at')->first())
         ->values();
 
-    $totalSkor    = $deduplicated->sum('skor');
-    $totalSedekah = $deduplicated->sum('sedekah_subuh');
     $totalHari    = $deduplicated->count();
 
     $tanggalMulai = $deduplicated->first()->tanggal;
@@ -192,9 +195,6 @@ public function raporRiyadhoh(Request $request)
             'no_wa'             => $noWa,
             'grup'              => $allEntries->first()->grup,
             'total_hari'        => $totalHari,
-            'skor_total'        => $totalSkor,
-            'skor_total_gabung' => number_format($totalSkor, 0, ',', '.') . ($totalSedekah > 0 ? ' + Rp' . number_format($totalSedekah, 0, ',', '.') : ''),
-            'skor_rata'         => $totalHari > 0 ? round($totalSkor / $totalHari) : 0,
             'tanggal_mulai'     => $tanggalMulai,
             'tanggal_selesai'   => $tanggalSelesai,            
         ],

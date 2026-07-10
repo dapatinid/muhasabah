@@ -54,9 +54,6 @@ interface Props {
         no_wa: string;
         grup: string;
         total_hari: number;
-        skor_rata: number;
-        skor_total: number;
-        skor_total_gabung: number;
         tanggal_mulai: string;
         tanggal_selesai: string;
     } | null;
@@ -291,11 +288,11 @@ const statsFrontend = computed(() => {
         </div>
 
         <!-- Found info -->
-        <div v-if="peserta" class="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/20 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div v-if="peserta && entries" class="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/20 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
                 <p class="font-bold text-emerald-800 dark:text-emerald-200 text-lg">{{ peserta.nama }}</p>
                 <p class="text-sm text-emerald-700 dark:text-emerald-300">{{ peserta.no_wa }} · Grup {{ peserta.grup }}</p>
-                <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1">{{ peserta.total_hari }} hari tercatat · Skor rata-rata {{ peserta.skor_rata }}</p>
+                <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1">{{ peserta.total_hari }} hari tercatat · Skor rata-rata {{ statsFrontend.rataRata.toLocaleString('id-ID') }}</p>
             </div>
             <button
                 v-if="peserta"

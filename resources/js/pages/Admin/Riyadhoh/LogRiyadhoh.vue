@@ -55,6 +55,7 @@ interface Props {
     entries: LogEntry[];
     filters: {
         search: string;
+        day_num: number;
         date_from: string;
         date_to: string;
     };
@@ -72,6 +73,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const search = ref(props.filters?.search ?? '');
+const dayNum = ref(props.filters?.day_num ?? '');
 const dateFrom = ref(props.filters?.date_from ?? '');
 const dateTo = ref(props.filters?.date_to ?? '');
 
@@ -82,6 +84,7 @@ function applyFilters() {
         '/log-riyadhoh',
         {
             search: search.value,
+            day_num: dayNum.value,
             date_from: dateFrom.value,
             date_to: dateTo.value,
         },
@@ -94,12 +97,13 @@ watch([search], () => {
     debounceTimer = setTimeout(applyFilters, 400);
 });
 
-watch([dateFrom, dateTo], () => {
+watch([dayNum, dateFrom, dateTo], () => {
     applyFilters();
 });
 
 function resetFilters() {
     search.value = '';
+    dayNum.value = 0;
     dateFrom.value = '';
     dateTo.value = '';
     applyFilters();
@@ -174,13 +178,14 @@ function skorClass(skor: number): string {
     return 'bg-red-100 text-red-500 dark:bg-red-900/40 dark:text-red-300';
 }
 
-const hasFilters = computed(() => search.value || dateFrom.value || dateTo.value);
+const hasFilters = computed(() => search.value || dateFrom.value || dayNum.value || dateTo.value);
 
 function goToPage(page: number) {
     router.get(
         '/log-riyadhoh',
         {
             search: search.value,
+            day_num: dayNum.value,
             date_from: dateFrom.value,
             date_to: dateTo.value,
             page,
@@ -329,7 +334,7 @@ function handleDoubleClick(entry: LogEntry, columnKey: string, label: string) {
 <template>
     <Head :title="props.meta?.title ?? 'Log Riyadhoh'" />
 
-    <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto p-4">
+    <div class="max-w-5xl gap-4 p-4 space-y-4">
 
         <div class="flex flex-col gap-1">
             <h1 class="text-2xl font-bold text-zinc-800 dark:text-zinc-100">Log Riyadhoh</h1>
@@ -341,7 +346,7 @@ function handleDoubleClick(entry: LogEntry, columnKey: string, label: string) {
         <div class="rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-white dark:bg-sidebar p-4">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:flex-wrap">
 
-                <div class="flex flex-col gap-1 flex-1 min-w-[200px]">
+                <div class="flex flex-col gap-1 flex-1 max-w-sm">
                     <label class="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
                         Cari Nama / No. HP
                     </label>
@@ -359,6 +364,17 @@ function handleDoubleClick(entry: LogEntry, columnKey: string, label: string) {
                             class="w-full pl-9 pr-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm text-zinc-800 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition"
                         />
                     </div>
+                </div>
+
+                <div class="flex flex-col gap-1 w-20">
+                    <label class="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+                        Hari Ke
+                    </label>
+                    <input
+                        v-model="dayNum"
+                        type="number"
+                        class="w-full px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition"
+                    />
                 </div>
 
                 <div class="flex flex-col gap-1">

@@ -1184,7 +1184,7 @@ logRiyadhoh.form = logRiyadhohForm
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:138
+* @see app/Http/Controllers/LaporanRiyadhohController.php:143
 * @route '/rapor-riyadhoh'
 */
 export const raporRiyadhoh = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -1199,7 +1199,7 @@ raporRiyadhoh.definition = {
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:138
+* @see app/Http/Controllers/LaporanRiyadhohController.php:143
 * @route '/rapor-riyadhoh'
 */
 raporRiyadhoh.url = (options?: RouteQueryOptions) => {
@@ -1208,7 +1208,7 @@ raporRiyadhoh.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:138
+* @see app/Http/Controllers/LaporanRiyadhohController.php:143
 * @route '/rapor-riyadhoh'
 */
 raporRiyadhoh.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -1218,7 +1218,7 @@ raporRiyadhoh.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:138
+* @see app/Http/Controllers/LaporanRiyadhohController.php:143
 * @route '/rapor-riyadhoh'
 */
 raporRiyadhoh.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -1228,7 +1228,7 @@ raporRiyadhoh.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:138
+* @see app/Http/Controllers/LaporanRiyadhohController.php:143
 * @route '/rapor-riyadhoh'
 */
 const raporRiyadhohForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1238,7 +1238,7 @@ const raporRiyadhohForm = (options?: RouteQueryOptions): RouteFormDefinition<'ge
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:138
+* @see app/Http/Controllers/LaporanRiyadhohController.php:143
 * @route '/rapor-riyadhoh'
 */
 raporRiyadhohForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1248,7 +1248,7 @@ raporRiyadhohForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'
 
 /**
 * @see \App\Http\Controllers\LaporanRiyadhohController::raporRiyadhoh
-* @see app/Http/Controllers/LaporanRiyadhohController.php:138
+* @see app/Http/Controllers/LaporanRiyadhohController.php:143
 * @route '/rapor-riyadhoh'
 */
 raporRiyadhohForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
