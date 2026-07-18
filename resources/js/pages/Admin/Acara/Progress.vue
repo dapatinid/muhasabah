@@ -125,7 +125,7 @@ function submit() {
                 <p class="text-xs text-zinc-400 italic">Formulir Manajemen Pembaruan Berita</p>
                 
                 <div class="flex gap-3 w-full md:w-auto">
-                    <Link href="/admin/acara" class="flex-1 md:flex-none text-center px-6 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 text-sm font-bold hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+                    <Link :href="`/admin/acara/`+acara.slug+`/edit`" class="flex-1 md:flex-none text-center px-6 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 text-sm font-bold hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                         Batal
                     </Link>
                     <Button 

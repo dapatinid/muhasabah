@@ -169,6 +169,7 @@ class KalamController extends Controller
     {
         // Asumsi nama relasi di model Kalam adalah 'komentars'
         $komentarsPublik = $kalam->komentars()
+            ->with(['user', 'parent.user'])
             ->latest()
             ->paginate(15, ['*'], 'page_komentar') // parameter halaman unik
             ->withQueryString();

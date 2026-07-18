@@ -78,7 +78,7 @@ const getRoutePrefix = (type) => {
                                 Berekspresi {{ renderEmoji(log.type).label }}
                             </div>
                             <span class="text-xs text-zinc-400 mt-0.5 block">
-                                Di tulisan: <span class="font-medium text-zinc-600 dark:text-zinc-300 hover:text-indigo-500">
+                                Pada Konten: <span class="font-medium text-zinc-600 dark:text-zinc-300 hover:text-indigo-500">
                                     <Link :href="`/${getRoutePrefix(log.reaktiable_type)}/${log.reaktiable?.slug}`">
                                         {{ log.reaktiable?.judul || 'Konten telah dihapus' }}
                                     </Link>

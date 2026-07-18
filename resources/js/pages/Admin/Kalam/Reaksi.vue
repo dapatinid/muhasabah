@@ -9,6 +9,7 @@ import { ArrowLeft,
     SquarePen, 
     HeartHandshake, 
     MessageSquare,
+    Eye,
  } from 'lucide-vue-next'
 
 const props = defineProps<{
@@ -81,6 +82,15 @@ const goToPagination = (url: string | null) => {
                         </div>
 
                         <div class="px-1 py-1">
+                            <Link 
+                                :href="`/kalam/${kalam.slug}`"
+                                @click="dropdownOpen = false"
+                                class="flex items-center gap-2.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors w-full text-left text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                            >
+                                <Eye class="size-4 text-zinc-400 shrink-0" />
+                                Lihat di Publik
+                            </Link>
+
                             <Link 
                                 :href="`/admin/kalam/${kalam.slug}/reaksi`"
                                 @click="dropdownOpen = false"

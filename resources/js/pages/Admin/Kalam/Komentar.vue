@@ -11,6 +11,8 @@ import { ArrowLeft,
     SquarePen, 
     HeartHandshake, 
     MessageSquare,
+    Eye,
+    CornerDownRight,
  } from 'lucide-vue-next'
 
 const props = defineProps<{
@@ -23,6 +25,19 @@ const dropdownOpen = ref(false)
 const goToPagination = (url: string | null) => {
     if (!url) return
     router.get(url, {}, { preserveState: true, preserveScroll: true })
+}
+
+// ✔️ Nama tampilan: nama_publik atau nama relasi user, fallback "Hamba Allah" jika keduanya kosong
+const getDisplayName = (item: any) => {
+    return item.user?.name?.trim() || item.nama_publik?.trim() || 'Hamba Allah'
+}
+
+// ✔️ Singkatan 2 huruf dari nama (inisial kata pertama & kedua, bukan sekadar 2 karakter pertama)
+const getInitials = (name: string) => {
+    const words = name.trim().split(/\s+/).filter(Boolean)
+    if (words.length === 0) return 'HA'
+    if (words.length === 1) return words[0].substring(0, 2).toUpperCase()
+    return (words[0][0] + words[1][0]).toUpperCase()
 }
 </script>
 
@@ -73,6 +88,15 @@ const goToPagination = (url: string | null) => {
 
                         <div class="px-1 py-1">
                             <Link 
+                                :href="`/kalam/${kalam.slug}`"
+                                @click="dropdownOpen = false"
+                                class="flex items-center gap-2.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors w-full text-left text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                            >
+                                <Eye class="size-4 text-zinc-400 shrink-0" />
+                                Lihat di Publik
+                            </Link>
+
+                            <Link 
                                 :href="`/admin/kalam/${kalam.slug}/reaksi`"
                                 @click="dropdownOpen = false"
                                 class="flex items-center gap-2.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors w-full text-left text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800"
@@ -106,19 +130,32 @@ const goToPagination = (url: string | null) => {
                 <div v-for="item in komentarsPublik.data" :key="item.id" class="p-4 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors">
                     <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center gap-2">
-                            <div class="size-8 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-xs uppercase">
-                                {{ (item.nama_publik || item.user?.name || 'HA').substring(0, 2) }}
+                            <!-- ✔️ Avatar: 2 huruf inisial dari nama tampilan (nama_publik / user.name / "Hamba Allah") -->
+                            <div class="size-8 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-xs uppercase shrink-0">
+                                {{ getInitials(getDisplayName(item)) }}
                             </div>
-                            <span class="text-sm font-bold text-zinc-800 dark:text-zinc-200">
-                                {{ item.nama_publik || item.user?.name || 'Hamba Allah' }}
-                            </span>
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="text-sm font-bold text-zinc-800 dark:text-zinc-200">
+                                    {{ getDisplayName(item) }}
+                                </span>
+                                <!-- ✔️ Badge pembeda: tampil hanya jika komentar ini adalah balasan -->
+                                <span v-if="item.parent_id" class="font-medium bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded-md text-[10px] flex items-center gap-1">
+                                    <CornerDownRight class="size-3" /> Balasan
+                                </span>
+                            </div>
                         </div>
-                        <span class="text-[11px] text-zinc-400">
+                        <span class="text-[11px] text-zinc-400 shrink-0">
                             {{ new Date(item.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) }}
                         </span>
                     </div>
+
+                    <!-- ✔️ Konteks sub komentar: kutipan komentar induk yang dibalas -->
+                    <div v-if="item.parent_id" class="text-xs text-zinc-500 dark:text-zinc-400 border-l-2 border-zinc-200 dark:border-zinc-700 pl-3 mb-2 ml-10 line-clamp-2">
+                        Membalas <span class="font-semibold text-zinc-600 dark:text-zinc-300">{{ getDisplayName(item.parent ?? {}) }}</span>:
+                        <span class="italic">"{{ item.parent?.body ?? item.parent?.isi_komentar ?? 'Komentar telah dihapus' }}"</span>
+                    </div>
                     
-                    <p class="text-sm text-zinc-600 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-950 p-4 rounded-xl border border-zinc-100 dark:border-zinc-800">
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-950 p-4 rounded-xl border border-zinc-100 dark:border-zinc-800" :class="{ 'ml-10': item.parent_id }">
                         {{ item.isi_komentar || item.body || item.comment }}
                     </p>
                 </div>
