@@ -2,7 +2,7 @@
 import { Head, Link, usePage } from '@inertiajs/vue3'
 import { 
   BookOpen, CalendarDays, Search, UserRound, Target, Heart, User, Loader2, ArrowRight, X,
-  MapPin, Phone, Mail, Facebook, Instagram, Youtube, Linkedin, Music2, ChevronRight, Grid, Box
+  MapPin, Phone, Info, Facebook, Instagram, Youtube, Linkedin, Music2, ChevronRight, Grid, Box
 } from 'lucide-vue-next'
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import {
@@ -427,7 +427,7 @@ function getHargaBadgeInfo(acara: any) {
               </div>
               
               <button @click="isSearchOpen = false" class="text-xs font-bold text-stone-400 hover:text-white px-2 py-1 bg-stone-900 border border-stone-800 rounded-xl transition-all">
-                Tutup
+                <X class="size-4" />
               </button>
             </div>
 
@@ -884,8 +884,8 @@ function getHargaBadgeInfo(acara: any) {
                 <span class="text-stone-400"><a href="https://wa.me/6285950540055?text='Halo admin, saya tertarik dengan Muhasabah.ID'" class="hover:text-teal-400 transition">0859-5054-0055 (WA)</a></span>
               </li>
               <li class="flex items-center gap-3">
-                <Mail class="size-5 text-stone-400 shrink-0" />
-                <span class="text-stone-400">admin@muhasabah.id</span>
+                <Link :href="'/tentang-kami'"><Info class="size-5 text-stone-400 shrink-0" /></Link>
+                <Link :href="'/tentang-kami'"><span class="text-stone-400">Tentang Kami</span></Link>
               </li>
             </ul>            
           </div>

@@ -56,6 +56,7 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::inertia('/tentang-kami', 'TentangKami')->name('tentang-kami');
 // Halaman Legalitas - Publik
 Route::inertia('/kebijakan-privasi', 'Legal/KebijakanPrivasi')->name('kebijakan-privasi');
 Route::inertia('/syarat-ketentuan', 'Legal/SyaratKetentuan')->name('syarat-ketentuan');

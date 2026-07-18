@@ -8,6 +8,7 @@ use App\Models\Reaksi;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -220,49 +221,58 @@ class KalamController extends Controller
     }  
 
     // Contoh untuk Kalam (Terapkan pola yang sama persis untuk Kalam dan Acara, cukup sesuaikan parameter modelnya)
-    public function storeKomentar(Request $request, Kalam $kalam)
-    {
-        // 1. Validasi Dasar (Body selalu wajib)
-        $rules = [
-            'body' => 'required|string|max:1000',
-        ];
+public function storeKomentar(Request $request, Kalam $kalam)
+{
+    // 1. Validasi Dasar (Body selalu wajib)
+    $rules = [
+        'body' => 'required|string|max:1000',
+        // ✔️ Pakai relasi $kalam->komentars() langsung, jadi tidak perlu tahu nama kolom FK-nya
+        'parent_id' => [
+            'nullable',
+            'integer',
+            Rule::exists('komentars', 'id')->where(function ($query) use ($kalam) {
+                $query->whereIn('id', $kalam->komentars()->pluck('id'))
+                      ->whereNull('parent_id'); // hanya boleh membalas komentar induk, bukan balasan lain
+            }),
+        ],
+    ];
 
-        // 2. Jika GUEST (belum login), wajibkan nama dan captcha
-        if (!auth()->check()) {
-            $rules['nama_publik'] = 'required|string|max:50';
-            $rules['captcha_challenge'] = 'required|string';
-            $rules['captcha_answer'] = 'required|integer';
-        }
-
-        $request->validate($rules);
-
-        // 3. Verifikasi Math Captcha (Hanya untuk GUEST)
-        if (!auth()->check()) {
-            $challenge = $request->input('captcha_challenge'); 
-            if (strpos($challenge, '+') !== false) {
-                [$num1, $num2] = explode('+', $challenge);
-                $correctAnswer = (int)$num1 + (int)$num2;
-
-                if ((int)$request->input('captcha_answer') !== $correctAnswer) {
-                    return back()->withErrors(['captcha_answer' => 'Kode keamanan captcha salah.']);
-                }
-            } else {
-                return back()->withErrors(['captcha_challenge' => 'Tantangan keamanan tidak valid.']);
-            }
-        }
-
-        // 4. Simpan komentar menggunakan relasi
-        $komentar = new Komentar([
-            'body' => $request->body,
-            // Jika ada nama_publik (berarti guest), simpan. Jika login, biarkan null.
-            'nama_publik' => $request->filled('nama_publik') ? strip_tags($request->nama_publik) : null,
-            'user_id' => auth()->check() ? auth()->id() : null,
-        ]);
-
-        $kalam->komentars()->save($komentar);
-
-        return back()->with('success', 'Komentar Anda berhasil diterbitkan.');
+    // 2. Jika GUEST (belum login), wajibkan nama dan captcha
+    if (!auth()->check()) {
+        $rules['nama_publik'] = 'required|string|max:50';
+        $rules['captcha_challenge'] = 'required|string';
+        $rules['captcha_answer'] = 'required|integer';
     }
+
+    $validated = $request->validate($rules);
+
+    // 3. Verifikasi Math Captcha (Hanya untuk GUEST)
+    if (!auth()->check()) {
+        $challenge = $validated['captcha_challenge'];
+        if (strpos($challenge, '+') !== false) {
+            [$num1, $num2] = explode('+', $challenge);
+            $correctAnswer = (int) $num1 + (int) $num2;
+
+            if ((int) $validated['captcha_answer'] !== $correctAnswer) {
+                return back()->withErrors(['captcha_answer' => 'Kode keamanan captcha salah.']);
+            }
+        } else {
+            return back()->withErrors(['captcha_challenge' => 'Tantangan keamanan tidak valid.']);
+        }
+    }
+
+    // 4. Simpan komentar menggunakan relasi
+    $komentar = new Komentar([
+        'body' => $validated['body'],
+        'nama_publik' => $request->filled('nama_publik') ? strip_tags($validated['nama_publik']) : null,
+        'user_id' => auth()->check() ? auth()->id() : null,
+        'parent_id' => $validated['parent_id'] ?? null,
+    ]);
+
+    $kalam->komentars()->save($komentar);
+
+    return back()->with('success', 'Komentar Anda berhasil diterbitkan.');
+} 
 
     /**
      * Menyimpan, Mengubah, atau Membatalkan Reaksi Publik di Artikel Kalam

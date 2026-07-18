@@ -32,6 +32,7 @@ createInertiaApp({
                  name === 'Obrolan' ||
                  name === 'Legal/KebijakanPrivasi' ||
                  name === 'Legal/SyaratKetentuan' ||
+                 name === 'TentangKami' ||
                  name === 'Welcome' : 
                 return null; 
             

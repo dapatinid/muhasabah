@@ -64,7 +64,7 @@ import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
         </div>
 
         <div>
-          <h2 class="text-base font-bold text-stone-100 mb-2 font-serif text-teal-400">4. Hak Kekayaan Intelektual (Konten Kalam)</h2>
+          <h2 class="text-base font-bold text-stone-100 mb-2 font-serif text-teal-400">4. Hak Kekayaan Intelektual</h2>
           <p>
             Seluruh konten edukasi keagamaan yang tersedia di platform, termasuk Artikel "Kalam", Program "Donasi", atau "Acara" Kegiatan, adalah milik Muhasabah.ID atau kontributor/penulis (tokoh) kami. 
             Anda diizinkan untuk membagikan dan menyebarluaskan konten tersebut untuk tujuan dakwah dan kebaikan, dengan kewajiban menyertakan sumber (tautan kembali ke Muhasabah.ID).

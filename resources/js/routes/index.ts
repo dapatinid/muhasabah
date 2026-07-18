@@ -294,6 +294,87 @@ home.form = homeForm
 /**
 * @see \Inertia\Controller::__invoke
 * @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tentang-kami'
+*/
+export const tentangKami = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: tentangKami.url(options),
+    method: 'get',
+})
+
+tentangKami.definition = {
+    methods: ["get","head"],
+    url: '/tentang-kami',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tentang-kami'
+*/
+tentangKami.url = (options?: RouteQueryOptions) => {
+    return tentangKami.definition.url + queryParams(options)
+}
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tentang-kami'
+*/
+tentangKami.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: tentangKami.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tentang-kami'
+*/
+tentangKami.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: tentangKami.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tentang-kami'
+*/
+const tentangKamiForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: tentangKami.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tentang-kami'
+*/
+tentangKamiForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: tentangKami.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tentang-kami'
+*/
+tentangKamiForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: tentangKami.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+tentangKami.form = tentangKamiForm
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
 * @route '/kebijakan-privasi'
 */
 export const kebijakanPrivasi = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -617,7 +698,7 @@ amalIbadah.form = amalIbadahForm
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:19
+* @see app/Http/Controllers/KalamController.php:20
 * @route '/kalam'
 */
 export const kalam = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -632,7 +713,7 @@ kalam.definition = {
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:19
+* @see app/Http/Controllers/KalamController.php:20
 * @route '/kalam'
 */
 kalam.url = (options?: RouteQueryOptions) => {
@@ -641,7 +722,7 @@ kalam.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:19
+* @see app/Http/Controllers/KalamController.php:20
 * @route '/kalam'
 */
 kalam.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -651,7 +732,7 @@ kalam.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:19
+* @see app/Http/Controllers/KalamController.php:20
 * @route '/kalam'
 */
 kalam.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -661,7 +742,7 @@ kalam.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:19
+* @see app/Http/Controllers/KalamController.php:20
 * @route '/kalam'
 */
 const kalamForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -671,7 +752,7 @@ const kalamForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:19
+* @see app/Http/Controllers/KalamController.php:20
 * @route '/kalam'
 */
 kalamForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -681,7 +762,7 @@ kalamForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\KalamController::kalam
-* @see app/Http/Controllers/KalamController.php:19
+* @see app/Http/Controllers/KalamController.php:20
 * @route '/kalam'
 */
 kalamForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

@@ -2,6 +2,86 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 /**
 * @see \Inertia\Controller::__invoke
 * @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tentang-kami'
+*/
+const Controllercaa0ac59a54ac8054bbfb3b32db74b70 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: Controllercaa0ac59a54ac8054bbfb3b32db74b70.url(options),
+    method: 'get',
+})
+
+Controllercaa0ac59a54ac8054bbfb3b32db74b70.definition = {
+    methods: ["get","head"],
+    url: '/tentang-kami',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tentang-kami'
+*/
+Controllercaa0ac59a54ac8054bbfb3b32db74b70.url = (options?: RouteQueryOptions) => {
+    return Controllercaa0ac59a54ac8054bbfb3b32db74b70.definition.url + queryParams(options)
+}
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tentang-kami'
+*/
+Controllercaa0ac59a54ac8054bbfb3b32db74b70.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: Controllercaa0ac59a54ac8054bbfb3b32db74b70.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tentang-kami'
+*/
+Controllercaa0ac59a54ac8054bbfb3b32db74b70.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: Controllercaa0ac59a54ac8054bbfb3b32db74b70.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tentang-kami'
+*/
+const Controllercaa0ac59a54ac8054bbfb3b32db74b70Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllercaa0ac59a54ac8054bbfb3b32db74b70.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tentang-kami'
+*/
+Controllercaa0ac59a54ac8054bbfb3b32db74b70Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllercaa0ac59a54ac8054bbfb3b32db74b70.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tentang-kami'
+*/
+Controllercaa0ac59a54ac8054bbfb3b32db74b70Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllercaa0ac59a54ac8054bbfb3b32db74b70.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+Controllercaa0ac59a54ac8054bbfb3b32db74b70.form = Controllercaa0ac59a54ac8054bbfb3b32db74b70Form
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
 * @route '/kebijakan-privasi'
 */
 const Controller8d420e8836099d9098a665641f2faef3 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -801,6 +881,7 @@ Controllere19ee86e9cf603ce1a59a1ec5d21dec5Form.head = (options?: RouteQueryOptio
 Controllere19ee86e9cf603ce1a59a1ec5d21dec5.form = Controllere19ee86e9cf603ce1a59a1ec5d21dec5Form
 
 const Controller = {
+    '/tentang-kami': Controllercaa0ac59a54ac8054bbfb3b32db74b70,
     '/kebijakan-privasi': Controller8d420e8836099d9098a665641f2faef3,
     '/syarat-ketentuan': Controller03293bd771fb203395c1b7dcfc34d6ff,
     '/laporan-riyadhoh': Controllerd695224dce3196d1787d0802ce2060c0,

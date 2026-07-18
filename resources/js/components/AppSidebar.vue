@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { Award, BookOpen, Calendar, CircleStar, FolderGit2, GalleryThumbnails, HeartHandshake, LayoutGrid, Logs, MessageCircle, MoonStar, ShieldCheck, Smile, Star, Target, Ticket, Users, Wallet } from 'lucide-vue-next';
+import { Award, BookOpen, Calendar, CircleStar, FolderGit2, GalleryThumbnails, HeartHandshake, LayoutGrid, Logs, MessageCircle, MessageSquare, MoonStar, ShieldCheck, Smile, Star, Target, Ticket, Users, Wallet } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -88,7 +88,7 @@ const mainNavItemsAktifitas = computed(() => {
             {
                 title: 'Komentar',
                 href: '/user/aktifitas/komentar',
-                icon: MessageCircle,
+                icon: MessageSquare,
             },
             {
                 title: 'Rating',

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3'
 import CustomPagination from '@/components/CustomPagination.vue'
-import { Clock, HeartHandshake, Ticket, MessageSquare, Heart, Star, UserCheck, Calendar, MessageCircle } from 'lucide-vue-next'
+import { Clock, HeartHandshake, Ticket, MessageSquare, Heart, Star, UserCheck, Calendar, MessageCircle, CornerDownRight } from 'lucide-vue-next'
 
 const props = defineProps<{
     currentTab: string;
@@ -34,6 +34,12 @@ const getRoutePrefix = (type) => {
   // Jika cocok gunakan hasilnya, jika tidak ada yang cocok (default) jadi 'lingkaran'
   return match ? routes[match] : 'lingkaran';
 };
+
+// ✔️ Nama penulis komentar induk (untuk ditampilkan pada entri balasan)
+const getParentAuthorName = (parent: any) => {
+  if (!parent) return 'Pengguna'
+  return parent.user?.name || parent.nama_publik || 'Pengguna'
+}
 </script>
 
 <template>
@@ -42,7 +48,7 @@ const getRoutePrefix = (type) => {
     <div class="py-10 px-4 w-full max-w-4xl mx-auto font-poppins">
         <div class="mb-6">
             <h1 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-                <MessageCircle class="size-6 text-amber-500" />
+                <MessageSquare class="size-6 text-amber-500" />
                 Komentar Saya
             </h1>
             <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
@@ -59,9 +65,15 @@ const getRoutePrefix = (type) => {
             <div v-if="dataList?.data.length > 0" class="divide-y divide-zinc-100 dark:divide-zinc-800">
                 <div v-for="log in dataList.data" :key="log.id" class="p-4 sm:px-6 flex flex-col gap-3 hover:bg-zinc-50/50 dark:hover:bg-zinc-800/20 transition-colors">
                     <div class="flex items-center justify-between text-zinc-400 text-[11px]">
-                        <span class="font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2 py-1 rounded-lg flex items-center gap-1.5">
-                            <MessageSquare class="size-3" /> {{ getModulePath(log.commentable_type) }}
-                        </span>
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2 py-1 rounded-lg flex items-center gap-1.5">
+                                <MessageSquare class="size-3" /> {{ getModulePath(log.commentable_type) }}
+                            </span>
+                            <!-- ✔️ Badge pembeda: tampil hanya jika komentar ini adalah balasan -->
+                            <span v-if="log.parent_id" class="font-medium bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 px-2 py-1 rounded-lg flex items-center gap-1.5">
+                                <CornerDownRight class="size-3" /> Balasan
+                            </span>
+                        </div>
                         <span>{{ new Date(log.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) }}</span>
                     </div>
                     
@@ -72,6 +84,13 @@ const getRoutePrefix = (type) => {
                                         "{{ log.commentable?.judul || 'Konten telah dihapus' }}"
                                     </Link>
                         </div>
+
+                        <!-- ✔️ Konteks sub komentar: kutipan komentar induk yang dibalas -->
+                        <div v-if="log.parent_id" class="text-xs text-zinc-500 dark:text-zinc-400 border-l-2 border-zinc-200 dark:border-zinc-700 pl-3 mb-2 line-clamp-2">
+                            Membalas <span class="font-semibold text-zinc-600 dark:text-zinc-300">{{ getParentAuthorName(log.parent) }}</span>:
+                            <span class="italic">"{{ log.parent?.body ?? 'Komentar telah dihapus' }}"</span>
+                        </div>
+
                         <div class="text-sm text-zinc-600 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-950 p-4 rounded-xl border border-zinc-100 dark:border-zinc-800/80 italic shadow-inner">
                             "{{ log.body }}"
                         </div>

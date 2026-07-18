@@ -67,7 +67,7 @@ class AktifitasController extends Controller
     public function komentar()
     {
         $data = Komentar::where('user_id', auth()->id())
-            ->with('commentable:id,judul,slug')
+            ->with('commentable:id,judul,slug', 'parent.user')
             ->latest()
             ->paginate(10);
 

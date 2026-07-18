@@ -176,6 +176,35 @@ const formatRelativeTime = (dateString: string) => {
     return `${monthName} ${day}, ${hour}:${minute}`;
 };
 
+const formatRelativeTimeOnline = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    // 1. Logika untuk "online" (di bawah 60 detik)
+    if (seconds < 300) return 'Online';
+
+    // 2. Selain kondisi di atas, format tanggal absolut (contoh: "2026 Juli 3, 10:23")
+    const hour = String(date.getHours()).padStart(2, '0');
+    const minute = String(date.getMinutes()).padStart(2, '0');
+    
+    // Ambil nama bulan dalam bahasa Indonesia secara manual
+    const months = [
+        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    const monthName = months[date.getMonth()];
+    const day = date.getDate();
+
+    // Jika tahun berbeda dengan tahun sekarang, tampilkan tahun di depan
+    if (date.getFullYear() !== now.getFullYear()) {
+        return `${date.getFullYear()} ${monthName} ${day}, ${hour}:${minute}`;
+    }
+
+    // Jika tahun sama, tahun disembunyikan
+    return `${monthName} ${day}, ${hour}:${minute}`;
+};
+
 // State untuk pencarian
 const isSearching = ref(false)
 const searchQuery = ref('')
@@ -375,7 +404,10 @@ function handleKeydown(e) {
                         <img v-else :src="activeChat.user.gender === 'P' ? `/avatar_cewe.png` : `/avatar_cowo.png`"
                           class=" rounded-full object-cover border-4 border-stone-950 bg-stone-900 shadow-xl" />
                     </div>
-                    <div class="font-bold text-stone-200 truncate">{{ activeChat.user.name }}</div>
+                    <div class="block -space-y-1">
+                        <div class="font-bold text-stone-200 truncate">{{ activeChat.user.name }}</div>
+                        <div class="font-base text-xs text-stone-400">{{ formatRelativeTimeOnline(activeChat.user.last_seen_at) }}</div>
+                    </div>
                     <button @click="closeChat" class="p-2 ms-auto rounded-full hover:bg-stone-600 bg-stone-800 text-stone-400 transition">
                         <X class="size-5" />
                     </button>

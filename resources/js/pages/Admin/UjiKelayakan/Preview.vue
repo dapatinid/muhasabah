@@ -102,7 +102,7 @@ function getChoiceClass(choice: string): string {
                     </DialogDescription>
                 </div>
 
-                <div class="flex flex-col items-center justify-center p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200/60 dark:border-zinc-700 text-center min-w-[120px]">
+                <div class="flex flex-col items-center justify-center p-3 me-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200/60 dark:border-zinc-700 text-center min-w-[120px]">
                     <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-0.5">
                         Total Skor
                     </span>

@@ -335,7 +335,7 @@ const goToKalamRespon = () => {
     // Kita arahkan menggunakan query parameter '?scroll=respon'
     router.get(`/kalam/${targetSlug}`, { scroll: 'respon' }, {
       preserveState: false,
-      replace: true
+      // replace: true
     })
   }, 500)
 }
@@ -616,9 +616,9 @@ const goToKalamRespon = () => {
               <span>{{ isSubmittingComment ? 'Mengirim...' : 'Kirim Komentar' }}</span>
             </button>
 
-            <!-- <div class="text-center text-[11px] text-stone-500 font-medium">
+            <div class="text-center text-[11px] text-stone-500 font-medium">
               <button type="button" @click="goToKalamRespon" class="underline hover:text-stone-300 transition-colors">Lihat Semua Komentar</button>
-            </div> -->
+            </div>
           </form>
         </div>
 

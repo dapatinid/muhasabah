@@ -421,7 +421,7 @@ const playNotificationSound = () => {
         <slot name="header" />
       </nav>
 
-      <main :class="[shouldShowNav ? 'pb-32' : 'pb-10', 'pt-16']">
+      <main :class="[shouldShowNav ? 'pb-30' : 'pb-10', 'pt-16']">
         <slot />
       </main>
 

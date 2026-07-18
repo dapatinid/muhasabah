@@ -7,13 +7,14 @@ import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import Youtube from '@tiptap/extension-youtube'
 import { TextStyle } from '@tiptap/extension-text-style'
-import { ref, watch, onBeforeUnmount } from 'vue'
+import { ref, watch, onBeforeUnmount, onMounted } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { 
   Bold, Italic, Underline as UnderlineIcon, 
   List, ListOrdered, Quote, Undo, Redo, 
   ImagePlus, Loader2, VideoIcon,
-  Minus, Link as LinkIcon, Type
+  Minus, Link as LinkIcon, Type,
+  Pencil, X
 } from 'lucide-vue-next'
 
 // FontSize extension manual (tidak ada package resmi untuk v3)
@@ -237,16 +238,74 @@ function insertDivider() {
   editor.value?.chain().focus().insertContent('<hr>').run()
 }
 
-onBeforeUnmount(() => { editor.value?.destroy() })
+// Dialog editor (preview klik -> buka editor lengkap)
+const isDialogOpen = ref(false)
+
+function openDialog() {
+  isDialogOpen.value = true
+  document.body.style.overflow = 'hidden'
+}
+function closeDialog() {
+  isDialogOpen.value = false
+  document.body.style.overflow = ''
+}
+function handleKeydown(e: KeyboardEvent) {
+  if (e.key === 'Escape' && isDialogOpen.value) closeDialog()
+}
+onMounted(() => window.addEventListener('keydown', handleKeydown))
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleKeydown)
+  document.body.style.overflow = ''
+  editor.value?.destroy()
+})
 </script>
 
 <template>
-  <div v-if="editor" class="border rounded-2xl bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800">
-    
-    <!-- Toolbar -->
-    <div class="sticky top-0 z-10 flex flex-wrap items-center gap-1 p-2 bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-100 dark:border-zinc-800 rounded-t-2xl">
+  <!-- Preview: cuplikan HTML, klik untuk buka editor lengkap -->
+  <div
+    v-if="editor"
+    @click="openDialog"
+    class="group relative cursor-pointer rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5 min-h-[140px] hover:border-emerald-300 dark:hover:border-emerald-800 transition-colors"
+  >
+    <div
+      v-if="modelValue"
+      class="prose dark:prose-invert max-w-none tiptap-content pointer-events-none"
+      v-html="modelValue"
+    />
+    <p v-else class="text-sm text-zinc-400 pointer-events-none">
+      Klik untuk menulis konten...
+    </p>
+    <div class="absolute top-3 right-3 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity bg-white dark:bg-zinc-900 rounded-full px-2.5 py-1 shadow-sm border border-zinc-200 dark:border-zinc-700 text-xs text-zinc-500 dark:text-zinc-400">
+      <Pencil class="size-3.5" /> Edit
+    </div>
+  </div>
 
-      <!-- Font Size -->
+  <!-- Dialog editor: di-teleport ke <body>, jadi lepas total dari overflow-x-hidden AppContent -->
+  <Teleport to="body">
+    <div
+      v-if="isDialogOpen"
+      class="fixed inset-0 z-[100] flex items-end md:items-center justify-center bg-black/40 backdrop-blur-sm md:p-6"
+      @click.self="closeDialog"
+    >
+      <div class="w-full h-[92vh] md:h-auto md:max-h-[85vh] md:max-w-3xl bg-white dark:bg-zinc-950 rounded-t-2xl md:rounded-2xl flex flex-col overflow-hidden shadow-2xl">
+
+        <!-- Header + toolbar: sticky di dalam dialog (bukan lagi di dalam AppContent) -->
+        <div class="sticky top-0 z-10 bg-white dark:bg-zinc-950 shrink-0">
+          <div class="flex items-center justify-between px-4 py-2 border-b border-zinc-100 dark:border-zinc-800">
+            <span class="text-sm font-semibold text-zinc-600 dark:text-zinc-300">Edit Konten</span>
+            <button
+              type="button"
+              @click="closeDialog"
+              class="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-600 transition-colors"
+              title="Tutup"
+            >
+              <X class="size-4" />
+            </button>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-1 p-2 bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-100 dark:border-zinc-800">
+
+          <!-- Font Size -->
       <div class="flex items-center bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 p-0.5 shadow-sm">
         <div class="flex items-center gap-1 px-2 py-2">
           <Type class="size-3.5 text-zinc-400 shrink-0" />
@@ -354,70 +413,75 @@ onBeforeUnmount(() => { editor.value?.destroy() })
         </button>
       </div>
 
-      <!-- Undo / Redo -->
-      <div class="ms-auto flex items-center gap-1">
-        <button type="button" @click="editor.chain().focus().undo().run()" :disabled="!editor.can().undo()"
-          class="p-2 text-zinc-400 hover:text-zinc-600 disabled:opacity-30 transition-colors" title="Undo">
-          <Undo class="size-4" />
-        </button>
-        <button type="button" @click="editor.chain().focus().redo().run()" :disabled="!editor.can().redo()"
-          class="p-2 text-zinc-400 hover:text-zinc-600 disabled:opacity-30 transition-colors" title="Redo">
-          <Redo class="size-4" />
-        </button>
+          <!-- Undo / Redo -->
+          <div class="ms-auto flex items-center gap-1">
+            <button type="button" @click="editor.chain().focus().undo().run()" :disabled="!editor.can().undo()"
+              class="p-2 text-zinc-400 hover:text-zinc-600 disabled:opacity-30 transition-colors" title="Undo">
+              <Undo class="size-4" />
+            </button>
+            <button type="button" @click="editor.chain().focus().redo().run()" :disabled="!editor.can().redo()"
+              class="p-2 text-zinc-400 hover:text-zinc-600 disabled:opacity-30 transition-colors" title="Redo">
+              <Redo class="size-4" />
+            </button>
+          </div>
+          </div>
+
+          <!-- Input YouTube URL -->
+          <div v-if="showYoutubeInput"
+               class="flex items-center gap-2 px-4 py-2.5 bg-red-50 dark:bg-red-950/30 border-b border-red-100 dark:border-red-900/50">
+            <VideoIcon class="size-4 text-red-500 shrink-0" />
+            <input
+              v-model="youtubeUrl"
+              type="url"
+              placeholder="Tempel URL YouTube... (https://youtube.com/watch?v=...)"
+              class="flex-1 text-sm bg-transparent outline-none text-zinc-700 dark:text-zinc-300 placeholder-zinc-400"
+              @keydown.enter.prevent="insertYoutube"
+              @keydown.esc="cancelYoutube"
+              autofocus
+            />
+            <button type="button" @click="insertYoutube" :disabled="!youtubeUrl.trim()"
+              class="text-xs font-bold px-3 py-1.5 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-40 transition-all">
+              Sisipkan
+            </button>
+            <button type="button" @click="cancelYoutube" class="text-xs text-zinc-400 hover:text-zinc-600 px-2">
+              Batal
+            </button>
+          </div>
+
+          <!-- Input Hyperlink -->
+          <div v-if="showLinkInput"
+               class="flex items-center gap-2 px-4 py-2.5 bg-blue-50 dark:bg-blue-950/30 border-b border-blue-100 dark:border-blue-900/50">
+            <LinkIcon class="size-4 text-blue-500 shrink-0" />
+            <input
+              v-model="linkUrl"
+              type="url"
+              placeholder="Masukkan URL... (https://...)"
+              class="flex-1 text-sm bg-transparent outline-none text-zinc-700 dark:text-zinc-300 placeholder-zinc-400"
+              @keydown.enter.prevent="insertLink"
+              @keydown.esc="cancelLink"
+              autofocus
+            />
+            <button type="button" @click="insertLink" :disabled="!linkUrl.trim()"
+              class="text-xs font-bold px-3 py-1.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-40 transition-all">
+              Terapkan
+            </button>
+            <button v-if="editor.isActive('link')" type="button" @click="removeLink"
+              class="text-xs font-bold px-3 py-1.5 bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300 rounded-lg hover:bg-red-100 hover:text-red-600 transition-all">
+              Hapus Link
+            </button>
+            <button type="button" @click="cancelLink" class="text-xs text-zinc-400 hover:text-zinc-600 px-2">
+              Batal
+            </button>
+          </div>
+        </div>
+
+        <!-- Area editor: scroll di dalam dialog -->
+        <div class="flex-1 overflow-y-auto">
+          <editor-content :editor="editor" />
+        </div>
       </div>
     </div>
-
-    <!-- Input YouTube URL -->
-    <div v-if="showYoutubeInput"
-         class="flex items-center gap-2 px-4 py-2.5 bg-red-50 dark:bg-red-950/30 border-b border-red-100 dark:border-red-900/50">
-      <VideoIcon class="size-4 text-red-500 shrink-0" />
-      <input
-        v-model="youtubeUrl"
-        type="url"
-        placeholder="Tempel URL YouTube... (https://youtube.com/watch?v=...)"
-        class="flex-1 text-sm bg-transparent outline-none text-zinc-700 dark:text-zinc-300 placeholder-zinc-400"
-        @keydown.enter.prevent="insertYoutube"
-        @keydown.esc="cancelYoutube"
-        autofocus
-      />
-      <button type="button" @click="insertYoutube" :disabled="!youtubeUrl.trim()"
-        class="text-xs font-bold px-3 py-1.5 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-40 transition-all">
-        Sisipkan
-      </button>
-      <button type="button" @click="cancelYoutube" class="text-xs text-zinc-400 hover:text-zinc-600 px-2">
-        Batal
-      </button>
-    </div>
-
-    <!-- Input Hyperlink -->
-    <div v-if="showLinkInput"
-         class="flex items-center gap-2 px-4 py-2.5 bg-blue-50 dark:bg-blue-950/30 border-b border-blue-100 dark:border-blue-900/50">
-      <LinkIcon class="size-4 text-blue-500 shrink-0" />
-      <input
-        v-model="linkUrl"
-        type="url"
-        placeholder="Masukkan URL... (https://...)"
-        class="flex-1 text-sm bg-transparent outline-none text-zinc-700 dark:text-zinc-300 placeholder-zinc-400"
-        @keydown.enter.prevent="insertLink"
-        @keydown.esc="cancelLink"
-        autofocus
-      />
-      <button type="button" @click="insertLink" :disabled="!linkUrl.trim()"
-        class="text-xs font-bold px-3 py-1.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-40 transition-all">
-        Terapkan
-      </button>
-      <button v-if="editor.isActive('link')" type="button" @click="removeLink"
-        class="text-xs font-bold px-3 py-1.5 bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300 rounded-lg hover:bg-red-100 hover:text-red-600 transition-all">
-        Hapus Link
-      </button>
-      <button type="button" @click="cancelLink" class="text-xs text-zinc-400 hover:text-zinc-600 px-2">
-        Batal
-      </button>
-    </div>
-
-    <!-- Editor Area -->
-    <editor-content :editor="editor" />
-  </div>
+  </Teleport>
 </template>
 
 <style>

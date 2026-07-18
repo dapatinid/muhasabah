@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Head, Link, useForm } from '@inertiajs/vue3'
+import { Head, Link, useForm, usePage } from '@inertiajs/vue3'
 import { computed, ref, onMounted } from 'vue'
-import { CalendarDays, Share2, Tag, User, SendHorizontal, MessageSquare, MoreHorizontal, AlertTriangle, X } from 'lucide-vue-next'
+import { CalendarDays, Share2, Tag, User, SendHorizontal, MessageSquare, MoreHorizontal, AlertTriangle, X, Reply, CornerDownRight } from 'lucide-vue-next'
 import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
 import { toast } from 'vue-sonner'
 import Separator from '@/components/ui/separator/Separator.vue'
@@ -30,6 +30,7 @@ const props = defineProps<{
         }>    
     komentars: Array<{
       id: number
+      parent_id: number
       body: string
       nama_publik?: string
       created_at: string
@@ -77,11 +78,32 @@ const formattedAuthors = computed(() => {
   return `${displayedNames} dan ${remainingCount} orang lainnya`;
 });
 
+const komentarUtama = computed(() => {
+  if (!props.kalam.komentars) return []
+  
+  // Ambil komentar induk (parent_id null)
+  const parents = props.kalam.komentars.filter(k => !k.parent_id)
+  
+  // Sisipkan balasan (replies) ke masing-masing induk
+  return parents.map(parent => ({
+    ...parent,
+    replies: props.kalam.komentars.filter(k => k.parent_id === parent.id)
+  }))
+})
+
 // --- STATE MANAGEMENT ---
 const isSubmittingComment = ref(false)
 const isSubmittingReaction = ref(false)
 const storageKey = `kalam_reaksi_${props.kalam.slug}`
 const selectedReaksi = ref<string | null>(localStorage.getItem(storageKey))
+const showReplyModal = ref(false) // ✔️ Samakan menjadi showReplyModal
+const selectedComment = ref<any>(null)
+
+// --- INERTIA PAGE PROPS (untuk deteksi status login) ---
+// Di dalam <script setup>, $page tidak tersedia secara otomatis seperti di template,
+// jadi kita wajib memanggil usePage() secara eksplisit.
+const page = usePage()
+const isUserLoggedIn = computed(() => !!(page.props.auth as any)?.user)
 
 // --- SECURITY MATH CAPTCHA ---
 const captchaNum1 = ref(0)
@@ -291,6 +313,103 @@ const authorList = computed(() => {
   return list;
 });
 
+// Form Inertia untuk Balasan
+const replyForm = useForm({
+  parent_id: null as number | null,
+  nama_publik: '',
+  body: '',
+  captcha_challenge: computed(() => `${captchaNum1.value}+${captchaNum2.value}`),
+  captcha_answer: ''
+})
+
+// Fungsi Buka Modal Balas
+const openReplyModal = (komentar: any) => {
+  selectedComment.value = komentar
+  replyForm.reset()
+  replyForm.parent_id = komentar.id
+  
+  if (!isUserLoggedIn.value) {
+    generateCaptcha() // ✔️ Panggil captcha di sini
+  }
+  showReplyModal.value = true
+}
+
+// ✔️ Ganti nama fungsinya menjadi closeReplyModal
+const closeReplyModal = () => {
+  showReplyModal.value = false
+  selectedComment.value = null
+  replyForm.reset()
+}
+
+// Helper Nama Penulis Komentar (Prioritas: nama_publik -> relasi user -> Hamba Allah)
+const getAuthorName = (item: any) => {
+  if (item.nama_publik) return item.nama_publik
+  if (item.user?.name) return item.user.name
+  return 'Hamba Allah'
+}
+
+// Fungsi Kirim Balasan
+const submitReply = () => {
+  // Validasi Captcha jika Guest
+  if (!isUserLoggedIn.value) {
+    const expected = captchaNum1.value + captchaNum2.value
+    if (parseInt(userCaptchaAnswer.value) !== expected) {
+      toast.error('Jawaban perhitungan hitungan salah, silakan coba lagi.')
+      generateCaptcha()
+      return
+    }
+  }
+
+  // ✔️ Sinkronkan jawaban captcha ke form sebelum dikirim (tadinya tidak pernah terkirim ke server)
+  replyForm.captcha_answer = userCaptchaAnswer.value
+
+  replyForm.post(`/kalam/${props.kalam.slug}/komentar`, {
+    preserveScroll: true,
+    onSuccess: () => {
+      toast.success('Balasan komentar berhasil dikirim!')
+      closeReplyModal()
+    },
+    onError: () => {
+      toast.error('Gagal mengirim balasan, periksa isian Anda.')
+      if (!isUserLoggedIn.value) generateCaptcha()
+    }
+  })
+}
+
+
+
+const formatRelativeTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    // 1. Logika untuk "barusan" (di bawah 60 detik)
+    if (seconds < 60) return 'barusan';
+
+    // 2. Logika untuk "xx menit lalu" (di bawah 60 menit)
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes} menit lalu`;
+
+    // 3. Selain kondisi di atas, format tanggal absolut (contoh: "2026 Juli 3, 10:23")
+    const hour = String(date.getHours()).padStart(2, '0');
+    const minute = String(date.getMinutes()).padStart(2, '0');
+    
+    // Ambil nama bulan dalam bahasa Indonesia secara manual
+    const months = [
+        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    const monthName = months[date.getMonth()];
+    const day = date.getDate();
+
+    // Jika tahun berbeda dengan tahun sekarang, tampilkan tahun di depan
+    if (date.getFullYear() !== now.getFullYear()) {
+        return `${date.getFullYear()} ${monthName} ${day}, ${hour}:${minute}`;
+    }
+
+    // Jika tahun sama, tahun disembunyikan
+    return `${monthName} ${day}, ${hour}:${minute}`;
+};
 </script>
 
 <template>
@@ -496,28 +615,71 @@ const authorList = computed(() => {
           </div>
 
           <div v-if="!kalam.komentars || kalam.komentars.length === 0"
-               class="text-center py-10 rounded-3xl border border-dashed border-stone-850 bg-stone-900/10 text-stone-600 text-sm">
+               class="text-center py-5 rounded-xl border-2 border-dashed border-stone-700 bg-stone-900/10 text-stone-600 text-sm">
             Belum ada diskusi atau tanggapan publik.
           </div>
 
-          <div v-else class="space-y-3">
-            <div
-              v-for="komentar in kalam.komentars"
-              :key="komentar.id"
-              class="bg-stone-900/20 border border-stone-800 rounded-2xl p-4 space-y-1 hover:border-amber-500/20 transition-colors"
-            >
-              <div class="flex items-center gap-2 mb-1">
-                <span class="text-xs font-bold text-amber-200">
-                  {{ komentar.nama_publik || komentar.user?.name || 'Hamba Allah' }}
-                </span>
-                <span class="text-[9px] text-stone-600 font-mono">• {{ new Date(komentar.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'}).replace('pukul', '|')}}</span>
-              </div>
-              <p class="text-sm text-stone-400 leading-relaxed">{{ komentar.body }}</p>
+          <div v-else class="space-y-6">
+              <div 
+                v-for="komentar in komentarUtama" 
+                :key="komentar.id"
+                class="bg-stone-900/60 border border-stone-800/80 rounded-2xl p-5 space-y-4 transition-colors hover:border-stone-700/60"
+              >
+                <div class="flex items-start justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center text-amber-400 font-bold text-sm shadow-inner">
+                      {{ getAuthorName(komentar).charAt(0).toUpperCase() }}
+                    </div>
+                    <div class="block -space-y-2">
+                      <h4 class="text-sm font-bold text-stone-200">{{ getAuthorName(komentar) }}</h4>
+                      <span class="text-[11px] text-stone-500">{{ formatRelativeTime(komentar.created_at) }}</span>
+                    </div>
+                  </div>
+
+                  <button 
+                    @click="openReplyModal(komentar)"
+                    type="button"
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-stone-800/80 hover:bg-amber-500/10 text-stone-400 hover:text-amber-400 border border-stone-700/60 hover:border-amber-500/30 text-xs font-medium transition-all active:scale-95 cursor-pointer"
+                  >
+                    <Reply class="w-3.5 h-3.5" />
+                    <span>Balas</span>
+                  </button>
+                </div>
+
+                <p class="text-sm text-stone-300 leading-relaxed pl-12 whitespace-pre-line">
+                  {{ komentar.body }}
+                </p>
+
+                <div 
+                  v-if="komentar.replies && komentar.replies.length > 0" 
+                  class="mt-4 pt-4 pl-4 md:pl-8 border-l-2 border-amber-500/20 ml-4 md:ml-6 space-y-4"
+                >
+                  <div 
+                    v-for="balasan in komentar.replies" 
+                    :key="balasan.id"
+                    class="bg-stone-950/50 border border-stone-800/60 rounded-xl p-4 space-y-2"
+                  >
+                    <div class="flex items-center justify-between gap-2">
+                      <div class="flex items-center gap-2">
+                        <CornerDownRight class="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                        <span class="text-xs font-bold text-amber-400/90">{{ getAuthorName(balasan) }}</span>
+                        <span class="text-[10px] text-stone-600">•</span>
+                        <span class="text-[10px] text-stone-500">{{ formatRelativeTime(balasan.created_at) }}</span>
+                      </div>
+                    </div>
+
+                    <p class="text-xs text-stone-300 leading-relaxed pl-5 whitespace-pre-line">
+                      {{ balasan.body }}
+                    </p>
+                  </div>
+                </div>
+                </div>
             </div>
-          </div>
         </div>
       </section>
       </main>
+
+  
 
     <div class="fixed bottom-46 max-w-xl mx-auto inset-x-0 z-50 pointer-events-none">
       <div class="absolute left-5 pointer-events-auto flex flex-col gap-3">
@@ -539,7 +701,111 @@ const authorList = computed(() => {
           <Share2 class="w-4 h-4 stroke-[2.5]" />
         </button>
       </div>
-    </div>      
+    </div>   
+    
+
+  <Transition
+    enter-active-class="transition duration-200 ease-out"
+    enter-from-class="opacity-0 scale-95"
+    enter-to-class="opacity-100 scale-100"
+    leave-active-class="transition duration-150 ease-in"
+    leave-from-class="opacity-100 scale-100"
+    leave-to-class="opacity-0 scale-95"
+  >
+    <div 
+      v-if="showReplyModal" 
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+    >
+      <div class="absolute inset-0" @click="closeReplyModal"></div>
+
+      <div class="relative w-full max-w-lg bg-stone-950 border border-stone-800 rounded-2xl shadow-2xl overflow-hidden z-10">
+        
+        <div class="flex items-center justify-between px-6 py-4 border-b border-stone-800/80 bg-stone-900/50">
+          <div class="flex items-center gap-2.5">
+            <Reply class="w-4 h-4 text-amber-500" />
+            <h3 class="text-sm font-bold text-stone-200">Balas Komentar</h3>
+          </div>
+          <button 
+            @click="closeReplyModal" 
+            type="button"
+            class="text-stone-500 hover:text-stone-300 transition-colors p-1 rounded-lg hover:bg-stone-800"
+          >
+            <X class="w-5 h-5" />
+          </button>
+        </div>
+
+        <div v-if="selectedComment" class="mx-6 mt-5 p-3.5 bg-stone-900/80 border-l-4 border-amber-500 rounded-r-xl">
+          <p class="text-xs font-semibold text-amber-400 mb-1">
+            Membalas {{ getAuthorName(selectedComment) }}:
+          </p>
+          <p class="text-xs text-stone-400 italic line-clamp-2">
+            "{{ selectedComment.body }}"
+          </p>
+        </div>
+
+        <form @submit.prevent="submitReply" class="p-6 space-y-4">
+          
+          <div v-if="!isUserLoggedIn" class="space-y-1.5">
+            <label class="block text-xs font-medium text-stone-400">
+              Nama Anda <span class="text-stone-600">(Opsional, kosongkan untuk Hamba Allah)</span>
+            </label>
+            <input
+              v-model="replyForm.nama_publik"
+              type="text"
+              placeholder="Tulis nama atau inisial..."
+              class="w-full bg-stone-900 border border-stone-800 rounded-xl px-3.5 py-2.5 text-xs text-stone-200 placeholder-stone-600 outline-none focus:border-amber-500/50 transition-colors"
+            />
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block text-xs font-medium text-stone-400">
+              Isi Balasan <span class="text-amber-500">*</span>
+            </label>
+            <textarea
+              v-model="replyForm.body"
+              required
+              rows="4"
+              placeholder="Tulis balasan Anda dengan santun dan bermanfaat..."
+              class="w-full bg-stone-900 border border-stone-800 rounded-xl p-3.5 text-xs text-stone-200 placeholder-stone-600 outline-none focus:border-amber-500/50 transition-colors resize-none"
+            ></textarea>
+          </div>
+
+          <div v-if="!isUserLoggedIn" class="p-3 bg-stone-900/50 border border-stone-800/80 rounded-xl flex items-center justify-between gap-3">
+            <span class="text-xs font-medium text-stone-300 tracking-wider">
+              Berapakah: <strong class="text-amber-400">{{ captchaNum1 }} + {{ captchaNum2 }}</strong> ?
+            </span>
+            <input
+              v-model="userCaptchaAnswer"
+              type="number"
+              required
+              placeholder="Hasil"
+              class="w-20 bg-stone-950 border border-stone-800 rounded-lg py-1.5 px-2 text-center text-xs text-stone-200 outline-none focus:border-amber-500/50"
+            />
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-2">
+            <button
+              type="button"
+              @click="closeReplyModal"
+              class="px-4 py-2.5 rounded-xl border border-stone-800 hover:bg-stone-800 text-stone-400 text-xs font-semibold transition-colors"
+            >
+              Batal
+            </button>
+
+            <button
+              type="submit"
+              :disabled="replyForm.processing || !replyForm.body || (!isUserLoggedIn && !userCaptchaAnswer)"
+              class="px-5 py-2.5 bg-amber-500 disabled:bg-amber-500/20 text-stone-950 disabled:text-stone-600 font-bold text-xs rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer"
+            >
+              <SendHorizontal class="w-3.5 h-3.5" />
+              <span>{{ replyForm.processing ? 'Mengirim...' : 'Kirim Balasan' }}</span>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </Transition>        
 
   </AppLayoutPublic>
 </template>
