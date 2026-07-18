@@ -202,7 +202,8 @@ const filteredQuestions = computed(() => {
     if (activeTab.value === 2) return q.id >= 21 && q.id <= 40
     if (activeTab.value === 3) return q.id >= 41 && q.id <= 60
     if (activeTab.value === 4) return q.id >= 61 && q.id <= 80
-    return q.id >= 81 && q.id <= 100
+    if (activeTab.value === 5) return q.id >= 81 && q.id <= 100
+    return q.id >= 101 && q.id <= 120
   })
 })
 
@@ -221,6 +222,7 @@ const getCategoryProgress = (catId: number) => {
   else if (catId === 3) { min = 41; max = 60 }
   else if (catId === 4) { min = 61; max = 80 }
   else if (catId === 5) { min = 81; max = 100 }
+  else if (catId === 6) { min = 101; max = 120 }
 
   const catQuestions = questions.value.filter(q => q.id >= min && q.id <= max)
   const answered = catQuestions.filter(q => 
