@@ -44,7 +44,7 @@ const formatIDR = (value: number) => {
                             <div class="text-xs text-zinc-400 mt-0.5">
                                 Berdonasi ke: <span class="font-medium text-zinc-600 dark:text-zinc-300 hover:text-indigo-500"><Link :href="`/donasi/${log.paymentable?.slug}`">{{ log.paymentable?.judul || 'Program Terhapus' }}</Link></span>
                             </div>
-                            <div class="mt-1"><span class="text-[10px] uppercase px-2 py-0.5 rounded font-bold" :class="log.status === 'success' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'">{{ log.status ?? '~' }}</span></div>
+                            <div class="mt-1"><span class="text-[10px] uppercase px-2 py-0.5 rounded font-bold" :class="log.status === 'success' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'">{{ log.status ?? 'PENDING' }}</span></div>
                         </div>
                     </div>
                     <span class="text-[11px] text-zinc-400 self-end sm:self-center">{{ new Date(log.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) }}</span>
