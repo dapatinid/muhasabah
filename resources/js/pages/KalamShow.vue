@@ -623,15 +623,15 @@ const formatRelativeTime = (dateString: string) => {
               <div 
                 v-for="komentar in komentarUtama" 
                 :key="komentar.id"
-                class="relative bg-stone-900/60 border border-stone-800/80 rounded-2xl p-5 space-y-4 transition-colors hover:border-stone-700/60"
+                class="relative bg-stone-900/60 border border-stone-800/80 rounded-2xl p-5 space-y-0 transition-colors hover:border-stone-700/60"
               >
                 <!-- ✅ Trunk: SATU garis, mulai persis di bawah bulatan inisial (top-9 = 36px = tinggi avatar),
                     memanjang ke bawah. Karena ini satu div yang membentang penuh tinggi kartu,
                     dia otomatis mencakup body + seluruh balasan tanpa perlu dihitung per-item. -->
-                <div
+                <!-- <div
                   v-if="komentar.replies && komentar.replies.length > 0"
-                  class="absolute left-9.5 -translate-x-1/2 top-14 bottom-9.5 w-0.5 bg-amber-700"
-                ></div>
+                  class="absolute left-9.5 -translate-x-1/2 top-14 bottom-9.5 w-0.5 bg-amber-800"
+                ></div> -->
 
                 <div class="flex items-start justify-between gap-3">
                   <div class="flex items-center gap-3">
@@ -654,22 +654,25 @@ const formatRelativeTime = (dateString: string) => {
                   </button>
                 </div>
 
-                <p class="text-sm text-stone-300 leading-relaxed pl-12 whitespace-pre-line">
+                <p v-if="komentar.replies && komentar.replies.length > 0" class="ms-[17.5px] -mb-0.5 py-4 text-sm text-stone-300 leading-relaxed pl-4 whitespace-pre-line border-l-2 border-amber-800">
+                  {{ komentar.body }}
+                </p>
+                <p v-else class="-mb-0.5 py-4 text-sm text-stone-300 leading-relaxed pl-12 whitespace-pre-line">
                   {{ komentar.body }}
                 </p>
 
                 <div 
                   v-if="komentar.replies && komentar.replies.length > 0" 
-                  class="space-y-4 ml-1.25"
+                  class="-space-y-0.5 ml-[19px]"
                 >
                   <div 
-                    v-for="balasan in komentar.replies" 
+                    v-for="(balasan, index) in komentar.replies" 
                     :key="balasan.id"
-                    class="relative pl-12"
+                    class="relative pl-8"
                   >
                     <!-- ✅ Elbow/panah: ditumpuk pas di atas garis trunk. Ikon CornerDownRight
                         SECARA BENTUK sudah menyerupai garis turun lalu belok kanan. -->
-                    <CornerDownRight class="w-5 h-5 text-amber-700 absolute left-5 -translate-x-1/2 -top-0.5" />
+                    <CornerDownRight class="size-5.5 text-amber-800 absolute -left-[4px] -top-0.5" />
 
                     <div class="flex items-center gap-2 flex-wrap">
                       <span class="text-xs font-bold text-amber-400/90">{{ getAuthorName(balasan) }}</span>
@@ -677,7 +680,10 @@ const formatRelativeTime = (dateString: string) => {
                       <span class="text-[10px] text-stone-500">{{ formatRelativeTime(balasan.created_at) }}</span>
                     </div>
 
-                    <p class="text-xs text-stone-300 leading-relaxed mt-1 whitespace-pre-line">
+                    <p v-if="balasan.id !== Math.min(...komentar.replies.map(r => r.id))" class="text-xs text-stone-300 leading-relaxed whitespace-pre-line border-l-2 border-amber-800 -mt-2 pt-2 -ms-[33.5px] pl-8 pb-3">
+                      {{ balasan.body }}
+                    </p>
+                    <p v-else class="text-xs text-stone-300 leading-relaxed whitespace-pre-line -mt-2 pt-2 -ms-[33.5px] pl-8.5 pb-3">
                       {{ balasan.body }}
                     </p>
                   </div>
