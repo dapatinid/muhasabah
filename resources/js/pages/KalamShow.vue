@@ -623,11 +623,19 @@ const formatRelativeTime = (dateString: string) => {
               <div 
                 v-for="komentar in komentarUtama" 
                 :key="komentar.id"
-                class="bg-stone-900/60 border border-stone-800/80 rounded-2xl p-5 space-y-4 transition-colors hover:border-stone-700/60"
+                class="relative bg-stone-900/60 border border-stone-800/80 rounded-2xl p-5 space-y-4 transition-colors hover:border-stone-700/60"
               >
+                <!-- ✅ Trunk: SATU garis, mulai persis di bawah bulatan inisial (top-9 = 36px = tinggi avatar),
+                    memanjang ke bawah. Karena ini satu div yang membentang penuh tinggi kartu,
+                    dia otomatis mencakup body + seluruh balasan tanpa perlu dihitung per-item. -->
+                <div
+                  v-if="komentar.replies && komentar.replies.length > 0"
+                  class="absolute left-9.5 -translate-x-1/2 top-14 bottom-9.5 w-0.5 bg-amber-700"
+                ></div>
+
                 <div class="flex items-start justify-between gap-3">
                   <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center text-amber-400 font-bold text-sm shadow-inner">
+                    <div class="w-9 h-9 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center text-amber-400 font-bold text-sm shadow-inner shrink-0">
                       {{ getAuthorName(komentar).charAt(0).toUpperCase() }}
                     </div>
                     <div class="block -space-y-2">
@@ -652,29 +660,31 @@ const formatRelativeTime = (dateString: string) => {
 
                 <div 
                   v-if="komentar.replies && komentar.replies.length > 0" 
-                  class="mt-4 pt-4 pl-4 md:pl-8 border-l-2 border-amber-500/20 ml-4 md:ml-6 space-y-4"
+                  class="space-y-4 ml-1.25"
                 >
                   <div 
                     v-for="balasan in komentar.replies" 
                     :key="balasan.id"
-                    class="bg-stone-950/50 border border-stone-800/60 rounded-xl p-4 space-y-2"
+                    class="relative pl-12"
                   >
-                    <div class="flex items-center justify-between gap-2">
-                      <div class="flex items-center gap-2">
-                        <CornerDownRight class="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                        <span class="text-xs font-bold text-amber-400/90">{{ getAuthorName(balasan) }}</span>
-                        <span class="text-[10px] text-stone-600">•</span>
-                        <span class="text-[10px] text-stone-500">{{ formatRelativeTime(balasan.created_at) }}</span>
-                      </div>
+                    <!-- ✅ Elbow/panah: ditumpuk pas di atas garis trunk. Ikon CornerDownRight
+                        SECARA BENTUK sudah menyerupai garis turun lalu belok kanan. -->
+                    <CornerDownRight class="w-5 h-5 text-amber-700 absolute left-5 -translate-x-1/2 -top-0.5" />
+
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="text-xs font-bold text-amber-400/90">{{ getAuthorName(balasan) }}</span>
+                      <span class="text-[10px] text-stone-600">•</span>
+                      <span class="text-[10px] text-stone-500">{{ formatRelativeTime(balasan.created_at) }}</span>
                     </div>
 
-                    <p class="text-xs text-stone-300 leading-relaxed pl-5 whitespace-pre-line">
+                    <p class="text-xs text-stone-300 leading-relaxed mt-1 whitespace-pre-line">
                       {{ balasan.body }}
                     </p>
                   </div>
                 </div>
-                </div>
-            </div>
+              </div>
+          </div>
+
         </div>
       </section>
       </main>

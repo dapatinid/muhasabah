@@ -64,29 +64,38 @@ class UkhuwahController extends Controller
      */
     public function tokoh(User $user)
     {
-        // Eager load relasi kota, serta ambil kalams, donasis, acaras milik user
+        // Eager load relasi, serta ambil kalams, donasis, acaras milik user
         // Kita batasi hanya mengambil yang ter-publish dan beberapa data terbaru (contoh: 4 data terbaru)
         $user->load([
             'tentangSaya',
+            'province', // 💡 Disarankan ikut di-load agar seragam dengan data wilayah di halaman direktori
             'city',
             'lingkarans:id,nama,slug,logo', // Ambil data lingkaran yang diikuti tokoh
             'masjids:id,nama,slug,logo',    // Ambil data masjid yang diikuti tokoh
             'kalams' => function($query) {
                 $query->where('is_published', true)
-                      ->withCount(['komentars', 'reaksis']) // Hitung jumlah komentar & reaksi
-                      ->latest();
+                    ->withCount(['komentars', 'reaksis']) // Hitung jumlah komentar & reaksi
+                    ->latest();
             },
             'donasis' => function($query) {
                 $query->where('is_published', true)
-                      ->withSum(['payments as donasi_masuk' => function($q) {
-                          $q->where('mutation_type', 'donasi_utama');
-                      }], 'nominal') // Hitung total donasi masuk per program
-                      ->latest();
+                    ->withSum(['payments as donasi_masuk' => function($q) {
+                        $q->where('mutation_type', 'donasi_utama');
+                    }], 'nominal') // Hitung total donasi masuk per program
+                    ->latest();
             },
             'acaras' => function($query) {
-                $query->where('is_published', true)->latest();
+                $query->where('is_published', true)
+                    ->latest();
             }
         ]);
+
+        // 🛠️ PERBAIKAN UTAMA: Mengatasi data kembar/duplikat akibat multi-attach di tabel pivot
+        // Menggunakan ->unique('id') untuk menyaring ID unik, dan ->values() untuk mereset index array
+        // Fungsi ->values() sangat penting agar di sisi Inertia/Vue terbaca sebagai Array murni [], bukan Object {}
+        $user->setRelation('acaras', $user->acaras->unique('id')->values());
+        $user->setRelation('lingkarans', $user->lingkarans->unique('id')->values());
+        $user->setRelation('masjids', $user->masjids->unique('id')->values());
 
         // Tambahkan flag is_online (true jika aktif dalam 5 menit terakhir)
         $user->is_online = $user->last_seen_at && $user->last_seen_at->gt(now()->subMinutes(5));
@@ -94,7 +103,7 @@ class UkhuwahController extends Controller
         return Inertia::render('Tokoh', [
             'user' => $user
         ]);
-    }
+    }   
 
     /**
      * Halaman Profil Publik Komunitas / Lingkaran
