@@ -54,7 +54,7 @@ const formattedAuthors = computed(() => {
   const mainUser = props.kalam.user?.name || 'Hamba Allah';
   const relatedUsers = props.kalam.users || [];
 
-  if (relatedUsers.length === 0) {
+  if (relatedUsers.length == 0) {
     return mainUser;
   }
 
@@ -65,8 +65,8 @@ const formattedAuthors = computed(() => {
   const uniqueNames = [...new Set(names)];
 
   // Logika format text
-  if (uniqueNames.length === 1) return uniqueNames[0];
-  if (uniqueNames.length === 2) return `${uniqueNames[0]} dan ${uniqueNames[1]}`;
+  if (uniqueNames.length == 1) return uniqueNames[0];
+  if (uniqueNames.length == 2) return `${uniqueNames[0]} dan ${uniqueNames[1]}`;
   if (uniqueNames.length <= 3) {
     return `${uniqueNames.slice(0, -1).join(', ')} dan ${uniqueNames[uniqueNames.length - 1]}`;
   }
@@ -87,7 +87,7 @@ const komentarUtama = computed(() => {
   // Sisipkan balasan (replies) ke masing-masing induk
   return parents.map(parent => ({
     ...parent,
-    replies: props.kalam.komentars.filter(k => k.parent_id === parent.id)
+    replies: props.kalam.komentars.filter(k => k.parent_id == parent.id)
   }))
 })
 
@@ -273,7 +273,7 @@ function getWhatsAppReportLink(slug: string) {
 }
 
 function toggleDropdown(id: number) {
-  activeDropdownId.value = activeDropdownId.value === id ? null : id
+  activeDropdownId.value = activeDropdownId.value == id ? null : id
 }
 
 function closeDropdowns() {
@@ -303,7 +303,7 @@ const authorList = computed(() => {
       
       if (authorData && authorData.id) {
         // Mencegah duplikasi jika penulis utama terdaftar juga di relasi
-        if (!list.find(u => u.id === authorData.id)) {
+        if (!list.find(u => u.id == authorData.id)) {
           list.push(authorData);
         }
       }
@@ -439,7 +439,7 @@ const formatRelativeTime = (dateString: string) => {
                 <MoreHorizontal class="size-5" />
               </button>
               
-              <div v-if="activeDropdownId === kalam.id" 
+              <div v-if="activeDropdownId == kalam.id" 
                 class="absolute right-0 mt-1 w-48 bg-stone-900 border border-stone-800 rounded-xl shadow-xl py-1 z-30 animate-in fade-in slide-in-from-top-1 duration-150"
               >
                 <a :href="getWhatsAppReportLink(kalam.slug)"
@@ -614,7 +614,7 @@ const formatRelativeTime = (dateString: string) => {
             </p>
           </div>
 
-          <div v-if="!kalam.komentars || kalam.komentars.length === 0"
+          <div v-if="!kalam.komentars || kalam.komentars.length == 0"
                class="text-center py-5 rounded-xl border-2 border-dashed border-stone-700 bg-stone-900/10 text-stone-600 text-sm">
             Belum ada diskusi atau tanggapan publik.
           </div>
