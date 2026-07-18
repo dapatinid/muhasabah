@@ -366,7 +366,7 @@ const submitReply = () => {
   replyForm.post(`/kalam/${props.kalam.slug}/komentar`, {
     preserveScroll: true,
     onSuccess: () => {
-      toast.success('Balasan komentar berhasil dikirim!')
+      // toast.success('Balasan komentar berhasil dikirim!')
       closeReplyModal()
     },
     onError: () => {
