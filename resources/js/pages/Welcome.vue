@@ -882,12 +882,12 @@ function getHargaBadgeInfo(acara: any) {
                 <span class="text-stone-400 leading-snug">RT 22 RW 01, Desa Nawangsari, Kec. Weleri, Kab. Kendal, Jawa Tengah, 51355</span>
               </li>
               <li class="flex items-center gap-3">
-                <Phone class="size-5 text-stone-400 shrink-0" />
-                <span class="text-stone-400"><a href="https://wa.me/6285950540055?text='Halo admin, saya tertarik dengan Muhasabah.ID'" class="hover:text-teal-400 transition">0859-5054-0055 (WA)</a></span>
+                <a href="https://wa.me/6285950540055?text='Halo admin, saya tertarik dengan Muhasabah.ID'" class="hover:text-teal-400 transition"><Phone class="size-5 text-stone-400 shrink-0" /></a>
+                <a href="https://wa.me/6285950540055?text='Halo admin, saya tertarik dengan Muhasabah.ID'" class="hover:text-teal-400 transition"><span class="text-stone-400">0859-5054-0055 (WA)</span></a>
               </li>
               <li class="flex items-center gap-3">
                 <Link :href="'/tentang-kami'"><Info class="size-5 text-stone-400 shrink-0" /></Link>
-                <Link :href="'/tentang-kami'"><span class="text-stone-400">Tentang Kami</span></Link>
+                <Link :href="'/tentang-kami'"><span class="text-stone-400">Tentang Kami</span> <span class="text-blue-400">selengkapnya...</span> </Link>
               </li>
             </ul>            
           </div>

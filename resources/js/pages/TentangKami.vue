@@ -38,6 +38,9 @@ import AppLayoutPublic from '@/layouts/AppLayoutPublic.vue'
         <p>
           Muhasabah juga menghubungkan setiap penggunanya terhubung dengan aktifis lain, relawan hingga donatur di halaman Ukhuwah. Fitur Obrolan memungkinkan setiap pengguna memulai kebermanfaatan baru untuk tujuan lebih mulia, "Ukhuwah Islamiyah".
         </p>
+        <p>
+          Dengan bergabung di platfrom kami, anda telah memiliki pilihan apakah hanya menjadi pengguna biasa atau aktifis (relawan / donatur / keduanya). Kami menyediakan sedikitnya 120 questioner dasar untuk relawan/donatur. Jika ingin membuka semua fitur, total ada 520 questioner untuk bahan pertimbangan kami sebagai bentuk komitmen pengguna kepada platform ini. Questioner yang kami sediakan bukan merupakan tes yang menilai pengguna benar atau salah, namun merupakan diskusi yang sangat umum dan perlu sama sama diketahui & dipahami. 
+        </p>
 
       </section>
     </main>
