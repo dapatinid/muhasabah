@@ -102,7 +102,7 @@ function submit() {
                 
                 <div class="flex gap-3 w-full md:w-auto">
                     <Link 
-                        href="/admin/dashboard" 
+                        href="/dashboard" 
                         class="flex-1 md:flex-none text-center px-6 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 text-sm font-bold hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors dark:text-zinc-300"
                     >
                         Batal

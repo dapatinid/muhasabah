@@ -172,7 +172,7 @@ function closeModal() {
           :key="kat"
           @click="filterKategori(kat)"
           :class="[
-            'shrink-0 px-5 py-2 rounded-full text-xs font-bold border transition-all uppercase tracking-wider',
+            'shrink-0 px-3 py-1.5 rounded-full text-xs font-bold border transition-all uppercase tracking-wider',
             aktifKategori === kat
               ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
               : 'bg-stone-900 border-stone-800 text-stone-500 hover:border-amber-500/30 hover:text-amber-400'

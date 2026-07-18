@@ -426,9 +426,11 @@ function getHargaBadgeInfo(acara: any) {
                 <Loader2 v-if="isSearching" class="size-4 animate-spin text-stone-500" />
               </div>
               
-              <button @click="isSearchOpen = false" class="text-xs font-bold text-stone-400 hover:text-white px-2 py-1 bg-stone-900 border border-stone-800 rounded-xl transition-all">
-                <X class="size-4" />
-              </button>
+              <div class="relative">
+                <button @click="isSearchOpen = false" class="absolute -top-11 -left-3 text-xs font-bold text-red-400 hover:text-white px-2 py-2 bg-stone-900 border border-stone-800 rounded-full transition-all">
+                  <X class="size-4" />
+                </button>
+              </div>
             </div>
 
             <div class="max-h-[50vh] sm:max-h-[60vh] overflow-y-auto p-2 no-scrollbar">
