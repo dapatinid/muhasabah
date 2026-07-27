@@ -779,7 +779,7 @@ kalam.form = kalamForm
 
 /**
 * @see \App\Http\Controllers\DonasiController::donasi
-* @see app/Http/Controllers/DonasiController.php:21
+* @see app/Http/Controllers/DonasiController.php:22
 * @route '/donasi'
 */
 export const donasi = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -794,7 +794,7 @@ donasi.definition = {
 
 /**
 * @see \App\Http\Controllers\DonasiController::donasi
-* @see app/Http/Controllers/DonasiController.php:21
+* @see app/Http/Controllers/DonasiController.php:22
 * @route '/donasi'
 */
 donasi.url = (options?: RouteQueryOptions) => {
@@ -803,7 +803,7 @@ donasi.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\DonasiController::donasi
-* @see app/Http/Controllers/DonasiController.php:21
+* @see app/Http/Controllers/DonasiController.php:22
 * @route '/donasi'
 */
 donasi.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -813,7 +813,7 @@ donasi.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\DonasiController::donasi
-* @see app/Http/Controllers/DonasiController.php:21
+* @see app/Http/Controllers/DonasiController.php:22
 * @route '/donasi'
 */
 donasi.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -823,7 +823,7 @@ donasi.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\DonasiController::donasi
-* @see app/Http/Controllers/DonasiController.php:21
+* @see app/Http/Controllers/DonasiController.php:22
 * @route '/donasi'
 */
 const donasiForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -833,7 +833,7 @@ const donasiForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 
 /**
 * @see \App\Http\Controllers\DonasiController::donasi
-* @see app/Http/Controllers/DonasiController.php:21
+* @see app/Http/Controllers/DonasiController.php:22
 * @route '/donasi'
 */
 donasiForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -843,7 +843,7 @@ donasiForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\DonasiController::donasi
-* @see app/Http/Controllers/DonasiController.php:21
+* @see app/Http/Controllers/DonasiController.php:22
 * @route '/donasi'
 */
 donasiForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

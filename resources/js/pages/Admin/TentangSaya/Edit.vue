@@ -68,7 +68,7 @@ function submit() {
 
         </div>
 
-        <form @submit.prevent="submit" class="bg-white dark:bg-zinc-900 space-y-6">
+        <form @submit.prevent="submit" class="space-y-6">
             
             <div class="flex gap-3 p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
                 <FileText class="size-5 text-amber-600 shrink-0 mt-0.5" />

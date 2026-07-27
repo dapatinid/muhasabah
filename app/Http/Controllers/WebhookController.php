@@ -42,18 +42,31 @@ class WebhookController extends Controller
                 
                 // Ambil ID yang tepat dari Payload Mayar
                 $transactionId = $mayarData['transactionId'] ?? null;
-                $referenceId   = $mayarData['reference_id'] ?? null;
+                $productId      = $mayarData['productId'] ?? null;
+                $referenceId    = $mayarData['reference_id'] ?? null;
+
+                // 🌟 FIX: Mayar tidak mengirim field 'reference_id'.
+                // Reference ID kita selipkan sendiri di 'description' saat create link,
+                // formatnya "REF-{payment_id} | ...". Ekstrak dari sana.
+                if (!$referenceId && !empty($mayarData['productDescription'])) {
+                    if (preg_match('/REF-(\d+)/', $mayarData['productDescription'], $matches)) {
+                        $referenceId = $matches[1];
+                    }
+                }
 
                 if ($mayarStatus === 'SUCCESS') {
                     $payment = null;
 
-                    // PRIORITAS 1: Cari menggunakan reference_id (ID asli tabel Payment kita)
+                    // PRIORITAS 1: Cari menggunakan reference_id hasil ekstraksi dari description
                     if ($referenceId) {
                         $payment = Payment::find($referenceId);
-                    } 
-                    // PRIORITAS 2: Fallback mencari menggunakan transaction_id Mayar
-                    if (!$payment && $transactionId) {
-                        $payment = Payment::where('transaction_id', $transactionId)->first();
+                    }
+
+                    // PRIORITAS 2: Fallback — 'transaction_id' yang tersimpan di DB kita
+                    // sebenarnya diisi dari 'data.id' saat create link, yang nilainya
+                    // = productId di webhook (BUKAN transactionId). Jadi cocokkan ke productId.
+                    if (!$payment && $productId) {
+                        $payment = Payment::where('transaction_id', $productId)->first();
                     }
 
                     // Jika Transaksi Ditemukan dan Belum Lunas
@@ -72,6 +85,7 @@ class WebhookController extends Controller
                             'status'         => 'success',
                             'payment_method' => 'transfer',
                             'rekening'       => 'Mayar - ' . $metodeMayar,
+                            'transaction_id' => $transactionId, // 🔥 timpa dengan transaction id asli
                             'updated_at'     => $waktuPembayaran,
                         ]);
 

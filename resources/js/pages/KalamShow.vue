@@ -672,7 +672,7 @@ const formatRelativeTime = (dateString: string) => {
                   >
                     <!-- ✅ Elbow/panah: ditumpuk pas di atas garis trunk. Ikon CornerDownRight
                         SECARA BENTUK sudah menyerupai garis turun lalu belok kanan. -->
-                    <CornerDownRight class="size-5.5 text-amber-800 absolute -left-[4px] -top-0.5" />
+                    <CornerDownRight class="size-6 text-amber-800 absolute -left-[4.5px] -top-0.5" />
 
                     <div class="flex items-center gap-2 flex-wrap">
                       <span class="text-xs font-bold text-amber-400/90">{{ getAuthorName(balasan) }}</span>

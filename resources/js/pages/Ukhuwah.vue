@@ -285,7 +285,7 @@ onUnmounted(() => {
     </div>
 
     <div class="fixed bottom-31 max-w-xl mx-auto inset-x-0 z-101 pointer-events-none">
-      <div class="absolute right-5 pointer-events-auto flex flex-col gap-3">
+      <div class="absolute right-4 pointer-events-auto flex flex-col gap-3">
         
         <Link 
             href="/obrolan"

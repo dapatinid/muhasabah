@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class DonasiController extends Controller
 {
@@ -823,7 +824,7 @@ class DonasiController extends Controller
             ->post('https://api.mayar.id/hl/v1/payment/create', $payload);
 
         if (!$response->successful() || !isset($response['data']['link'])) {
-            \Log::error('Mayar API Error', ['response' => $response->body()]);
+            Log::error('Mayar API Error', ['response' => $response->body()]);
             return back()->with('error', 'Gagal menghubungkan ke server Mayar.');
         }
 
