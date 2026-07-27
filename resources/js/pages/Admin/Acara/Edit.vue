@@ -434,9 +434,9 @@ const submit = () => {
                         </div>
 
                         <div class="space-y-1.5">
-                            <Label :class="{'text-red-500': form.errors.panduan_acara}" class="text-xs font-semibold">Instruksi Pembayaran / Rekening</Label>
-                            <Input v-model="form.panduan_acara" class="h-11 rounded-xl bg-zinc-50/30 dark:bg-zinc-950/30" :class="{'border-red-500 focus-visible:ring-red-500': form.errors.panduan_acara}" />
-                            <div v-if="form.errors.panduan_acara" class="text-red-500 text-xs mt-1">{{ form.errors.panduan_acara }}</div>
+                            <Label :class="{'text-red-500': form.errors.panduan_acara}" class="text-xs font-semibold">Instruksi untuk Donatur / Sponsor</Label>
+                            <Input v-model="form.panduan_acara" class="h-11 rounded-xl bg-zinc-50/30 dark:bg-zinc-950/30" :class="{'border-red-500 focus-visible:ring-red-500': form.errors.panduan_acara}" placeholder="Contoh: Jika ingin menjadi sponsor, maka..."/>
+                            <div v-if="form.errors.panduan_acara" class="text-red-500 text-xs mt-1" >{{ form.errors.panduan_acara }}</div>
                         </div>
                     </div>
                     
