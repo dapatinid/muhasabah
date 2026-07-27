@@ -172,7 +172,8 @@ function getJumlahDonatur(donasi: any): number {
             <Search class="size-4" />
           </span>
           <input
-            v-model="search"
+            :value="search"
+            @input="search = ($event.target as HTMLInputElement).value"
             type="text"
             inputmode="search"
             enterkeyhint="search"

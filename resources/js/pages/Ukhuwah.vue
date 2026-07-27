@@ -138,7 +138,8 @@ onUnmounted(() => {
         <div class="relative mb-6">
           <Search class="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-stone-400 pointer-events-none" />
           <input
-            v-model="search"
+            :value="search"
+            @input="search = ($event.target as HTMLInputElement).value"
             type="text"
             inputmode="search"
             enterkeyhint="search"

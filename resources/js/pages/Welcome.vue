@@ -417,7 +417,8 @@ function getHargaBadgeInfo(acara: any) {
               <div class="relative flex-1 flex items-center">
                 <Search class="absolute left-3 size-4 text-amber-500" />
                 <input
-                  v-model="searchQuery"
+                  :value="searchQuery"
+                  @input="searchQuery = ($event.target as HTMLInputElement).value"
                   type="text"
                   inputmode="search"
                   enterkeyhint="search"

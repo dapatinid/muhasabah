@@ -400,7 +400,9 @@ class DonasiController extends Controller
 
         // Asumsikan field thumbnail donasi Anda bernama 'thumbnail'. 
         // Pastikan menghasilkan URL absolut (https://...) menggunakan asset() atau Storage::url()
-        $imageUrl = $donasi->thumbnail ? $donasi->thumbnail : asset('favicon.png');
+        $imageUrl = $donasi->thumbnail
+        ? (str_starts_with($donasi->thumbnail, 'http') ? $donasi->thumbnail : asset('storage/' . $donasi->thumbnail))
+        : asset('favicon.png');
 
         return Inertia::render('DonasiShow', [
             'donasi' => $donasi->load([

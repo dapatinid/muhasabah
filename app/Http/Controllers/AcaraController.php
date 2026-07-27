@@ -492,7 +492,9 @@ class AcaraController extends Controller
         }
 
         $cleanDescription = Str::limit(strip_tags($acara->body), 150, '...');
-        $imageUrl = $acara->thumbnail ? $acara->thumbnail : asset('favicon.png');
+        $imageUrl = $acara->thumbnail
+        ? (str_starts_with($acara->thumbnail, 'http') ? $acara->thumbnail : asset('storage/' . $acara->thumbnail))
+        : asset('favicon.png');
 
         $acara->loadSum(['payments as total_donasi_masuk' => function ($q) {
             $q->whereIn('mutation_type', ['tiket', 'sponsor'])->where('status', 'success');

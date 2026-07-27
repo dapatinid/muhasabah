@@ -208,7 +208,9 @@ class KalamController extends Controller
         $cleanDescription = Str::limit(strip_tags($kalam->body), 150, '...');
 
         // Ambil URL thumbnail jika tersedia, gunakan default jika kosong
-        $imageUrl = $kalam->thumbnail ? $kalam->thumbnail : asset('favicon.png');
+        $imageUrl = $kalam->thumbnail
+        ? (str_starts_with($kalam->thumbnail, 'http') ? $kalam->thumbnail : asset('storage/' . $kalam->thumbnail))
+        : asset('favicon.png');
 
         return Inertia::render('KalamShow', [
             'kalam' => $kalam,
