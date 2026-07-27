@@ -300,16 +300,16 @@ function submit() {
                     <div v-if="form.errors.body" class="text-red-500 text-xs mt-1">{{ form.errors.body }}</div>
                 </div>
 
-                <div class="flex justify-between items-center pt-6 gap-4">
+                <div class="flex flex-col md:flex-row justify-between items-center pt-6 gap-4">
                     <p class="text-xs text-zinc-400 italic">* Perubahan akan langsung diterbitkan setelah Anda menekan tombol simpan.</p>
                     
-                    <div class="flex gap-3">
-                        <Link href="/admin/kalam" class="px-6 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 text-sm font-bold hover:bg-secondary transition-colors">
+                    <div class="flex gap-3 w-full md:w-auto">
+                        <Link href="/admin/kalam" class="flex-1 md:flex-none text-center px-6 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 text-sm font-bold hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                             Batal
                         </Link>
                         <Button 
                             type="submit" 
-                            class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 h-11 rounded-xl font-bold gap-2 transition-all cursor-pointer"
+                            class="flex-1 md:flex-none bg-emerald-600 hover:bg-emerald-700 text-white px-8 h-11 rounded-xl font-bold gap-2 transition-all cursor-pointer"
                             :disabled="form.processing"
                         >
                             <Save class="size-4" />

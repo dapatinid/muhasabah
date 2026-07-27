@@ -127,7 +127,11 @@ class DonasiController extends Controller
         return Inertia::render('Admin/Donasi/Edit', [
             'donasi' => $donasi,
             'users' => $users,
-            'attachedUsers' => $attachedUsers
+            'attachedUsers' => $attachedUsers,
+            'breadcrumbs' => [
+                ['title' => 'Donasi', 'href' => '/admin/donasi'],
+                ['title' => 'Edit Donasi', 'href' => "/admin/donasi/{$donasi->slug}/edit"],
+            ],            
         ]);
     }
 

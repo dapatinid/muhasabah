@@ -26,6 +26,7 @@ const props = defineProps<{
     };
     users: Array<{ id: number, name: string, slug: string }>; // (TAMBAHAN) Daftar semua user
     attachedUsers: Array<number>;    
+    breadcrumbs: any;    
 }>();
 
 const dropdownOpen = ref(false)

@@ -139,7 +139,7 @@ onUnmounted(() => {
           <Search class="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-stone-400 pointer-events-none" />
           <input
             v-model="search"
-            type="search"
+            type="text"
             :placeholder="'Cari nama ' + activeTab + '…'"
             class="w-full pl-11 pr-5 py-3.5 border-b border-b-stone-800 text-sm text-stone-100 placeholder-stone-400 focus:outline-none ring-0 focus:border-b-2 focus:border-b-emerald-500/60 shadow-none transition"
           />

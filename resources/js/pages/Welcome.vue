@@ -418,7 +418,7 @@ function getHargaBadgeInfo(acara: any) {
                 <Search class="absolute left-3 size-4 text-amber-500" />
                 <input
                   v-model="searchQuery"
-                  type="search"
+                  type="text"
                   placeholder="Ketik untuk mencari..."
                   class="w-full bg-transparent pl-10 pr-4 py-2 text-stone-100 outline-none placeholder:text-stone-600 text-sm"
                   autofocus
@@ -435,7 +435,7 @@ function getHargaBadgeInfo(acara: any) {
 
             <div class="max-h-[50vh] sm:max-h-[60vh] overflow-y-auto p-2 no-scrollbar">
               <div v-if="!searchQuery" class="p-8 text-center">
-                <p class="text-stone-500 text-xs">Cari kalam, doa, program, komunitas atau masjid.</p>
+                <p class="text-stone-500 text-xs">Cari kalam, donasi atau acara.</p>
               </div>
               
               <div v-else-if="searchResultsKalam.length > 0 || searchResultsDonasi.length > 0 || searchResultsAcara.length > 0" class="space-y-4 p-2">

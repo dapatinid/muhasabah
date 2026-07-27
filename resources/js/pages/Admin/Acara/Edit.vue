@@ -38,22 +38,8 @@ const props = defineProps<{
     };
     users: Array<{ id: number, name: string, slug: string }>; // (TAMBAHAN) Daftar semua user
     attachedUsers: Array<number>;
+    breadcrumbs: any;    
 }>();
-
-defineOptions({
-    layout: {
-        breadcrumbs: [
-            {
-                title: 'Acara',
-                href: '/admin/acara',
-            },
-            {
-                title: 'Edit Acara',
-                href: '#',
-            },
-        ],
-    },
-});
 
 // Fitur Filter dan Auto-Sort User (Tercentang di Atas)
 const searchUser = ref('');
@@ -511,7 +497,7 @@ const submit = () => {
                     :disabled="form.processing"
                 >
                     <Save class="w-4 h-4" />
-                    {{ form.processing ? 'Menyimpan...' : 'Perbarui Acara' }}
+                    {{ form.processing ? 'Menyimpan...' : 'Simpan Perubahan' }}
                 </Button>
             </div>
         </div>
