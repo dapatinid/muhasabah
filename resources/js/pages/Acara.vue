@@ -62,7 +62,7 @@ watch(search, debounce((val) => {
     search:   val || undefined,
     kategori: aktifKategori.value === 'Semua' ? undefined : aktifKategori.value,
   }, { preserveState: true, preserveScroll: true, replace: true })
-}, 600))
+}, 1000))
 
 function formatRupiah(nominal: number): string {
   return new Intl.NumberFormat('id-ID', {
@@ -161,6 +161,12 @@ function closeModal() {
         <input
           v-model="search"
           type="text"
+          inputmode="search"
+          enterkeyhint="search"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
           placeholder="Cari agenda kegiatan..."
           class="w-full bg-stone-900 border border-stone-800 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-stone-200 placeholder-stone-600 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/40 transition-all outline-none"
         >

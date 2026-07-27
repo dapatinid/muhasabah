@@ -171,7 +171,7 @@ watch(search, debounce((val) => {
     search: val || undefined, 
     kategori: aktifKategori.value === 'Semua' ? undefined : aktifKategori.value 
   }, { preserveState: true, replace: true })
-}, 600))
+}, 1000))
 
 function filterKategori(kat: string) {
   aktifKategori.value = kat
@@ -349,7 +349,9 @@ const goToKalamRespon = () => {
       <div class="sticky top-0 z-20 bg-stone-955/80 backdrop-blur-md border-b border-stone-800/50 py-4 space-y-4">
         <div class="relative px-5">
           <Search class="absolute left-8.5 top-1/2 -translate-y-1/2 size-4 text-stone-500" />
-          <input v-model="search" type="text" placeholder="Cari kalam..." 
+          <input v-model="search" type="text" inputmode="search" enterkeyhint="search"
+            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+            placeholder="Cari kalam..." 
             class="w-full bg-stone-900/50 border border-stone-800 rounded-xl py-2.5 pl-10 pr-4 text-sm text-stone-200 placeholder:text-stone-500 outline-none focus:ring-1 focus:ring-amber-500/50" />
         </div>
         <div class="flex px-5 gap-2 overflow-x-auto no-scrollbar">

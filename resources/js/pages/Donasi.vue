@@ -63,7 +63,7 @@ watch(search, debounce((val) => {
     preserveScroll: true, 
     replace: true,
   })
-}, 600))
+}, 1000))
 
 function formatRupiah(nominal: number): string {
   return new Intl.NumberFormat('id-ID', {
@@ -174,6 +174,12 @@ function getJumlahDonatur(donasi: any): number {
           <input
             v-model="search"
             type="text"
+            inputmode="search"
+            enterkeyhint="search"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
             placeholder="Cari program donasi..."
             class="w-full bg-stone-900 border border-stone-800 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-stone-200 placeholder-stone-600 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/40 transition-all outline-none"
           >

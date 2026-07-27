@@ -21,7 +21,7 @@ const activeTab = ref(props.tab ?? 'tokoh');
 
 watch(search, debounce((val) => {
   router.get('/ukhuwah', { search: val || undefined, tab: activeTab.value }, { preserveState: true, preserveScroll: true, replace: true })
-}, 800));
+}, 1000));
 
 function switchTab(newTab: string) {
   activeTab.value = newTab;
@@ -140,6 +140,12 @@ onUnmounted(() => {
           <input
             v-model="search"
             type="text"
+            inputmode="search"
+            enterkeyhint="search"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
             :placeholder="'Cari nama ' + activeTab + '…'"
             class="w-full pl-11 pr-5 py-3.5 border-b border-b-stone-800 text-sm text-stone-100 placeholder-stone-400 focus:outline-none ring-0 focus:border-b-2 focus:border-b-emerald-500/60 shadow-none transition"
           />

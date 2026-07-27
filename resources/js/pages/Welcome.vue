@@ -135,7 +135,7 @@ const performSearch = customDebounce((query: string) => {
   )
   
   isSearching.value = false
-}, 500)
+}, 1000)
 
 watch(searchQuery, (newVal: string) => {
   isSearching.value = true
@@ -419,6 +419,12 @@ function getHargaBadgeInfo(acara: any) {
                 <input
                   v-model="searchQuery"
                   type="text"
+                  inputmode="search"
+                  enterkeyhint="search"
+                  autocomplete="off"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  spellcheck="false"
                   placeholder="Ketik untuk mencari..."
                   class="w-full bg-transparent pl-10 pr-4 py-2 text-stone-100 outline-none placeholder:text-stone-600 text-sm"
                   autofocus
