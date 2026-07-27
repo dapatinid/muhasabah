@@ -18,25 +18,37 @@ class WebhookController extends Controller
             // 1. AMBIL SECRET DARI .ENV ATAU CONFIG
             $secret = env('MAYAR_WEBHOOK_SECRET') ?? config('services.mayar.webhook_secret');
 
-            // 2. CEK MULTI-HEADER SIGNATURE (Antisipasi perbedaan nama header dari Mayar)
+            // 2. CEK MULTI-HEADER SIGNATURE
             $signature = $request->header('X-Mayar-Signature')
                       ?? $request->header('X-Callback-Signature')
                       ?? $request->header('X-Mayar-Token')
                       ?? $request->header('X-Callback-Token');
 
-            // Jika secret atau signature tidak ditemukan, log seluruh header untuk bahan debug
             if (!$secret || !$signature) {
-                Log::warning('Mayar Webhook Ditolak: Secret atau Signature tidak ditemukan.', [
-                    'secret_exists'    => !empty($secret),
-                    'signature_exists' => !empty($signature),
-                    'received_headers' => $request->headers->all() // 🔥 Log semua header agar tahu apa yang dikirim Mayar
-                ]);
+                Log::warning('Mayar Webhook Ditolak: Secret atau Signature tidak ditemukan.');
                 return response()->json(['message' => 'Missing Auth'], 200); 
             }
 
-            // 3. VERIFIKASI SIGNATURE
-            if (!hash_equals(hash_hmac('sha256', $payload, $secret), $signature)) {
-                Log::warning('Mayar Webhook Ditolak: Signature tidak valid!');
+            // 3. 🔥 SMART VERIFICATION (3 Lapis Pengecekan)
+            $generatedHmac = hash_hmac('sha256', $payload, $secret);
+            
+            // Lapis A: Cek HMAC SHA256 standar
+            $isHmacValid = hash_equals($generatedHmac, $signature);
+            
+            // Lapis B: Cek HMAC SHA256 tanpa memedulikan huruf besar/kecil (Case-insensitive)
+            $isHmacCaseInsensitiveValid = (strcasecmp($generatedHmac, $signature) === 0);
+            
+            // Lapis C: Cek apakah Mayar mengirim Direct Token (plain text token)
+            $isDirectTokenValid = hash_equals($secret, $signature);
+
+            // Jika KETIGANYA gagal, tolak dan catat bukti forensik ke log!
+            if (!$isHmacValid && !$isHmacCaseInsensitiveValid && !$isDirectTokenValid) {
+                Log::warning('Mayar Webhook Ditolak: Signature tidak valid!', [
+                    'alasan'             => 'HMAC maupun Direct Token tidak cocok',
+                    'secret_4_karakter'  => substr($secret, 0, 4) . '...', // Intip 4 huruf awal secret di .env Anda
+                    'signature_dari_mayar' => $signature,                  // Apa yang sebenarnya dikirim Mayar
+                    'hmac_hitung_laravel'  => $generatedHmac,              // Apa yang dihitung oleh Laravel
+                ]);
                 return response()->json(['message' => 'Invalid signature'], 403);
             }
 
