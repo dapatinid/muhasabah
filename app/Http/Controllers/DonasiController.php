@@ -829,12 +829,21 @@ class DonasiController extends Controller
         }
 
         $mayarLink = $response['data']['link'];
-        $mayarId = $response['data']['id'] ?? '';
+        $mayarId   = $response['data']['id'] ?? '';
 
+        // Update pembayaran utama
         $payment->update([
             'link'           => $mayarLink,
             'transaction_id' => $mayarId
         ]);
+
+        // 🔥 Tambahkan ini: Simpan link & ID Mayar yang sama ke infaq pasangannya
+        if ($infaqPasangan) {
+            $infaqPasangan->update([
+                'link'           => $mayarLink,
+                'transaction_id' => $mayarId
+            ]);
+        }
 
         return back()->with('info', $mayarLink);
     }

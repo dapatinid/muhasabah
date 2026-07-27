@@ -38,74 +38,78 @@ class WebhookController extends Controller
             if (isset($data['event']) && $data['event'] === 'payment.received') {
                 
                 $mayarData   = $data['data'] ?? [];
-                $mayarStatus = $mayarData['status'] ?? '';
-                
-                // Ambil ID yang tepat dari Payload Mayar
-                $transactionId = $mayarData['transactionId'] ?? null;
-                $productId      = $mayarData['productId'] ?? null;
-                $referenceId    = $mayarData['reference_id'] ?? null;
+                $mayarStatus = strtoupper($mayarData['status'] ?? '');
 
-                // 🌟 FIX: Mayar tidak mengirim field 'reference_id'.
-                // Reference ID kita selipkan sendiri di 'description' saat create link,
-                // formatnya "REF-{payment_id} | ...". Ekstrak dari sana.
-                if (!$referenceId && !empty($mayarData['productDescription'])) {
-                    if (preg_match('/REF-(\d+)/', $mayarData['productDescription'], $matches)) {
-                        $referenceId = $matches[1];
-                    }
-                }
+                if ($mayarStatus === 'SUCCESS' || $mayarStatus === 'PAID') {
+                    
+                    // 1. Ambil ID Link Mayar (di DB tersimpan di kolom transaction_id)
+                    // Pada webhook Mayar, ID ini berada pada field 'productId' atau 'paymentLinkId'
+                    $linkId = $mayarData['productId'] ?? $mayarData['paymentLinkId'] ?? $mayarData['invoiceId'] ?? null;
 
-                if ($mayarStatus === 'SUCCESS') {
-                    $payment = null;
+                    // 2. Ambil Transaction ID asli dari pembayaran Mayar
+                    $transactionId = $mayarData['transactionId'] ?? $mayarData['id'] ?? null;
 
-                    // PRIORITAS 1: Cari menggunakan reference_id hasil ekstraksi dari description
-                    if ($referenceId) {
-                        $payment = Payment::find($referenceId);
+                    // 3. CADANGAN AKURAT: Ekstrak ID Payment dari customerEmail (contoh: donatur_4@muhasabah.id -> angka 4)
+                    $paymentIdFromEmail = null;
+                    if (isset($mayarData['customerEmail']) && preg_match('/^donatur_(\d+)@/', $mayarData['customerEmail'], $matches)) {
+                        $paymentIdFromEmail = $matches[1];
                     }
 
-                    // PRIORITAS 2: Fallback — 'transaction_id' yang tersimpan di DB kita
-                    // sebenarnya diisi dari 'data.id' saat create link, yang nilainya
-                    // = productId di webhook (BUKAN transactionId). Jadi cocokkan ke productId.
-                    if (!$payment && $productId) {
-                        $payment = Payment::where('transaction_id', $productId)->first();
-                    }
+                    // 4. Cari transaksi di Database
+                    $payment = Payment::where(function ($query) use ($linkId, $transactionId, $paymentIdFromEmail) {
+                            if ($linkId) {
+                                $query->orWhere('transaction_id', $linkId);
+                            }
+                            if ($transactionId) {
+                                $query->orWhere('transaction_id', $transactionId);
+                            }
+                            if ($paymentIdFromEmail) {
+                                $query->orWhere('id', $paymentIdFromEmail);
+                            }
+                        })
+                        ->where(function ($q) {
+                            $q->whereNull('status')->orWhere('status', '!=', 'success');
+                        })
+                        ->first();
 
-                    // Jika Transaksi Ditemukan dan Belum Lunas
-                    if ($payment && $payment->status !== 'success') {
-                        
-                        // Parse format ISO Mayar ke format standard MySQL
-                        $waktuPembayaran = isset($mayarData['createdAt']) 
-                            ? Carbon::parse($mayarData['createdAt'])->format('Y-m-d H:i:s') 
+                    if ($payment) {
+                        $waktuPembayaran = isset($mayarData['updatedAt']) 
+                            ? Carbon::parse($mayarData['updatedAt'])->setTimezone('Asia/Jakarta') 
                             : now();
                         
-                        // Nama metode pembayaran dari Mayar (misal: QRIS, VA Mandiri)
-                        $metodeMayar = $mayarData['paymentMethod'] ?? 'Otomatis';
+                        $metodeMayar = $mayarData['paymentMethod'] ?? 'QRIS';
 
-                        // A. LUNASKAN TRANSAKSI UTAMA (Berlaku untuk Donasi, Tiket Acara, & Sponsor)
-                        $payment->forceFill([
+                        // A. Update Status Payment Utama (Donasi/Tiket/Sponsor)
+                        $payment->update([
                             'status'         => 'success',
+                            'transaction_id' => $transactionId ?? $payment->transaction_id, // Timpa dengan ID transaksi asli Mayar
                             'payment_method' => 'transfer',
                             'rekening'       => 'Mayar - ' . $metodeMayar,
-                            'transaction_id' => $transactionId,
                             'updated_at'     => $waktuPembayaran,
-                        ])->save();
+                        ]);
 
-                        // B. LUNASKAN INFAQ PASANGAN (Eksklusif hanya untuk Donasi)
-                        if ($payment->mutation_type === 'donasi_utama') {
-                            Payment::where('mutation_type', 'infaq_sistem')
-                                ->where('paymentable_type', $payment->paymentable_type) // Kunci polimorfik
-                                ->where('paymentable_id', $payment->paymentable_id)
-                                ->where('created_at', $payment->created_at)
-                                ->where('atas_nama', $payment->atas_nama)
-                                ->update([
-                                    'status'         => 'success',
-                                    'payment_method' => 'transfer',
-                                    'rekening'       => 'Mayar - ' . $metodeMayar,
-                                    'updated_at'     => $waktuPembayaran,
-                                ]);
-                        }
+                        // B. 🔥 UPDATE JUGA INFAQ SISTEM PASANGANNYA (Jika Ada)
+                        // Karena saat generateMayarLink infaq digabungkan ke total tagihan,
+                        // maka saat lunas, baris infaq pasangannya juga harus di-success-kan!
+                        Payment::where('mutation_type', 'infaq_sistem')
+                            ->where('paymentable_type', $payment->paymentable_type)
+                            ->where('paymentable_id', $payment->paymentable_id)
+                            ->where('created_at', $payment->created_at)
+                            ->where('atas_nama', $payment->atas_nama)
+                            ->where(function($q) {
+                                $q->whereNull('status')->orWhere('status', '!=', 'success');
+                            })
+                            ->update([
+                                'status'         => 'success',
+                                'transaction_id' => $transactionId ?? $payment->transaction_id,
+                                'payment_method' => 'transfer',
+                                'rekening'       => 'Mayar - ' . $metodeMayar,
+                                'updated_at'     => $waktuPembayaran,
+                            ]);
 
-                        Log::info("Webhook Mayar SUKSES: Transaksi ID {$payment->id} berhasil dilunaskan.", [
+                        Log::info("Webhook Mayar SUKSES: Transaksi ID {$payment->id} (dan infaq pasangannya) berhasil dilunaskan.", [
                             'transaction_id' => $transactionId,
+                            'product_id'     => $linkId,
                             'customer'       => $mayarData['customerName'] ?? '-',
                             'amount'         => $mayarData['amount'] ?? 0,
                             'method'         => $metodeMayar
@@ -115,12 +119,13 @@ class WebhookController extends Controller
 
                     } else {
                         Log::warning('Webhook Mayar: Transaksi tidak ditemukan di database atau sudah berstatus success.', [
-                            'reference_id'   => $referenceId,
-                            'transaction_id' => $transactionId
+                            'product_id'     => $linkId,
+                            'transaction_id' => $transactionId,
+                            'email_id'       => $paymentIdFromEmail
                         ]);
                     }
                 }
-            }
+            }           
 
             return response()->json(['message' => 'Event ignored'], 200);
 
