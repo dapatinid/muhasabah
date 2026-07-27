@@ -9,6 +9,7 @@ import Youtube from '@tiptap/extension-youtube'
 import { TextStyle } from '@tiptap/extension-text-style'
 import { ref, watch, onBeforeUnmount, onMounted } from 'vue'
 import { router } from '@inertiajs/vue3'
+import imageCompression from 'browser-image-compression'
 import { 
   Bold, Italic, Underline as UnderlineIcon, 
   List, ListOrdered, Quote, Undo, Redo, 
@@ -131,37 +132,67 @@ watch(() => props.modelValue, (value) => {
 // Upload gambar
 function triggerFileInput() { fileInput.value?.click() }
 
-function handleImageUpload(event: Event) {
+async function handleImageUpload(event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (!file) return
+
   isUploading.value = true
-  
-  router.post(props.uploadUrl, { image: file }, {
-    forceFormData: true,
-    preserveScroll: true,
-    preserveState: true, // Tambahkan ini agar state editor tidak ter-reset
-    onSuccess: (page) => {
-      // 🌟 KITA CEK ISI PROPS DI CONSOLE
-      console.log("Berhasil Request! Isi Props:", page.props); 
-      
-      const url = (page.props as any).flash?.uploaded_image_url;
-      
-      if (url) {
-        editor.value?.chain().focus().setImage({ src: url }).run()
-      } else {
-        alert("Gambar berhasil di-upload, tapi URL gagal ditangkap oleh editor. Cek Console Inspect Element.");
-      }
-    },
-    // 🌟 TAMBAHKAN ONERROR UNTUK MENANGKAP KEGAGALAN VALIDASI (MISAL: FILE > 2MB)
-    onError: (errors) => {
-      console.error("Validasi Gagal:", errors);
-      alert("Gagal upload gambar: " + (errors.image || "Terjadi kesalahan pada server"));
-    },
-    onFinish: () => {
-      isUploading.value = false
-      if (fileInput.value) fileInput.value.value = ''
+
+  try {
+    // 1. Opsi kompresi
+    const options = {
+      maxSizeMB: 1,              // target maksimal ~1MB (algoritma coba mendekati ini)
+      maxWidthOrHeight: 1920,    // batasi resolusi biar tidak sia-sia besar
+      useWebWorker: true,        // biar proses kompresi tidak nge-freeze UI
+      initialQuality: 0.8,       // kualitas awal jpeg/webp
     }
-  })
+
+    let fileToUpload = file
+
+    // 2. Hanya kompres kalau memang > 1MB (kalau sudah kecil, skip aja)
+    if (file.size > 1001 * 1001) {
+      const compressedBlob = await imageCompression(file, options)
+
+      // browser-image-compression mengembalikan Blob, kita bungkus jadi File
+      // supaya nama & tipe filenya tetap terjaga saat dikirim ke server
+      fileToUpload = new File([compressedBlob], file.name, {
+        type: compressedBlob.type,
+        lastModified: Date.now(),
+      })
+
+      console.log(
+        `Kompresi: ${(file.size / 1001 / 1001).toFixed(2)}MB → ${(fileToUpload.size / 1001 / 1001).toFixed(2)}MB`
+      )
+    }
+
+    // 3. Kirim file (asli atau hasil kompresi) via Inertia router, seperti biasa
+    router.post(props.uploadUrl, { image: fileToUpload }, {
+      forceFormData: true,
+      preserveScroll: true,
+      preserveState: true,
+      onSuccess: (page) => {
+        const url = (page.props as any).flash?.uploaded_image_url
+        if (url) {
+          editor.value?.chain().focus().setImage({ src: url }).run()
+        } else {
+          alert("Gambar berhasil di-upload, tapi URL gagal ditangkap oleh editor. Cek Console Inspect Element.")
+        }
+      },
+      onError: (errors) => {
+        console.error("Validasi Gagal:", errors)
+        alert("Gagal upload gambar: " + (errors.image || "Terjadi kesalahan pada server"))
+      },
+      onFinish: () => {
+        isUploading.value = false
+        if (fileInput.value) fileInput.value.value = ''
+      }
+    })
+  } catch (err) {
+    console.error("Gagal mengompres gambar:", err)
+    alert("Gagal memproses gambar sebelum upload. Coba gambar lain.")
+    isUploading.value = false
+    if (fileInput.value) fileInput.value.value = ''
+  }
 }
 
 // YouTube
