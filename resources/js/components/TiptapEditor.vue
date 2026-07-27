@@ -150,7 +150,7 @@ async function handleImageUpload(event: Event) {
     let fileToUpload = file
 
     // 2. Hanya kompres kalau memang > 1MB (kalau sudah kecil, skip aja)
-    if (file.size > 1001 * 1001) {
+    if (file.size > 1500 * 1500) {
       const compressedBlob = await imageCompression(file, options)
 
       // browser-image-compression mengembalikan Blob, kita bungkus jadi File
@@ -161,7 +161,7 @@ async function handleImageUpload(event: Event) {
       })
 
       console.log(
-        `Kompresi: ${(file.size / 1001 / 1001).toFixed(2)}MB → ${(fileToUpload.size / 1001 / 1001).toFixed(2)}MB`
+        `Kompresi: ${(file.size / 1500 / 1500).toFixed(2)}MB → ${(fileToUpload.size / 1500 / 1500).toFixed(2)}MB`
       )
     }
 
