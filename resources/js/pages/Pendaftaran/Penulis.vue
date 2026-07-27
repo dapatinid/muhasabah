@@ -45,7 +45,7 @@ const availableCategories = computed(() => {
 // 100 Pertanyaan Kelayakan Penulis Kalam
 const questions = ref<Question[]>([
   // KATEGORI 1: KOMITMEN & KONSISTENSI (1-20)
-  { id: 1, text: 'Saya berkomitmen untuk menerbitkan artikel minimal 2 kali dalam seminggu secara berkala.' },
+  { id: 1, text: 'Saya berkomitmen untuk menerbitkan artikel minimal 1 kali dalam sepekan secara berkala.' },
   { id: 2, text: 'Saya siap meluangkan waktu khusus setiap hari untuk riset dan menulis konten Kalam.' },
   { id: 3, text: 'Kehadiran tenggat waktu (deadline) dari editor justru memotivasi saya untuk menulis lebih baik.' },
   { id: 4, text: 'Saya tetap akan menulis secara konsisten meskipun artikel saya di awal-awal sepi pembaca.' },

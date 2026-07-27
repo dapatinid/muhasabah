@@ -87,7 +87,7 @@ const questions = ref<Question[]>([
   { id: 40, text: 'Saya memahami bahwa transparansi legalitas di awal adalah benteng utama pencegahan tindak korupsi dana umat.' },
 
   // KATEGORI 2: SISTEM PELAPORAN & AKUNTABILITAS PUBLIK (41-80)
-  { id: 41, text: 'Saya berkomitmen mengunggah laporan penggunaan dana (LPD) secara berkala setiap minggu.' },
+  { id: 41, text: 'Saya berkomitmen mengunggah laporan penggunaan dana (LPD) secara berkala minimal setiap 7 hari.' },
   { id: 42, text: 'Setiap pengeluaran dana wajib disertai dengan bukti kuitansi, nota digital, atau invoice resmi.' },
   { id: 43, text: 'Saya bersedia mengambil dokumentasi foto dan video berkualitas jelas saat penyerahan bantuan dilakukan.' },
   { id: 44, text: 'Saya menolak membuat kuitansi palsu atau membesarkan nominal pengeluaran (mark-up) demi keuntungan pribadi.' },

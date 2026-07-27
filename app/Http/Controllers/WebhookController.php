@@ -81,13 +81,13 @@ class WebhookController extends Controller
                         $metodeMayar = $mayarData['paymentMethod'] ?? 'Otomatis';
 
                         // A. LUNASKAN TRANSAKSI UTAMA (Berlaku untuk Donasi, Tiket Acara, & Sponsor)
-                        $payment->update([
+                        $payment->forceFill([
                             'status'         => 'success',
                             'payment_method' => 'transfer',
                             'rekening'       => 'Mayar - ' . $metodeMayar,
-                            'transaction_id' => $transactionId, // 🔥 timpa dengan transaction id asli
+                            'transaction_id' => $transactionId,
                             'updated_at'     => $waktuPembayaran,
-                        ]);
+                        ])->save();
 
                         // B. LUNASKAN INFAQ PASANGAN (Eksklusif hanya untuk Donasi)
                         if ($payment->mutation_type === 'donasi_utama') {
